@@ -1,4 +1,9 @@
-from . import level
+from . import levels
+from . import storage
+from . import ingredients
 
 
-level.load()
+levels.load()
+print(levels.level)
+print(storage.storages)
+print(ingredients.ingredients)

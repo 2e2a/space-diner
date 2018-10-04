@@ -8,11 +8,13 @@ class Storage:
         self.name = data.get('name')
         print(self.name)
 
+storages = None
+
 
 def load(data):
+    global storages
     storages = OrderedDict()
     for storage_data in data:
         storage = Storage()
         storage.load(storage_data)
         storages.update({storage.name: storage})
-    return storages

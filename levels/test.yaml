@@ -1,4 +1,35 @@
 name: Test Level
+
+ingredients:
+  - name: Space onion
+    taste: good
+
+  - name: Space potato
+    taste: ok
+
+  - name: Space egg
+    taste: bleh
+
+  - name: Ice
+    taste: cold
+
 storage:
   - name: Fridge
+    initial: True
+    ingredients:
+    - name: Space egg
+      available: 6
+
   - name: Pantry
+    initial: True
+    ingredients:
+    - name: Space potato
+      available: 10
+    - name: Space onion
+      available: 1
+
+  - name: Freezer
+    initial: False
+    ingredients:
+    - name: Ice
+      available: 12
