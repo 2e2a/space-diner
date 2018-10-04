@@ -3,10 +3,15 @@ from collections import OrderedDict
 
 class Storage:
     name = None
+    ingredient_availability = {}
 
     def load(self, data):
         self.name = data.get('name')
-        print(self.name)
+        for storage_ingredient in  data.get('ingredients'):
+            ingredient =  storage_ingredient.get('name')
+            availablity = storage_ingredient.get('available')
+            self.ingredient_availability.update({ingredient: availablity})
+
 
 storages = None
 
