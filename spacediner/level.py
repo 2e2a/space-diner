@@ -1,16 +1,19 @@
 import os
 import yaml
 
+from . import storage
+
 
 class Level:
     name = None
+    storages = {}
 
     def load(self, filename):
         with open(filename, 'r') as stream:
             data = yaml.load(stream)
             self.name = data.get('name')
+            self.storages = storage.load(data.get('storage'))
             print(self.name)
-
 
 
 def load():
