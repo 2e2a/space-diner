@@ -15,13 +15,13 @@ ingredients:
 
 storage:
   - name: Fridge
-    initial: True
+    available: True
     ingredients:
     - name: Space egg
       available: 6
 
   - name: Pantry
-    initial: True
+    available: True
     ingredients:
     - name: Space potato
       available: 10
@@ -29,7 +29,7 @@ storage:
       available: 1
 
   - name: Freezer
-    initial: False
+    available: False
     ingredients:
     - name: Ice
       available: 12

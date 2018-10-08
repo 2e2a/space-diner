@@ -3,14 +3,18 @@ from collections import OrderedDict
 
 class Storage:
     name = None
-    ingredient_availability = {}
+    available = False
+    available_ingredients = None
 
     def load(self, data):
         self.name = data.get('name')
+        self.available = data.get('available')
+        self.available_ingredients = OrderedDict()
         for storage_ingredient in  data.get('ingredients'):
             ingredient =  storage_ingredient.get('name')
-            availablity = storage_ingredient.get('available')
-            self.ingredient_availability.update({ingredient: availablity})
+            availability = storage_ingredient.get('available')
+            self.available_ingredients.update({ingredient: availability})
+
 
 
 storages = None
