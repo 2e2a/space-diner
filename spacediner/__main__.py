@@ -1,9 +1,7 @@
 from . import levels
-from . import storage
-from . import ingredients
+from . import cli
 
 
 levels.load()
-print(levels.level)
-print(storage.storages)
-print(ingredients.ingredients)
+cli.run()
+

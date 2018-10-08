@@ -1,10 +1,20 @@
 from collections import OrderedDict
 
+from . import ingredients
+
 
 class Storage:
     name = None
     available = False
     available_ingredients = None
+
+    def take_ingredient(self, name):
+        if name in self.available_ingredients:
+            availability = self.available_ingredients.get(name)
+            if availability > 0:
+                self.available_ingredients.update({name: availability - 1})
+                return ingredients.get(name)
+        return None
 
     def load(self, data):
         self.name = data.get('name')
@@ -18,6 +28,25 @@ class Storage:
 
 
 storages = None
+
+
+def available_ingredients():
+    global storages
+    available_ingredients = {}
+    for storage in storages.values():
+        if storage.available:
+            available_ingredients.update(storage.available_ingredients)
+    return available_ingredients
+
+
+def take_ingredient(name):
+    global storages
+    for storage in storages.values():
+        if storage.available:
+            ingredient = storage.take_ingredient(name)
+            if ingredient:
+                return ingredient
+    return None
 
 
 def load(data):

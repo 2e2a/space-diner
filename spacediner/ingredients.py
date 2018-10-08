@@ -13,6 +13,11 @@ class Ingredient:
 ingredients = None
 
 
+def get(name):
+    global ingredients
+    return ingredients.get(name)
+
+
 def load(data):
     global ingredients
     ingredients = OrderedDict()

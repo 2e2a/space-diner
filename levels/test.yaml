@@ -2,13 +2,13 @@ name: Test Level
 
 ingredients:
   - name: Space onion
-    taste: good
+    taste: bleh
 
   - name: Space potato
-    taste: ok
+    taste: good
 
   - name: Space egg
-    taste: bleh
+    taste: ok
 
   - name: Ice
     taste: cold
@@ -33,3 +33,13 @@ storage:
     ingredients:
     - name: Ice
       available: 12
+
+recipes:
+- name: Omelet
+  available: False
+  taste: dynamite
+  ingredients:
+  - name: Space egg
+    amount: 2
+  - name: Space potato
+    amount: 1
