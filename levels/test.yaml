@@ -39,7 +39,5 @@ recipes:
   available: False
   taste: dynamite
   ingredients:
-  - name: Space egg
-    amount: 2
-  - name: Space potato
-    amount: 1
+  - Space egg
+  - Space potato

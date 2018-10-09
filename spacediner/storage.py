@@ -8,6 +8,14 @@ class Storage:
     available = False
     available_ingredients = None
 
+    def get_ingredient(self, name):
+        if name in self.available_ingredients:
+            availability = self.available_ingredients.get(name)
+            if availability > 0:
+                self.available_ingredients.update({name: availability - 1})
+                return ingredients.get(name)
+        return None
+
     def take_ingredient(self, name):
         if name in self.available_ingredients:
             availability = self.available_ingredients.get(name)
@@ -24,6 +32,10 @@ class Storage:
             ingredient =  storage_ingredient.get('name')
             availability = storage_ingredient.get('available')
             self.available_ingredients.update({ingredient: availability})
+
+    def __str__(self):
+        ingredients = ', '.join(['{}[{}]'.format(i, c) for (i, c) in self.available_ingredients.items()])
+        return '{}: {}'.format(self.name, ingredients)
 
 
 

@@ -9,6 +9,9 @@ class Ingredient:
         self.name = data.get('name')
         self.taste = data.get('taste')
 
+    def __str__(self):
+        return '{} ({})'.format(self.name, self.taste)
+
 
 ingredients = None
 

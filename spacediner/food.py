@@ -1,10 +1,12 @@
 from collections import OrderedDict
 
+from . import storage
+
 
 class Food:
     name = None
     taste = None
-    ingredients = {}
+    ingredients = []
 
     def __init__(self, ingredients=None):
         if ingredients:
@@ -14,24 +16,51 @@ class Food:
         self.ingredients = ingredients
         name = []
         taste = []
-        for ingredient in ingredients:
+        for ingredient_name in ingredients:
+            ingredient = storage.take_ingredient(ingredient_name)
             name.append(ingredient.name)
             taste.append(ingredient.taste)
-        self.name = 'cooked ' + '-'.join(name)
-        self.taste = '-'.join(taste)
+        recipe = get_recipe(ingredients)
+        if recipe:
+            self.name = recipe.name
+            self.taste = recipe.taste
+        else:
+            self.name = 'cooked ' + '-'.join(name)
+            self.taste = '-'.join(taste)
+
+    def __str__(self):
+        return '{} ({})'.format(self.name, self.taste)
 
 
 class Recipe(Food):
     available = False
+    ingredients = []
+
+    def consists_of(self, ingredients):
+        return ingredients == self.ingredients
 
     def load(self, data):
         self.name = data.get('name')
         self.taste = data.get('taste')
         self.available = data.get('available')
+        self.ingredients = data.get('ingredients')
 
 
 recipes = None
-food = OrderedDict()
+cooked = OrderedDict()
+
+
+def take(name):
+    global cooked
+    return cooked.pop(name)
+
+
+def get_recipe(ingredients):
+    global recipes
+    for recipe in recipes.values():
+        if recipe.consists_of(ingredients):
+            return recipe
+    return None
 
 
 def load(data):
@@ -44,7 +73,6 @@ def load(data):
 
 
 def cook(ingredients):
-    global food
-    cooked_food = Food(ingredients)
-    food.update({cooked_food.name: cooked_food})
-    print(food)
+    global cooked
+    food = Food(ingredients)
+    cooked.update({food.name: food})

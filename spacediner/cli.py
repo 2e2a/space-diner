@@ -1,13 +1,18 @@
 from . import actions
-from . import storage
 from . import food
+from . import levels
+from . import storage
 
 
 class Mode:
     commands = []
     prompt = None
 
+    def print_info(self):
+        raise NotImplemented()
+
     def print_help(self):
+        print('Help:')
         raise NotImplemented()
 
     def _match_arg(self, arg_type, arg):
@@ -46,43 +51,54 @@ class Mode:
 class ActionMode(Mode):
     commands = [
         (['cooking'],),
+        (['service'],),
         (['exit'],),
     ]
 
+    def print_info(self):
+        print('Level: {}'.format(levels.level.name))
+
     def print_help(self):
+        print('Help:')
         print(self.commands)
 
     def exec(self, cmd, input):
         if cmd == 1:
-            return CookMode()
+            return CookingMode()
         if cmd == 2:
             exit()
 
 
-class CookMode(Mode):
+class CookingMode(Mode):
     commands = [
         (['cook'], [], ),
         (['done'], ),
     ]
     prompt = 'cooking'
-    ingredients = None
     action = None
+    available_ingredients = None
 
     def __init__(self):
+        self.available_ingredients = storage.available_ingredients()
         self.update_commands()
         self.action = actions.Cook()
 
     def update_commands(self):
-        self.ingredients = storage.available_ingredients()
-        ingredients = [ingredient.replace(' ', '_') for ingredient in self.ingredients.keys()]
+        ingredients = [i.replace(' ', '_') for i in self.available_ingredients.keys()]
         self.commands[0] = (['cook'], ingredients)
 
+    def print_info(self):
+        print('Available Ingredients:')
+        print(self.available_ingredients)
+
     def print_help(self):
+        print('Help:')
         print(self.commands)
 
     def exec(self, cmd, input):
         if cmd == 1:
             ingredient = input[1].replace('_', ' ')
+            self.available_ingredients.update({ingredient: self.available_ingredients.get(ingredient) - 1})
             self.action.add_ingredient(ingredient)
             return self
         if cmd == 2:
@@ -98,6 +114,7 @@ def run():
     global mode
     mode = ActionMode()
     while True:
+        mode.print_info()
         prompt = '({}) '.format(mode.prompt) if mode.prompt else ''
         cmd = input('space diner {}>> '.format(prompt))
         mode = mode.parse(cmd)

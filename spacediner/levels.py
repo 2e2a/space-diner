@@ -1,5 +1,6 @@
 import yaml
 
+from . import food
 from . import storage
 from . import ingredients
 
@@ -11,8 +12,9 @@ class Level:
         with open(filename, 'r') as stream:
             data = yaml.load(stream)
             self.name = data.get('name')
-            storage.load(data.get('storage'))
             ingredients.load(data.get('ingredients'))
+            storage.load(data.get('storage'))
+            food.load(data.get('recipes'))
 
 
 level = None

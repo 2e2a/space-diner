@@ -18,8 +18,4 @@ class Cook(Action):
         self.ingredients.append(ingredient)
 
     def perform(self):
-        ingredients = []
-        for ingredient_name in self.ingredients:
-            ingredient = storage.take_ingredient(ingredient_name)
-            ingredients.append(ingredient)
-        food.cook(ingredients)
+        food.cook(self.ingredients)
