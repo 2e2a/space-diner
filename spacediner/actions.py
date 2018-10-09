@@ -1,4 +1,5 @@
 from . import food
+from . import guests
 from . import storage
 
 
@@ -19,3 +20,15 @@ class Cook(Action):
 
     def perform(self):
         food.cook(self.ingredients)
+
+
+class Serve(Action):
+    food = None
+    guest = None
+
+    def __init__(self, food, guest):
+        self.food = food
+        self.guest = guest
+
+    def perform(self):
+        guests.serve(self.guest, self.food)

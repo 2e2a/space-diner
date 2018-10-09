@@ -1,6 +1,7 @@
 import yaml
 
 from . import food
+from . import guests
 from . import storage
 from . import ingredients
 
@@ -15,6 +16,7 @@ class Level:
             ingredients.load(data.get('ingredients'))
             storage.load(data.get('storage'))
             food.load(data.get('recipes'))
+            guests.load(data.get('guests'))
 
 
 level = None

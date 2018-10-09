@@ -1,5 +1,6 @@
 from . import actions
 from . import food
+from . import guests
 from . import levels
 from . import storage
 
@@ -66,7 +67,47 @@ class ActionMode(Mode):
         if cmd == 1:
             return CookingMode()
         if cmd == 2:
+            return ServiceMode()
+        if cmd == 3:
             exit()
+
+
+class ServiceMode(Mode):
+    commands = [
+        (['serve'], [], ['to'], []),
+        (['done'], ),
+    ]
+    prompt = 'service'
+
+    def __init__(self):
+        self.update_commands()
+
+    def update_commands(self):
+        cooked_food = [f.replace(' ', '_') for f in food.cooked.keys()]
+        available_guests = [g.replace(' ', '_') for g in guests.available_guests()]
+        self.commands[0] = (['serve'], cooked_food, ['to'], available_guests)
+
+    def print_info(self):
+        print('Food:')
+        for dish in food.cooked.values():
+            print(dish)
+        print('Guests:')
+        for guest in guests.available_guests():
+            print(guest)
+
+    def print_help(self):
+        print('Help:')
+        print(self.commands)
+
+    def exec(self, cmd, input):
+        if cmd == 1:
+            food = input[1].replace('_', ' ')
+            guest = input[3].replace('_', ' ')
+            action = actions.Serve(food, guest)
+            action.perform()
+            return self
+        if cmd == 2:
+            return ActionMode()
 
 
 class CookingMode(Mode):

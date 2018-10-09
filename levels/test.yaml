@@ -41,3 +41,11 @@ recipes:
   ingredients:
   - Space egg
   - Space potato
+
+guests:
+- name: E.T.
+  available: True
+- name: Predator
+  available: True
+- name: Alien
+  available: False
