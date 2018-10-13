@@ -10,18 +10,19 @@ class Action:
 
 
 class Cook(Action):
-    ingredients = None
+    food = None
 
     def __init__(self, ingredients=None):
-        self.ingredients = ingredients if ingredients else []
+        self.food = food.Food(ingredients)
 
-    def add_ingredient(self, ingredient):
-        if not storage.is_ingredient_available(ingredient):
-            raise RuntimeError('Ingredient not available')
-        self.ingredients.append(ingredient)
+    def add_ingredients(self, ingredients):
+        for ingredient in ingredients:
+           if not storage.is_ingredient_available(ingredient):
+                raise RuntimeError('Ingredient not available')
+        self.food.add_ingredients(ingredients)
 
     def perform(self):
-        food.cook(self.ingredients)
+        self.food.cook()
 
 
 class Serve(Action):

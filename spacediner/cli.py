@@ -151,7 +151,7 @@ class CookingMode(Mode):
         if cmd == 1:
             ingredient = self.original_name(input[1])
             self.available_ingredients.update({ingredient: self.available_ingredients.get(ingredient) - 1})
-            self.action.add_ingredient(ingredient)
+            self.action.add_ingredients([ingredient])
             self.update_commands()
             return self
         if cmd == 2:

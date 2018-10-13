@@ -12,21 +12,26 @@ class Food:
         if ingredients:
             self.cook(ingredients)
 
-    def cook(self, ingredients):
-        self.ingredients = ingredients
-        name = []
-        taste = []
+    def add_ingredients(self, ingredients):
         for ingredient_name in ingredients:
             ingredient = storage.take_ingredient(ingredient_name)
-            name.append(ingredient.name)
+            self.ingredients.append(ingredient)
+
+    def cook(self):
+        global cooked
+        names = []
+        taste = []
+        for ingredient in self.ingredients:
+            names.append(ingredient.name)
             taste.append(ingredient.taste)
-        recipe = get_recipe(ingredients)
+        recipe = get_recipe(names)
         if recipe:
             self.name = recipe.name
             self.taste = recipe.taste
         else:
-            self.name = 'cooked ' + '_'.join(name)
+            self.name = 'cooked ' + '_'.join(names)
             self.taste = '-'.join(taste)
+        cooked.update({self.name: self})
 
     def __str__(self):
         return '{} ({})'.format(self.name, self.taste)
@@ -71,8 +76,3 @@ def load(data):
         recipe.load(recipe_data)
         recipes.update({recipe.name: recipe})
 
-
-def cook(ingredients):
-    global cooked
-    food = Food(ingredients)
-    cooked.update({food.name: food})
