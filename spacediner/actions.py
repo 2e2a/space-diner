@@ -16,13 +16,13 @@ class Cook(Action):
         self.food = food.Food(ingredients)
 
     def add_ingredients(self, ingredients):
-        for ingredient in ingredients:
+        for ingredient, device in ingredients:
            if not storage.is_ingredient_available(ingredient):
                 raise RuntimeError('Ingredient not available')
-        self.food.add_ingredients(ingredients)
+        self.food.prepare_ingredients(ingredients)
 
     def perform(self):
-        self.food.cook()
+        self.food.plate()
 
 
 class Serve(Action):

@@ -34,6 +34,15 @@ storage:
     - name: Ice
       available: 12
 
+kitchen:
+  - name: Pot
+    available: True
+    preparation: [cook, cooked]
+
+  - name: Pan
+    available: True
+    preparation: [fry, fried]
+
 recipes:
 - name: Omelet
   available: False

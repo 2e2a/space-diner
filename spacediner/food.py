@@ -1,5 +1,6 @@
 from collections import OrderedDict
 
+from . import kitchen
 from . import storage
 
 
@@ -10,26 +11,29 @@ class Food:
 
     def __init__(self, ingredients=None):
         if ingredients:
-            self.cook(ingredients)
+            self.plate(ingredients)
 
-    def add_ingredients(self, ingredients):
-        for ingredient_name in ingredients:
+    def prepare_ingredients(self, ingredients):
+        for ingredient_name, device_name in ingredients:
             ingredient = storage.take_ingredient(ingredient_name)
-            self.ingredients.append(ingredient)
+            device = kitchen.get_device(device_name)
+            preparation_participle = device.preparation_participle
+            self.ingredients.append((ingredient, preparation_participle))
 
-    def cook(self):
+    def plate(self):
         global cooked
         names = []
         taste = []
-        for ingredient in self.ingredients:
-            names.append(ingredient.name)
+        for ingredient, preparation_participle in self.ingredients:
+            name = '{} {}'.format(preparation_participle, ingredient)
+            names.append(name)
             taste.append(ingredient.taste)
         recipe = get_recipe(names)
         if recipe:
             self.name = recipe.name
             self.taste = recipe.taste
         else:
-            self.name = 'cooked ' + '_'.join(names)
+            self.name = '_'.join(names)
             self.taste = '-'.join(taste)
         cooked.update({self.name: self})
 

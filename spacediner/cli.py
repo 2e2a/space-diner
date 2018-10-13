@@ -1,6 +1,7 @@
 from . import actions
 from . import food
 from . import guests
+from . import kitchen
 from . import levels
 from . import storage
 
@@ -127,9 +128,11 @@ class CookingMode(Mode):
     prompt = 'cooking'
     action = None
     available_ingredients = None
+    available_devices = None
 
     def __init__(self):
         self.available_ingredients = storage.available_ingredients()
+        self.available_devices = kitchen.available_devices()
         self.update_commands()
         self.action = actions.Cook()
 
@@ -137,21 +140,32 @@ class CookingMode(Mode):
         ingredients = []
         for ingredient, available in self.available_ingredients.items():
             if available: ingredients.append(self.name_for_command(ingredient))
-        self.commands[0] = (['cook'], ingredients)
+        preparations = [d.preparation_verb for d in self.available_devices.values()]
+        self.commands[0] = (preparations, ingredients)
 
     def print_info(self):
         print('Available Ingredients:')
         print(self.available_ingredients)
+        print('Kitchen:')
+        print(', '.join(['{} for {}ing'.format(d.name, d.preparation_verb) for d in self.available_devices.values()]))
 
     def print_help(self):
         print('Help:')
         print(self.commands)
 
+    def _get_device_name(self, preparation_command):
+        for device in self.available_devices.values():
+            if device.preparation_verb == preparation_command:
+                return device.name
+        return None
+
     def exec(self, cmd, input):
         if cmd == 1:
+            preparation_command = input[0]
+            device_name = self._get_device_name(preparation_command)
             ingredient = self.original_name(input[1])
             self.available_ingredients.update({ingredient: self.available_ingredients.get(ingredient) - 1})
-            self.action.add_ingredients([ingredient])
+            self.action.add_ingredients([(ingredient, device_name)])
             self.update_commands()
             return self
         if cmd == 2:
