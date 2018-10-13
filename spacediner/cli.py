@@ -125,7 +125,9 @@ class CookingMode(Mode):
         self.action = actions.Cook()
 
     def update_commands(self):
-        ingredients = [i.replace(' ', '_') for i in self.available_ingredients.keys()]
+        ingredients = []
+        for ingredient, available in self.available_ingredients.items():
+            if available: ingredients.append(ingredient.replace(' ', '_'))
         self.commands[0] = (['cook'], ingredients)
 
     def print_info(self):
@@ -141,6 +143,7 @@ class CookingMode(Mode):
             ingredient = input[1].replace('_', ' ')
             self.available_ingredients.update({ingredient: self.available_ingredients.get(ingredient) - 1})
             self.action.add_ingredient(ingredient)
+            self.update_commands()
             return self
         if cmd == 2:
             self.action.perform()
