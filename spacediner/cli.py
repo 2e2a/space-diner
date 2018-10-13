@@ -8,6 +8,7 @@ from . import storage
 class Mode:
     commands = []
     prompt = None
+    names = {}
 
     def print_info(self):
         raise NotImplemented()
@@ -48,6 +49,14 @@ class Mode:
         self.print_help()
         return self
 
+    def name_for_command(self, name):
+        cmd_name = name.replace(' ', '_').lower()
+        self.names.update({cmd_name: name})
+        return cmd_name
+
+    def original_name(self, cmd_name):
+        return self.names.get(cmd_name)
+
 
 class ActionMode(Mode):
     commands = [
@@ -83,8 +92,8 @@ class ServiceMode(Mode):
         self.update_commands()
 
     def update_commands(self):
-        cooked_food = [f.replace(' ', '_') for f in food.cooked.keys()]
-        available_guests = [g.replace(' ', '_') for g in guests.available_guests()]
+        cooked_food = [self.name_for_command(f) for f in food.cooked.keys()]
+        available_guests = [self.name_for_command(g) for g in guests.available_guests()]
         self.commands[0] = (['serve'], cooked_food, ['to'], available_guests)
 
     def print_info(self):
@@ -101,8 +110,8 @@ class ServiceMode(Mode):
 
     def exec(self, cmd, input):
         if cmd == 1:
-            food = input[1].replace('_', ' ')
-            guest = input[3].replace('_', ' ')
+            food = self.original_name(input[1])
+            guest = self.original_name(input[3])
             action = actions.Serve(food, guest)
             action.perform()
             return self
@@ -127,7 +136,7 @@ class CookingMode(Mode):
     def update_commands(self):
         ingredients = []
         for ingredient, available in self.available_ingredients.items():
-            if available: ingredients.append(ingredient.replace(' ', '_'))
+            if available: ingredients.append(self.name_for_command(ingredient))
         self.commands[0] = (['cook'], ingredients)
 
     def print_info(self):
@@ -140,7 +149,7 @@ class CookingMode(Mode):
 
     def exec(self, cmd, input):
         if cmd == 1:
-            ingredient = input[1].replace('_', ' ')
+            ingredient = self.original_name(input[1])
             self.available_ingredients.update({ingredient: self.available_ingredients.get(ingredient) - 1})
             self.action.add_ingredient(ingredient)
             self.update_commands()

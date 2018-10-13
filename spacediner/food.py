@@ -25,7 +25,7 @@ class Food:
             self.name = recipe.name
             self.taste = recipe.taste
         else:
-            self.name = 'cooked ' + '-'.join(name)
+            self.name = 'cooked ' + '_'.join(name)
             self.taste = '-'.join(taste)
 
     def __str__(self):
