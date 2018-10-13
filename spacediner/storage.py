@@ -16,6 +16,11 @@ class Storage:
                 return ingredients.get(name)
         return None
 
+    def is_ingredient_available(self, name):
+        if name in self.available_ingredients and self.available_ingredients.get(name) > 0:
+            return True
+        return False
+
     def take_ingredient(self, name):
         if name in self.available_ingredients:
             availability = self.available_ingredients.get(name)
@@ -49,6 +54,14 @@ def available_ingredients():
         if storage.available:
             available_ingredients.update(storage.available_ingredients)
     return available_ingredients
+
+
+def is_ingredient_available(name):
+    global storages
+    for storage in storages.values():
+        if storage.available and storage.is_ingredient_available(name):
+            return True
+    return False
 
 
 def take_ingredient(name):
