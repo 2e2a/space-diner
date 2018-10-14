@@ -25,7 +25,7 @@ class Food:
         names = []
         taste = []
         for ingredient, preparation_participle in self.ingredients:
-            name = '{} {}'.format(preparation_participle, ingredient)
+            name = '{} {}'.format(preparation_participle, ingredient.name)
             names.append(name)
             taste.append(ingredient.taste)
         recipe = get_recipe(names)
