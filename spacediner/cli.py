@@ -129,6 +129,7 @@ class CookingMode(Mode):
     action = None
     available_ingredients = None
     available_devices = None
+    prepared_components = []
 
     def __init__(self):
         self.available_ingredients = storage.available_ingredients()
@@ -148,24 +149,27 @@ class CookingMode(Mode):
         print(self.available_ingredients)
         print('Kitchen:')
         print(', '.join(['{} for {}ing'.format(d.name, d.preparation_verb) for d in self.available_devices.values()]))
+        print('Prepared:')
+        print(self.prepared_components)
 
     def print_help(self):
         print('Help:')
         print(self.commands)
 
-    def _get_device_name(self, preparation_command):
+    def _get_device(self, preparation_command):
         for device in self.available_devices.values():
             if device.preparation_verb == preparation_command:
-                return device.name
+                return device
         return None
 
     def exec(self, cmd, input):
         if cmd == 1:
             preparation_command = input[0]
-            device_name = self._get_device_name(preparation_command)
+            device = self._get_device(preparation_command)
             ingredient = self.original_name(input[1])
             self.available_ingredients.update({ingredient: self.available_ingredients.get(ingredient) - 1})
-            self.action.add_ingredients([(ingredient, device_name)])
+            self.action.add_ingredients([(ingredient, device.name)])
+            self.prepared_components.append('{} {}'.format(device.preparation_participle, ingredient))
             self.update_commands()
             return self
         if cmd == 2:
