@@ -6,6 +6,7 @@ from . import ingredients
 class Storage:
     name = None
     available = False
+    cost = 0
     available_ingredients = None
 
     def get_ingredient(self, name):
@@ -32,6 +33,7 @@ class Storage:
     def load(self, data):
         self.name = data.get('name')
         self.available = data.get('available')
+        self.cost = data.get('cost', 0)
         self.available_ingredients = OrderedDict()
         for storage_ingredient in  data.get('ingredients'):
             ingredient =  storage_ingredient.get('name')
@@ -72,6 +74,27 @@ def take_ingredient(name):
             if ingredient:
                 return ingredient
     return None
+
+
+def for_sale():
+    global storages
+    storages_for_sale = {}
+    for storage in storages.values():
+        if not storage.available:
+            storages_for_sale.update({storage.name : storage})
+    return storages_for_sale
+
+
+def buy(name):
+    global storages
+    storage = storages.get(name)
+    storage.available = True
+
+
+def get(name):
+    global storages
+    return storages.get(name)
+
 
 
 def load(data):

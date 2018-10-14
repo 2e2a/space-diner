@@ -62,10 +62,12 @@ class Mode:
 class ActionMode(Mode):
     CMD_COOKING = 1
     CMD_SERVICE = 2
-    CMD_EXIT = 3
+    CMD_SHOPPING = 3
+    CMD_EXIT = 4
     commands = [
         (['cooking'],),
         (['service'],),
+        (['shopping'],),
         (['exit'],),
     ]
 
@@ -81,6 +83,8 @@ class ActionMode(Mode):
             return CookingMode()
         if cmd == self.CMD_SERVICE:
             return ServiceMode()
+        if cmd == self.CMD_SHOPPING:
+            return ShoppingMode()
         if cmd == self.CMD_EXIT:
             exit()
 
@@ -128,7 +132,6 @@ class ServiceMode(Mode):
 class CookingMode(Mode):
     CMD_COOK = 1
     CMD_PLATE = 2
-    CMD_ABORT = 3
     commands = [
         (['cook'], [], ),
         (['plate'], ),
@@ -183,7 +186,51 @@ class CookingMode(Mode):
             return self
         if cmd == self.CMD_PLATE:
             self.action.perform()
-            return ServiceMode()
+            return ActionMode()
+        if cmd == self.CMD_ABORT:
+            return ActionMode()
+
+
+class ShoppingMode(Mode):
+    CMD_BUY_STORAGE = 1
+    CMD_ABORT = 2
+    commands = [
+        (['buy'], ['storage'], []),
+        (['abort'], ),
+    ]
+    prompt = 'shopping'
+    storages_for_sale = None
+
+    def __init__(self):
+        self.storages_for_sale = storage.for_sale()
+        self.update_commands()
+
+    def update_commands(self):
+        available_storages = []
+        for storage in self.storages_for_sale.values():
+            if storage.cost < levels.level.money:
+                available_storages.append(self.name_for_command(storage.name))
+        self.commands[0] = (['buy'], ['storage'], available_storages)
+
+
+    def print_info(self):
+        print('Money: {} space dollars'.format(levels.level.money))
+        print('Storages for sale:')
+        print([(s.name, s.cost) for s in self.storages_for_sale.values()])
+
+
+    def print_help(self):
+        print('Help:')
+        print(self.commands)
+
+    def exec(self, cmd, input):
+        if cmd == self.CMD_BUY_STORAGE:
+            storage = self.original_name(input[2])
+            action = actions.BuyStorage(storage)
+            action.perform()
+            self.storages_for_sale.pop(storage)
+            self.update_commands()
+            return self
         if cmd == self.CMD_ABORT:
             return ActionMode()
 

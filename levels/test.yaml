@@ -1,4 +1,6 @@
 name: Test Level
+diner: Best Diner
+money: 1000
 
 ingredients:
   - name: Space onion
@@ -30,6 +32,7 @@ storage:
 
   - name: Freezer
     available: False
+    cost: 200
     ingredients:
     - name: Ice
       available: 12
@@ -54,7 +57,10 @@ recipes:
 guests:
 - name: E.T.
   available: True
+  budget: 5
 - name: Predator
   available: True
+  budget: 20
 - name: Alien
   available: False
+  budget: 10

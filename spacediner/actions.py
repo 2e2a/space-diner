@@ -1,5 +1,6 @@
 from . import food
 from . import guests
+from . import levels
 from . import storage
 
 
@@ -35,3 +36,18 @@ class Serve(Action):
 
     def perform(self):
         guests.serve(self.guest, self.food)
+
+
+class BuyStorage(Action):
+    storage = None
+
+    def __init__(self, storage):
+        self.storage = storage
+
+    def perform(self):
+        new_storage = storage.get(self.storage)
+        if new_storage.cost > levels.level.money:
+            raise RuntimeError('Not enough money')
+        levels.level.money = levels.level.money - new_storage.cost
+        storage.buy(self.storage)
+

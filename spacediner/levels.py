@@ -9,11 +9,15 @@ from . import ingredients
 
 class Level:
     name = None
+    diner = None
+    money = 0
 
     def load(self, filename):
         with open(filename, 'r') as stream:
             data = yaml.load(stream)
             self.name = data.get('name')
+            self.diner = data.get('diner')
+            self.money = data.get('money')
             ingredients.load(data.get('ingredients'))
             storage.load(data.get('storage'))
             kitchen.load(data.get('kitchen'))
