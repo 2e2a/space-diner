@@ -33,7 +33,7 @@ class Food:
             self.name = recipe.name
             self.taste = recipe.taste
         else:
-            self.name = '_'.join(names)
+            self.name = ' '.join(names)
             self.taste = '-'.join(taste)
         cooked.update({self.name: self})
 
