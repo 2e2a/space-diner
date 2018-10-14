@@ -60,6 +60,9 @@ class Mode:
 
 
 class ActionMode(Mode):
+    CMD_COOKING = 1
+    CMD_SERVICE = 2
+    CMD_EXIT = 3
     commands = [
         (['cooking'],),
         (['service'],),
@@ -74,15 +77,17 @@ class ActionMode(Mode):
         print(self.commands)
 
     def exec(self, cmd, input):
-        if cmd == 1:
+        if cmd == self.CMD_COOKING:
             return CookingMode()
-        if cmd == 2:
+        if cmd == self.CMD_SERVICE:
             return ServiceMode()
-        if cmd == 3:
+        if cmd == self.CMD_EXIT:
             exit()
 
 
 class ServiceMode(Mode):
+    CMD_SERVE = 1
+    CMD_DONE = 2
     commands = [
         (['serve'], [], ['to'], []),
         (['done'], ),
@@ -121,9 +126,13 @@ class ServiceMode(Mode):
 
 
 class CookingMode(Mode):
+    CMD_COOK = 1
+    CMD_PLATE = 2
+    CMD_ABORT = 3
     commands = [
         (['cook'], [], ),
-        (['done'], ),
+        (['plate'], ),
+        (['abort'], ),
     ]
     prompt = 'cooking'
     action = None
@@ -163,7 +172,7 @@ class CookingMode(Mode):
         return None
 
     def exec(self, cmd, input):
-        if cmd == 1:
+        if cmd == self.CMD_COOK:
             preparation_command = input[0]
             device = self._get_device(preparation_command)
             ingredient = self.original_name(input[1])
@@ -172,9 +181,10 @@ class CookingMode(Mode):
             self.prepared_components.append('{} {}'.format(device.preparation_participle, ingredient))
             self.update_commands()
             return self
-        if cmd == 2:
+        if cmd == self.CMD_PLATE:
             self.action.perform()
-            self.action = actions.Cook()
+            return ServiceMode()
+        if cmd == self.CMD_ABORT:
             return ActionMode()
 
 
