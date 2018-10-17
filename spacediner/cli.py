@@ -1,3 +1,5 @@
+import readline
+
 from . import actions
 from . import food
 from . import guests
@@ -6,16 +8,68 @@ from . import levels
 from . import storage
 
 
+class CommandCompleter:
+    commands = None
+    matches = []
+
+    def __init__(self, commands):
+        self.commands = commands
+        readline.set_completer(self.complete)
+        readline.parse_and_bind('tab: complete')
+
+    def _get_completed_args(self):
+        buffer = readline.get_line_buffer()
+        if not buffer:
+            return []
+        args = buffer.split()
+        if buffer.endswith(' '):
+            return args
+        return args[:-1]
+
+    def _matching_cmds(self, args):
+        commands = []
+        for cmd in self.commands:
+            cmd_match = True
+            for cmd_args, arg in zip(cmd, args):
+                if not arg in cmd_args:
+                    cmd_match = False
+                    break
+            if cmd_match:
+                commands.append(cmd)
+        return commands
+
+    def complete(self, text, state):
+        if state == 0:
+            commands = []
+            args = self._get_completed_args()
+            matching_cmds = self._matching_cmds(args)
+            for cmd in matching_cmds: commands.extend(cmd[len(args)])
+            if text:
+                self.matches = [cmd for cmd in commands if cmd.startswith(text)]
+            else:
+                self.matches =  commands
+        try:
+            return self.matches[state]
+        except IndexError:
+            return None
+
+
 class Mode:
     commands = []
     prompt = None
     names = {}
+    completer = None
+
+    def __init__(self):
+        self.update_commands()
+
+    def update_commands(self):
+        self.completer = CommandCompleter(self.commands)
 
     def print_info(self):
         raise NotImplemented()
 
     def print_help(self):
-        print('Help:')
         raise NotImplemented()
 
     def _match_arg(self, arg_type, arg):
@@ -98,13 +152,11 @@ class ServiceMode(Mode):
     ]
     prompt = 'service'
 
-    def __init__(self):
-        self.update_commands()
-
     def update_commands(self):
         cooked_food = [self.name_for_command(f) for f in food.cooked.keys()]
         available_guests = [self.name_for_command(g) for g in guests.available_guests()]
         self.commands[0] = (['serve'], cooked_food, ['to'], available_guests)
+        super().update_commands()
 
     def print_info(self):
         print('Food:')
@@ -146,8 +198,8 @@ class CookingMode(Mode):
     def __init__(self):
         self.available_ingredients = storage.available_ingredients()
         self.available_devices = kitchen.available_devices()
-        self.update_commands()
         self.action = actions.Cook()
+        super().__init__()
 
     def update_commands(self):
         ingredients = []
@@ -155,6 +207,7 @@ class CookingMode(Mode):
             if available: ingredients.append(self.name_for_command(ingredient))
         preparations = [d.preparation_verb for d in self.available_devices.values()]
         self.commands[0] = (preparations, ingredients)
+        super().update_commands()
 
     def print_info(self):
         print('Available Ingredients:')
@@ -203,7 +256,7 @@ class ShoppingMode(Mode):
 
     def __init__(self):
         self.storages_for_sale = storage.for_sale()
-        self.update_commands()
+        super().__init__()
 
     def update_commands(self):
         available_storages = []
@@ -211,6 +264,7 @@ class ShoppingMode(Mode):
             if storage.cost < levels.level.money:
                 available_storages.append(self.name_for_command(storage.name))
         self.commands[0] = (['buy'], ['storage'], available_storages)
+        super().update_commands()
 
 
     def print_info(self):
