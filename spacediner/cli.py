@@ -8,6 +8,25 @@ from . import levels
 from . import storage
 
 
+def print_title(str):
+    print(str)
+    print('-'*(len(str)))
+
+
+def print_list(list):
+    if list:
+        for e in list:
+            print('- {}'.format(e))
+    else:
+        print('-')
+    print('')
+
+
+def print_value(key, *values):
+    value = ' '.join([str(v) for v in values])
+    print('{}: {}'.format(key, value))
+
+
 class CommandCompleter:
     commands = None
     matches = []
@@ -55,7 +74,7 @@ class CommandCompleter:
 
 
 class Mode:
-    commands = []
+    commands = None
     prompt = None
     names = {}
     completer = None
@@ -102,7 +121,7 @@ class Mode:
             if cmd:
                 return self.exec(cmd, input_list)
         self.print_help()
-        return self
+        return None
 
     def name_for_command(self, name):
         cmd_name = name.replace(' ', '_').lower()
@@ -126,7 +145,9 @@ class ActionMode(Mode):
     ]
 
     def print_info(self):
-        print('Level: {}'.format(levels.level.name))
+        print_value('Level', levels.level.name)
+        print_value('Money', levels.level.money, 'space dollars')
+        print('')
 
     def print_help(self):
         print('Help:')
@@ -159,12 +180,10 @@ class ServiceMode(Mode):
         super().update_commands()
 
     def print_info(self):
-        print('Food:')
-        for dish in food.cooked.values():
-            print(dish)
-        print('Guests:')
-        for guest in guests.available_guests():
-            print(guest)
+        print_title('Food:')
+        print_list(food.cooked.values())
+        print_title('Guests:')
+        print_list(guests.available_guests())
 
     def print_help(self):
         print('Help:')
@@ -196,10 +215,11 @@ class CookingMode(Mode):
     action = None
     available_ingredients = None
     available_devices = None
-    prepared_components = []
+    prepared_components = None
     plated_dished = []
 
     def __init__(self):
+        self.prepared_components = []
         self.available_ingredients = storage.available_ingredients()
         self.available_devices = kitchen.available_devices()
         self.action = actions.Cook()
@@ -214,14 +234,14 @@ class CookingMode(Mode):
         super().update_commands()
 
     def print_info(self):
-        print('Available Ingredients:')
-        print(self.available_ingredients)
-        print('Kitchen:')
-        print(', '.join(['{} for {}ing'.format(d.name, d.preparation_verb) for d in self.available_devices.values()]))
-        print('Prepared:')
-        print(self.prepared_components)
-        print('Plated:')
-        print(list(food.cooked.keys()))
+        print_title('Available Ingredients:')
+        print_list(['{} {}s'.format(a, i) for i, a in self.available_ingredients.items()])
+        print_title('Kitchen:')
+        print_list(['{} for {}ing'.format(d.name, d.preparation_verb) for d in self.available_devices.values()])
+        print_title('Prepared:')
+        print_list(self.prepared_components)
+        print_title('Plated:')
+        print_list(list(food.cooked.keys()))
 
     def print_help(self):
         print('Help:')
@@ -258,10 +278,10 @@ class CookingMode(Mode):
 
 class ShoppingMode(Mode):
     CMD_BUY_STORAGE = 1
-    CMD_ABORT = 2
+    CMD_DONE = 2
     commands = [
         (['buy'], ['storage'], []),
-        (['abort'], ),
+        (['done'], ),
     ]
     prompt = 'shopping'
     storages_for_sale = None
@@ -280,9 +300,10 @@ class ShoppingMode(Mode):
 
 
     def print_info(self):
-        print('Money: {} space dollars'.format(levels.level.money))
-        print('Storages for sale:')
-        print([(s.name, s.cost) for s in self.storages_for_sale.values()])
+        print_value('Money', levels.level.money, 'space dollars')
+        print('')
+        print_title('Storages for sale:')
+        print_list(['{}: {} space dollars'.format(s.name, s.cost) for s in self.storages_for_sale.values()])
 
 
     def print_help(self):
@@ -297,7 +318,7 @@ class ShoppingMode(Mode):
             self.storages_for_sale.pop(storage)
             self.update_commands()
             return self
-        if cmd == self.CMD_ABORT:
+        if cmd == self.CMD_DONE:
             return ActionMode()
 
 
@@ -307,9 +328,18 @@ mode = None
 def run():
     global mode
     mode = ActionMode()
+    print_info = True
     while True:
-        mode.print_info()
+        if print_info:
+            print('')
+            mode.print_info()
+            print('################################  SPACE  DINER  ################################')
         prompt = '({}) '.format(mode.prompt) if mode.prompt else ''
-        cmd = input('space diner {}>> '.format(prompt))
-        mode = mode.parse(cmd)
+        cmd = input('{}>> '.format(prompt))
+        next_mode = mode.parse(cmd)
+        if next_mode:
+            mode = next_mode
+            print_info = True
+        else:
+            print_info = False
 
