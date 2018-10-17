@@ -49,7 +49,7 @@ class CommandCompleter:
             else:
                 self.matches =  commands
         try:
-            return self.matches[state]
+            return self.matches[state] + ' '
         except IndexError:
             return None
 
