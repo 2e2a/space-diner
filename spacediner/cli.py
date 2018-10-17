@@ -184,16 +184,20 @@ class ServiceMode(Mode):
 class CookingMode(Mode):
     CMD_COOK = 1
     CMD_PLATE = 2
+    CMD_ABORT = 3
+    CMD_DONE = 4
     commands = [
         (['cook'], [], ),
         (['plate'], ),
         (['abort'], ),
+        (['done'], ),
     ]
     prompt = 'cooking'
     action = None
     available_ingredients = None
     available_devices = None
     prepared_components = []
+    plated_dished = []
 
     def __init__(self):
         self.available_ingredients = storage.available_ingredients()
@@ -216,6 +220,8 @@ class CookingMode(Mode):
         print(', '.join(['{} for {}ing'.format(d.name, d.preparation_verb) for d in self.available_devices.values()]))
         print('Prepared:')
         print(self.prepared_components)
+        print('Plated:')
+        print(list(food.cooked.keys()))
 
     def print_help(self):
         print('Help:')
@@ -239,8 +245,14 @@ class CookingMode(Mode):
             return self
         if cmd == self.CMD_PLATE:
             self.action.perform()
-            return ActionMode()
+            self.action = actions.Cook()
+            self.prepared_components = []
+            return self
         if cmd == self.CMD_ABORT:
+            self.action = actions.Cook()
+            self.prepared_components = []
+            return self
+        if cmd == self.CMD_DONE:
             return ActionMode()
 
 
