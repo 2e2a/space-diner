@@ -7,11 +7,12 @@ from . import storage
 class Food:
     name = None
     taste = None
-    ingredients = []
+    ingredients = None
 
     def __init__(self, ingredients=None):
-        if ingredients:
-            self.plate(ingredients)
+        self.ingredients = ingredients if ingredients else []
+        if self.ingredients:
+            self.plate()
 
     def prepare_ingredients(self, ingredients):
         for ingredient_name, device_name in ingredients:
@@ -43,7 +44,6 @@ class Food:
 
 class Recipe(Food):
     available = False
-    ingredients = []
 
     def consists_of(self, ingredients):
         return ingredients == self.ingredients
@@ -70,6 +70,7 @@ def get_recipe(ingredients):
         if recipe.consists_of(ingredients):
             return recipe
     return None
+
 
 
 def load(data):
