@@ -9,7 +9,9 @@ class Guest:
 
     def serve(self, food_name):
         dish = food.take(food_name)
-        print('Guest: "Tasted {}!"'.format(dish.taste))
+        print('')
+        print('*** {}: "Tasted {}!" ***'.format(self.name, dish.taste))
+        print('')
 
     def load(self, data):
         self.name = data.get('name')
