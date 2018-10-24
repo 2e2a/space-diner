@@ -7,8 +7,8 @@ from . import storage
 
 class Food(generic.Thing):
     name = None
-    taste = None
     ingredients = None
+    properties = None
 
     def __init__(self, ingredients=None):
         self.ingredients = ingredients if ingredients else []
@@ -25,23 +25,23 @@ class Food(generic.Thing):
     def plate(self):
         global cooked
         names = []
-        taste = []
+        self.properties = set()
         for ingredient, preparation_participle in self.ingredients:
             name = '{} {}'.format(preparation_participle, ingredient.name)
             names.append(name)
-            taste.append(ingredient.taste)
+            self.properties.update(ingredient.properties)
         recipe = get_recipe(names)
         if recipe:
+            self.properties.update(recipe.properties)
             self.name = recipe.name
-            self.taste = recipe.taste
         else:
             self.name = ' with '.join(names)
-            self.taste = '-'.join(taste)
         cooked.update({self.name: self})
 
 
 class Recipe(generic.Thing):
     available = False
+    properties = None
 
     def consists_of(self, ingredients):
         return ingredients == self.ingredients
@@ -51,6 +51,8 @@ class Recipe(generic.Thing):
         self.taste = data.get('taste')
         self.available = data.get('available')
         self.ingredients = data.get('ingredients')
+        self.properties = data.get('properties')
+        self.properties.append(self.name)
 
 
 recipes = None

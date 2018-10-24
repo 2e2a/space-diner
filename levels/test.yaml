@@ -4,38 +4,43 @@ money: 1000
 
 ingredients:
   - name: Space onion
-    taste: bleh
+    properties:
+      - vegetable
 
   - name: Space potato
-    taste: good
+    properties:
+      - vegetable
+      - heavy
 
   - name: Space egg
-    taste: ok
+    properties:
+      - birdy
 
   - name: Ice
-    taste: cold
+    properties:
+      - cole
 
 storage:
   - name: Fridge
     available: True
     ingredients:
-    - name: Space egg
-      available: 6
+      - name: Space egg
+        available: 6
 
   - name: Pantry
     available: True
     ingredients:
-    - name: Space potato
-      available: 10
-    - name: Space onion
-      available: 1
+      - name: Space potato
+        available: 10
+      - name: Space onion
+        available: 1
 
   - name: Freezer
     available: False
     cost: 200
     ingredients:
-    - name: Ice
-      available: 12
+      - name: Ice
+        available: 12
 
 kitchen:
   - name: Pot
@@ -47,20 +52,44 @@ kitchen:
     preparation: [fry, fried]
 
 recipes:
-- name: Omelet
-  available: False
-  taste: dynamite
-  ingredients:
-  - Space egg
-  - Space potato
+  - name: Omelet
+    available: False
+    taste: dynamite
+    ingredients:
+      - fried Space egg
+      - fried Space potato
+    properties:
+      - elevated
+      - birdy
+      - heavy
 
 guests:
-- name: E.T.
-  available: True
-  budget: 5
-- name: Predator
-  available: True
-  budget: 20
-- name: Alien
-  available: False
-  budget: 10
+  - name: E.T.
+    available: True
+    budget: 5
+    reactions:
+      - properties: [ heavy, birdy ]
+        taste: +1
+        output: Yeah!
+      - properties: [ cold ]
+        taste: -1
+        output: Brrr
+      - properties: Space onion
+        taste: -10
+        output: Bleh!
+
+  - name: Predator
+    available: True
+    budget: 20
+    reactions:
+      - properties: [ Omelet ]
+        taste: +10
+        output: An elevated dish!
+
+  - name: Alien
+    available: False
+    budget: 10
+    reactions:
+      - properties: [vegetable]
+        taste: -1
+        output: Mehh...

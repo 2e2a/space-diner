@@ -5,11 +5,12 @@ from . import generic
 
 class Ingredient(generic.Thing):
     name = None
-    taste = None
+    properties = None
 
     def load(self, data):
         self.name = data.get('name')
-        self.taste = data.get('taste')
+        self.properties = data.get('properties')
+        self.properties.append(self.name)
 
 
 ingredients = None
