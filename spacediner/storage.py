@@ -1,9 +1,10 @@
 from collections import OrderedDict
 
+from . import generic
 from . import ingredients
 
 
-class Storage:
+class Storage(generic.Thing):
     name = None
     available = False
     cost = 0
@@ -104,3 +105,9 @@ def load(data):
         storage = Storage()
         storage.load(storage_data)
         storages.update({storage.name: storage})
+
+
+def debug():
+    global storages
+    for storage in storages.values():
+        storage.debug()

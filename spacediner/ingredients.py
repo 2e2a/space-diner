@@ -1,16 +1,15 @@
 from collections import OrderedDict
 
+from . import generic
 
-class Ingredient:
+
+class Ingredient(generic.Thing):
     name = None
     taste = None
 
     def load(self, data):
         self.name = data.get('name')
         self.taste = data.get('taste')
-
-    def __str__(self):
-        return '{} ({})'.format(self.name, self.taste)
 
 
 ingredients = None
@@ -28,3 +27,9 @@ def load(data):
         ingredient = Ingredient()
         ingredient.load(ingredient_data)
         ingredients.update({ingredient.name: ingredient})
+
+
+def debug():
+    global ingredients
+    for ingredient in ingredients.values():
+        ingredient.debug()

@@ -3,7 +3,7 @@ from collections import OrderedDict
 from . import food
 
 
-class Guest:
+class Guest(generic.Thing):
     name = None
     available = False
 
@@ -16,9 +16,6 @@ class Guest:
     def load(self, data):
         self.name = data.get('name')
         self.available = data.get('available')
-
-    def __str__(self):
-        return self.name
 
 
 guests = None
@@ -46,3 +43,9 @@ def load(data):
         guest = Guest()
         guest.load(guest_data)
         guests.update({guest.name: guest})
+
+
+def debug():
+    global guests
+    for guest in guests.values():
+        guest.debug()

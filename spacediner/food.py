@@ -1,10 +1,11 @@
 from collections import OrderedDict
 
+from . import generic
 from . import kitchen
 from . import storage
 
 
-class Food:
+class Food(generic.Thing):
     name = None
     taste = None
     ingredients = None
@@ -38,11 +39,8 @@ class Food:
             self.taste = '-'.join(taste)
         cooked.update({self.name: self})
 
-    def __str__(self):
-        return '{} ({})'.format(self.name, self.taste)
 
-
-class Recipe(Food):
+class Recipe(generic.Thing):
     available = False
 
     def consists_of(self, ingredients):
@@ -81,3 +79,12 @@ def load(data):
         recipe.load(recipe_data)
         recipes.update({recipe.name: recipe})
 
+
+
+def debug():
+    global recipes
+    global cooked
+    for recipe in recipes.values():
+        recipe.debug()
+    for food in cooked.values():
+        food.debug()

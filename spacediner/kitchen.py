@@ -1,9 +1,9 @@
 from collections import OrderedDict
 
-from . import storage
+from . import generic
 
 
-class Device:
+class Device(generic.Thing):
     name = None
     preparation_verb = None
     preparation_participle = None
@@ -43,4 +43,10 @@ def load(data):
         device = Device()
         device.load(device_data)
         devices.update({device.name: device})
+
+
+def debug():
+    global devices
+    for device in devices.values():
+        device.debug()
 

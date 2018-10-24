@@ -5,6 +5,7 @@ from . import food
 from . import guests
 from . import kitchen
 from . import levels
+from . import settings
 from . import storage
 
 
@@ -329,11 +330,13 @@ def run():
     global mode
     mode = ActionMode()
     print_info = True
+    print('################################  SPACE  DINER  ################################')
     while True:
+        if settings.DEBUG:
+            levels.debug()
         if print_info:
             print('')
             mode.print_info()
-            print('################################  SPACE  DINER  ################################')
         prompt = '({}) '.format(mode.prompt) if mode.prompt else ''
         cmd = input('{}>> '.format(prompt))
         next_mode = mode.parse(cmd)
