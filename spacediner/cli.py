@@ -357,8 +357,9 @@ class ShoppingMode(Mode):
                 action.perform()
                 self.update_commands()
                 merchant_ingredients = self.ingredients_for_sale.get(merchant)
-                amount, cost, storage = merchant_ingredients.get(ingredient)
-                merchant_ingredients.update({ingredient: (amount - 1, cost, storage)})
+                ingredient_amount, ingredient_cost, ingredient_storage = merchant_ingredients.get(ingredient)
+                merchant_ingredients.update({ingredient: (ingredient_amount - amount, ingredient_cost, ingredient_storage)})
+                self.available_ingredients.update({ingredient: self.available_ingredients.get(ingredient) + amount})
             except RuntimeError as e:
                 print(e)
             return self
