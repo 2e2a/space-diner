@@ -1,6 +1,7 @@
 from . import food
 from . import guests
 from . import levels
+from . import merchants
 from . import storage
 
 
@@ -53,4 +54,28 @@ class BuyStorage(Action):
             raise RuntimeError('Not enough money')
         levels.level.money = levels.level.money - new_storage.cost
         storage.buy(self.storage)
+
+
+class BuyIngredients(Action):
+    merchant = None
+    ingredient = None
+    amount = 0
+
+    def __init__(self, merchant, ingredient, amount):
+        self.merchant = merchant
+        self.ingredient = ingredient
+        self.amount = amount
+
+    def perform(self):
+        merchant = merchants.get(self.merchant)
+        if not merchant.is_ingredient_available(self.ingredient, 1):
+            raise RuntimeError('Not in stock')
+        if not merchant.is_ingredient_available(self.ingredient, self.amount):
+            raise RuntimeError('Not enough ingredients')
+        cost = merchant.cost(self.ingredient) * self.amount
+        if cost > levels.level.money:
+            raise RuntimeError('Not enough money')
+        levels.level.money = levels.level.money - cost
+        merchant.buy(self.ingredient, self.amount)
+        storage.store_ingredient(self.ingredient, self.amount)
 

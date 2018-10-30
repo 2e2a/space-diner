@@ -8,41 +8,38 @@ class Storage(generic.Thing):
     name = None
     available = False
     cost = 0
-    available_ingredients = None
-
-    def get_ingredient(self, name):
-        if name in self.available_ingredients:
-            availability = self.available_ingredients.get(name)
-            if availability > 0:
-                self.available_ingredients.update({name: availability - 1})
-                return ingredients.get(name)
-        return None
+    ingredients = None
 
     def is_ingredient_available(self, name):
-        if name in self.available_ingredients and self.available_ingredients.get(name) > 0:
+        if name in self.ingredients and self.ingredients.get(name) > 0:
             return True
         return False
 
     def take_ingredient(self, name):
-        if name in self.available_ingredients:
-            availability = self.available_ingredients.get(name)
+        if name in self.ingredients:
+            availability = self.ingredients.get(name)
             if availability > 0:
-                self.available_ingredients.update({name: availability - 1})
+                self.ingredients.update({name: availability - 1})
                 return ingredients.get(name)
         return None
+
+    def store_ingredient(self, name, amount):
+        if name in self.ingredients:
+            availability = self.ingredients.get(name)
+            self.ingredients.update({name: availability + amount})
 
     def load(self, data):
         self.name = data.get('name')
         self.available = data.get('available')
         self.cost = data.get('cost', 0)
-        self.available_ingredients = OrderedDict()
+        self.ingredients = OrderedDict()
         for storage_ingredient in  data.get('ingredients'):
             ingredient =  storage_ingredient.get('name')
             availability = storage_ingredient.get('available')
-            self.available_ingredients.update({ingredient: availability})
+            self.ingredients.update({ingredient: availability})
 
     def __str__(self):
-        ingredients = ', '.join(['{}[{}]'.format(i, c) for (i, c) in self.available_ingredients.items()])
+        ingredients = ', '.join(['{}[{}]'.format(i, c) for (i, c) in self.ingredients.items()])
         return '{}: {}'.format(self.name, ingredients)
 
 
@@ -50,13 +47,18 @@ class Storage(generic.Thing):
 storages = None
 
 
+def available_storages():
+    global storages
+    return [s.name for s in storages.values() if s.available]
+
+
 def available_ingredients():
     global storages
-    available_ingredients = {}
+    ingredients = {}
     for storage in storages.values():
         if storage.available:
-            available_ingredients.update(storage.available_ingredients)
-    return available_ingredients
+            ingredients.update(storage.ingredients)
+    return ingredients
 
 
 def is_ingredient_available(name):
@@ -91,11 +93,15 @@ def buy(name):
     storage = storages.get(name)
     storage.available = True
 
+def store_ingredient(name, amount):
+    ingredient = ingredients.get(name)
+    storage = storages.get(ingredient.storage)
+    storage.store_ingredient(name, amount)
+
 
 def get(name):
     global storages
     return storages.get(name)
-
 
 
 def load(data):

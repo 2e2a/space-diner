@@ -4,21 +4,33 @@ money: 1000
 
 ingredients:
   - name: Space onion
+    storage: Pantry
     properties:
       - vegetable
 
   - name: Space potato
+    storage: Pantry
     properties:
       - vegetable
       - heavy
 
   - name: Space egg
+    storage: Fridge
     properties:
       - birdy
 
   - name: Ice
+    storage: Freezer
     properties:
-      - cole
+      - cool
+
+  - name: Human
+    storage: Freezer
+    properties:
+      - heavy
+      - meat
+      - exotic
+
 
 storage:
   - name: Fridge
@@ -50,6 +62,21 @@ kitchen:
   - name: Pan
     available: True
     preparation: [fry, fried]
+
+merchants:
+  - name: Jabba The Hutt
+    available: True
+    ingredients:
+      - name: Space onion
+        cost: 1000
+        available: 1
+      - name: Space egg
+        cost: 2
+        available: 20
+      - name: Human
+        cost: 400
+        available: 2
+
 
 recipes:
   - name: Omelet
@@ -93,3 +120,6 @@ guests:
       - properties: [vegetable]
         taste: -1
         output: Mehh...
+      - properties: [human]
+        taste: 8
+        output: Tastes just like Ripley.

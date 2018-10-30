@@ -5,10 +5,12 @@ from . import generic
 
 class Ingredient(generic.Thing):
     name = None
+    storage = None
     properties = None
 
     def load(self, data):
         self.name = data.get('name')
+        self.storage = data.get('storage')
         self.properties = data.get('properties')
         self.properties.append(self.name)
 
