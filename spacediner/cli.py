@@ -297,10 +297,12 @@ class ShoppingMode(Mode):
     ]
     prompt = 'shopping'
     storages_for_sale = None
+    available_ingredients = None
     ingredients_for_sale = None
 
     def __init__(self):
         self.storages_for_sale = storage.for_sale()
+        self.available_ingredients = storage.available_ingredients()
         self.ingredients_for_sale = merchants.ingredients_for_sale()
         super().__init__()
 
@@ -322,8 +324,11 @@ class ShoppingMode(Mode):
     def print_info(self):
         print_value('Money', levels.level.money, 'space dollars')
         print('')
+        print_title('Available Ingredients:')
+        print_list(['{} {}s'.format(a, i) for i, a in self.available_ingredients.items()])
         print_title('Igredients for sale:')
         for merchant, ingredients in  self.ingredients_for_sale.items():
+            print('')
             print('Merchant: {}'.format(merchant))
             print_list(['{}: {} space dollars, {} in sock, {} required'.format(i, c, a, s)
                         for i, (a, c, s) in ingredients.items()])
