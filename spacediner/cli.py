@@ -37,6 +37,37 @@ class CommandCompleter:
         readline.set_completer(self.complete)
         readline.parse_and_bind('tab: complete')
 
+    def match_arg(self, arg_type, arg):
+        if isinstance(arg_type, list):
+            return arg in arg_type
+        if arg_type == int:
+            try:
+                int(arg)
+                return True
+            except ValueError:
+                return False
+
+    def matching_commands(self, input):
+        matching_commands = []
+        for cmd in self.commands:
+            arg_type_match = True
+            for arg_type, arg in zip(cmd, input):
+                if not self.match_arg(arg_type, arg):
+                    arg_type_match = False
+                    break
+            if arg_type_match:
+                matching_commands.append(cmd)
+        return matching_commands
+
+    def match_command(self, input):
+        matching_commands = self.matching_commands(input)
+        if len(matching_commands) != 1:
+            return None
+        command = matching_commands[0]
+        if len(command) != len(input):
+            return None
+        return self.commands.index(command) + 1
+
     def _get_completed_args(self):
         buffer = readline.get_line_buffer()
         if not buffer:
@@ -46,28 +77,25 @@ class CommandCompleter:
             return args
         return args[:-1]
 
-    def _matching_cmds(self, args):
-        commands = []
-        for cmd in self.commands:
-            cmd_match = True
-            for cmd_args, arg in zip(cmd, args):
-                if not arg in cmd_args:
-                    cmd_match = False
-                    break
-            if cmd_match:
-                commands.append(cmd)
-        return commands
+    def _suggestions(self, matching_commands, pos):
+        suggestions = []
+        for cmd in matching_commands:
+            next_arg = cmd[pos]
+            if isinstance(next_arg, list):
+                suggestions.extend(next_arg)
+            elif next_arg == int:
+                suggestions.extend(['<num>'])
+        return suggestions
 
     def complete(self, text, state):
         if state == 0:
-            commands = []
             args = self._get_completed_args()
-            matching_cmds = self._matching_cmds(args)
-            for cmd in matching_cmds: commands.extend(cmd[len(args)])
+            matching_cmds = self.matching_commands(args)
+            suggestions = self._suggestions(matching_cmds, len(args))
             if text:
-                self.matches = [cmd for cmd in commands if cmd.startswith(text)]
+                self.matches = [cmd for cmd in suggestions if cmd.startswith(text)]
             else:
-                self.matches =  commands
+                self.matches =  suggestions
         try:
             return self.matches[state] + ' '
         except IndexError:
@@ -92,35 +120,15 @@ class Mode:
     def print_help(self):
         raise NotImplemented()
 
-    def _match_arg(self, arg_type, arg):
-        if isinstance(arg_type, list):
-            return arg in arg_type
-        if isinstance(arg_type, str):
-            return isinstance(arg, str)
-        if isinstance(arg_type, int):
-            return isinstance(arg, int)
-
-    def _get_command(self, input):
-        for num, cmd in enumerate(self.commands):
-            if len(cmd) == len(input):
-                arg_type_match = True
-                for arg_type, arg in zip(cmd, input):
-                    if not self._match_arg(arg_type, arg):
-                        arg_type_match = False
-                        break
-                if arg_type_match:
-                    return num + 1
-        return None
-
     def exec(self, cmd, input):
         raise  NotImplemented()
 
     def parse(self, input):
         if input:
             input_list = input.split()
-            cmd = self._get_command(input_list)
-            if cmd:
-                return self.exec(cmd, input_list)
+            matching_command = self.completer.match_command(input_list)
+            if matching_command:
+                return self.exec(matching_command, input_list)
         self.print_help()
         return None
 
