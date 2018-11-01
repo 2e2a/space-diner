@@ -24,9 +24,8 @@ class Storage(generic.Thing):
         return None
 
     def store_ingredient(self, name, amount):
-        if name in self.ingredients:
-            availability = self.ingredients.get(name)
-            self.ingredients.update({name: availability + amount})
+        availability = self.ingredients.get(name, 0)
+        self.ingredients.update({name: availability + amount})
 
     def load(self, data):
         self.name = data.get('name')
@@ -92,6 +91,7 @@ def buy(name):
     global storages
     storage = storages.get(name)
     storage.available = True
+
 
 def store_ingredient(name, amount):
     ingredient = ingredients.get(name)
