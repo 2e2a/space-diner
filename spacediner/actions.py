@@ -1,5 +1,6 @@
 from . import food
 from . import guests
+from . import ingredients
 from . import levels
 from . import merchants
 from . import storage
@@ -67,6 +68,8 @@ class BuyIngredients(Action):
         self.amount = amount
 
     def perform(self):
+        if not storage.get(ingredients.get(self.ingredient).storage).available:
+            raise RuntimeError('Required storage not available')
         merchant = merchants.get(self.merchant)
         if not merchant.is_ingredient_available(self.ingredient, 1):
             raise RuntimeError('Not in stock')
