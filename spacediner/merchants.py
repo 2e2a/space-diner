@@ -44,7 +44,7 @@ class Merchant(generic.Thing):
             self.ingredients.update({ingredient: (availability, cost, )})
 
     def __str__(self):
-        ingredients = ', '.join(['{}[{} in stock] [{} $$$]'.format(i, a, c) for (i, a, c) in self.ingredients.items()])
+        ingredients = ', '.join(['{}[{} in stock] [{} $$$]'.format(i, a, c) for (i, (a, c)) in self.ingredients.items()])
         return '{}: {}'.format(self.name, ingredients)
 
 
