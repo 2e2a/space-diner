@@ -25,25 +25,33 @@ class Guest(generic.Thing):
     name = None
     budget = 0
     available = False
-    taste = None # TODO: tuple taste x reaction sentence
     reactions = None
+    taste = None
 
-    def react(self, reaction):
-        print('{}: ""'.format(self.name, reaction.output))
+    def react(self, reaction, properties):
+        print('{}: "{}, {}"'.format(
+            self.name,
+            ', '.join(properties),
+            reaction.output
+        ))
+
+    def print_taste(self, taste):
+        if taste > 4: taste = 4
+        elif taste < 0: taste = 0
+        print('{}: "{}"'.format(self.name, self.taste[taste]))
 
     def serve(self, food_name):
         dish = food.take(food_name)
-        taste = 0
+        taste = 2
         for reaction in self.reactions:
-            if set(reaction.properties).intersection(dish.properties):
-                self.react(reaction)
+            matching_properties = set(reaction.properties).intersection(dish.properties)
+            if matching_properties:
+                self.react(reaction, matching_properties)
                 taste += reaction.taste
-        # TODO: print overall reaction
+        self.print_taste(taste)
         payment = int(self.budget/5 * taste)
         levels.level.money += payment
         print('{} payed {} space dollars.'.format(self.name, payment))
-
-
 
     def load(self, data):
         self.name = data.get('name')
@@ -54,6 +62,7 @@ class Guest(generic.Thing):
             reaction = Reaction()
             reaction.load(reaction_data)
             self.reactions.append(reaction)
+        self.taste = data.get('taste', ['Vary Bad', 'Bad', 'OK', 'Good', 'Vary Good' ])
 
 
 class GuestGroup(Guest):
@@ -77,6 +86,10 @@ class GuestFactory(generic.Thing):
         guest.reactions = list(itertools.chain.from_iterable(group.reactions for group in groups))
         guest.budget = max([group.budget for group in groups])
         guest.available = True
+        guest.taste = []
+        for i in range(5):
+            group = random.SystemRandom().randint(0, len(groups) - 1)
+            guest.taste.append(groups[group].taste[i])
         return guest
 
 

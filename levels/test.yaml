@@ -96,8 +96,14 @@ guests:
       budget: 5
       reactions:
         - properties: [ heavy, birdy ]
-          taste: +3
+          taste: +2
           output: Yeah!
+      taste:
+        - Bleh
+        - Grmpf
+        - ...
+        - Ok
+        - Mhh
 
     - name: snob
       budget: 20
@@ -110,7 +116,7 @@ guests:
       budget: 10
       reactions:
         - properties: [ Space egg ]
-          taste: +2
+          taste: +1
           output: Yams Yams
         - properties: [ vegetable ]
           taste: -10
