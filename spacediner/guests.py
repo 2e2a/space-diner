@@ -1,3 +1,5 @@
+import itertools
+import random
 from collections import OrderedDict
 
 from . import food
@@ -46,7 +48,33 @@ class Guest(generic.Thing):
             self.reactions.append(reaction)
 
 
+class GuestGroup(Guest):
+    pass
+
+
+class GuestFactory(generic.Thing):
+    groups = None
+
+    def load(self, data):
+        self.groups = []
+        for groups in data:
+            self.groups.append(groups)
+
+    def create(self):
+        global guest_groups
+        num = random.SystemRandom().randint(0, len(self.groups) - 1)
+        guest = Guest()
+        groups = [guest_groups.get(name) for name in self.groups[num]]
+        guest.name = ' '.join(group.name for group in groups)
+        guest.reactions = list(itertools.chain.from_iterable(group.reactions for group in groups))
+        guest.available = True
+        return guest
+
+
 guests = None
+regulars = None
+guest_groups = None
+guest_factory = None
 
 
 def available_guests():
@@ -65,11 +93,35 @@ def serve(name, food):
 
 
 def load(data):
-    global guests
-    guests = OrderedDict()
-    for guest_data in data:
+    global regulars
+    regulars = OrderedDict()
+    for guest_data in data.get('regulars'):
         guest = Guest()
         guest.load(guest_data)
+        regulars.update({guest.name: guest})
+
+    global guest_groups
+    guest_groups = OrderedDict()
+    for group_data in data.get('groups'):
+        group = GuestGroup()
+        group.load(group_data)
+        guest_groups.update({group.name: group})
+
+    global guest_factory
+    guest_factory = GuestFactory()
+    guest_factory.load(data.get('factory'))
+
+    # TODO: move somewhere else
+    new_day()
+
+
+def new_day():
+    global guests
+    global regulars
+    global guest_factory
+    guests = OrderedDict(regulars)
+    for i in range(4):
+        guest = guest_factory.create()
         guests.update({guest.name: guest})
 
 
@@ -77,4 +129,8 @@ def debug():
     global guests
     for guest in guests.values():
         guest.debug()
-
+    global guest_groups
+    for guest_group in guest_groups.values():
+        guest_group.debug()
+    global guest_factory
+    guest_factory.debug()

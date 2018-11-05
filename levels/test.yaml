@@ -91,35 +91,66 @@ recipes:
       - heavy
 
 guests:
-  - name: E.T.
-    available: True
-    budget: 5
-    reactions:
-      - properties: [ heavy, birdy ]
-        taste: +1
-        output: Yeah!
-      - properties: [ cold ]
-        taste: -1
-        output: Brrr
-      - properties: Space onion
-        taste: -10
-        output: Bleh!
+  groups:
+    - name: mine worker
+      budget: 5
+      reactions:
+        - properties: [ heavy, birdy ]
+          taste: +3
+          output: Yeah!
 
-  - name: Predator
-    available: True
-    budget: 20
-    reactions:
-      - properties: [ Omelet ]
-        taste: +10
-        output: An elevated dish!
+    - name: snob
+      budget: 20
+      reactions:
+      - properties: [ elevated ]
+        taste: +3
+        output: Slurp...
 
-  - name: Alien
-    available: False
-    budget: 10
-    reactions:
-      - properties: [vegetable]
-        taste: -1
-        output: Mehh...
-      - properties: [human]
-        taste: 8
-        output: Tastes just like Ripley.
+    - name: Reptile
+      budget: 10
+      reactions:
+        - properties: [ space egg ]
+          taste: +2
+          output: Yams Yams
+        - properties: [ vegetable ]
+          taste: -10
+          output: Cannot eat this!
+
+  factory:
+    - [ Reptile, mine worker ]
+    - [ Reptile, snob ]
+    - [ Reptile ]
+
+  regulars:
+    - name: E.T.
+      available: True
+      budget: 5
+      reactions:
+        - properties: [ heavy, birdy ]
+          taste: +1
+          output: Yeah!
+        - properties: [ cold ]
+          taste: -1
+          output: Brrr
+        - properties: Space onion
+          taste: -10
+          output: Bleh!
+
+    - name: Predator
+      available: True
+      budget: 20
+      reactions:
+        - properties: [ Omelet ]
+          taste: +10
+          output: An elevated dish!
+
+    - name: Alien
+      available: False
+      budget: 10
+      reactions:
+        - properties: [vegetable]
+          taste: -1
+          output: Mehh...
+        - properties: [human]
+          taste: 8
+          output: Tastes just like Ripley.
