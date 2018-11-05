@@ -4,19 +4,17 @@ from collections import OrderedDict
 
 from . import food
 from . import generic
+from . import levels
 
 
 class Reaction(generic.Thing):
     properties = None
-    taste = 1
+    taste = 0
     output = None
-
-    def perform(self, *args, **kwargs):
-        pass
 
     def load(self, data):
         self.properties = data.get('properties')
-        self.taste = int(data.get('taste'))
+        self.taste = data.get('taste')
         self.output = data.get('output')
 
     def __str__(self):
@@ -25,21 +23,31 @@ class Reaction(generic.Thing):
 
 class Guest(generic.Thing):
     name = None
+    budget = 0
     available = False
     taste = None # TODO: tuple taste x reaction sentence
     reactions = None
 
     def react(self, reaction):
-        print(reaction.output)
+        print('{}: ""'.format(self.name, reaction.output))
 
     def serve(self, food_name):
         dish = food.take(food_name)
+        taste = 0
         for reaction in self.reactions:
             if set(reaction.properties).intersection(dish.properties):
                 self.react(reaction)
+                taste += reaction.taste
+        # TODO: print overall reaction
+        payment = int(self.budget/5 * taste)
+        levels.level.money += payment
+        print('{} payed {} space dollars.'.format(self.name, payment))
+
+
 
     def load(self, data):
         self.name = data.get('name')
+        self.budget = data.get('budget')
         self.available = data.get('available')
         self.reactions = []
         for reaction_data in data.get('reactions'):
@@ -67,6 +75,7 @@ class GuestFactory(generic.Thing):
         groups = [guest_groups.get(name) for name in self.groups[num]]
         guest.name = ' '.join(group.name for group in groups)
         guest.reactions = list(itertools.chain.from_iterable(group.reactions for group in groups))
+        guest.budget = max([group.budget for group in groups])
         guest.available = True
         return guest
 

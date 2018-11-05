@@ -109,7 +109,7 @@ guests:
     - name: Reptile
       budget: 10
       reactions:
-        - properties: [ space egg ]
+        - properties: [ Space egg ]
           taste: +2
           output: Yams Yams
         - properties: [ vegetable ]
