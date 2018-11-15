@@ -36,7 +36,7 @@ class Food(generic.Thing):
             self.name = recipe.name
         else:
             self.name = ' with '.join(names)
-        cooked.update({self.name: self})
+        cooked.append(self)
 
 
 class Recipe(generic.Thing):
@@ -56,12 +56,19 @@ class Recipe(generic.Thing):
 
 
 recipes = None
-cooked = OrderedDict()
+cooked = []
 
 
 def take(name):
     global cooked
-    return cooked.pop(name)
+    for dish in cooked:
+        if dish.name == name:
+            return dish
+    return None
+
+def plated():
+    global cooked
+    return [dish.name for dish in cooked]
 
 
 def get_recipe(ingredients):
@@ -70,7 +77,6 @@ def get_recipe(ingredients):
         if recipe.consists_of(ingredients):
             return recipe
     return None
-
 
 
 def load(data):
@@ -82,11 +88,10 @@ def load(data):
         recipes.update({recipe.name: recipe})
 
 
-
 def debug():
     global recipes
     global cooked
     for recipe in recipes.values():
         recipe.debug()
-    for food in cooked.values():
+    for food in cooked:
         food.debug()

@@ -184,14 +184,14 @@ class ServiceMode(Mode):
     prompt = 'service'
 
     def update_commands(self):
-        cooked_food = [self.name_for_command(f) for f in food.cooked.keys()]
+        cooked_food = [self.name_for_command(f) for f in food.plated()]
         available_guests = [self.name_for_command(g) for g in guests.available_guests()]
         self.commands[0] = (['serve'], cooked_food, ['to'], available_guests)
         super().update_commands()
 
     def print_info(self):
         print_title('Food:')
-        print_list(food.cooked.values())
+        print_list(food.plated())
         print_title('Guests:')
         print_list(guests.available_guests())
 
@@ -226,7 +226,6 @@ class CookingMode(Mode):
     available_ingredients = None
     available_devices = None
     prepared_components = None
-    plated_dished = []
 
     def __init__(self):
         self.prepared_components = []
@@ -251,7 +250,7 @@ class CookingMode(Mode):
         print_title('Prepared:')
         print_list(self.prepared_components)
         print_title('Plated:')
-        print_list(list(food.cooked.keys()))
+        print_list(list(food.plated()))
 
     def print_help(self):
         print('Help:')
@@ -330,7 +329,7 @@ class ShoppingMode(Mode):
         for merchant, ingredients in  self.ingredients_for_sale.items():
             print('')
             print('Merchant: {}'.format(merchant))
-            print_list(['{}: {} space dollars, {} in sock, {} required'.format(i, c, a, s)
+            print_list(['{}: {} space dollars, {} in stock, {} required'.format(i, c, a, s)
                         for i, (a, c, s) in ingredients.items()])
         print_title('Storages for sale:')
         print_list(['{}: {} space dollars'.format(s.name, s.cost) for s in self.storages_for_sale.values()])

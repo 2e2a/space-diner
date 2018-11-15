@@ -102,7 +102,7 @@ guest_factory = None
 def available_guests():
     global guests
     available_guests = {}
-    for available_guest in filter(lambda g: g.available, guests.values()):
+    for available_guest in filter(lambda g: g.available, guests):
         available_guests.update({available_guest.name: available_guest})
     return available_guests
 
@@ -149,7 +149,7 @@ def new_day():
 
 def debug():
     global guests
-    for guest in guests.values():
+    for guest in guests:
         guest.debug()
     global guest_groups
     for guest_group in guest_groups.values():
