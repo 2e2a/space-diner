@@ -11,9 +11,6 @@ class Action:
     def perform(self, *args, **kwargs):
         raise NotImplemented
 
-    def abort(self, *args, **kwargs):
-        pass
-
 
 class Cook(Action):
     food = None

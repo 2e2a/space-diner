@@ -63,6 +63,7 @@ def take(name):
     global cooked
     for dish in cooked:
         if dish.name == name:
+            cooked.remove(dish)
             return dish
     return None
 

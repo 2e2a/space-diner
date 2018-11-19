@@ -5,6 +5,7 @@ from collections import OrderedDict
 from . import food
 from . import generic
 from . import levels
+from . import time
 
 
 class Reaction(generic.Thing):
@@ -52,6 +53,8 @@ class Guest(generic.Thing):
         payment = int(self.budget/5 * taste)
         levels.level.money += payment
         print('{} payed {} space dollars.'.format(self.name, payment))
+        print('{} left.'.format(self.name))
+
 
     def load(self, data):
         self.name = data.get('name')
@@ -101,16 +104,20 @@ guest_factory = None
 
 def available_guests():
     global guests
-    available_guests = {}
-    for available_guest in filter(lambda g: g.available, guests):
-        available_guests.update({available_guest.name: available_guest})
-    return available_guests
+    return [guest.name for guest in guests]
 
+def get(name):
+    global guests
+    for guest in guests:
+        if guest.name == name:
+            return guest
+    return None
 
 def serve(name, food):
     global guests
-    guest = guests.get(name)
+    guest = get(name)
     if guest and guest.available:
+        guests.remove(guest)
         guest.serve(food)
 
 

@@ -142,7 +142,7 @@ class Mode:
         return self.names.get(cmd_name)
 
 
-class ActionMode(Mode):
+class DinerMode(Mode):
     CMD_COOKING = 1
     CMD_SERVICE = 2
     CMD_SHOPPING = 3
@@ -200,14 +200,14 @@ class ServiceMode(Mode):
         print(self.commands)
 
     def exec(self, cmd, input):
-        if cmd == 1:
+        if cmd == self.CMD_SERVE:
             food = self.original_name(input[1])
             guest = self.original_name(input[3])
             action = actions.Serve(food, guest)
             action.perform()
             return self
-        if cmd == 2:
-            return ActionMode()
+        if cmd == self.CMD_DONE:
+            return DinerMode()
 
 
 class CookingMode(Mode):
@@ -363,7 +363,8 @@ class ShoppingMode(Mode):
                 print(e)
             return self
         if cmd == self.CMD_DONE:
-            return ActionMode()
+            return DinerMode()
+
 
 
 mode = None
@@ -371,7 +372,7 @@ mode = None
 
 def run():
     global mode
-    mode = ActionMode()
+    mode = DinerMode()
     print_info = True
     print('################################  SPACE  DINER  ################################')
     while True:
