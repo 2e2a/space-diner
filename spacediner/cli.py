@@ -8,6 +8,7 @@ from . import merchants
 from . import levels
 from . import settings
 from . import storage
+from . import time
 
 
 def print_title(str):
@@ -27,6 +28,14 @@ def print_list(list):
 def print_value(key, *values):
     value = ' '.join([str(v) for v in values])
     print('{}: {}'.format(key, value))
+
+
+def print_time(t):
+    print('')
+    if t == time.Clock.TIME_OFF:
+        print('Finally off...')
+    else:
+        print('A new day... work... work... work')
 
 
 class CommandCompleter:
@@ -146,13 +155,16 @@ class DinerMode(Mode):
     CMD_COOKING = 1
     CMD_SERVICE = 2
     CMD_SHOPPING = 3
-    CMD_EXIT = 4
+    CMD_CLOSE_UP = 4
+    CMD_EXIT = 5
     commands = [
         (['cooking'],),
         (['service'],),
         (['shopping'],),
+        (['close_up'],),
         (['exit'],),
     ]
+    prompt = 'diner'
 
     def print_info(self):
         print_value('Level', levels.level.name)
@@ -170,6 +182,9 @@ class DinerMode(Mode):
             return ServiceMode()
         if cmd == self.CMD_SHOPPING:
             return ShoppingMode()
+        if cmd == self.CMD_CLOSE_UP:
+            time.tick()
+            return AfterWorkMode()
         if cmd == self.CMD_EXIT:
             exit()
 
@@ -282,7 +297,7 @@ class CookingMode(Mode):
             self.prepared_components = []
             return self
         if cmd == self.CMD_DONE:
-            return ActionMode()
+            return DinerMode()
 
 
 class ShoppingMode(Mode):
@@ -366,12 +381,52 @@ class ShoppingMode(Mode):
             return DinerMode()
 
 
+class AfterWorkMode(Mode):
+    CMD_WATCH_TV = 1
+    CMD_SLEEP = 2
+    commands = [
+        (['watch_tv'],),
+        (['sleep'],),
+    ]
+    prompt = 'after work'
+    activities_done = 0
+
+    def __init__(self):
+        super().__init__()
+        self.activities_done = 0
+
+    def update_commands(self):
+        super().update_commands()
+
+    def print_info(self):
+        print_title('TODO')
+
+    def print_help(self):
+        print('Help:')
+        print(self.commands)
+
+    def exec(self, cmd, input):
+        self.activities_done += 1
+        if self.activities_done > 1 and cmd != self.CMD_SLEEP:
+            print('')
+            print('Let\'s not do this today.')
+            return self
+        if cmd == self.CMD_WATCH_TV:
+            print('')
+            print('You watched some TV...')
+            return self
+        if cmd == self.CMD_SLEEP:
+            time.tick()
+            return DinerMode()
+
 
 mode = None
+time_ticked = None
 
 
 def run():
     global mode
+    global time_ticked
     mode = DinerMode()
     print_info = True
     print('################################  SPACE  DINER  ################################')
@@ -379,6 +434,9 @@ def run():
         if settings.DEBUG:
             levels.debug()
         if print_info:
+            if time_ticked:
+                print_time(time_ticked)
+                time_ticked = None
             print('')
             mode.print_info()
         prompt = '({}) '.format(mode.prompt) if mode.prompt else ''
@@ -390,3 +448,17 @@ def run():
         else:
             print_info = False
 
+
+def worktime_callback():
+    global time_ticked
+    time_ticked = time.Clock.TIME_WORK
+
+
+def offtime_callback():
+    global time_ticked
+    time_ticked = time.Clock.TIME_OFF
+
+
+def init():
+    time.register_callback(time.Clock.TIME_WORK, worktime_callback)
+    time.register_callback(time.Clock.TIME_OFF, offtime_callback)

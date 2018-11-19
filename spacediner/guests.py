@@ -120,6 +120,15 @@ def serve(name, food):
         guests.remove(guest)
         guest.serve(food)
 
+def new_workday():
+    global guests
+    global regulars
+    global guest_factory
+    guests = [regular for regular in regulars.values() if regular.available]
+    for i in range(4):
+        guest = guest_factory.create()
+        guests.append(guest)
+
 
 def load(data):
     global regulars
@@ -140,18 +149,7 @@ def load(data):
     guest_factory = GuestFactory()
     guest_factory.load(data.get('factory'))
 
-    # TODO: move somewhere else
-    new_day()
-
-
-def new_day():
-    global guests
-    global regulars
-    global guest_factory
-    guests = OrderedDict(regulars)
-    for i in range(4):
-        guest = guest_factory.create()
-        guests.update({guest.name: guest})
+    time.register_callback(time.Clock.TIME_WORK, new_workday)
 
 
 def debug():
