@@ -7,6 +7,7 @@ from . import kitchen
 from . import merchants
 from . import levels
 from . import settings
+from . import sozial
 from . import storage
 from . import time
 
@@ -192,9 +193,11 @@ class DinerMode(Mode):
 
 class ServiceMode(Mode):
     CMD_SERVE = 1
-    CMD_DONE = 2
+    CMD_TALK = 2
+    CMD_DONE = 3
     commands = [
         (['serve'], [], ['to'], []),
+        (['talk'],['to'], []),
         (['done'], ),
     ]
     prompt = 'service'
@@ -202,7 +205,9 @@ class ServiceMode(Mode):
     def update_commands(self):
         cooked_food = [self.name_for_command(f) for f in food.plated()]
         available_guests = [self.name_for_command(g) for g in guests.available_guests()]
-        self.commands[0] = (['serve'], cooked_food, ['to'], available_guests)
+        talks = [self.name_for_command(t) for t in sozial.talks_available()]
+        self.commands[self.CMD_SERVE - 1] = (['serve'], cooked_food, ['to'], available_guests)
+        self.commands[self.CMD_TALK - 1] = (['talk'],['to'], talks)
         super().update_commands()
 
     def print_info(self):
@@ -222,6 +227,9 @@ class ServiceMode(Mode):
             action = actions.Serve(food, guest)
             action.perform()
             return self
+        if cmd == self.CMD_TALK:
+            guest = self.original_name(input[2])
+            return TalkMode(guest)
         if cmd == self.CMD_DONE:
             return DinerMode()
 
@@ -380,6 +388,40 @@ class ShoppingMode(Mode):
             return self
         if cmd == self.CMD_DONE:
             return DinerMode()
+
+
+class TalkMode(Mode):
+    commands = [
+        (int,),
+    ]
+    prompt = 'talk'
+    guest = None
+    talk = None
+
+    def __init__(self, guest):
+        super().__init__()
+        self.guest = guest
+        self.talk = sozial.next_talk(guest)
+
+    def update_commands(self):
+        super().update_commands()
+
+    def print_info(self):
+        print('{}: "{}"'.format(self.guest, self.talk.question))
+        print_list(['{}: "{}"'.format(i, reply) for i, reply in enumerate(self.talk.replies)])
+
+    def print_help(self):
+        print('Help:')
+        print(self.commands)
+
+    def exec(self, cmd, input):
+        reply = int(input[0])
+        if reply > len(self.talk.replies) or reply < 0:
+            print('Invalid reply number.')
+            return self
+        action = actions.Talk(self.guest, reply)
+        action.perform()
+        return ServiceMode()
 
 
 class AfterWorkMode(Mode):

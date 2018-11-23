@@ -6,6 +6,7 @@ from . import guests
 from . import kitchen
 from . import ingredients
 from . import merchants
+from . import sozial
 from . import storage
 
 
@@ -26,6 +27,7 @@ class Level(generic.Thing):
             merchants.load(data.get('merchants'))
             food.load(data.get('recipes'))
             guests.load(data.get('guests'))
+            sozial.load(data.get('sozial'))
 
 
 level = None
@@ -46,3 +48,4 @@ def debug():
     merchants.debug()
     food.debug()
     guests.debug()
+    sozial.debug()

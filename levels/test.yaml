@@ -160,3 +160,12 @@ guests:
         - properties: [human]
           taste: 8
           output: Tastes just like Ripley.
+
+sozial:
+  - guest: E.T.
+    talks:
+      - question: Elliott...
+        replies:
+          - [-1, It's me!, Not funny...]
+          - [ 0, It's time to look forward., Mhh ... maybe ...]
+          - [+1, We all miss him!, He had a good heart]

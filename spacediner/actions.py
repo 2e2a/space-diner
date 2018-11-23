@@ -3,6 +3,7 @@ from . import guests
 from . import ingredients
 from . import levels
 from . import merchants
+from . import sozial
 from . import storage
 
 
@@ -78,4 +79,24 @@ class BuyIngredients(Action):
         levels.level.money = levels.level.money - cost
         merchant.buy(self.ingredient, self.amount)
         storage.store_ingredient(self.ingredient, self.amount)
+
+
+class Talk(Action):
+    guest = None
+
+    def __init__(self, guest, reply):
+        self.guest = guest
+        self.reply = reply
+
+    def perform(self):
+        effect, reaction = sozial.talk(self.guest, self.reply)
+        print('{}: "{}"'.format(self.guest, reaction))
+        if effect > 0:
+            print('{} liked your reply.'.format(self.guest))
+        elif effect < 0:
+            print('{} did not like your reply.'.format(self.guest))
+        else:
+            print('{} does not care.'.format(self.guest))
+        print('{} bonding level is {}'.format(self.guest, sozial.level(self.guest)))
+
 
