@@ -1,12 +1,9 @@
-from . import guests
-
-
 class Clock:
     TIME_WORK = 'work'
     TIME_OFF = 'off'
 
     def __init__(self):
-        self.day = 1
+        self.day = 0
         self.time = self.TIME_OFF
         self.callbacks = []
 
@@ -20,6 +17,9 @@ class Clock:
             if time == self.time:
                 callback()
 
+    def now(self):
+        return '{} - {}'.format(self.day, self.time)
+
     def register_callback(self, time, callback):
         self.callbacks.append((time, callback))
 
@@ -30,6 +30,11 @@ clock = Clock()
 def tick():
     global clock
     clock.tick()
+
+
+def now():
+    global clock
+    return clock.now()
 
 
 def register_callback(time, callback):

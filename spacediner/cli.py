@@ -33,9 +33,9 @@ def print_value(key, *values):
 def print_time(t):
     print('')
     if t == time.Clock.TIME_OFF:
-        print('Finally off...')
+        print('"Finally off..."')
     else:
-        print('A new day... work... work... work')
+        print('"A new day... work... work... work"')
 
 
 class CommandCompleter:
@@ -168,6 +168,7 @@ class DinerMode(Mode):
 
     def print_info(self):
         print_value('Level', levels.level.name)
+        print_value('Day', time.now())
         print_value('Money', levels.level.money, 'space dollars')
         print('')
 
