@@ -205,9 +205,8 @@ class ServiceMode(Mode):
     def update_commands(self):
         cooked_food = [self.name_for_command(f) for f in food.plated()]
         available_guests = [self.name_for_command(g) for g in guests.available_guests()]
-        talks = [self.name_for_command(t) for t in sozial.talks_available()]
         self.commands[self.CMD_SERVE - 1] = (['serve'], cooked_food, ['to'], available_guests)
-        self.commands[self.CMD_TALK - 1] = (['talk'],['to'], talks)
+        self.commands[self.CMD_TALK - 1] = (['talk'],['to'], available_guests)
         super().update_commands()
 
     def print_info(self):
@@ -229,6 +228,9 @@ class ServiceMode(Mode):
             return self
         if cmd == self.CMD_TALK:
             guest = self.original_name(input[2])
+            if not guest in sozial.talks_available():
+                print('{} does not want to talk.'.format(guest))
+                return self
             return TalkMode(guest)
         if cmd == self.CMD_DONE:
             return DinerMode()

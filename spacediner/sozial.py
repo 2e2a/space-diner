@@ -24,13 +24,13 @@ class Talk:
 
 
 class Relation:
-    guest = None
+    name = None
     talks = None
     talks_done = None
     level = 0
 
     def load(self, data):
-        self.guest = data.get('guest')
+        self.name = data.get('name')
         self.talks = []
         self.talks_done = 0
         self.level = 0
@@ -88,7 +88,7 @@ def load(data):
     for relation_data in data:
         relation = Relation()
         relation.load(relation_data)
-        relations.update({relation.guest: relation})
+        relations.update({relation.name: relation})
 
 
 def debug():

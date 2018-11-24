@@ -162,7 +162,7 @@ guests:
           output: Tastes just like Ripley.
 
 sozial:
-  - guest: E.T.
+  - name: E.T.
     talks:
       - question: Elliott...
         replies:
