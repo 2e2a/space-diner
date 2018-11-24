@@ -118,12 +118,14 @@ class Mode:
     prompt = None
     names = {}
     completer = None
+    no_input = False
 
     def __init__(self):
         self.update_commands()
 
     def update_commands(self):
-        self.completer = CommandCompleter(self.commands)
+        if not self.no_input:
+            self.completer = CommandCompleter(self.commands)
 
     def print_info(self):
         raise NotImplemented()
@@ -228,8 +230,9 @@ class ServiceMode(Mode):
             return self
         if cmd == self.CMD_TALK:
             guest = self.original_name(input[2])
-            if not guest in sozial.talks_available():
-                print('{} does not want to talk.'.format(guest))
+            if not guest in social.talks_available():
+                print('"What\'s up, {}?"'.format(guest))
+                print('{}: "Breakfast is up.".'.format(guest))
                 return self
             return TalkMode(guest)
         if cmd == self.CMD_DONE:
@@ -403,12 +406,14 @@ class TalkMode(Mode):
     def __init__(self, guest):
         super().__init__()
         self.guest = guest
-        self.talk = sozial.next_talk(guest)
+        self.talk = social.next_talk(guest)
+        self.no_input = not bool(self.talk.replies)
 
     def update_commands(self):
         super().update_commands()
 
     def print_info(self):
+        print('"What\'s up, {}?"'.format(self.guest))
         print('{}: "{}"'.format(self.guest, self.talk.question))
         print_list(['{}: "{}"'.format(i, reply) for i, reply in enumerate(self.talk.replies)])
 
@@ -417,12 +422,13 @@ class TalkMode(Mode):
         print(self.commands)
 
     def exec(self, cmd, input):
-        reply = int(input[0])
-        if reply > len(self.talk.replies) or reply < 0:
-            print('Invalid reply number.')
-            return self
-        action = actions.Talk(self.guest, reply)
-        action.perform()
+        if input:
+            reply = int(input[0])
+            if reply > len(self.talk.replies) or reply < 0:
+                print('Invalid reply number.')
+                return self
+            action = actions.Talk(self.guest, reply)
+            action.perform()
         return ServiceMode()
 
 
@@ -484,9 +490,12 @@ def run():
                 time_ticked = None
             print('')
             mode.print_info()
-        prompt = '({}) '.format(mode.prompt) if mode.prompt else ''
-        cmd = input('{}>> '.format(prompt))
-        next_mode = mode.parse(cmd)
+        if not mode.no_input:
+            prompt = '({}) '.format(mode.prompt) if mode.prompt else ''
+            cmd = input('{}>> '.format(prompt))
+            next_mode = mode.parse(cmd)
+        else:
+            next_mode = mode.exec(None, None)
         if next_mode:
             mode = next_mode
             print_info = True

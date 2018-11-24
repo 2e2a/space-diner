@@ -169,3 +169,18 @@ sozial:
           - [-1, It's me!, Not funny...]
           - [ 0, It's time to look forward., Mhh ... maybe ...]
           - [+1, We all miss him!, He had a good heart]
+  - name: Reptile
+    talks:
+      - question: Could eat eggs all day long.
+      - question: Hope you have a good egg supply.
+  - name: Reptile
+    talks:
+    - question: Could eat eggs all day long.
+    - question: Hope you have a good egg supply.
+  - name: Reptile mine worker
+    talks:
+    - question: I've seen the devil in the mines...
+  - name: Reptile snob
+    talks:
+    - question: All these mine workers should eat at home.
+    - question: Mine workers are getting payed to much, eating in diners...
