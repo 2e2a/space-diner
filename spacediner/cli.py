@@ -7,7 +7,7 @@ from . import kitchen
 from . import merchants
 from . import levels
 from . import settings
-from . import sozial
+from . import social
 from . import storage
 from . import time
 

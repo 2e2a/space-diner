@@ -4,6 +4,7 @@ from collections import OrderedDict
 class Talk:
     question = None
     replies = None
+    reactions = None
     effects = None
 
     def load(self, data):
@@ -11,16 +12,16 @@ class Talk:
         self.effects = []
         self.replies = []
         self.reactions = []
-        for reply_data in data.get('replies'):
+        for reply_data in data.get('replies', []):
             self.effects.append(reply_data[0])
             self.replies.append(reply_data[1])
             self.reactions.append(reply_data[2])
 
     def effect(self, reply):
-        return self.effects[reply]
+        return self.effects[reply] if self.replies else None
 
     def reaction(self, reply):
-        return self.reactions[reply]
+        return self.reactions[reply] if self.reactions else None
 
 
 class Relation:

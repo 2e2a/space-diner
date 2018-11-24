@@ -3,7 +3,7 @@ from . import guests
 from . import ingredients
 from . import levels
 from . import merchants
-from . import sozial
+from . import social
 from . import storage
 
 
@@ -89,7 +89,7 @@ class Talk(Action):
         self.reply = reply
 
     def perform(self):
-        effect, reaction = sozial.talk(self.guest, self.reply)
+        effect, reaction = social.talk(self.guest, self.reply)
         print('{}: "{}"'.format(self.guest, reaction))
         if effect > 0:
             print('{} liked your reply.'.format(self.guest))
@@ -97,6 +97,6 @@ class Talk(Action):
             print('{} did not like your reply.'.format(self.guest))
         else:
             print('{} does not care.'.format(self.guest))
-        print('{} bonding level is {}'.format(self.guest, sozial.level(self.guest)))
+        print('{} bonding level is {}'.format(self.guest, social.level(self.guest)))
 
 
