@@ -28,6 +28,8 @@ class Guest(generic.Thing):
     available = False
     reactions = None
     taste = None
+    orders = None
+    order = None
 
     def react(self, reaction, properties):
         print('{}: "{}, {}"'.format(
@@ -40,6 +42,14 @@ class Guest(generic.Thing):
         if taste > 4: taste = 4
         elif taste < 0: taste = 0
         print('{}: "{}"'.format(self.name, self.taste[taste]))
+
+    def get_order(self):
+        if self.order:
+            return self.order
+        if not self.orders:
+            return None
+        self.order = random.SystemRandom().choice(self.orders)
+        return self.order
 
     def serve(self, food_name):
         dish = food.take(food_name)
@@ -55,7 +65,6 @@ class Guest(generic.Thing):
         print('{} payed {} space dollars.'.format(self.name, payment))
         print('{} left.'.format(self.name))
 
-
     def load(self, data):
         self.name = data.get('name')
         self.budget = data.get('budget')
@@ -66,6 +75,7 @@ class Guest(generic.Thing):
             reaction.load(reaction_data)
             self.reactions.append(reaction)
         self.taste = data.get('taste', ['Vary Bad', 'Bad', 'OK', 'Good', 'Vary Good' ])
+        self.orders = data.get('orders', [])
 
 
 class GuestGroup(Guest):
@@ -93,6 +103,7 @@ class GuestFactory(generic.Thing):
         for i in range(5):
             group = random.SystemRandom().randint(0, len(groups) - 1)
             guest.taste.append(groups[group].taste[i])
+        guest.orders = list(itertools.chain.from_iterable(group.orders for group in groups))
         return guest
 
 
@@ -106,6 +117,7 @@ def available_guests():
     global guests
     return [guest.name for guest in guests]
 
+
 def get(name):
     global guests
     for guest in guests:
@@ -113,18 +125,27 @@ def get(name):
             return guest
     return None
 
+
+def get_order(name):
+    guest = get(name)
+    return guest.get_order()
+
+
 def serve(name, food):
     global guests
     guest = get(name)
     if guest and guest.available:
-        guests.remove(guest)
         guest.serve(food)
+        guests.remove(guest)
+
 
 def new_workday():
     global guests
     global regulars
     global guest_factory
     guests = [regular for regular in regulars.values() if regular.available]
+    for regular in guests:
+        regular.order = None
     for i in range(4):
         guest = guest_factory.create()
         guests.append(guest)

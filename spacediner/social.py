@@ -1,7 +1,7 @@
 from collections import OrderedDict
 
 
-class Talk:
+class Chat:
     question = None
     replies = None
     reactions = None
@@ -26,28 +26,28 @@ class Talk:
 
 class Relation:
     name = None
-    talks = None
-    talks_done = None
+    chats = None
+    chats_done = None
     level = 0
 
     def load(self, data):
         self.name = data.get('name')
-        self.talks = []
-        self.talks_done = 0
+        self.chats = []
+        self.chats_done = 0
         self.level = 0
-        for talk_data in data.get('talks'):
-            talk = Talk()
-            talk.load(talk_data)
-            self.talks.append(talk)
+        for chat_data in data.get('chats'):
+            chat = Chat()
+            chat.load(chat_data)
+            self.chats.append(chat)
 
-    def talk(self, reply):
-        talk = self.talks[self.talks_done]
-        effect = talk.effect(reply)
-        reaction = talk.reaction(reply)
+    def chat(self, reply):
+        chat = self.chats[self.chats_done]
+        effect = chat.effect(reply)
+        reaction = chat.reaction(reply)
         self.level += effect
-        self.talks_done += 1
-        if self.talks_done >= len(self.talks):
-            self.talks_done = 0
+        self.chats_done += 1
+        if self.chats_done >= len(self.chats):
+            self.chats_done = 0
         return (effect, reaction)
 
 
@@ -59,22 +59,22 @@ def get(name):
     return relations.get(name)
 
 
-def talks_available():
+def chats_available():
     global relations
     return list(relations.keys())
 
 
-def next_talk(name):
+def next_chat(name):
     global relations
     guest_relations = relations.get(name)
-    talk = guest_relations.talks[guest_relations.talks_done]
-    return talk
+    chat = guest_relations.chats[guest_relations.chats_done]
+    return chat
 
 
-def talk(name, reply):
+def chat(name, reply):
     global relations
     guest_relation = relations.get(name)
-    return guest_relation.talk(reply)
+    return guest_relation.chat(reply)
 
 
 def level(name):

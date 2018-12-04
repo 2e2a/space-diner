@@ -24,6 +24,13 @@ ingredients:
     properties:
       - cool
 
+  - name: Space chicken
+    storage: Freezer
+    properties:
+    - heavy
+    - birdy
+    - meat
+
   - name: Human
     storage: Freezer
     properties:
@@ -104,13 +111,19 @@ guests:
         - ...
         - Ok
         - Mhh
+      orders:
+        - heavy
+        - Space egg
 
     - name: snob
       budget: 20
       reactions:
-      - properties: [ elevated ]
-        taste: +3
-        output: Slurp...
+        - properties: [ elevated ]
+          taste: +3
+          output: Slurp...
+      orders:
+        - elevated
+        - cool
 
     - name: Reptile
       budget: 10
@@ -135,12 +148,14 @@ guests:
         - properties: [ heavy, birdy ]
           taste: +1
           output: Yeah!
-        - properties: [ cold ]
+        - properties: [ cool ]
           taste: -1
           output: Brrr
         - properties: Space onion
           taste: -10
           output: Bleh!
+      orders:
+        - vegetable
 
     - name: Predator
       available: True
@@ -149,6 +164,9 @@ guests:
         - properties: [ Omelet ]
           taste: +10
           output: An elevated dish!
+      orders:
+        - cool
+        - vegetable
 
     - name: Alien
       available: False
@@ -160,27 +178,30 @@ guests:
         - properties: [human]
           taste: 8
           output: Tastes just like Ripley.
+      orders:
+        - human
+        - heavy
 
 sozial:
   - name: E.T.
-    talks:
+    chats:
       - question: Elliott...
         replies:
           - [-1, It's me!, Not funny...]
           - [ 0, It's time to look forward., Mhh ... maybe ...]
           - [+1, We all miss him!, He had a good heart]
   - name: Reptile
-    talks:
+    chats:
       - question: Could eat eggs all day long.
       - question: Hope you have a good egg supply.
   - name: Reptile
-    talks:
+    chats:
     - question: Could eat eggs all day long.
     - question: Hope you have a good egg supply.
   - name: Reptile mine worker
-    talks:
+    chats:
     - question: I've seen the devil in the mines...
   - name: Reptile snob
-    talks:
+    chats:
     - question: All these mine workers should eat at home.
     - question: Mine workers are getting payed to much, eating in diners...

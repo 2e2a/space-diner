@@ -89,7 +89,7 @@ class Talk(Action):
         self.reply = reply
 
     def perform(self):
-        effect, reaction = social.talk(self.guest, self.reply)
+        effect, reaction = social.chat(self.guest, self.reply)
         print('{}: "{}"'.format(self.guest, reaction))
         if effect > 0:
             print('{} liked your reply.'.format(self.guest))
