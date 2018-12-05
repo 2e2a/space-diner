@@ -350,7 +350,7 @@ class ShoppingMode(Mode):
         print('')
         print_title('Available Ingredients:')
         print_list(['{} {}s'.format(a, i) for i, a in self.available_ingredients.items()])
-        print_title('Igredients for sale:')
+        print_title('Ingredients for sale:')
         for merchant, ingredients in  self.ingredients_for_sale.items():
             print('')
             print('Merchant: {}'.format(merchant))
@@ -429,6 +429,12 @@ class TalkMode(Mode):
                 else:
                     print('{}: Surprise me.'.format(self.guest))
             else:
+                guest = guests.get(self.guest)
+                if guest.chatted_today:
+                    print('"What\'s up, {}?"'.format(self.guest))
+                    print('{}: "Enough chatting for today, I\'m hungry.".'.format(self.guest))
+                    return self
+                guest.chatted_today = True
                 if not self.guest in social.chats_available():
                     print('"What\'s up, {}?"'.format(self.guest))
                     print('{}: "Breakfast is up.".'.format(self.guest))
@@ -471,12 +477,12 @@ class ChatMode(Mode):
 
     def exec(self, cmd, input):
         reply = int(input[0])
-        if reply > len(self.chat.replies) or reply < 0:
+        if reply >= len(self.chat.replies) or reply < 0:
             print('Invalid reply number.')
             return self
         action = actions.Talk(self.guest, reply)
         action.perform()
-        return ServiceMode()
+        return TalkMode(self.guest)
 
 
 class AfterWorkMode(Mode):

@@ -30,6 +30,7 @@ class Guest(generic.Thing):
     taste = None
     orders = None
     order = None
+    chatted_today = False
 
     def react(self, reaction, properties):
         print('{}: "{}, {}"'.format(
@@ -146,6 +147,7 @@ def new_workday():
     guests = [regular for regular in regulars.values() if regular.available]
     for regular in guests:
         regular.order = None
+        regular.chatted_today = False
     for i in range(4):
         guest = guest_factory.create()
         guests.append(guest)
