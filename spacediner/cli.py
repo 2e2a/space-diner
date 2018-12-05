@@ -154,6 +154,75 @@ class Mode:
         return self.names.get(cmd_name)
 
 
+class ChoiceMode(Mode):
+    CMD_CHOICE = 1
+    commands = [
+        (int,),
+    ]
+    size = 0
+
+    def print_help(self):
+        print('Help:')
+        print(self.commands)
+
+    def exec_choice(self, choice):
+        raise  NotImplemented
+
+    def exec(self, cmd, input):
+        if cmd == self.CMD_CHOICE:
+            choice = int(input[0])
+            if choice < 1 or choice > self.size:
+                print('Invalid choice.')
+                return self
+            return self.exec_choice(choice)
+
+
+class MenuMode(ChoiceMode):
+    prompt = 'menu'
+    size = 4
+
+    def print_info(self):
+        print('################################  SPACE  DINER  ################################')
+        print('')
+        print_title('Menu')
+        print_list(['1: Continue', '2: New game', '3: Load game', '4: Exit'])
+
+    def exec_choice(self, choice):
+        if choice == 1:
+            pass
+        elif choice == 2:
+            return NewGameMode()
+        elif choice == 3:
+            pass
+        elif choice == 4:
+            exit()
+
+
+class NewGameMode(ChoiceMode):
+    prompt = 'new game'
+    levels = None
+    done_choice = 0
+
+    def __init__(self):
+        super().__init__()
+        self.levels = levels.list()
+        self.size = len(self.levels) + 1
+        self.done_choice = self.size
+
+    def print_info(self):
+        print_title('Select level')
+        choice = ['{}: {}'.format(i, level) for i, level in enumerate(self.levels, 1)]
+        choice.append('{}: back'.format(len(self.levels) + 1))
+        print_list(choice)
+
+    def exec_choice(self, choice):
+        if choice == self.done_choice:
+            return MenuMode()
+        levels.load(self.levels[choice - 1])
+        time.tick()
+        return DinerMode()
+
+
 class DinerMode(Mode):
     CMD_COOKING = 1
     CMD_SERVICE = 2
@@ -190,7 +259,7 @@ class DinerMode(Mode):
             time.tick()
             return AfterWorkMode()
         if cmd == self.CMD_EXIT:
-            exit()
+            return MenuMode()
 
 
 class ServiceMode(Mode):
@@ -391,14 +460,9 @@ class ShoppingMode(Mode):
             return DinerMode()
 
 
-class TalkMode(Mode):
-    CMD_CHOICE = 1
-    CMD_DONE = 2
-    commands = [
-        (int,),
-        (['done'], ),
-    ]
+class TalkMode(ChoiceMode):
     prompt = 'talk'
+    size = 3
     guest = None
 
     def __init__(self, guest):
@@ -410,50 +474,37 @@ class TalkMode(Mode):
 
     def print_info(self):
         print('"Hey, {}?"'.format(self.guest))
-        print_list(['1: take order', '2: chat'])
+        print_list(['1: take order', '2: chat', '3: done'])
 
-    def print_help(self):
-        print('Help:')
-        print(self.commands)
-
-    def exec(self, cmd, input):
-        if cmd == self.CMD_CHOICE:
-            choice = int(input[0])
-            if choice > 2 or choice < 1:
-                print('Invalid reply number.')
-                return self
-            if choice == 1:
-                order = guests.get_order(self.guest)
-                if order:
-                    print('{}: I\'ll have something {}-ish.'.format(self.guest, order))
-                else:
-                    print('{}: Surprise me.'.format(self.guest))
+    def exec_choice(self, choice):
+        if choice == 1:
+            order = guests.get_order(self.guest)
+            if order:
+                print('{}: I\'ll have something {}-ish.'.format(self.guest, order))
             else:
-                guest = guests.get(self.guest)
-                if guest.chatted_today:
-                    print('"What\'s up, {}?"'.format(self.guest))
-                    print('{}: "Enough chatting for today, I\'m hungry.".'.format(self.guest))
-                    return self
-                guest.chatted_today = True
-                if not self.guest in social.chats_available():
-                    print('"What\'s up, {}?"'.format(self.guest))
-                    print('{}: "Breakfast is up.".'.format(self.guest))
-                    return self
-                chat = social.next_chat(self.guest)
-                if not chat.replies:
-                    print('"What\'s up, {}?"'.format(self.guest))
-                    print('{}: "{}"'.format(self.guest, chat.question))
-                    return self
-                return ChatMode(self.guest, chat)
-            return self
-        if cmd == self.CMD_DONE:
+                print('{}: Surprise me.'.format(self.guest))
+        elif choice == 2:
+            guest = guests.get(self.guest)
+            if guest.chatted_today:
+                print('"What\'s up, {}?"'.format(self.guest))
+                print('{}: "Enough chatting for today, I\'m hungry.".'.format(self.guest))
+                return self
+            guest.chatted_today = True
+            if not self.guest in social.chats_available():
+                print('"What\'s up, {}?"'.format(self.guest))
+                print('{}: "Breakfast is up.".'.format(self.guest))
+                return self
+            chat = social.next_chat(self.guest)
+            if not chat.replies:
+                print('"What\'s up, {}?"'.format(self.guest))
+                print('{}: "{}"'.format(self.guest, chat.question))
+                return self
+            return ChatMode(self.guest, chat)
+        elif choice == 3:
             return ServiceMode()
 
 
-class ChatMode(Mode):
-    commands = [
-        (int,),
-    ]
+class ChatMode(ChoiceMode):
     prompt = 'chat'
     guest = None
     chat = None
@@ -462,6 +513,7 @@ class ChatMode(Mode):
         super().__init__()
         self.guest = guest
         self.chat = chat
+        self.size = len(self.chat.replies)
 
     def update_commands(self):
         super().update_commands()
@@ -471,16 +523,8 @@ class ChatMode(Mode):
         print('{}: "{}"'.format(self.guest, self.chat.question))
         print_list(['{}: "{}"'.format(i, reply) for i, reply in enumerate(self.chat.replies)])
 
-    def print_help(self):
-        print('Help:')
-        print(self.commands)
-
-    def exec(self, cmd, input):
-        reply = int(input[0])
-        if reply >= len(self.chat.replies) or reply < 0:
-            print('Invalid reply number.')
-            return self
-        action = actions.Chat(self.guest, reply)
+    def exec_choice(self, choice):
+        action = actions.Chat(self.guest, choice)
         action.perform()
         return TalkMode(self.guest)
 
@@ -531,9 +575,8 @@ time_ticked = None
 def run():
     global mode
     global time_ticked
-    mode = DinerMode()
+    mode = MenuMode()
     print_info = True
-    print('################################  SPACE  DINER  ################################')
     while True:
         if settings.DEBUG:
             levels.debug()

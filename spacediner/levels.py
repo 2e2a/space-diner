@@ -1,3 +1,4 @@
+import os
 import yaml
 
 from . import food
@@ -33,10 +34,15 @@ class Level(generic.Thing):
 level = None
 
 
-def load():
+def list():
+    return [level_file for level_file in os.listdir('levels/')]
+
+
+def load(name):
     global level
     level = Level()
-    level.load('levels/test.yaml')
+    file_name = 'levels/{}'.format(name)
+    level.load(file_name)
 
 
 def debug():

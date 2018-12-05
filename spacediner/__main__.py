@@ -14,6 +14,4 @@ parser.add_argument(
 args = vars(parser.parse_args())
 settings.read_args(args)
 cli.init()
-levels.load()
-time.tick()
 cli.run()
