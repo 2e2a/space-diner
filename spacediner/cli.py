@@ -218,7 +218,7 @@ class NewGameMode(ChoiceMode):
     def exec_choice(self, choice):
         if choice == self.done_choice:
             return MenuMode()
-        levels.load(self.levels[choice - 1])
+        levels.init(self.levels[choice - 1])
         time.tick()
         return DinerMode()
 

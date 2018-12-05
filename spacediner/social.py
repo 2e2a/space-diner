@@ -16,7 +16,7 @@ class RewardUnlockGuest(Reward):
     def __init__(self):
         self.typ = self.TYP_UNLOCK_GUEST
 
-    def load(self, data):
+    def init(self, data):
         self.level = data.get('level')
         self.guest = data.get('guest')
 
@@ -31,7 +31,7 @@ class Chat:
     reactions = None
     effects = None
 
-    def load(self, data):
+    def init(self, data):
         self.question = data.get('question')
         self.effects = []
         self.replies = []
@@ -55,21 +55,21 @@ class Relation:
     level = 0
     rewards = None
 
-    def load(self, data):
+    def init(self, data):
         self.name = data.get('name')
         self.chats = []
         self.chats_done = 0
         self.level = 0
         for chat_data in data.get('chats'):
             chat = Chat()
-            chat.load(chat_data)
+            chat.init(chat_data)
             self.chats.append(chat)
         self.rewards = {}
         for reward_data in data.get('rewards', []):
             typ = reward_data.get('typ')
             if typ == Reward.TYP_UNLOCK_GUEST:
                 reward = RewardUnlockGuest()
-                reward.load(reward_data)
+                reward.init(reward_data)
             self.rewards.update({reward.level: reward})
 
     def level_up(self):
@@ -140,12 +140,12 @@ def level(name):
     return guest_relation.level
 
 
-def load(data):
+def init(data):
     global relations
     relations = OrderedDict()
     for relation_data in data:
         relation = Relation()
-        relation.load(relation_data)
+        relation.init(relation_data)
         relations.update({relation.name: relation})
 
 

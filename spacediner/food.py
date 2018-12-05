@@ -46,7 +46,7 @@ class Recipe(generic.Thing):
     def consists_of(self, ingredients):
         return set(ingredients) == set(self.ingredients)
 
-    def load(self, data):
+    def init(self, data):
         self.name = data.get('name')
         self.taste = data.get('taste')
         self.available = data.get('available')
@@ -80,12 +80,12 @@ def get_recipe(ingredients):
     return None
 
 
-def load(data):
+def init(data):
     global recipes
     recipes = OrderedDict()
     for recipe_data in data:
         recipe = Recipe()
-        recipe.load(recipe_data)
+        recipe.init(recipe_data)
         recipes.update({recipe.name: recipe})
 
 

@@ -8,7 +8,7 @@ class Ingredient(generic.Thing):
     storage = None
     properties = None
 
-    def load(self, data):
+    def init(self, data):
         self.name = data.get('name')
         self.storage = data.get('storage')
         self.properties = data.get('properties')
@@ -23,12 +23,12 @@ def get(name):
     return ingredients.get(name)
 
 
-def load(data):
+def init(data):
     global ingredients
     ingredients = OrderedDict()
     for ingredient_data in data:
         ingredient = Ingredient()
-        ingredient.load(ingredient_data)
+        ingredient.init(ingredient_data)
         ingredients.update({ingredient.name: ingredient})
 
 

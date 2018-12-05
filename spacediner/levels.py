@@ -16,19 +16,19 @@ class Level(generic.Thing):
     diner = None
     money = 0
 
-    def load(self, filename):
+    def init(self, filename):
         with open(filename, 'r') as stream:
             data = yaml.load(stream)
             self.name = data.get('name')
             self.diner = data.get('diner')
             self.money = data.get('money')
-            ingredients.load(data.get('ingredients'))
-            storage.load(data.get('storage'))
-            kitchen.load(data.get('kitchen'))
-            merchants.load(data.get('merchants'))
-            food.load(data.get('recipes'))
-            guests.load(data.get('guests'))
-            social.load(data.get('sozial'))
+            ingredients.init(data.get('ingredients'))
+            storage.init(data.get('storage'))
+            kitchen.init(data.get('kitchen'))
+            merchants.init(data.get('merchants'))
+            food.init(data.get('recipes'))
+            guests.init(data.get('guests'))
+            social.init(data.get('sozial'))
 
 
 level = None
@@ -38,11 +38,11 @@ def list():
     return [level_file for level_file in os.listdir('levels/')]
 
 
-def load(name):
+def init(name):
     global level
     level = Level()
     file_name = 'levels/{}'.format(name)
-    level.load(file_name)
+    level.init(file_name)
 
 
 def debug():

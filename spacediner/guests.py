@@ -13,7 +13,7 @@ class Reaction(generic.Thing):
     taste = 0
     output = None
 
-    def load(self, data):
+    def init(self, data):
         self.properties = data.get('properties')
         self.taste = data.get('taste')
         self.output = data.get('output')
@@ -76,14 +76,14 @@ class Guest(generic.Thing):
         print('{} left.'.format(self.name))
         return taste
 
-    def load(self, data):
+    def init(self, data):
         self.name = data.get('name')
         self.budget = data.get('budget')
         self.available = data.get('available')
         self.reactions = []
         for reaction_data in data.get('reactions'):
             reaction = Reaction()
-            reaction.load(reaction_data)
+            reaction.init(reaction_data)
             self.reactions.append(reaction)
         self.taste = data.get('taste', ['Very Bad', 'Bad', 'OK', 'Good', 'Very Good' ])
         self.orders = data.get('orders', [])
@@ -96,7 +96,7 @@ class GuestGroup(Guest):
 class GuestFactory(generic.Thing):
     groups = None
 
-    def load(self, data):
+    def init(self, data):
         self.groups = []
         for groups in data:
             self.groups.append(groups)
@@ -176,24 +176,24 @@ def unlock(name):
 
 
 
-def load(data):
+def init(data):
     global regulars
     regulars = OrderedDict()
     for guest_data in data.get('regulars'):
         guest = Guest()
-        guest.load(guest_data)
+        guest.init(guest_data)
         regulars.update({guest.name: guest})
 
     global guest_groups
     guest_groups = OrderedDict()
     for group_data in data.get('groups'):
         group = GuestGroup()
-        group.load(group_data)
+        group.init(group_data)
         guest_groups.update({group.name: group})
 
     global guest_factory
     guest_factory = GuestFactory()
-    guest_factory.load(data.get('factory'))
+    guest_factory.init(data.get('factory'))
 
     time.register_callback(time.Clock.TIME_WORK, new_workday)
 

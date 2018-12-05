@@ -27,7 +27,7 @@ class Storage(generic.Thing):
         availability = self.ingredients.get(name, 0)
         self.ingredients.update({name: availability + amount})
 
-    def load(self, data):
+    def init(self, data):
         self.name = data.get('name')
         self.available = data.get('available')
         self.cost = data.get('cost', 0)
@@ -104,12 +104,12 @@ def get(name):
     return storages.get(name)
 
 
-def load(data):
+def init(data):
     global storages
     storages = OrderedDict()
     for storage_data in data:
         storage = Storage()
-        storage.load(storage_data)
+        storage.init(storage_data)
         storages.update({storage.name: storage})
 
 

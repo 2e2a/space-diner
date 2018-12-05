@@ -33,7 +33,7 @@ class Merchant(generic.Thing):
                 return ingredients.get(name)
         return None
 
-    def load(self, data):
+    def init(self, data):
         self.name = data.get('name')
         self.available = data.get('available')
         self.ingredients = OrderedDict()
@@ -61,12 +61,12 @@ def ingredients_for_sale():
     return OrderedDict({merchant.name: merchant.for_sale() for merchant in merchants.values()})
 
 
-def load(data):
+def init(data):
     global merchants
     merchants = OrderedDict()
     for merchant_data in data:
         merchant = Merchant()
-        merchant.load(merchant_data)
+        merchant.init(merchant_data)
         merchants.update({merchant.name: merchant})
 
 

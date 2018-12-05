@@ -12,7 +12,7 @@ class Device(generic.Thing):
     def __str__(self):
         return '{} ({})'.format(self.name, self.preparation_verb)
 
-    def load(self, data):
+    def init(self, data):
         self.name = data.get('name')
         self.preparation_verb = data.get('preparation')[0]
         self.preparation_participle = data.get('preparation')[1]
@@ -36,12 +36,12 @@ def get_device(name):
     return devices.get(name)
 
 
-def load(data):
+def init(data):
     global devices
     devices = OrderedDict()
     for device_data in data:
         device = Device()
-        device.load(device_data)
+        device.init(device_data)
         devices.update({device.name: device})
 
 
