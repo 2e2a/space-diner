@@ -60,6 +60,12 @@ class Guest(generic.Thing):
             if matching_properties:
                 self.react(reaction, matching_properties)
                 taste += reaction.taste
+        if self.order in dish.properties:
+            print('{}: "Mhh... {}-ish, like ordered."'.format(self.name, self.order))
+            taste += 2
+        else:
+            print('{}: "Not really {}-ish..."'.format(self.name, self.order))
+            taste -= 2
         self.print_taste(taste)
         payment = int(self.budget/5 * taste)
         levels.level.money += payment
@@ -75,7 +81,7 @@ class Guest(generic.Thing):
             reaction = Reaction()
             reaction.load(reaction_data)
             self.reactions.append(reaction)
-        self.taste = data.get('taste', ['Vary Bad', 'Bad', 'OK', 'Good', 'Vary Good' ])
+        self.taste = data.get('taste', ['Very Bad', 'Bad', 'OK', 'Good', 'Very Good' ])
         self.orders = data.get('orders', [])
 
 
