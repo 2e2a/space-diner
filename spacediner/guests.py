@@ -60,7 +60,10 @@ class Guest(generic.Thing):
             if matching_properties:
                 self.react(reaction, matching_properties)
                 taste += reaction.taste
-        if self.order in dish.properties:
+        if not self.order in dish.properties:
+            print('{}: "You could have taken my order first."'.format(self.name))
+            taste += 2
+        elif self.order in dish.properties:
             print('{}: "Mhh... {}-ish, like ordered."'.format(self.name, self.order))
             taste += 2
         else:
@@ -71,6 +74,7 @@ class Guest(generic.Thing):
         levels.level.money += payment
         print('{} payed {} space dollars.'.format(self.name, payment))
         print('{} left.'.format(self.name))
+        return taste
 
     def load(self, data):
         self.name = data.get('name')
@@ -142,8 +146,9 @@ def serve(name, food):
     global guests
     guest = get(name)
     if guest and guest.available:
-        guest.serve(food)
+        taste = guest.serve(food)
         guests.remove(guest)
+    return taste
 
 
 def new_workday():
@@ -157,6 +162,18 @@ def new_workday():
     for i in range(4):
         guest = guest_factory.create()
         guests.append(guest)
+
+
+def unlock(name):
+    global regulars
+    global guest_factory
+    guest = regulars.get(name)
+    if not guest:
+        guest = guest_factory.get(name)
+    if guest:
+        guest.available = True
+
+
 
 
 def load(data):

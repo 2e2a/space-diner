@@ -1,5 +1,29 @@
 from collections import OrderedDict
 
+from . import guests
+
+
+class Reward:
+    TYP_UNLOCK_GUEST = 'unlock_guest'
+
+    typ = None
+    level = None
+
+
+class RewardUnlockGuest(Reward):
+    guest = None
+
+    def __init__(self):
+        self.typ = self.TYP_UNLOCK_GUEST
+
+    def load(self, data):
+        self.level = data.get('level')
+        self.guest = data.get('guest')
+
+    def apply(self):
+        print('*** New guest unlocked. ***' )
+        guests.unlock(self.guest)
+
 
 class Chat:
     question = None
@@ -29,6 +53,7 @@ class Relation:
     chats = None
     chats_done = None
     level = 0
+    rewards = None
 
     def load(self, data):
         self.name = data.get('name')
@@ -39,16 +64,42 @@ class Relation:
             chat = Chat()
             chat.load(chat_data)
             self.chats.append(chat)
+        self.rewards = {}
+        for reward_data in data.get('rewards', []):
+            typ = reward_data.get('typ')
+            if typ == Reward.TYP_UNLOCK_GUEST:
+                reward = RewardUnlockGuest()
+                reward.load(reward_data)
+            self.rewards.update({reward.level: reward})
+
+    def level_up(self):
+        self.level += 1
+        reward = self.rewards.get(self.level)
+        if reward:
+            reward.apply()
+
+    def level_down(self):
+        self.level -= 1
 
     def chat(self, reply):
         chat = self.chats[self.chats_done]
         effect = chat.effect(reply)
         reaction = chat.reaction(reply)
-        self.level += effect
+        if effect > 0:
+            self.level_up()
+        elif effect < 0:
+            self.level_down()
         self.chats_done += 1
         if self.chats_done >= len(self.chats):
             self.chats_done = 0
-        return (effect, reaction)
+        return effect, reaction
+
+    def taste(self, taste):
+        if taste >= 5:
+            self.level_up()
+        elif taste <= 0:
+            self.level_down()
+
 
 
 relations = None
@@ -75,6 +126,12 @@ def chat(name, reply):
     global relations
     guest_relation = relations.get(name)
     return guest_relation.chat(reply)
+
+
+def taste(name, taste):
+    global relations
+    relation = relations.get(name)
+    relation.taste(taste)
 
 
 def level(name):

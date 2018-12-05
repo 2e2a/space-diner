@@ -480,7 +480,7 @@ class ChatMode(Mode):
         if reply >= len(self.chat.replies) or reply < 0:
             print('Invalid reply number.')
             return self
-        action = actions.Talk(self.guest, reply)
+        action = actions.Chat(self.guest, reply)
         action.perform()
         return TalkMode(self.guest)
 

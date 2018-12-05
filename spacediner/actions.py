@@ -38,7 +38,10 @@ class Serve(Action):
         self.guest = guest
 
     def perform(self):
-        guests.serve(self.guest, self.food)
+        taste = guests.serve(self.guest, self.food)
+        social.taste(self.guest, taste)
+        if social.get(self.guest):
+            print('{} bonding level is {}'.format(self.guest, social.level(self.guest)))
 
 
 class BuyStorage(Action):
@@ -81,7 +84,7 @@ class BuyIngredients(Action):
         storage.store_ingredient(self.ingredient, self.amount)
 
 
-class Talk(Action):
+class Chat(Action):
     guest = None
 
     def __init__(self, guest, reply):

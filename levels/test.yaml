@@ -190,6 +190,17 @@ sozial:
           - [-1, It's me!, Not funny...]
           - [ 0, It's time to look forward., Mhh ... maybe ...]
           - [+1, We all miss him!, He had a good heart]
+  - name: Predator
+    chats:
+    - question: How is you human?
+      replies:
+      - [-1, We don't serve human, That's racist ]
+      - [ 0, I can prepare you some, 'Nah, like them freshly hunted.' ]
+      - [+1, It's the best, Maybe I'll invite a friend who quite likes it. ]
+    rewards:
+      - typ: unlock_guest
+        level: 2
+        guest: Alien
   - name: Reptile
     chats:
       - question: Could eat eggs all day long.

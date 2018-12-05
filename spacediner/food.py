@@ -44,7 +44,7 @@ class Recipe(generic.Thing):
     properties = None
 
     def consists_of(self, ingredients):
-        return ingredients == self.ingredients
+        return set(ingredients) == set(self.ingredients)
 
     def load(self, data):
         self.name = data.get('name')
