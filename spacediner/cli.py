@@ -322,10 +322,17 @@ class CookingMode(Mode):
     prepared_components = None
 
     def __init__(self):
+        global actions_saved
         self.prepared_components = []
         self.available_ingredients = storage.available_ingredients()
         self.available_devices = kitchen.available_devices()
-        self.action = actions.Cook()
+        if len(actions_saved) == 0:
+            self.action = actions.Cook()
+        else:
+            self.action = actions_saved[0]
+            del actions_saved[0]
+            for ingredient, preparation_participle in self.action.food.ingredients:
+                self.prepared_components.append('{} {}'.format(preparation_participle, ingredient))
         super().__init__()
 
     def update_commands(self):
@@ -376,6 +383,8 @@ class CookingMode(Mode):
             self.prepared_components = []
             return self
         if cmd == self.CMD_DONE:
+            global actions_saved
+            actions_saved.append(self.action)
             return DinerMode()
 
 
@@ -569,6 +578,7 @@ class AfterWorkMode(Mode):
 
 
 mode = None
+actions_saved = []
 time_ticked = None
 
 
