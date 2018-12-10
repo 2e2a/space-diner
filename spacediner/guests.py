@@ -60,15 +60,16 @@ class Guest(generic.Thing):
             if matching_properties:
                 self.react(reaction, matching_properties)
                 taste += reaction.taste
-        if not self.order in dish.properties:
-            print('{}: "You could have taken my order first."'.format(self.name))
-            taste += 2
-        elif self.order in dish.properties:
-            print('{}: "Mhh... {}-ish, like ordered."'.format(self.name, self.order))
-            taste += 2
-        else:
-            print('{}: "Not really {}-ish..."'.format(self.name, self.order))
-            taste -= 2
+        if self.orders:
+            if not self.order:
+                print('{}: "You could have taken my order first."'.format(self.name))
+                taste += 2
+            elif self.order in dish.properties:
+                print('{}: "Mhh... {}-ish, like ordered."'.format(self.name, self.order))
+                taste += 2
+            else:
+                print('{}: "Not really {}-ish..."'.format(self.name, self.order))
+                taste -= 2
         self.print_taste(taste)
         payment = int(self.budget/5 * taste)
         levels.level.money += payment
