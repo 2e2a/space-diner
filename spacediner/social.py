@@ -1,3 +1,5 @@
+import pickle
+
 from collections import OrderedDict
 
 from . import guests
@@ -101,7 +103,6 @@ class Relation:
             self.level_down()
 
 
-
 relations = None
 
 
@@ -147,6 +148,16 @@ def init(data):
         relation = Relation()
         relation.init(relation_data)
         relations.update({relation.name: relation})
+
+
+def save(file):
+    global relations
+    pickle.dump(relations, file)
+
+
+def load(file):
+    global relations
+    relations = pickle.load(file)
 
 
 def debug():

@@ -1,3 +1,5 @@
+import pickle
+
 from collections import OrderedDict
 
 from . import generic
@@ -43,6 +45,16 @@ def init(data):
         device = Device()
         device.init(device_data)
         devices.update({device.name: device})
+
+
+def save(file):
+    global devices
+    pickle.dump(devices, file)
+
+
+def load(file):
+    global devices
+    devices = pickle.load(file)
 
 
 def debug():

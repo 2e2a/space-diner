@@ -1,3 +1,5 @@
+import pickle
+
 from collections import OrderedDict
 
 from . import generic
@@ -68,6 +70,16 @@ def init(data):
         merchant = Merchant()
         merchant.init(merchant_data)
         merchants.update({merchant.name: merchant})
+
+
+def save(file):
+    global merchants
+    pickle.dump(merchants, file)
+
+
+def load(file):
+    global merchants
+    merchants = pickle.load(file)
 
 
 def debug():

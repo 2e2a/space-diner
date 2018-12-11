@@ -1,4 +1,5 @@
 import itertools
+import pickle
 import random
 from collections import OrderedDict
 
@@ -197,6 +198,28 @@ def init(data):
     guest_factory.init(data.get('factory'))
 
     time.register_callback(time.Clock.TIME_WORK, new_workday)
+
+
+def save(file):
+    global guests
+    global regulars
+    global guest_groups
+    global guest_factory
+    pickle.dump(guests, file)
+    pickle.dump(regulars, file)
+    pickle.dump(guest_groups, file)
+    pickle.dump(guest_factory, file)
+
+
+def load(file):
+    global guests
+    global regulars
+    global guest_groups
+    global guest_factory
+    guests = pickle.load(file)
+    regulars = pickle.load(file)
+    guest_groups = pickle.load(file)
+    guest_factory = pickle.load(file)
 
 
 def debug():

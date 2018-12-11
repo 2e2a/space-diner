@@ -1,3 +1,5 @@
+import pickle
+
 from collections import OrderedDict
 
 from . import generic
@@ -30,6 +32,16 @@ def init(data):
         ingredient = Ingredient()
         ingredient.init(ingredient_data)
         ingredients.update({ingredient.name: ingredient})
+
+
+def save(file):
+    global ingredients
+    pickle.dump(ingredients, file)
+
+
+def load(file):
+    global ingredients
+    ingredients = pickle.load(file)
 
 
 def debug():

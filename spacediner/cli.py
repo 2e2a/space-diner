@@ -193,7 +193,7 @@ class MenuMode(ChoiceMode):
         elif choice == 2:
             return NewGameMode()
         elif choice == 3:
-            pass
+            return LoadGameMode()
         elif choice == 4:
             exit()
 
@@ -201,25 +201,74 @@ class MenuMode(ChoiceMode):
 class NewGameMode(ChoiceMode):
     prompt = 'new game #'
     levels = None
-    done_choice = 0
 
     def __init__(self):
         super().__init__()
         self.levels = levels.list()
         self.size = len(self.levels) + 1
-        self.done_choice = self.size
 
     def print_info(self):
         print_title('Select level')
         choice = ['{}: {}'.format(i, level) for i, level in enumerate(self.levels, 1)]
-        choice.append('{}: back'.format(len(self.levels) + 1))
+        choice.append('{}: abort'.format(len(self.levels) + 1))
         print_list(choice)
 
     def exec_choice(self, choice):
-        if choice == self.done_choice:
+        if choice == self.size:
             return MenuMode()
         levels.init(self.levels[choice - 1])
         time.tick()
+        return DinerMode()
+
+
+class SaveGameMode(ChoiceMode):
+    prompt = 'save #'
+    saved_games = None
+    slots = 8
+    size = 9
+
+    def __init__(self):
+        super().__init__()
+        self.saved_games = levels.saved_games()
+
+    def print_info(self):
+        print_title('Select slot')
+        choice = []
+        for slot in range(1,self.slots):
+            file = self.saved_games.get(slot)
+            if file:
+                choice.append('{}: {}'.format(slot, file))
+            else:
+                choice.append('{}: <empty>'.format(slot))
+        choice.append('{}: back'.format(self.size))
+        print_list(choice)
+
+    def exec_choice(self, choice):
+        if choice == self.size:
+            return DinerMode()
+        levels.save_game(choice)
+        return DinerMode()
+
+
+class LoadGameMode(ChoiceMode):
+    prompt = 'load #'
+    slots = 8
+    size = 9
+
+    def __init__(self):
+        super().__init__()
+        self.saved_games = levels.saved_games()
+
+    def print_info(self):
+        print_title('Select saved game')
+        choice = ['{}: {}'.format(slot, file) for slot, file in self.saved_games.items()]
+        choice.append('{}: back'.format(self.size))
+        print_list(choice)
+
+    def exec_choice(self, choice):
+        if choice == self.size:
+            return MenuMode()
+        levels.load_game(choice)
         return DinerMode()
 
 
@@ -228,12 +277,14 @@ class DinerMode(Mode):
     CMD_SERVICE = 2
     CMD_SHOPPING = 3
     CMD_CLOSE_UP = 4
-    CMD_EXIT = 5
+    CMD_SAVE = 5
+    CMD_EXIT = 6
     commands = [
         (['cooking'],),
         (['service'],),
         (['shopping'],),
         (['close_up'],),
+        (['save'],),
         (['exit'],),
     ]
     prompt = 'diner >>'
@@ -258,6 +309,8 @@ class DinerMode(Mode):
         if cmd == self.CMD_CLOSE_UP:
             time.tick()
             return AfterWorkMode()
+        if cmd == self.CMD_SAVE:
+            return SaveGameMode()
         if cmd == self.CMD_EXIT:
             return MenuMode()
 

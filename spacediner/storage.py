@@ -1,3 +1,5 @@
+import pickle
+
 from collections import OrderedDict
 
 from . import generic
@@ -111,6 +113,16 @@ def init(data):
         storage = Storage()
         storage.init(storage_data)
         storages.update({storage.name: storage})
+
+
+def save(file):
+    global storages
+    pickle.dump(storages, file)
+
+
+def load(file):
+    global storages
+    storages = pickle.load(file)
 
 
 def debug():
