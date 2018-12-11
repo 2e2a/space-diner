@@ -178,7 +178,7 @@ class ChoiceMode(Mode):
 
 
 class MenuMode(ChoiceMode):
-    prompt = 'menu'
+    prompt = 'menu #'
     size = 4
 
     def print_info(self):
@@ -199,7 +199,7 @@ class MenuMode(ChoiceMode):
 
 
 class NewGameMode(ChoiceMode):
-    prompt = 'new game'
+    prompt = 'new game #'
     levels = None
     done_choice = 0
 
@@ -236,7 +236,7 @@ class DinerMode(Mode):
         (['close_up'],),
         (['exit'],),
     ]
-    prompt = 'diner'
+    prompt = 'diner >>'
 
     def print_info(self):
         print_value('Level', levels.level.name)
@@ -271,7 +271,7 @@ class ServiceMode(Mode):
         (['talk'], ['to'], []),
         (['done'], ),
     ]
-    prompt = 'service'
+    prompt = 'service >>'
 
     def update_commands(self):
         cooked_food = [self.name_for_command(f) for f in food.plated()]
@@ -315,7 +315,7 @@ class CookingMode(Mode):
         (['abort'], ),
         (['done'], ),
     ]
-    prompt = 'cooking'
+    prompt = 'cooking >>'
     action = None
     available_ingredients = None
     available_devices = None
@@ -397,7 +397,7 @@ class ShoppingMode(Mode):
         (['buy'], int, [], ['from'], []),
         (['done'], ),
     ]
-    prompt = 'shopping'
+    prompt = 'shopping >>'
     storages_for_sale = None
     available_ingredients = None
     ingredients_for_sale = None
@@ -470,7 +470,7 @@ class ShoppingMode(Mode):
 
 
 class TalkMode(ChoiceMode):
-    prompt = 'talk'
+    prompt = 'talk #'
     size = 3
     guest = None
 
@@ -514,7 +514,7 @@ class TalkMode(ChoiceMode):
 
 
 class ChatMode(ChoiceMode):
-    prompt = 'chat'
+    prompt = 'chat #'
     guest = None
     chat = None
 
@@ -545,7 +545,7 @@ class AfterWorkMode(Mode):
         (['watch_tv'],),
         (['sleep'],),
     ]
-    prompt = 'after work'
+    prompt = 'after work >>'
     activities_done = 0
 
     def __init__(self):
@@ -597,8 +597,8 @@ def run():
             print('')
             mode.print_info()
         if not mode.no_input:
-            prompt = '({}) '.format(mode.prompt) if mode.prompt else ''
-            cmd = input('{}>> '.format(prompt))
+            prompt = '{} '.format(mode.prompt) if mode.prompt else ''
+            cmd = input('{} '.format(prompt))
             next_mode = mode.parse(cmd)
         else:
             next_mode = mode.exec(None, None)
