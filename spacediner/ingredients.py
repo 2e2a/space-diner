@@ -13,8 +13,11 @@ class Ingredient(generic.Thing):
     def init(self, data):
         self.name = data.get('name')
         self.storage = data.get('storage')
-        self.properties = data.get('properties')
-        self.properties.append(self.name)
+        self.properties = set(data.get('properties'))
+        self.properties.add(self.name)
+
+    def __str__(self):
+        return self.name
 
 
 ingredients = None

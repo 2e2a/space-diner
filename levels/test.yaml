@@ -90,8 +90,8 @@ recipes:
     available: False
     taste: dynamite
     ingredients:
-      - fried Space egg
-      - fried Space potato
+      - [fried, Space egg]
+      - [fried, vegetable]
     properties:
       - elevated
       - birdy

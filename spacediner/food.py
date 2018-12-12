@@ -3,6 +3,7 @@ import pickle
 from collections import OrderedDict
 
 from . import generic
+from . import ingredients
 from . import kitchen
 from . import storage
 
@@ -22,20 +23,22 @@ class Food(generic.Thing):
             ingredient = storage.take_ingredient(ingredient_name)
             device = kitchen.get_device(device_name)
             preparation_participle = device.preparation_participle
+            ingredient.properties.add(preparation_participle)
             self.ingredients.append((ingredient, preparation_participle))
 
     def plate(self):
         global cooked
-        names = []
         self.properties = set()
+        names = []
         for ingredient, preparation_participle in self.ingredients:
             name = '{} {}'.format(preparation_participle, ingredient.name)
             names.append(name)
             self.properties.update(ingredient.properties)
-        recipe = get_recipe(names)
+            self.properties.update(preparation_participle)
+        recipe = get_recipe([ingredient for ingredient, _ in self.ingredients])
         if recipe:
             self.properties.update(recipe.properties)
-            self.name = recipe.name
+            self.name = '{} ({})'.format(recipe.name, ' with '.join(names))
         else:
             self.name = ' with '.join(names)
         cooked.append(self)
@@ -45,14 +48,30 @@ class Recipe(generic.Thing):
     available = False
     properties = None
 
-    def consists_of(self, ingredients):
-        return set(ingredients) == set(self.ingredients)
+    def  _properties_match(self, recipe_ingredient_property_list, ingredient_list):
+        if not recipe_ingredient_property_list:
+            return True
+        for recipe_ingredient_properties in recipe_ingredient_property_list:
+            for ingredient in ingredient_list:
+                if recipe_ingredient_properties.issubset(ingredient.properties):
+                    remaining_recipe_ingredient_property_list = recipe_ingredient_property_list.copy()
+                    remaining_recipe_ingredient_property_list.remove(recipe_ingredient_properties)
+                    remaining_ingredient_list = ingredient_list.copy()
+                    remaining_ingredient_list.remove(ingredient)
+                    if self._properties_match(remaining_recipe_ingredient_property_list, remaining_ingredient_list):
+                        return True
+        return False
+
+    def consists_of(self, ingredient_list):
+        return self._properties_match(self.ingredient_properties, ingredient_list)
 
     def init(self, data):
         self.name = data.get('name')
         self.taste = data.get('taste')
         self.available = data.get('available')
-        self.ingredients = data.get('ingredients')
+        self.ingredient_properties = []
+        for ingredient_property_data in data.get('ingredients'):
+            self.ingredient_properties.append(set(ingredient_property_data))
         self.properties = data.get('properties')
         self.properties.append(self.name)
 
@@ -68,6 +87,7 @@ def take(name):
             cooked.remove(dish)
             return dish
     return None
+
 
 def plated():
     global cooked
