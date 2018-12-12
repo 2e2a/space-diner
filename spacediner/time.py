@@ -1,3 +1,6 @@
+import pickle
+
+
 class Clock:
     TIME_WORK = 'work'
     TIME_OFF = 'off'
@@ -40,3 +43,13 @@ def now():
 def register_callback(time, callback):
     global clock
     clock.register_callback(time, callback)
+
+
+def save(file):
+    global clock
+    pickle.dump(clock, file)
+
+
+def load(file):
+    global clock
+    clock = pickle.load(file)

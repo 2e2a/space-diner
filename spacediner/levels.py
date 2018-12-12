@@ -12,6 +12,7 @@ from . import ingredients
 from . import merchants
 from . import social
 from . import storage
+from . import time
 
 
 class Level(generic.Thing):
@@ -82,6 +83,7 @@ def save(file):
     food.save(file)
     guests.save(file)
     social.save(file)
+    time.save(file)
 
 
 def load(file):
@@ -94,6 +96,7 @@ def load(file):
     food.load(file)
     guests.load(file)
     social.load(file)
+    time.load(file)
 
 
 def debug():
