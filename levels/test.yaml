@@ -87,7 +87,7 @@ merchants:
 
 recipes:
   - name: Omelet
-    available: False
+    available: True
     taste: dynamite
     ingredients:
       - [fried, Space egg]

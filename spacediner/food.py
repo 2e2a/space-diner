@@ -35,7 +35,7 @@ class Food(generic.Thing):
             names.append(name)
             self.properties.update(ingredient.properties)
             self.properties.update(preparation_participle)
-        recipe = get_recipe([ingredient for ingredient, _ in self.ingredients])
+        recipe = match_recipe([ingredient for ingredient, _ in self.ingredients])
         if recipe:
             self.properties.update(recipe.properties)
             self.name = '{} ({})'.format(recipe.name, ' with '.join(names))
@@ -46,6 +46,7 @@ class Food(generic.Thing):
 
 class Recipe(generic.Thing):
     available = False
+    ingredient_properties = None
     properties = None
 
     def  _properties_match(self, recipe_ingredient_property_list, ingredient_list):
@@ -94,7 +95,17 @@ def plated():
     return [dish.name for dish in cooked]
 
 
-def get_recipe(ingredients):
+def get_recipes():
+    global recipes
+    return [recipe.name for recipe in recipes.values() if recipe.available]
+
+
+def get_recipe(name):
+    global recipes
+    return recipes.get(name)
+
+
+def match_recipe(ingredients):
     global recipes
     for recipe in recipes.values():
         if recipe.consists_of(ingredients):

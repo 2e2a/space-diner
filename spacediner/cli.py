@@ -360,11 +360,13 @@ class ServiceMode(Mode):
 class CookingMode(Mode):
     CMD_COOK = 1
     CMD_PLATE = 2
-    CMD_ABORT = 3
-    CMD_DONE = 4
+    CMD_RECIPES = 3
+    CMD_ABORT = 4
+    CMD_DONE = 5
     commands = [
         (['cook'], [], ),
         (['plate'], ),
+        (['recipes'], ),
         (['abort'], ),
         (['done'], ),
     ]
@@ -417,6 +419,7 @@ class CookingMode(Mode):
         return None
 
     def exec(self, cmd, input):
+        global actions_saved
         if cmd == self.CMD_COOK:
             preparation_command = input[0]
             device = self._get_device(preparation_command)
@@ -431,14 +434,46 @@ class CookingMode(Mode):
             self.action = actions.Cook()
             self.prepared_components = []
             return self
+        if cmd == self.CMD_RECIPES:
+            actions_saved.append(self.action)
+            return RecipeMode()
         if cmd == self.CMD_ABORT:
             self.action = actions.Cook()
             self.prepared_components = []
             return self
         if cmd == self.CMD_DONE:
-            global actions_saved
             actions_saved.append(self.action)
             return DinerMode()
+
+
+class RecipeMode(ChoiceMode):
+    prompt = 'recipe #'
+    recipes = None
+    size = 0
+
+    def __init__(self):
+        super().__init__()
+        self.recipes = food.get_recipes()
+        self.size = len(self.recipes) + 1
+
+    def update_commands(self):
+        super().update_commands()
+
+    def print_info(self):
+        print_title('Recipes:')
+        choice = ['{}: {}'.format(i, file) for i, file in enumerate(self.recipes, 1)]
+        choice.append('{}: back'.format(self.size))
+        print_list(choice)
+
+    def exec_choice(self, choice):
+        if choice == self.size:
+            return CookingMode()
+        recipe = food.get_recipe(self.recipes[choice - 1])
+        print('')
+        print_title(recipe.name)
+        ingredient_list = [' '.join(properties) for properties in recipe.ingredient_properties]
+        print_list(ingredient_list)
+        return self
 
 
 class ShoppingMode(Mode):
