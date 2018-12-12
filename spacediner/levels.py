@@ -32,7 +32,7 @@ class Level(generic.Thing):
             merchants.init(data.get('merchants'))
             food.init(data.get('recipes'))
             guests.init(data.get('guests'))
-            social.init(data.get('sozial'))
+            social.init(data.get('social'))
 
 
 level = None

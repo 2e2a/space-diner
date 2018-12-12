@@ -182,7 +182,7 @@ guests:
         - human
         - heavy
 
-sozial:
+social:
   - name: E.T.
     chats:
       - question: Elliott...
