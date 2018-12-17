@@ -13,6 +13,7 @@ from . import time
 
 
 def print_title(str):
+    print('')
     print(str)
     print('-'*(len(str)))
 
@@ -37,6 +38,7 @@ def print_time(t):
         print('"Finally off..."')
     else:
         print('"A new day... work... work... work"')
+    print('')
 
 
 class CommandCompleter:
@@ -183,7 +185,6 @@ class MenuMode(ChoiceMode):
 
     def print_info(self):
         print('################################  SPACE  DINER  ################################')
-        print('')
         print_title('Menu')
         print_list(['1: Continue', '2: New game', '3: Load game', '4: Exit'])
 
@@ -293,7 +294,6 @@ class DinerMode(Mode):
         print_value('Level', levels.level.name)
         print_value('Day', time.now())
         print_value('Money', levels.level.money, 'space dollars')
-        print('')
 
     def print_help(self):
         print('Help:')
@@ -469,7 +469,6 @@ class RecipeMode(ChoiceMode):
         if choice == self.size:
             return CookingMode()
         recipe = food.get_recipe(self.recipes[choice - 1])
-        print('')
         print_title(recipe.name)
         ingredient_list = [' '.join(properties) for properties in recipe.ingredient_properties]
         print_list(ingredient_list)
@@ -513,12 +512,10 @@ class ShoppingMode(Mode):
 
     def print_info(self):
         print_value('Money', levels.level.money, 'space dollars')
-        print('')
         print_title('Available Ingredients:')
         print_list(['{} {}s'.format(a, i) for i, a in self.available_ingredients.items()])
         print_title('Ingredients for sale:')
         for merchant, ingredients in  self.ingredients_for_sale.items():
-            print('')
             print('Merchant: {}'.format(merchant))
             print_list(['{}: {} space dollars, {} in stock, {} required'.format(i, c, a, s)
                         for i, (a, c, s) in ingredients.items()])
@@ -653,11 +650,9 @@ class AfterWorkMode(Mode):
     def exec(self, cmd, input):
         self.activities_done += 1
         if self.activities_done > 1 and cmd != self.CMD_SLEEP:
-            print('')
             print('Let\'s not do this today.')
             return self
         if cmd == self.CMD_WATCH_TV:
-            print('')
             print('You watched some TV...')
             return self
         if cmd == self.CMD_SLEEP:
@@ -682,7 +677,6 @@ def run():
             if time_ticked:
                 print_time(time_ticked)
                 time_ticked = None
-            print('')
             mode.print_info()
         if not mode.no_input:
             prompt = '{} '.format(mode.prompt) if mode.prompt else ''
