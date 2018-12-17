@@ -64,7 +64,7 @@ storage:
 kitchen:
   - name: Pot
     available: True
-    preparation: [cook, cooked]
+    preparation: [boil, boiled]
 
   - name: Pan
     available: True
