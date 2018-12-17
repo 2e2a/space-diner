@@ -4,6 +4,8 @@ import yaml
 
 from datetime import datetime
 
+
+from . import cli
 from . import food
 from . import generic
 from . import guests
@@ -43,7 +45,8 @@ def list():
 
 
 def saved_games():
-    return {slot: level_file for slot, level_file in enumerate(os.listdir('saves/'), 1)}
+    files = [file for file in os.listdir('saves/') if 'yaml' in file]
+    return {slot: level_file for slot, level_file in enumerate(files, 1)}
 
 
 def save_game(slot):
@@ -65,12 +68,23 @@ def load_game(slot):
     with open('saves/{}'.format(file), 'rb') as f:
         load(f)
 
+def autosave_save():
+    cli.print_message('Auto-saving...')
+    with open('saves/auto.yaml', 'wb') as f:
+        save(f)
+
+
+def autosave_load():
+    with open('saves/auto.yaml', 'rb') as f:
+        load(f)
+
 
 def init(name):
     global level
     level = Level()
     file_name = 'levels/{}'.format(name)
     level.init(file_name)
+    time.register_callback(time.Clock.TIME_WORK, autosave_save)
 
 
 def save(file):

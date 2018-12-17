@@ -194,7 +194,8 @@ class MenuMode(ChoiceMode):
 
     def exec_choice(self, choice):
         if choice == 1:
-            pass
+            levels.autosave_load()
+            return DinerMode()
         elif choice == 2:
             return NewGameMode()
         elif choice == 3:
@@ -316,6 +317,7 @@ class DinerMode(Mode):
         if cmd == self.CMD_SAVE:
             return SaveGameMode()
         if cmd == self.CMD_EXIT:
+            levels.autosave_save()
             return MenuMode()
 
 
