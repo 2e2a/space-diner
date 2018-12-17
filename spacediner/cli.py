@@ -41,6 +41,10 @@ def print_time(t):
     print('')
 
 
+def print_message(msg):
+    print('*** {} ***'.format(msg))
+
+
 class CommandCompleter:
     commands = None
     matches = []
@@ -361,12 +365,14 @@ class CookingMode(Mode):
     CMD_COOK = 1
     CMD_PLATE = 2
     CMD_RECIPES = 3
-    CMD_ABORT = 4
-    CMD_DONE = 5
+    CMD_CREATE_RECIPE = 4
+    CMD_ABORT = 5
+    CMD_DONE = 6
     commands = [
         (['cook'], [], ),
         (['plate'], ),
         (['recipes'], ),
+        (['write'], ['down'], ['recipe'] ),
         (['abort'], ),
         (['done'], ),
     ]
@@ -386,7 +392,7 @@ class CookingMode(Mode):
         else:
             self.action = actions_saved[0]
             del actions_saved[0]
-            for ingredient, preparation_participle in self.action.food.ingredients:
+            for preparation_participle, ingredient in self.action.food.ingredients:
                 self.prepared_components.append('{} {}'.format(preparation_participle, ingredient))
         super().__init__()
 
@@ -425,7 +431,7 @@ class CookingMode(Mode):
             device = self._get_device(preparation_command)
             ingredient = self.original_name(cmd_input[1])
             self.available_ingredients.update({ingredient: self.available_ingredients.get(ingredient) - 1})
-            self.action.add_ingredients([(ingredient, device.name)])
+            self.action.add_ingredients([(device.preparation_participle, ingredient)])
             self.prepared_components.append('{} {}'.format(device.preparation_participle, ingredient))
             self.update_commands()
             return self
@@ -433,6 +439,17 @@ class CookingMode(Mode):
             self.action.perform()
             self.action = actions.Cook()
             self.prepared_components = []
+            return self
+        if cmd == self.CMD_CREATE_RECIPE:
+            print_title('???')
+            print_list(['{} {}'.format(
+                preparation, ingredient) for preparation, ingredient in self.action.food.ingredients])
+            name = input('recipe name: ')
+            if not name:
+                print_message('aborted')
+            else:
+                food.create_recipe(name, self.action.food.ingredients)
+                print_message('recipe saved as "{}"'.format(name))
             return self
         if cmd == self.CMD_RECIPES:
             actions_saved.append(self.action)

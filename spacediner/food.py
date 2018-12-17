@@ -3,7 +3,6 @@ import pickle
 from collections import OrderedDict
 
 from . import generic
-from . import ingredients
 from . import kitchen
 from . import storage
 
@@ -19,23 +18,20 @@ class Food(generic.Thing):
             self.plate()
 
     def prepare_ingredients(self, ingredients):
-        for ingredient_name, device_name in ingredients:
+        for preparation_participle, ingredient_name in ingredients:
             ingredient = storage.take_ingredient(ingredient_name)
-            device = kitchen.get_device(device_name)
-            preparation_participle = device.preparation_participle
             ingredient.properties.add(preparation_participle)
-            self.ingredients.append((ingredient, preparation_participle))
+            self.ingredients.append((preparation_participle, ingredient))
 
     def plate(self):
         global cooked
         self.properties = set()
         names = []
-        for ingredient, preparation_participle in self.ingredients:
+        for preparation_participle, ingredient in self.ingredients:
             name = '{} {}'.format(preparation_participle, ingredient.name)
             names.append(name)
             self.properties.update(ingredient.properties)
-            self.properties.update(preparation_participle)
-        recipe = match_recipe([ingredient for ingredient, _ in self.ingredients])
+        recipe = match_recipe([ingredient for _, ingredient in self.ingredients])
         if recipe:
             self.properties.update(recipe.properties)
             self.name = '{} ({})'.format(recipe.name, ' with '.join(names))
@@ -68,7 +64,6 @@ class Recipe(generic.Thing):
 
     def init(self, data):
         self.name = data.get('name')
-        self.taste = data.get('taste')
         self.available = data.get('available')
         self.ingredient_properties = []
         for ingredient_property_data in data.get('ingredients'):
@@ -111,6 +106,19 @@ def match_recipe(ingredients):
         if recipe.consists_of(ingredients):
             return recipe
     return None
+
+
+def create_recipe(name, prepared_ingredients):
+    global recipes
+    recipe = Recipe()
+    recipe.name = name
+    recipe.available = True
+    recipe.ingredient_properties = []
+    recipe.properties = set()
+    for preparation, ingredient in prepared_ingredients:
+        recipe.ingredient_properties.append(set([preparation, ingredient.name]))
+        recipe.properties.update(ingredient.properties)
+    recipes.update({name: recipe})
 
 
 def init(data):
