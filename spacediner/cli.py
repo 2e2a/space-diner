@@ -60,11 +60,11 @@ class CommandCompleter:
             except ValueError:
                 return False
 
-    def matching_commands(self, input):
+    def matching_commands(self, cmd_input):
         matching_commands = []
         for cmd in self.commands:
             arg_type_match = True
-            for arg_type, arg in zip(cmd, input):
+            for arg_type, arg in zip(cmd, cmd_input):
                 if not self.match_arg(arg_type, arg):
                     arg_type_match = False
                     break
@@ -72,12 +72,12 @@ class CommandCompleter:
                 matching_commands.append(cmd)
         return matching_commands
 
-    def match_command(self, input):
-        matching_commands = self.matching_commands(input)
+    def match_command(self, cmd_input):
+        matching_commands = self.matching_commands(cmd_input)
         if len(matching_commands) != 1:
             return None
         command = matching_commands[0]
-        if len(command) != len(input):
+        if len(command) != len(cmd_input):
             return None
         return self.commands.index(command) + 1
 
@@ -135,15 +135,15 @@ class Mode:
     def print_help(self):
         raise NotImplemented()
 
-    def exec(self, cmd, input):
+    def exec(self, cmd, cmd_input):
         raise  NotImplemented()
 
-    def parse(self, input):
-        if input:
-            input_list = input.split()
-            matching_command = self.completer.match_command(input_list)
+    def parse(self, cmd_input):
+        if cmd_input:
+            cmd_input_list = cmd_input.split()
+            matching_command = self.completer.match_command(cmd_input_list)
             if matching_command:
-                return self.exec(matching_command, input_list)
+                return self.exec(matching_command, cmd_input_list)
         self.print_help()
         return None
 
@@ -170,9 +170,9 @@ class ChoiceMode(Mode):
     def exec_choice(self, choice):
         raise  NotImplemented
 
-    def exec(self, cmd, input):
+    def exec(self, cmd, cmd_input):
         if cmd == self.CMD_CHOICE:
-            choice = int(input[0])
+            choice = int(cmd_input[0])
             if choice < 1 or choice > self.size:
                 print('Invalid choice.')
                 return self
@@ -299,7 +299,7 @@ class DinerMode(Mode):
         print('Help:')
         print(self.commands)
 
-    def exec(self, cmd, input):
+    def exec(self, cmd, cmd_input):
         if cmd == self.CMD_COOKING:
             return CookingMode()
         if cmd == self.CMD_SERVICE:
@@ -343,15 +343,15 @@ class ServiceMode(Mode):
         print('Help:')
         print(self.commands)
 
-    def exec(self, cmd, input):
+    def exec(self, cmd, cmd_input):
         if cmd == self.CMD_SERVE:
-            food = self.original_name(input[1])
-            guest = self.original_name(input[3])
+            food = self.original_name(cmd_input[1])
+            guest = self.original_name(cmd_input[3])
             action = actions.Serve(food, guest)
             action.perform()
             return self
         if cmd == self.CMD_TALK:
-            guest = self.original_name(input[2])
+            guest = self.original_name(cmd_input[2])
             return TalkMode(guest)
         if cmd == self.CMD_DONE:
             return DinerMode()
@@ -418,12 +418,12 @@ class CookingMode(Mode):
                 return device
         return None
 
-    def exec(self, cmd, input):
+    def exec(self, cmd, cmd_input):
         global actions_saved
         if cmd == self.CMD_COOK:
-            preparation_command = input[0]
+            preparation_command = cmd_input[0]
             device = self._get_device(preparation_command)
-            ingredient = self.original_name(input[1])
+            ingredient = self.original_name(cmd_input[1])
             self.available_ingredients.update({ingredient: self.available_ingredients.get(ingredient) - 1})
             self.action.add_ingredients([(ingredient, device.name)])
             self.prepared_components.append('{} {}'.format(device.preparation_participle, ingredient))
@@ -527,18 +527,18 @@ class ShoppingMode(Mode):
         print('Help:')
         print(self.commands)
 
-    def exec(self, cmd, input):
+    def exec(self, cmd, cmd_input):
         if cmd == self.CMD_BUY_STORAGE:
-            storage = self.original_name(input[1])
+            storage = self.original_name(cmd_input[1])
             action = actions.BuyStorage(storage)
             action.perform()
             self.storages_for_sale.pop(storage)
             self.update_commands()
             return self
         if cmd == self.CMD_BUY_INGREDIENT:
-            amount = int(input[1])
-            ingredient = self.original_name(input[2])
-            merchant = self.original_name(input[4])
+            amount = int(cmd_input[1])
+            ingredient = self.original_name(cmd_input[2])
+            merchant = self.original_name(cmd_input[4])
             action = actions.BuyIngredients(merchant, ingredient, amount)
             try:
                 action.perform()
@@ -647,7 +647,7 @@ class AfterWorkMode(Mode):
         print('Help:')
         print(self.commands)
 
-    def exec(self, cmd, input):
+    def exec(self, cmd, cmd_input):
         self.activities_done += 1
         if self.activities_done > 1 and cmd != self.CMD_SLEEP:
             print('Let\'s not do this today.')
