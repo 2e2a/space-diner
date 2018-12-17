@@ -427,13 +427,16 @@ class CookingMode(Mode):
     def exec(self, cmd, cmd_input):
         global actions_saved
         if cmd == self.CMD_COOK:
-            preparation_command = cmd_input[0]
-            device = self._get_device(preparation_command)
-            ingredient = self.original_name(cmd_input[1])
-            self.available_ingredients.update({ingredient: self.available_ingredients.get(ingredient) - 1})
-            self.action.add_ingredients([(device.preparation_participle, ingredient)])
-            self.prepared_components.append('{} {}'.format(device.preparation_participle, ingredient))
-            self.update_commands()
+            if len(self.prepared_components) >= 3:
+                print_message('Maximum number of ingredients prepared')
+            else:
+                preparation_command = cmd_input[0]
+                device = self._get_device(preparation_command)
+                ingredient = self.original_name(cmd_input[1])
+                self.available_ingredients.update({ingredient: self.available_ingredients.get(ingredient) - 1})
+                self.action.add_ingredients([(device.preparation_participle, ingredient)])
+                self.prepared_components.append('{} {}'.format(device.preparation_participle, ingredient))
+                self.update_commands()
             return self
         if cmd == self.CMD_PLATE:
             self.action.perform()
