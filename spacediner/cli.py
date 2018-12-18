@@ -165,7 +165,7 @@ class ChoiceMode(Mode):
     commands = [
         (int,),
     ]
-    choice_info = []
+    choices = []
     back_label = 'Back'
 
     def print_help(self):
@@ -179,13 +179,14 @@ class ChoiceMode(Mode):
         raise NotImplemented
 
     def print_info(self):
-        choice_info = self.choice_info + ['0: {}'.format(self.back_label)]
+        choice_info = ['{}: {}'.format(i, choice) for i, choice in enumerate(self.choices, 1)]
+        choice_info += ['0: {}'.format(self.back_label)]
         print_list(choice_info)
 
     def exec(self, cmd, cmd_input):
         if cmd == self.CMD_CHOICE:
             choice = int(cmd_input[0])
-            if choice < 0 or choice > (len(self.choice_info) + 2):
+            if choice < 0 or choice > (len(self.choices) + 2):
                 print('Invalid choice.')
                 return self
             if choice == 0:
@@ -195,7 +196,7 @@ class ChoiceMode(Mode):
 
 class MenuMode(ChoiceMode):
     prompt = 'menu #'
-    choice_info = ['1: Continue', '2: New game', '3: Load game']
+    choices = ['Continue', 'New game', 'Load game']
     back_label = 'Exit'
 
     def print_info(self):
@@ -218,15 +219,15 @@ class MenuMode(ChoiceMode):
 class NewGameMode(ChoiceMode):
     prompt = 'new game #'
     levels = None
-    choice_info = None
+    choices = None
 
     def __init__(self):
         super().__init__()
         self.levels = levels.list()
+        self.choices = self.levels
 
     def print_info(self):
         print_title('Select level')
-        self.choice_info = ['{}: {}'.format(i, level) for i, level in enumerate(self.levels, 1)]
         super().print_info()
 
     def exec_choice(self, choice):
@@ -241,21 +242,21 @@ class NewGameMode(ChoiceMode):
 class SaveGameMode(ChoiceMode):
     prompt = 'save #'
     saved_games = None
-    choice_info = None
+    choices = None
 
     def __init__(self):
         super().__init__()
         self.saved_games = levels.saved_games()
-
-    def print_info(self):
-        print_title('Select slot')
-        self.choice_info = []
+        self.choices = []
         for slot in range(1, 9):
             file = self.saved_games.get(slot)
             if file:
-                self.choice_info.append('{}: {}'.format(slot, file))
+                self.choices.append(file)
             else:
-                self.choice_info.append('{}: <empty>'.format(slot))
+                self.choices.append('<empty>')
+
+    def print_info(self):
+        print_title('Select slot')
         super().print_info()
 
     def exec_choice(self, choice):
@@ -268,15 +269,15 @@ class SaveGameMode(ChoiceMode):
 
 class LoadGameMode(ChoiceMode):
     prompt = 'load #'
-    choice_info = None
+    choices = None
 
     def __init__(self):
         super().__init__()
         self.saved_games = levels.saved_games()
+        self.choices = self.saved_games.items()
 
     def print_info(self):
         print_title('Select saved game')
-        self.choice_info = ['{}: {}'.format(slot, file) for slot, file in self.saved_games.items()]
         super().print_info()
 
     def exec_choice(self, choice):
@@ -480,18 +481,18 @@ class CookingMode(Mode):
 class RecipeMode(ChoiceMode):
     prompt = 'recipe #'
     recipes = None
-    choice_info = None
+    choices = None
 
     def __init__(self):
         super().__init__()
         self.recipes = food.get_recipes()
+        self.choices = self.recipes
 
     def update_commands(self):
         super().update_commands()
 
     def print_info(self):
         print_title('Recipes:')
-        self.choice_info = ['{}: {}'.format(i, file) for i, file in enumerate(self.recipes, 1)]
         super().print_info()
 
     def exec_choice(self, choice):
@@ -587,7 +588,7 @@ class ShoppingMode(Mode):
 class TalkMode(ChoiceMode):
     prompt = 'talk #'
     guest = None
-    choice_info = ['1: take order', '2: chat']
+    choices = ['take order', 'chat']
 
 
     def __init__(self, guest):
@@ -635,12 +636,13 @@ class ChatMode(ChoiceMode):
     prompt = 'chat #'
     guest = None
     chat = None
-    choice_info = None
+    choices = None
 
     def __init__(self, guest, chat):
         super().__init__()
         self.guest = guest
         self.chat = chat
+        self.choices = self.chat.replies
 
     def update_commands(self):
         super().update_commands()
@@ -648,7 +650,6 @@ class ChatMode(ChoiceMode):
     def print_info(self):
         print('"What\'s up, {}?"'.format(self.guest))
         print('{}: "{}"'.format(self.guest, self.chat.question))
-        self.choice_info = ['{}: "{}"'.format(i, reply) for i, reply in enumerate(self.chat.replies)]
         super().print_info()
 
     def exec_choice(self, choice):
