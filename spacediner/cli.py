@@ -165,7 +165,6 @@ class ChoiceMode(Mode):
     commands = [
         (int,),
     ]
-    size = 0
     choice_info = []
     back_label = 'Back'
 
@@ -186,7 +185,7 @@ class ChoiceMode(Mode):
     def exec(self, cmd, cmd_input):
         if cmd == self.CMD_CHOICE:
             choice = int(cmd_input[0])
-            if choice < 0 or choice > (self.size + 1):
+            if choice < 0 or choice > (len(self.choice_info) + 2):
                 print('Invalid choice.')
                 return self
             if choice == 0:
@@ -196,7 +195,6 @@ class ChoiceMode(Mode):
 
 class MenuMode(ChoiceMode):
     prompt = 'menu #'
-    size = 3
     choice_info = ['1: Continue', '2: New game', '3: Load game']
     back_label = 'Exit'
 
@@ -225,7 +223,6 @@ class NewGameMode(ChoiceMode):
     def __init__(self):
         super().__init__()
         self.levels = levels.list()
-        self.size = len(self.levels)
 
     def print_info(self):
         print_title('Select level')
@@ -244,7 +241,6 @@ class NewGameMode(ChoiceMode):
 class SaveGameMode(ChoiceMode):
     prompt = 'save #'
     saved_games = None
-    size = 9
     choice_info = None
 
     def __init__(self):
@@ -254,7 +250,7 @@ class SaveGameMode(ChoiceMode):
     def print_info(self):
         print_title('Select slot')
         self.choice_info = []
-        for slot in range(1,self.size + 1):
+        for slot in range(1, 9):
             file = self.saved_games.get(slot)
             if file:
                 self.choice_info.append('{}: {}'.format(slot, file))
@@ -272,7 +268,6 @@ class SaveGameMode(ChoiceMode):
 
 class LoadGameMode(ChoiceMode):
     prompt = 'load #'
-    size = 9
     choice_info = None
 
     def __init__(self):
@@ -485,13 +480,11 @@ class CookingMode(Mode):
 class RecipeMode(ChoiceMode):
     prompt = 'recipe #'
     recipes = None
-    size = 0
     choice_info = None
 
     def __init__(self):
         super().__init__()
         self.recipes = food.get_recipes()
-        self.size = len(self.recipes) + 1
 
     def update_commands(self):
         super().update_commands()
@@ -593,7 +586,6 @@ class ShoppingMode(Mode):
 
 class TalkMode(ChoiceMode):
     prompt = 'talk #'
-    size = 3
     guest = None
     choice_info = ['1: take order', '2: chat']
 
@@ -649,7 +641,6 @@ class ChatMode(ChoiceMode):
         super().__init__()
         self.guest = guest
         self.chat = chat
-        self.size = len(self.chat.replies)
 
     def update_commands(self):
         super().update_commands()
