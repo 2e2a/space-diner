@@ -103,3 +103,13 @@ class Chat(Action):
         print('{} bonding level is {}'.format(self.guest, social.level(self.guest)))
 
 
+class SaveDish(Action):
+    dish = None
+    name = None
+
+    def __init__(self, dish, new_name=None):
+        self.dish = dish
+        self.name = new_name if new_name else dish
+
+    def perform(self):
+        food.save_dish(self.dish, self.name)

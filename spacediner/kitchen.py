@@ -33,6 +33,11 @@ def available_devices():
     return available_devices
 
 
+def available_preparation_participles():
+    global devices
+    return [device.preparation_participle for device in devices.values() if device.available ]
+
+
 def get_device(name):
     global devices
     return devices.get(name)

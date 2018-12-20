@@ -13,9 +13,9 @@ class Food(generic.Thing):
     properties = None
 
     def __init__(self, ingredients=None):
-        self.ingredients = ingredients if ingredients else []
-        if self.ingredients:
-            self.plate()
+        self.ingredients = []
+        if ingredients:
+            self.prepare_ingredients(ingredients)
 
     def prepare_ingredients(self, ingredients):
         for preparation_participle, ingredient_name in ingredients:
@@ -27,11 +27,13 @@ class Food(generic.Thing):
         global cooked
         self.properties = set()
         names = []
+        recipe_ingredients = []
         for preparation_participle, ingredient in self.ingredients:
             name = '{} {}'.format(preparation_participle, ingredient.name)
             names.append(name)
             self.properties.update(ingredient.properties)
-        recipe = match_recipe([ingredient for _, ingredient in self.ingredients])
+            recipe_ingredients.append(ingredient)
+        recipe = match_recipe(recipe_ingredients)
         if recipe:
             self.properties.update(recipe.properties)
             self.name = '{} ({})'.format(recipe.name, ' with '.join(names))
@@ -72,8 +74,47 @@ class Recipe(generic.Thing):
         self.properties.append(self.name)
 
 
+class SavedDish(Recipe):
+    ingredients = None
+
+    def __init__(self, name, food):
+        self.name = name
+        self.ingredients = food.ingredients
+        self.ingredient_properties = []
+        self.properties = []
+        for preparation, ingredient in self.ingredients:
+            self.ingredient_properties.append({preparation, ingredient.name})
+
+    def get_ingredients(self):
+        return [ingredient.name for preparation, ingredient in self.ingredients]
+
+    def get_prepared_ingredients(self):
+        return [(preparation, ingredient.name) for preparation, ingredient in self.ingredients]
+
+    def can_be_cooked(self):
+        available_ingredients = storage.available_ingredients()
+        available_preparations = kitchen.available_preparation_participles()
+        for preparation, ingredient in self.ingredients:
+            if preparation not in available_preparations:
+                return False
+            amount = available_ingredients.get(ingredient.name, 0)
+            if amount < 1:
+                return False
+            available_ingredients.update({ingredient.name: amount - 1})
+        return True
+
+
 recipes = None
+dishes = []
 cooked = []
+
+
+def get(name):
+    global cooked
+    for dish in cooked:
+        if dish.name == name:
+            return dish
+    return None
 
 
 def take(name):
@@ -101,24 +142,39 @@ def get_recipe(name):
 
 
 def match_recipe(ingredients):
+    global dishes
     global recipes
-    for recipe in recipes.values():
+    for recipe in dishes + list(recipes.values()):
         if recipe.consists_of(ingredients):
             return recipe
     return None
 
 
-def create_recipe(name, prepared_ingredients):
-    global recipes
-    recipe = Recipe()
-    recipe.name = name
-    recipe.available = True
-    recipe.ingredient_properties = []
-    recipe.properties = set()
-    for preparation, ingredient in prepared_ingredients:
-        recipe.ingredient_properties.append(set([preparation, ingredient.name]))
-        recipe.properties.update(ingredient.properties)
-    recipes.update({name: recipe})
+def save_dish(name, new_name):
+    global dishes
+    global cooked
+    if name in dishes: dishes.remove(name)
+    cooked_dish = get(name)
+    recipe = SavedDish(new_name, cooked_dish)
+    dishes.append(recipe)
+    for dish in cooked:
+        if dish.name == name:
+            ingredients =  ['{} {}'.format(
+                preparation, ingredient) for preparation, ingredient in recipe.get_prepared_ingredients()]
+            dish.name = '{} ({})'.format(new_name, ' with '.join(ingredients))
+
+
+def get_dishes():
+    global dishes
+    return [dish.name for dish in dishes]
+
+
+def get_dish(name):
+    global dishes
+    for dish in dishes:
+        if dish.name == name:
+            return dish
+    return None
 
 
 def init(data):
@@ -132,15 +188,19 @@ def init(data):
 
 def save(file):
     global recipes
+    global dishes
     global cooked
     pickle.dump(recipes, file)
+    pickle.dump(dishes, file)
     pickle.dump(cooked, file)
 
 
 def load(file):
     global recipes
+    global dishes
     global cooked
     recipes = pickle.load(file)
+    dishes = pickle.load(file)
     cooked = pickle.load(file)
 
 

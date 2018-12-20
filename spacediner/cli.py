@@ -45,6 +45,9 @@ def print_message(msg):
     print('*** {} ***'.format(msg))
 
 
+def print_dialog(name, msg):
+    print('{}: "{}"'.format(name, msg))
+
 class CommandCompleter:
     commands = None
     matches = []
@@ -377,14 +380,14 @@ class CookingMode(Mode):
     CMD_COOK = 1
     CMD_PLATE = 2
     CMD_RECIPES = 3
-    CMD_CREATE_RECIPE = 4
+    CMD_COOKING_BOT = 4
     CMD_ABORT = 5
     CMD_DONE = 6
     commands = [
         (['cook'], [], ),
         (['plate'], ),
         (['recipes'], ),
-        (['write'], ['down'], ['recipe'] ),
+        (['bot'], ),
         (['abort'], ),
         (['done'], ),
     ]
@@ -455,17 +458,9 @@ class CookingMode(Mode):
             self.action = actions.Cook()
             self.prepared_components = []
             return self
-        if cmd == self.CMD_CREATE_RECIPE:
-            print_title('???')
-            print_list(['{} {}'.format(
-                preparation, ingredient) for preparation, ingredient in self.action.food.ingredients])
-            name = input('recipe name: ')
-            if not name:
-                print_message('aborted')
-            else:
-                food.create_recipe(name, self.action.food.ingredients)
-                print_message('recipe saved as "{}"'.format(name))
-            return self
+        if cmd == self.CMD_COOKING_BOT:
+            actions_saved.append(self.action)
+            return CookingBotMenuMode()
         if cmd == self.CMD_RECIPES:
             actions_saved.append(self.action)
             return RecipeMode()
@@ -488,22 +483,124 @@ class RecipeMode(ChoiceMode):
         self.recipes = food.get_recipes()
         self.choices = self.recipes
 
-    def update_commands(self):
-        super().update_commands()
-
     def print_info(self):
         print_title('Recipes:')
         super().print_info()
 
-    def exec_choice(self, choice):
-        recipe = food.get_recipe(self.recipes[choice - 1])
+    def _print_recipe(self, recipe):
         print_title(recipe.name)
         ingredient_list = [' '.join(properties) for properties in recipe.ingredient_properties]
         print_list(ingredient_list)
+
+    def exec_choice(self, choice):
+        recipe = food.get_recipe(self.recipes[choice - 1])
+        self._print_recipe(recipe)
         return self
 
     def back(self):
         return CookingMode()
+
+
+class CookingBotMenuMode(ChoiceMode):
+    prompt = 'cooking bot #'
+    choices = ['Cook saved dish', 'Save plated dish', 'View saved dishes']
+
+    def __init__(self):
+        super().__init__()
+        print_dialog('KiBo3000', 'bleep ... blup ...')
+
+    def print_info(self):
+        print_title('Input')
+        super().print_info()
+
+    def exec_choice(self, choice):
+        if choice == 1:
+            return CookingBotCookMode()
+        elif choice == 2:
+            return CookingBotSaveMode()
+        elif choice == 3:
+            return CookingBotListMode()
+        return self
+
+    def back(self):
+        return CookingMode()
+
+
+class CookingBotCookMode(ChoiceMode):
+    prompt = 'cooking bot #'
+    choices = None
+
+    def __init__(self):
+        super().__init__()
+        print_dialog('KiBo3000', 'bleep ... blup ...')
+        self.choices = food.get_dishes()
+
+    def print_info(self):
+        print_title('Select dish')
+        super().print_info()
+
+    def exec_choice(self, choice):
+        dish = self.choices[choice - 1]
+        dish_recipe = food.get_dish(dish)
+        if dish_recipe.can_be_cooked():
+            ingredients = dish_recipe.get_prepared_ingredients()
+            self.action = actions.Cook(ingredients)
+            self.action.perform()
+            print_dialog('KiBo3000', 'Cooking {}...'.format(dish))
+        else:
+            print_dialog('KiBo3000', 'Not enough ingredients or equipment not available anymore.')
+        return CookingBotMenuMode()
+
+    def back(self):
+        return CookingBotMenuMode()
+
+
+class CookingBotSaveMode(ChoiceMode):
+    prompt = 'cooking bot #'
+    choices = None
+
+    def __init__(self):
+        super().__init__()
+        print_dialog('KiBo3000', 'bleep ... blup ...')
+
+    def print_info(self):
+        self.choices = food.plated()
+        print_title('Select dish')
+        super().print_info()
+
+    def exec_choice(self, choice):
+        dish = self.choices[choice - 1]
+        print('')
+        print_dialog('KiBo3000', 'Custom name for {}?'.format(dish))
+        name = input('dish name: '.format(self.prompt))
+        self.action = actions.SaveDish(dish, new_name=name)
+        self.action.perform()
+        print_message('saved {} ... bleep ... blup...'.format(name if name else dish))
+        return CookingBotMenuMode()
+
+    def back(self):
+        return CookingBotMenuMode()
+
+
+class CookingBotListMode(RecipeMode):
+    prompt = 'cooking bot #'
+
+    def __init__(self):
+        super().__init__()
+        self.recipes = food.get_dishes()
+        self.choices = self.recipes
+
+    def print_info(self):
+        print_title('Dish:')
+        super(RecipeMode, self).print_info()
+
+    def exec_choice(self, choice):
+        recipe = food.get_dish(self.recipes[choice - 1])
+        self._print_recipe(recipe)
+        return self
+
+    def back(self):
+        return CookingBotMenuMode()
 
 
 class ShoppingMode(Mode):
@@ -589,7 +686,6 @@ class TalkMode(ChoiceMode):
     prompt = 'talk #'
     guest = None
     choices = ['take order', 'chat']
-
 
     def __init__(self, guest):
         super().__init__()
