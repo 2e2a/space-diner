@@ -751,7 +751,7 @@ class ChatMode(ChoiceMode):
         super().print_info()
 
     def exec_choice(self, choice):
-        action = actions.Chat(self.guest, choice)
+        action = actions.Chat(self.guest, choice - 1)
         action.perform()
         return TalkMode(self.guest)
 
