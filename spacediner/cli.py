@@ -378,14 +378,14 @@ class ServiceMode(Mode):
 
 class CookingMode(Mode):
     CMD_COOK = 1
-    CMD_PLATE = 2
+    CMD_TRASH = 2
     CMD_RECIPES = 3
     CMD_COOKING_BOT = 4
     CMD_ABORT = 5
     CMD_DONE = 6
     commands = [
         (['cook'], [], ),
-        (['plate'], ),
+        (['trash'], ),
         (['recipes'], ),
         (['bot'], ),
         (['abort'], ),
@@ -442,19 +442,21 @@ class CookingMode(Mode):
     def exec(self, cmd, cmd_input):
         global actions_saved
         if cmd == self.CMD_COOK:
-            if len(self.prepared_components) >= 3:
-                print_message('Maximum number of ingredients prepared')
-            else:
-                preparation_command = cmd_input[0]
-                device = self._get_device(preparation_command)
-                ingredient = self.original_name(cmd_input[1])
-                self.available_ingredients.update({ingredient: self.available_ingredients.get(ingredient) - 1})
-                self.action.add_ingredients([(device.preparation_participle, ingredient)])
-                self.prepared_components.append('{} {}'.format(device.preparation_participle, ingredient))
-                self.update_commands()
+            preparation_command = cmd_input[0]
+            device = self._get_device(preparation_command)
+            ingredient = self.original_name(cmd_input[1])
+            self.available_ingredients.update({ingredient: self.available_ingredients.get(ingredient) - 1})
+            self.action.add_ingredients([(device.preparation_participle, ingredient)])
+            self.prepared_components.append('{} {}'.format(device.preparation_participle, ingredient))
+            self.update_commands()
+            if len(self.prepared_components) == 3:
+                self.action.perform()
+                print_message('Plated {}'.format(self.action.food.name))
+                self.action = actions.Cook()
+                self.prepared_components = []
             return self
-        if cmd == self.CMD_PLATE:
-            self.action.perform()
+        if cmd == self.CMD_TRASH:
+            print_message('throw away {}'.format(', '.join(self.prepared_components)))
             self.action = actions.Cook()
             self.prepared_components = []
             return self

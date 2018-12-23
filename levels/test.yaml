@@ -90,6 +90,7 @@ recipes:
     available: True
     ingredients:
       - [fried, Space egg]
+      - [fried, Space egg]
       - [fried, vegetable]
     properties:
       - elevated

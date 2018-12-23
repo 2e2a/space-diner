@@ -26,19 +26,21 @@ class Food(generic.Thing):
     def plate(self):
         global cooked
         self.properties = set()
-        names = []
+        names = set()
         recipe_ingredients = []
+        conjunctions = ['with', 'and']
         for preparation_participle, ingredient in self.ingredients:
             name = '{} {}'.format(preparation_participle, ingredient.name)
-            names.append(name)
+            names.add(name)
             self.properties.update(ingredient.properties)
             recipe_ingredients.append(ingredient)
         recipe = match_recipe(recipe_ingredients)
+        default_name = ' with '.join(names)
         if recipe:
             self.properties.update(recipe.properties)
-            self.name = '{} ({})'.format(recipe.name, ' with '.join(names))
+            self.name = '{} ({})'.format(recipe.name, default_name)
         else:
-            self.name = ' with '.join(names)
+            self.name = default_name
         cooked.append(self)
 
 
@@ -68,6 +70,8 @@ class Recipe(generic.Thing):
         self.name = data.get('name')
         self.available = data.get('available')
         self.ingredient_properties = []
+        if len(data.get('ingredients')) != 3:
+            raise RuntimeError('Recipes must consist of 3 ingredients')
         for ingredient_property_data in data.get('ingredients'):
             self.ingredient_properties.append(set(ingredient_property_data))
         self.properties = data.get('properties')
