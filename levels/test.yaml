@@ -64,11 +64,17 @@ storage:
 kitchen:
   - name: Pot
     available: True
-    preparation: [boil, boiled]
+    preparation: boiling
+    command: boil
+    result: boiled
+    properties: [ cooked ]
 
   - name: Pan
     available: True
-    preparation: [fry, fried]
+    preparation: frying
+    command: fry
+    result: fried
+    properties: [ cooked ]
 
 merchants:
   - name: Jabba The Hutt

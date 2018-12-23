@@ -407,15 +407,15 @@ class CookingMode(Mode):
         else:
             self.action = actions_saved[0]
             del actions_saved[0]
-            for preparation_participle, ingredient in self.action.food.ingredients:
-                self.prepared_components.append('{} {}'.format(preparation_participle, ingredient))
+            for preparation, ingredient in self.action.food.ingredients:
+                self.prepared_components.append('{} {}'.format(preparation, ingredient))
         super().__init__()
 
     def update_commands(self):
         ingredients = []
         for ingredient, available in self.available_ingredients.items():
             if available: ingredients.append(self.name_for_command(ingredient))
-        preparations = [d.preparation_verb for d in self.available_devices.values()]
+        preparations = [d.command for d in self.available_devices.values()]
         self.commands[0] = (preparations, ingredients)
         super().update_commands()
 
@@ -423,7 +423,7 @@ class CookingMode(Mode):
         print_title('Available Ingredients:')
         print_list(['{} {}s'.format(a, i) for i, a in self.available_ingredients.items()])
         print_title('Kitchen:')
-        print_list(['{} for {}ing'.format(d.name, d.preparation_verb) for d in self.available_devices.values()])
+        print_list(['{} for {}'.format(d.name, d.preparation) for d in self.available_devices.values()])
         print_title('Prepared:')
         print_list(self.prepared_components)
         print_title('Plated:')
@@ -435,7 +435,7 @@ class CookingMode(Mode):
 
     def _get_device(self, preparation_command):
         for device in self.available_devices.values():
-            if device.preparation_verb == preparation_command:
+            if device.command == preparation_command:
                 return device
         return None
 
@@ -446,8 +446,8 @@ class CookingMode(Mode):
             device = self._get_device(preparation_command)
             ingredient = self.original_name(cmd_input[1])
             self.available_ingredients.update({ingredient: self.available_ingredients.get(ingredient) - 1})
-            self.action.add_ingredients([(device.preparation_participle, ingredient)])
-            self.prepared_components.append('{} {}'.format(device.preparation_participle, ingredient))
+            self.action.add_ingredients([(device.result, ingredient)])
+            self.prepared_components.append('{} {}'.format(device.result, ingredient))
             self.update_commands()
             if len(self.prepared_components) == 3:
                 self.action.perform()

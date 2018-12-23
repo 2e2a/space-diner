@@ -18,19 +18,20 @@ class Food(generic.Thing):
             self.prepare_ingredients(ingredients)
 
     def prepare_ingredients(self, ingredients):
-        for preparation_participle, ingredient_name in ingredients:
+        for preparation, ingredient_name in ingredients:
             ingredient = storage.take_ingredient(ingredient_name)
-            ingredient.properties.add(preparation_participle)
-            self.ingredients.append((preparation_participle, ingredient))
+            device = kitchen.preparation_device(preparation)
+            ingredient.properties.add(device.result)
+            ingredient.properties.update(device.properties)
+            self.ingredients.append((preparation, ingredient))
 
     def plate(self):
         global cooked
         self.properties = set()
         names = set()
         recipe_ingredients = []
-        conjunctions = ['with', 'and']
-        for preparation_participle, ingredient in self.ingredients:
-            name = '{} {}'.format(preparation_participle, ingredient.name)
+        for preparation, ingredient in self.ingredients:
+            name = '{} {}'.format(preparation, ingredient.name)
             names.add(name)
             self.properties.update(ingredient.properties)
             recipe_ingredients.append(ingredient)
@@ -97,7 +98,7 @@ class SavedDish(Recipe):
 
     def can_be_cooked(self):
         available_ingredients = storage.available_ingredients()
-        available_preparations = kitchen.available_preparation_participles()
+        available_preparations = kitchen.available_preparation_results()
         for preparation, ingredient in self.ingredients:
             if preparation not in available_preparations:
                 return False
@@ -163,8 +164,8 @@ def save_dish(name, new_name):
     dishes.append(recipe)
     for dish in cooked:
         if dish.name == name:
-            ingredients =  ['{} {}'.format(
-                preparation, ingredient) for preparation, ingredient in recipe.get_prepared_ingredients()]
+            ingredients =  {'{} {}'.format(
+                preparation, ingredient) for preparation, ingredient in recipe.get_prepared_ingredients()}
             dish.name = '{} ({})'.format(new_name, ' with '.join(ingredients))
 
 

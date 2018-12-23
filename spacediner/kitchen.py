@@ -7,18 +7,22 @@ from . import generic
 
 class Device(generic.Thing):
     name = None
-    preparation_verb = None
-    preparation_participle = None
     available = False
+    preparation = None
+    command = None
+    result = None
+    properties = None
 
     def __str__(self):
-        return '{} ({})'.format(self.name, self.preparation_verb)
+        return '{} ({})'.format(self.name, ', '.join())
 
     def init(self, data):
         self.name = data.get('name')
-        self.preparation_verb = data.get('preparation')[0]
-        self.preparation_participle = data.get('preparation')[1]
         self.available = data.get('available')
+        self.preparation = data.get('preparation')
+        self.command = data.get('command')
+        self.result = data.get('result')
+        self.properties = data.get('properties')
 
 
 devices = None
@@ -33,9 +37,17 @@ def available_devices():
     return available_devices
 
 
-def available_preparation_participles():
+def available_preparation_results():
     global devices
-    return [device.preparation_participle for device in devices.values() if device.available ]
+    return [device.result for device in devices.values() if device.available ]
+
+
+def preparation_device(preparation_result):
+    global devices
+    for device in devices.values():
+        if device.available and device.result == preparation_result:
+            return device
+    return  None
 
 
 def get_device(name):
