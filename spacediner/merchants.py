@@ -60,7 +60,7 @@ def get(name):
 
 def ingredients_for_sale():
     global merchants
-    return OrderedDict({merchant.name: merchant.for_sale() for merchant in merchants.values()})
+    return OrderedDict({merchant.name: merchant.for_sale() for merchant in merchants.values() if merchant.available})
 
 
 def init(data):
