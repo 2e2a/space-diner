@@ -32,15 +32,6 @@ def print_value(key, *values):
     print('{}: {}'.format(key, value))
 
 
-def print_time(t):
-    print('')
-    if t == time.Clock.TIME_OFF:
-        print('"Finally off..."')
-    else:
-        print('"A new day... work... work... work"')
-    print('')
-
-
 def print_message(msg):
     print('*** {} ***'.format(msg))
 
@@ -813,7 +804,7 @@ def run():
             levels.debug()
         if print_info:
             if time_ticked:
-                print_time(time_ticked)
+                print(time.clock.get_greeting())
                 time_ticked = None
             mode.print_info()
         if not mode.no_input:

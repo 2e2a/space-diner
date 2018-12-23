@@ -28,6 +28,7 @@ class Level(generic.Thing):
             self.name = data.get('name')
             self.diner = data.get('diner')
             self.money = data.get('money')
+            time.init(data.get('time'))
             ingredients.init(data.get('ingredients'))
             storage.init(data.get('storage'))
             kitchen.init(data.get('kitchen'))
@@ -90,6 +91,7 @@ def init(name):
 def save(file):
     global level
     pickle.dump(level, file)
+    time.save(file)
     ingredients.save(file)
     storage.save(file)
     kitchen.save(file)
@@ -97,12 +99,12 @@ def save(file):
     food.save(file)
     guests.save(file)
     social.save(file)
-    time.save(file)
 
 
 def load(file):
     global level
     level = pickle.load(file)
+    time.load(file)
     ingredients.load(file)
     storage.load(file)
     kitchen.load(file)
@@ -110,7 +112,6 @@ def load(file):
     food.load(file)
     guests.load(file)
     social.load(file)
-    time.load(file)
 
 
 def debug():

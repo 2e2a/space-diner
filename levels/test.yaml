@@ -2,6 +2,8 @@ name: Test Level
 diner: Best Diner
 money: 1000
 
+time: {}
+
 ingredients:
   - name: Space onion
     storage: Pantry
