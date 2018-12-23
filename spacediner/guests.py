@@ -64,7 +64,7 @@ class Guest(generic.Thing):
         if self.orders:
             if not self.order:
                 print('{}: "You could have taken my order first."'.format(self.name))
-                taste += 2
+                taste -= 1
             elif self.order in dish.properties:
                 print('{}: "Mhh... {}-ish, like ordered."'.format(self.name, self.order))
                 taste += 2
