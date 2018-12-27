@@ -2,29 +2,7 @@ import pickle
 
 from collections import OrderedDict
 
-from . import guests
-
-
-class Reward:
-    TYP_UNLOCK_GUEST = 'unlock_guest'
-
-    typ = None
-    level = None
-
-
-class RewardUnlockGuest(Reward):
-    guest = None
-
-    def __init__(self):
-        self.typ = self.TYP_UNLOCK_GUEST
-
-    def init(self, data):
-        self.level = data.get('level')
-        self.guest = data.get('guest')
-
-    def apply(self):
-        print('*** New guest unlocked. ***' )
-        guests.unlock(self.guest)
+from . import rewards
 
 
 class Chat:
@@ -66,13 +44,7 @@ class Relation:
             chat = Chat()
             chat.init(chat_data)
             self.chats.append(chat)
-        self.rewards = {}
-        for reward_data in data.get('rewards', []):
-            typ = reward_data.get('typ')
-            if typ == Reward.TYP_UNLOCK_GUEST:
-                reward = RewardUnlockGuest()
-                reward.init(reward_data)
-            self.rewards.update({reward.level: reward})
+        self.rewards = {reward.level: reward for reward in rewards.init_list(data)}
 
     def level_up(self):
         self.level += 1
