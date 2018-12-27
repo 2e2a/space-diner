@@ -5,6 +5,7 @@ import yaml
 from datetime import datetime
 
 
+from . import activities
 from . import cli
 from . import food
 from . import generic
@@ -13,6 +14,7 @@ from . import kitchen
 from . import ingredients
 from . import merchants
 from . import social
+from . import skills
 from . import storage
 from . import time
 
@@ -29,13 +31,15 @@ class Level(generic.Thing):
             self.diner = data.get('diner')
             self.money = data.get('money')
             time.init(data.get('time'))
-            ingredients.init(data.get('ingredients'))
-            storage.init(data.get('storage'))
-            kitchen.init(data.get('kitchen'))
-            merchants.init(data.get('merchants'))
-            food.init(data.get('recipes'))
-            guests.init(data.get('guests'))
-            social.init(data.get('social'))
+            skills.init(data.get('skills', []))
+            ingredients.init(data.get('ingredients', []))
+            storage.init(data.get('storage', []))
+            kitchen.init(data.get('kitchen', []))
+            merchants.init(data.get('merchants', []))
+            food.init(data.get('recipes', []))
+            guests.init(data.get('guests', []))
+            social.init(data.get('social', []))
+            activities.init(data.get('activities', []))
 
 
 level = None
@@ -92,6 +96,7 @@ def save(file):
     global level
     pickle.dump(level, file)
     time.save(file)
+    skills.save(file)
     ingredients.save(file)
     storage.save(file)
     kitchen.save(file)
@@ -99,12 +104,14 @@ def save(file):
     food.save(file)
     guests.save(file)
     social.save(file)
+    activities.save(file)
 
 
 def load(file):
     global level
     level = pickle.load(file)
     time.load(file)
+    skills.load(file)
     ingredients.load(file)
     storage.load(file)
     kitchen.load(file)
@@ -112,6 +119,7 @@ def load(file):
     food.load(file)
     guests.load(file)
     social.load(file)
+    activities.load(file)
 
 
 def debug():

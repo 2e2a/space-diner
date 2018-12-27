@@ -2,7 +2,12 @@ name: Test Level
 diner: Best Diner
 money: 1000
 
-time: {}
+time:
+  morning_greeting: sun up
+  evening_greeting: sun down
+
+skills:
+  proficiency: 2.0
 
 ingredients:
   - name: Space onion
@@ -206,7 +211,7 @@ social:
       - [ 0, I can prepare you some, 'Nah, like them freshly hunted.' ]
       - [+1, It's the best, Maybe I'll invite a friend who quite likes it. ]
     rewards:
-      - typ: unlock_guest
+      - type: guest
         level: 2
         guest: Alien
   - name: Reptile
@@ -224,3 +229,17 @@ social:
     chats:
     - question: All these mine workers should eat at home.
     - question: Mine workers are getting payed to much, eating in diners...
+
+
+activities:
+  - name: watch tv
+    available: True
+    message: You watch some TV...
+    reward:
+  - name: study
+    available: True
+    message: You read a cook book
+    rewards:
+      - type: skill
+        skill: proficiency
+        diff: +1

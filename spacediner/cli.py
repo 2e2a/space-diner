@@ -1,6 +1,7 @@
 import readline
 
 from . import actions
+from . import activities
 from . import food
 from . import guests
 from . import kitchen
@@ -39,6 +40,7 @@ def print_message(msg):
 
 def print_dialog(name, msg):
     print('{}: "{}"'.format(name, msg))
+
 
 class CommandCompleter:
     commands = None
@@ -155,6 +157,7 @@ class Mode:
         return self.names.get(cmd_name)
 
 
+# TODO: pass back to constructor as in InfoMode
 class ChoiceMode(Mode):
     CMD_CHOICE = 1
     commands = [
@@ -162,10 +165,6 @@ class ChoiceMode(Mode):
     ]
     choices = []
     back_label = 'Back'
-
-    def print_help(self):
-        print('Help:')
-        print(self.commands)
 
     def exec_choice(self, choice):
         raise  NotImplemented
@@ -177,6 +176,10 @@ class ChoiceMode(Mode):
         choice_info = ['{}: {}'.format(i, choice) for i, choice in enumerate(self.choices, 1)]
         choice_info += ['0: {}'.format(self.back_label)]
         print_list(choice_info)
+
+    def print_help(self):
+        print('Help:')
+        print(self.commands)
 
     def exec(self, cmd, cmd_input):
         if cmd == self.CMD_CHOICE:
@@ -219,6 +222,7 @@ class MenuMode(ChoiceMode):
     def exec_choice(self, choice):
         if choice == 1:
             levels.autosave_load()
+            print_value('Level', levels.level.name)
             return DinerMode()
         elif choice == 2:
             return NewGameMode()
@@ -564,9 +568,9 @@ class CookingBotCookMode(ChoiceMode):
     choices = None
 
     def __init__(self):
-        super().__init__()
         print_dialog('KiBo3000', 'bleep ... blup ...')
         self.choices = food.get_dishes()
+        super().__init__()
 
     def print_info(self):
         print_title('Select dish')
@@ -619,9 +623,9 @@ class CookingBotListMode(RecipeMode):
     prompt = 'cooking bot #'
 
     def __init__(self):
-        super().__init__()
         self.recipes = food.get_dishes()
         self.choices = self.recipes
+        super().__init__()
 
     def print_info(self):
         print_title('Dish:')
@@ -721,8 +725,8 @@ class TalkMode(ChoiceMode):
     choices = ['take order', 'chat']
 
     def __init__(self, guest):
-        super().__init__()
         self.guest = guest
+        super().__init__()
 
     def update_commands(self):
         super().update_commands()
@@ -768,10 +772,10 @@ class ChatMode(ChoiceMode):
     choices = None
 
     def __init__(self, guest, chat):
-        super().__init__()
         self.guest = guest
         self.chat = chat
         self.choices = self.chat.replies
+        super().__init__()
 
     def update_commands(self):
         super().update_commands()
@@ -786,46 +790,49 @@ class ChatMode(ChoiceMode):
         action.perform()
         return TalkMode(self.guest)
 
-
     def back(self):
         return TalkMode(self.guest)
 
 
+# TODO: Allow dynamic command count
 class AfterWorkMode(Mode):
     CMD_WATCH_TV = 1
     CMD_SLEEP = 2
-    commands = [
-        (['watch_tv'],),
-        (['sleep'],),
-    ]
+    commands = []
     prompt = 'after work >>'
+    activities =  None
     activities_done = 0
 
     def __init__(self):
-        super().__init__()
         self.activities_done = 0
+        self.activities = activities.available_activities()
+        super().__init__()
 
     def update_commands(self):
+        self.commands = []
+        for activity in self.activities:
+            self.commands.append(([self.name_for_command(activity)],))
+        self.commands.append((['sleep'],))
         super().update_commands()
 
     def print_info(self):
-        print_title('TODO')
+        print_title('Available activities')
+        print_list(self.activities)
 
     def print_help(self):
         print('Help:')
         print(self.commands)
 
     def exec(self, cmd, cmd_input):
-        self.activities_done += 1
-        if self.activities_done > 1 and cmd != self.CMD_SLEEP:
-            print('Let\'s not do this today.')
-            return self
-        if cmd == self.CMD_WATCH_TV:
-            print('You watched some TV...')
-            return self
-        if cmd == self.CMD_SLEEP:
+        if cmd > len(self.activities): # sleep
             time.tick()
             return DinerMode()
+        self.activities_done += 1
+        if self.activities_done > 1:
+            print('Let\'s not do this today.')
+            return self
+        activity = self.activities[cmd - 1]
+        activities.do(activity)
 
 
 mode = None
