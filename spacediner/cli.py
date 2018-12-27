@@ -7,6 +7,7 @@ from . import kitchen
 from . import merchants
 from . import levels
 from . import settings
+from . import skills
 from . import social
 from . import storage
 from . import time
@@ -188,6 +189,24 @@ class ChoiceMode(Mode):
             return self.exec_choice(choice)
 
 
+class InfoMode(Mode):
+    CMD_DONE = 1
+    commands = [
+        (['done'], ),
+    ]
+
+    def print_help(self):
+        print('Help:')
+        print(self.commands)
+
+    def back(self):
+        raise NotImplemented
+
+    def exec(self, cmd, cmd_input):
+        if cmd == self.CMD_DONE:
+            return self.back()
+
+
 class MenuMode(ChoiceMode):
     prompt = 'menu #'
     choices = ['Continue', 'New game', 'Load game']
@@ -276,6 +295,7 @@ class LoadGameMode(ChoiceMode):
 
     def exec_choice(self, choice):
         levels.load_game(choice)
+        print_value('Level', levels.level.name)
         return DinerMode()
 
     def back(self):
@@ -287,20 +307,21 @@ class DinerMode(Mode):
     CMD_SERVICE = 2
     CMD_SHOPPING = 3
     CMD_CLOSE_UP = 4
-    CMD_SAVE = 5
-    CMD_EXIT = 6
+    CMD_SKILLS = 5
+    CMD_SAVE = 6
+    CMD_EXIT = 7
     commands = [
         (['cooking'],),
         (['service'],),
         (['shopping'],),
         (['close_up'],),
+        (['skills'],),
         (['save'],),
         (['exit'],),
     ]
     prompt = 'diner >>'
 
     def print_info(self):
-        print_value('Level', levels.level.name)
         print_value('Day', time.now())
         print_value('Money', levels.level.money, 'space dollars')
 
@@ -315,6 +336,8 @@ class DinerMode(Mode):
             return ServiceMode()
         if cmd == self.CMD_SHOPPING:
             return ShoppingMode()
+        if cmd == self.CMD_SKILLS:
+            return SkillInfoMode()
         if cmd == self.CMD_CLOSE_UP:
             time.tick()
             return AfterWorkMode()
@@ -323,6 +346,23 @@ class DinerMode(Mode):
         if cmd == self.CMD_EXIT:
             levels.autosave_save()
             return MenuMode()
+
+
+class SkillInfoMode(InfoMode):
+    prompt =  'skills >>'
+
+    def back(self):
+        return DinerMode()
+
+    def print_skill(self, skill, value):
+        progress = '#'*int(value) + '-'*(10 - int(value))
+        line = '[{}] {}/10 - {}'.format(progress, value, skill)
+        return line
+
+    def print_info(self):
+        print_title('Skills')
+        skill_values = [self.print_skill(skill, value) for skill, value in skills.get().items()]
+        print_list(skill_values)
 
 
 class ServiceMode(Mode):
