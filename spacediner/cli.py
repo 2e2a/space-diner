@@ -794,11 +794,13 @@ class ChatMode(ChoiceMode):
         return TalkMode(self.guest)
 
 
-# TODO: Allow dynamic command count
 class AfterWorkMode(Mode):
-    CMD_WATCH_TV = 1
+    CMD_ACTIVITY = 1
     CMD_SLEEP = 2
-    commands = []
+    commands = [
+        ([], ),
+        (['sleep'], ),
+    ]
     prompt = 'after work >>'
     activities =  None
     activities_done = 0
@@ -809,10 +811,8 @@ class AfterWorkMode(Mode):
         super().__init__()
 
     def update_commands(self):
-        self.commands = []
-        for activity in self.activities:
-            self.commands.append(([self.name_for_command(activity)],))
-        self.commands.append((['sleep'],))
+        activities = [self.name_for_command(activity) for activity in self.activities]
+        self.commands[self.CMD_ACTIVITY - 1] = (activities,)
         super().update_commands()
 
     def print_info(self):
@@ -824,15 +824,16 @@ class AfterWorkMode(Mode):
         print(self.commands)
 
     def exec(self, cmd, cmd_input):
-        if cmd > len(self.activities): # sleep
+        if cmd == self.CMD_SLEEP:
             time.tick()
             return DinerMode()
-        self.activities_done += 1
-        if self.activities_done > 1:
-            print('Let\'s not do this today.')
-            return self
-        activity = self.activities[cmd - 1]
-        activities.do(activity)
+        if cmd == self.CMD_ACTIVITY:
+            self.activities_done += 1
+            if self.activities_done > 1:
+                print('Let\'s not do this today.')
+                return self
+            activity = self.original_name(cmd_input[0])
+            activities.do(activity)
 
 
 mode = None
