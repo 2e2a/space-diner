@@ -1,3 +1,4 @@
+import re
 import readline
 
 from . import actions
@@ -149,7 +150,8 @@ class Mode:
         return None
 
     def name_for_command(self, name):
-        cmd_name = name.replace(' ', '_').lower()
+        cmd_name = re.sub(r'[^a-zA-Z0-9]+','_',name.lower(), count=16)
+        cmd_name = cmd_name.strip('_')
         self.names.update({cmd_name: name})
         return cmd_name
 
