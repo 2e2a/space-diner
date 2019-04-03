@@ -97,18 +97,21 @@ class GuestGroup(Guest):
 
 class GuestFactory(generic.Thing):
     groups = None
+    names = {}
 
     def init(self, data):
         self.groups = []
+        self.names = []
         for groups in data:
             self.groups.append(groups)
+            self.names.append(' '.join(group for group in groups))
 
     def create(self):
         global guest_groups
         num = random.SystemRandom().randint(0, len(self.groups) - 1)
         guest = Guest()
+        guest.name = self.names[num]
         groups = [guest_groups.get(name) for name in self.groups[num]]
-        guest.name = ' '.join(group.name for group in groups)
         guest.reactions = list(itertools.chain.from_iterable(group.reactions for group in groups))
         guest.budget = max([group.budget for group in groups])
         guest.available = True
@@ -124,6 +127,14 @@ guests = None
 regulars = None
 guest_groups = None
 guest_factory = None
+
+
+def get_names():
+    global regulars
+    global guest_factory
+    names = [name for name in regulars.keys()]
+    names.extend(guest_factory.names)
+    return names
 
 
 def available_guests():
@@ -161,7 +172,7 @@ def new_workday():
     for regular in guests:
         regular.order = None
         regular.chatted_today = False
-    for i in range(4):
+    for i in range(2):  # TODO: guest max
         guest = guest_factory.create()
         guests.append(guest)
 

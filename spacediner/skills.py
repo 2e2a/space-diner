@@ -23,7 +23,7 @@ def init(data):
     global skills
     skills = OrderedDict()
     for skill in SKILLS:
-        value = data.get(skill, 0.0)
+        value = data.get(skill) if data else 1.0
         skills.update({skill: value})
 
 

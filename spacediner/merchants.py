@@ -4,7 +4,7 @@ from collections import OrderedDict
 
 from . import generic
 from . import ingredients
-from . import storage
+
 
 
 class Merchant(generic.Thing):
@@ -35,13 +35,15 @@ class Merchant(generic.Thing):
                 return ingredients.get(name)
         return None
 
+    STOCK_AVAILABILITY_UNLIMITED = 99
+
     def init(self, data):
         self.name = data.get('name')
-        self.available = data.get('available')
+        self.available = data.get('available', True)
         self.ingredients = OrderedDict()
         for merchant_ingredient in  data.get('ingredients'):
             ingredient =  merchant_ingredient.get('name')
-            availability = merchant_ingredient.get('available')
+            availability = merchant_ingredient.get('available', self.STOCK_AVAILABILITY_UNLIMITED)
             cost = merchant_ingredient.get('cost', 0)
             self.ingredients.update({ingredient: (availability, cost, )})
 

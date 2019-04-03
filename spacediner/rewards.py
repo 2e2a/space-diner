@@ -1,17 +1,43 @@
 from . import cli
 from . import guests
+from . import merchants
 from . import skills
 
 
 class Reward:
+    TYPE_MERCHANT = 'merchant'
     TYPE_GUEST = 'guest'
     TYPE_SKILL = 'skill'
 
     typ = None
-    level = None
 
     def apply(self):
         raise NotImplemented
+
+
+class SocialReward(Reward):
+    level = None
+
+    def init(self, data):
+        self.level = data.get('level')
+
+    def apply(self):
+        raise NotImplemented
+
+
+class MerchantReward(SocialReward):
+    merchant = None
+
+    def __init__(self):
+        self.typ = self.TYPE_MERCHANT
+
+    def init(self, data):
+        super().init(data)
+        self.guest = data.get('guest')
+
+    def apply(self):
+        cli.print_message('New merchant unlocked')
+        #merchants.unlock()
 
 
 class GuestReward(Reward):
@@ -50,10 +76,12 @@ class SkillReward(Reward):
 
 def init_list(data):
     rewards = []
-    for reward_data in data.get('rewards', []):
+    for reward_data in data:
         typ = reward_data.get('type')
         reward = None
-        if typ == Reward.TYPE_GUEST:
+        if typ == Reward.TYPE_MERCHANT:
+            reward = MerchantReward()
+        elif typ == Reward.TYPE_GUEST:
             reward = GuestReward()
         elif typ == Reward.TYPE_SKILL:
             reward = SkillReward()

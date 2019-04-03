@@ -752,7 +752,7 @@ class TalkMode(ChoiceMode):
                 print('{}: "Enough chatting for today, I\'m hungry.".'.format(self.guest))
                 return self
             guest.chatted_today = True
-            if not self.guest in social.chats_available():
+            if self.guest not in social.chats_available():
                 print('"What\'s up, {}?"'.format(self.guest))
                 print('{}: "Breakfast is up.".'.format(self.guest))
                 return self

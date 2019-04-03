@@ -35,8 +35,9 @@ class Clock:
         self.callbacks.append((time, callback))
 
     def init(self, data):
-        self.morning_greeting = data.get('morning_greeting', 'A new morning...')
-        self.evening_greeting = data.get('evening_greeting', 'The work\'s done...')
+        if data:
+            self.morning_greeting = data.get('morning_greeting', 'A new morning...')
+            self.evening_greeting = data.get('evening_greeting', 'The work\'s done...')
 
 
 clock = Clock()

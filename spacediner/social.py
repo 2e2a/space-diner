@@ -2,6 +2,7 @@ import pickle
 
 from collections import OrderedDict
 
+from . import guests
 from . import rewards
 
 
@@ -18,8 +19,10 @@ class Chat:
         self.reactions = []
         for reply_data in data.get('replies', []):
             self.effects.append(reply_data[0])
-            self.replies.append(reply_data[1])
-            self.reactions.append(reply_data[2])
+            if len(reply_data) > 1:
+                self.replies.append(reply_data[1])
+            if len(reply_data) > 2:
+                self.reactions.append(reply_data[2])
 
     def effect(self, reply):
         return self.effects[reply] if self.replies else None
@@ -40,11 +43,13 @@ class Relation:
         self.chats = []
         self.chats_done = 0
         self.level = 0
-        for chat_data in data.get('chats'):
-            chat = Chat()
-            chat.init(chat_data)
-            self.chats.append(chat)
-        self.rewards = {reward.level: reward for reward in rewards.init_list(data)}
+        if 'chats' in data:
+            for chat_data in data.get('chats'):
+                chat = Chat()
+                chat.init(chat_data)
+                self.chats.append(chat)
+        if 'rewards' in data:
+            self.rewards = {reward.level: reward for reward in rewards.init_list(data.get('rewards'))}
 
     def level_up(self):
         self.level += 1
@@ -85,7 +90,8 @@ def get(name):
 
 def chats_available():
     global relations
-    return list(relations.keys())
+    chats = [guest for guest, relation in relations.items() if relation.chats]
+    return chats
 
 
 def next_chat(name):
@@ -120,6 +126,11 @@ def init(data):
         relation = Relation()
         relation.init(relation_data)
         relations.update({relation.name: relation})
+    for guest in guests.get_names():
+        if guest not in relations:
+            relation = Relation()
+            relation.name = guest
+            relations.update({guest: relation})
 
 
 def save(file):
