@@ -76,7 +76,7 @@ class Recipe(generic.Thing):
         for ingredient_property_data in data.get('ingredients'):
             self.ingredient_properties.append(set(ingredient_property_data))
         self.properties = data.get('properties')
-        self.properties.append(self.name)
+        self.properties.append(self.name.lower())
 
 
 class SavedDish(Recipe):
