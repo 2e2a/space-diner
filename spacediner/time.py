@@ -36,8 +36,11 @@ class Clock:
 
     def init(self, data):
         if data:
-            self.morning_greeting = data.get('morning_greeting', 'A new morning...')
-            self.evening_greeting = data.get('evening_greeting', 'The work\'s done...')
+            self.morning_greeting = data.get('morning_greeting')
+            self.evening_greeting = data.get('evening_greeting')
+        else:
+            self.morning_greeting = 'A new morning...'
+            self.evening_greeting = 'The work\'s done...'
 
 
 clock = Clock()
