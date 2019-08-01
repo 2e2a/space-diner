@@ -33,11 +33,11 @@ class MerchantReward(SocialReward):
 
     def init(self, data):
         super().init(data)
-        self.guest = data.get('guest')
+        self.merchant = data.get('merchant')
 
     def apply(self):
         cli.print_message('New merchant unlocked')
-        #merchants.unlock()
+        merchants.unlock(self.merchant)
 
 
 class GuestReward(Reward):

@@ -6,7 +6,6 @@ from . import generic
 from . import ingredients
 
 
-
 class Merchant(generic.Thing):
     name = None
     available = False
@@ -63,6 +62,12 @@ def get(name):
 def ingredients_for_sale():
     global merchants
     return OrderedDict({merchant.name: merchant.for_sale() for merchant in merchants.values() if merchant.available})
+
+
+def unlock(name):
+    global merchants
+    merchant = merchants.get(name)
+    merchant.available = True
 
 
 def init(data):
