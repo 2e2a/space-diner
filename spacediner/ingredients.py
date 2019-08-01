@@ -7,11 +7,13 @@ from . import generic
 
 class Ingredient(generic.Thing):
     name = None
+    description = None
     storage = None
     properties = None
 
     def init(self, data):
         self.name = data.get('name')
+        self.description = data.get('description', None)
         self.storage = data.get('storage')
         self.properties = set(data.get('properties'))
         self.properties.add(self.name)
