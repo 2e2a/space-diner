@@ -311,15 +311,13 @@ class LoadGameMode(ChoiceMode):
 class DinerMode(Mode):
     CMD_COOKING = 1
     CMD_SERVICE = 2
-    CMD_SHOPPING = 3
-    CMD_CLOSE_UP = 4
-    CMD_SKILLS = 5
-    CMD_SAVE = 6
-    CMD_EXIT = 7
+    CMD_CLOSE_UP = 3
+    CMD_SKILLS = 4
+    CMD_SAVE = 5
+    CMD_EXIT = 6
     commands = [
         (['cooking'],),
         (['service'],),
-        (['shopping'],),
         (['close_up'],),
         (['skills'],),
         (['save'],),
@@ -340,8 +338,6 @@ class DinerMode(Mode):
             return CookingMode()
         if cmd == self.CMD_SERVICE:
             return ServiceMode()
-        if cmd == self.CMD_SHOPPING:
-            return ShoppingMode()
         if cmd == self.CMD_SKILLS:
             return SkillInfoMode()
         if cmd == self.CMD_CLOSE_UP:
@@ -718,7 +714,7 @@ class ShoppingMode(Mode):
                 print(e)
             return self
         if cmd == self.CMD_DONE:
-            return DinerMode()
+            return AfterWorkMode()
 
 
 class TalkMode(ChoiceMode):
@@ -798,9 +794,11 @@ class ChatMode(ChoiceMode):
 
 class AfterWorkMode(Mode):
     CMD_ACTIVITY = 1
-    CMD_SLEEP = 2
+    CMD_SHOPPING = 2
+    CMD_SLEEP = 3
     commands = [
         ([], ),
+        (['shopping'],),
         (['sleep'], ),
     ]
     prompt = 'after work >>'
@@ -826,6 +824,8 @@ class AfterWorkMode(Mode):
         print(self.commands)
 
     def exec(self, cmd, cmd_input):
+        if cmd == self.CMD_SHOPPING:
+            return ShoppingMode()
         if cmd == self.CMD_SLEEP:
             time.tick()
             return DinerMode()
