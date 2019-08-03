@@ -15,8 +15,12 @@ from . import storage
 from . import time
 
 
+def print_text(str):
+    # TODO: use everywhere instead of print
+    print(str.capitalize())
+
+
 def print_title(str):
-    print('')
     print(str)
     print('-'*(len(str)))
 
@@ -37,6 +41,7 @@ def print_value(key, *values):
 
 def print_message(msg):
     print('*** {} ***'.format(msg))
+    print('')
 
 
 def print_dialog(name, msg):
@@ -132,13 +137,14 @@ class Mode:
             self.completer = CommandCompleter(self.commands)
 
     def print_info(self):
-        raise NotImplemented()
+        print('')
 
     def print_help(self):
+        # TODO: add simple help
         raise NotImplemented()
 
     def exec(self, cmd, cmd_input):
-        raise  NotImplemented()
+        raise NotImplemented()
 
     def parse(self, cmd_input):
         if cmd_input:
@@ -159,7 +165,7 @@ class Mode:
         return self.names.get(cmd_name)
 
 
-# TODO: pass back to constructor as in InfoMode
+# TODO: pass back to constructor as in InfoMode .. what?
 class ChoiceMode(Mode):
     CMD_CHOICE = 1
     commands = [
@@ -167,6 +173,7 @@ class ChoiceMode(Mode):
     ]
     choices = []
     back_label = 'Back'
+    title = None
 
     def exec_choice(self, choice):
         raise  NotImplemented
@@ -175,6 +182,9 @@ class ChoiceMode(Mode):
         raise NotImplemented
 
     def print_info(self):
+        super().print_info()
+        if self.title:
+            print_title(self.title)
         choice_info = ['{}: {}'.format(i, choice) for i, choice in enumerate(self.choices, 1)]
         choice_info += ['0: {}'.format(self.back_label)]
         print_list(choice_info)
@@ -216,10 +226,7 @@ class MenuMode(ChoiceMode):
     prompt = 'menu #'
     choices = ['Continue', 'New game', 'Load game']
     back_label = 'Exit'
-
-    def print_info(self):
-        print_title('Menu')
-        super().print_info()
+    title = 'Menu'
 
     def exec_choice(self, choice):
         if choice == 1:
@@ -239,15 +246,12 @@ class NewGameMode(ChoiceMode):
     prompt = 'new game #'
     levels = None
     choices = None
+    title = 'Select level'
 
     def __init__(self):
         super().__init__()
         self.levels = levels.list()
         self.choices = self.levels
-
-    def print_info(self):
-        print_title('Select level')
-        super().print_info()
 
     def exec_choice(self, choice):
         levels.init(self.levels[choice - 1])
@@ -262,6 +266,7 @@ class SaveGameMode(ChoiceMode):
     prompt = 'save #'
     saved_games = None
     choices = None
+    title = 'Select slot'
 
     def __init__(self):
         super().__init__()
@@ -274,10 +279,6 @@ class SaveGameMode(ChoiceMode):
             else:
                 self.choices.append('<empty>')
 
-    def print_info(self):
-        print_title('Select slot')
-        super().print_info()
-
     def exec_choice(self, choice):
         levels.save_game(choice)
         return DinerMode()
@@ -289,15 +290,12 @@ class SaveGameMode(ChoiceMode):
 class LoadGameMode(ChoiceMode):
     prompt = 'load #'
     choices = None
+    title = 'Select saved game'
 
     def __init__(self):
         super().__init__()
         self.saved_games = levels.saved_games()
         self.choices = self.saved_games.items()
-
-    def print_info(self):
-        print_title('Select saved game')
-        super().print_info()
 
     def exec_choice(self, choice):
         levels.load_game(choice)
@@ -326,8 +324,11 @@ class DinerMode(Mode):
     prompt = 'diner >>'
 
     def print_info(self):
+        super().print_info()
+        print_text('--------------------------------')
         print_value('Day', time.now())
         print_value('Money', levels.level.money, 'space dollars')
+        print_text('--------------------------------')
 
     def print_help(self):
         print('Help:')
@@ -351,7 +352,7 @@ class DinerMode(Mode):
 
 
 class SkillInfoMode(InfoMode):
-    prompt =  'skills >>'
+    prompt = 'skills >>'
 
     def back(self):
         return DinerMode()
@@ -362,6 +363,7 @@ class SkillInfoMode(InfoMode):
         return line
 
     def print_info(self):
+        super().print_info()
         print_title('Skills')
         skill_values = [self.print_skill(skill, value) for skill, value in skills.get().items()]
         print_list(skill_values)
@@ -370,10 +372,12 @@ class SkillInfoMode(InfoMode):
 class ServiceMode(Mode):
     CMD_SERVE = 1
     CMD_TALK = 2
-    CMD_DONE = 3
+    CMD_SEND_HOME = 3
+    CMD_DONE = 4
     commands = [
         (['serve'], [], ['to'], []),
-        (['talk'], ['to'], []),
+        (['talk_to'], []),
+        (['send_home'], []),
         (['done'], ),
     ]
     prompt = 'service >>'
@@ -382,10 +386,12 @@ class ServiceMode(Mode):
         cooked_food = [self.name_for_command(f) for f in food.plated()]
         available_guests = [self.name_for_command(g) for g in guests.available_guests()]
         self.commands[self.CMD_SERVE - 1] = (['serve'], cooked_food, ['to'], available_guests)
-        self.commands[self.CMD_TALK - 1] = (['talk'],['to'], available_guests)
+        self.commands[self.CMD_TALK - 1] = (['talk_to'], available_guests)
+        self.commands[self.CMD_SEND_HOME - 1] = (['send_home'], available_guests)
         super().update_commands()
 
     def print_info(self):
+        super().print_info()
         print_title('Food:')
         print_list(food.plated())
         print_title('Guests:')
@@ -401,10 +407,17 @@ class ServiceMode(Mode):
             guest = self.original_name(cmd_input[3])
             action = actions.Serve(food, guest)
             action.perform()
+            self.update_commands()
             return self
         if cmd == self.CMD_TALK:
-            guest = self.original_name(cmd_input[2])
+            guest = self.original_name(cmd_input[1])
             return TalkMode(guest)
+        if cmd == self.CMD_SEND_HOME:
+            guest = self.original_name(cmd_input[1])
+            action = actions.SendHome(guest)
+            action.perform()
+            self.update_commands()
+            return self
         if cmd == self.CMD_DONE:
             return DinerMode()
 
@@ -426,15 +439,17 @@ class CookingMode(Mode):
     ]
     prompt = 'cooking >>'
     action = None
+    orders = None
     available_ingredients = None
     available_devices = None
     prepared_components = None
 
     def __init__(self):
         global actions_saved
-        self.prepared_components = []
+        self.orders = guests.ordered()
         self.available_ingredients = storage.available_ingredients()
         self.available_devices = kitchen.available_devices()
+        self.prepared_components = []
         if len(actions_saved) == 0:
             self.action = actions.Cook()
         else:
@@ -453,6 +468,9 @@ class CookingMode(Mode):
         super().update_commands()
 
     def print_info(self):
+        super().print_info()
+        print_title('Orders:')
+        print_list(['{}: {}'.format(g, o) for g, o in self.orders.items()])
         print_title('Available Ingredients:')
         print_list(['{} {}s'.format(a, i) for i, a in self.available_ingredients.items()])
         print_title('Kitchen:')
@@ -512,15 +530,12 @@ class RecipeMode(ChoiceMode):
     prompt = 'recipe #'
     recipes = None
     choices = None
+    title = 'Recipes'
 
     def __init__(self):
         super().__init__()
         self.recipes = food.get_recipes()
         self.choices = self.recipes
-
-    def print_info(self):
-        print_title('Recipes:')
-        super().print_info()
 
     def _print_recipe(self, recipe):
         print_title(recipe.name)
@@ -539,14 +554,11 @@ class RecipeMode(ChoiceMode):
 class CookingBotMenuMode(ChoiceMode):
     prompt = 'cooking bot #'
     choices = ['Cook saved dish', 'Save plated dish', 'View saved dishes']
+    title = 'Input'
 
     def __init__(self):
         super().__init__()
         print_dialog('KiBo3000', 'bleep ... blup ...')
-
-    def print_info(self):
-        print_title('Input')
-        super().print_info()
 
     def exec_choice(self, choice):
         if choice == 1:
@@ -564,15 +576,12 @@ class CookingBotMenuMode(ChoiceMode):
 class CookingBotCookMode(ChoiceMode):
     prompt = 'cooking bot #'
     choices = None
+    title = 'Select dish'
 
     def __init__(self):
         print_dialog('KiBo3000', 'bleep ... blup ...')
         self.choices = food.get_dishes()
         super().__init__()
-
-    def print_info(self):
-        print_title('Select dish')
-        super().print_info()
 
     def exec_choice(self, choice):
         dish = self.choices[choice - 1]
@@ -593,15 +602,11 @@ class CookingBotCookMode(ChoiceMode):
 class CookingBotSaveMode(ChoiceMode):
     prompt = 'cooking bot #'
     choices = None
+    title = 'Select dish'
 
     def __init__(self):
         super().__init__()
         print_dialog('KiBo3000', 'bleep ... blup ...')
-
-    def print_info(self):
-        self.choices = food.plated()
-        print_title('Select dish')
-        super().print_info()
 
     def exec_choice(self, choice):
         dish = self.choices[choice - 1]
@@ -619,15 +624,13 @@ class CookingBotSaveMode(ChoiceMode):
 
 class CookingBotListMode(RecipeMode):
     prompt = 'cooking bot #'
+    title = 'Dish'
+
 
     def __init__(self):
         self.recipes = food.get_dishes()
         self.choices = self.recipes
         super().__init__()
-
-    def print_info(self):
-        print_title('Dish:')
-        super(RecipeMode, self).print_info()
 
     def exec_choice(self, choice):
         recipe = food.get_dish(self.recipes[choice - 1])
@@ -674,6 +677,7 @@ class ShoppingMode(Mode):
         super().update_commands()
 
     def print_info(self):
+        super().print_info()
         print_value('Money', levels.level.money, 'space dollars')
         print_title('Available Ingredients:')
         print_list(['{} {}s'.format(a, i) for i, a in self.available_ingredients.items()])
@@ -726,16 +730,13 @@ class TalkMode(ChoiceMode):
         self.guest = guest
         super().__init__()
 
-    def update_commands(self):
-        super().update_commands()
-
-    def print_info(self):
-        print('"Hey, {}?"'.format(self.guest))
-        super().print_info()
+    @property
+    def title(self):
+        return 'Talking to {}'.format(self.guest)
 
     def exec_choice(self, choice):
         if choice == 1:
-            order = guests.get_order(self.guest)
+            order = guests.take_order(self.guest)
             if order:
                 print('{}: I\'ll have something {}-ish.'.format(self.guest, order))
             else:
@@ -744,18 +745,15 @@ class TalkMode(ChoiceMode):
         elif choice == 2:
             guest = guests.get(self.guest)
             if guest.chatted_today:
-                print('"What\'s up, {}?"'.format(self.guest))
                 print('{}: "Enough chatting for today, I\'m hungry.".'.format(self.guest))
                 return self
             guest.chatted_today = True
             if self.guest not in social.chats_available():
-                print('"What\'s up, {}?"'.format(self.guest))
-                print('{}: "Breakfast is up.".'.format(self.guest))
+                print_text('{} is not in the mood for chatting.'.format(self.guest))
                 return self
             chat = social.next_chat(self.guest)
             if not chat.replies:
-                print('"What\'s up, {}?"'.format(self.guest))
-                print('{}: "{}"'.format(self.guest, chat.question))
+                print_dialog(self.guest, chat.question)
                 return self
             return ChatMode(self.guest, chat)
 
@@ -775,12 +773,12 @@ class ChatMode(ChoiceMode):
         self.choices = self.chat.replies
         super().__init__()
 
-    def update_commands(self):
-        super().update_commands()
+    @property
+    def title(self):
+        return 'Chatting with {}'.format(self.guest)
 
     def print_info(self):
-        print('"What\'s up, {}?"'.format(self.guest))
-        print('{}: "{}"'.format(self.guest, self.chat.question))
+        print_dialog(self.guest, self.chat.question)
         super().print_info()
 
     def exec_choice(self, choice):
@@ -816,6 +814,7 @@ class AfterWorkMode(Mode):
         super().update_commands()
 
     def print_info(self):
+        super().print_info()
         print_title('Available activities')
         print_list(self.activities)
 

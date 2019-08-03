@@ -1,3 +1,4 @@
+from . import cli  # TODO: inject
 from . import food
 from . import guests
 from . import ingredients
@@ -41,7 +42,21 @@ class Serve(Action):
         taste = guests.serve(self.guest, self.food)
         social.taste(self.guest, taste)
         if social.get(self.guest):
-            print('{} bonding level is {}'.format(self.guest, social.level(self.guest)))
+            cli.print_message('{} bonding level is {}'.format(self.guest, social.level(self.guest)))
+
+
+class SendHome(Action):
+    guest = None
+
+    def __init__(self, guest):
+        self.guest = guest
+
+    def perform(self):
+        guests.send_home(self.guest)
+        cli.print_dialog(self.guest, 'No more food?')
+        cli.print_text('{} left.'.format(self.guest))
+        if social.get(self.guest):
+            cli.print_message('{} bonding level is {}'.format(self.guest, social.level(self.guest)))
 
 
 class BuyStorage(Action):
@@ -93,14 +108,15 @@ class Chat(Action):
 
     def perform(self):
         effect, reaction = social.chat(self.guest, self.reply)
-        print('{}: "{}"'.format(self.guest, reaction))
+        if reaction:
+            cli.print_dialog(self.guest, reaction)
         if effect > 0:
-            print('{} liked your reply.'.format(self.guest))
+            cli.print_text('{} liked your reply.'.format(self.guest))
         elif effect < 0:
-            print('{} did not like your reply.'.format(self.guest))
+            cli.print_text('{} did not like your reply.'.format(self.guest))
         else:
-            print('{} does not care.'.format(self.guest))
-        print('{} bonding level is {}'.format(self.guest, social.level(self.guest)))
+            cli.print_text('{} does not care.'.format(self.guest))
+        cli.print_message('{} bonding level is {}'.format(self.guest, social.level(self.guest)))
 
 
 class SaveDish(Action):
