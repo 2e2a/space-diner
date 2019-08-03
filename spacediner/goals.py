@@ -1,90 +1,65 @@
 from . import cli
-from . import guests
-from . import merchants
-from . import skills
+from . import levels
+from . import time
 
 
 class Reward:
-    TYPE_MERCHANT = 'merchant'
-    TYPE_GUEST = 'guest'
-    TYPE_SKILL = 'skill'
+    TYPE_MONEY = 'money'
 
+    message = None
     typ = None
 
-    def apply(self):
-        raise NotImplemented
-
-
-class SocialReward(Reward):
-    level = None
-
     def init(self, data):
-        self.level = data.get('level')
+        self.message = data.get('message')
 
-    def apply(self):
-        raise NotImplemented
+    def reached(self):
+        cli.print_text(self.message)
+        cli.print_message('Congratulations! You have won!')
+
+    def check(self):
+        raise NotImplemented()
 
 
-class MerchantReward(SocialReward):
-    merchant = None
-
-    def __init__(self):
-        self.typ = self.TYPE_MERCHANT
+class MoneyGoal(Reward):
+    amount = None
 
     def init(self, data):
         super().init(data)
-        self.merchant = data.get('merchant')
+        self.amount = data.get('amount')
 
-    def apply(self):
-        cli.print_message('New merchant unlocked')
-        merchants.unlock(self.merchant)
+    def reached(self):
+        cli.print_message('Reached {} space dollars.')
+        super().reached()
 
-
-class GuestReward(Reward):
-    guest = None
-
-    def __init__(self):
-        self.typ = self.TYPE_GUEST
-
-    def init(self, data):
-        self.level = data.get('level')
-        self.guest = data.get('guest')
-
-    def apply(self):
-        cli.print_message('New guest unlocked')
-        guests.unlock(self.guest)
+    def check(self):
+        if levels.level.money >= self.amount:
+            self.reached()
 
 
-class SkillReward(Reward):
-    skill = None
-    diff = None
 
-    def __init__(self):
-        self.typ = self.TYPE_SKILL
-
-    def init(self, data):
-        self.skill = data.get('skill')
-        self.diff = data.get('diff')
-
-    def apply(self):
-        if self.diff > 0:
-            cli.print_message('{} increased by {}'.format(self.skill, self.diff))
-        else:
-            cli.print_message('{} decreased by {}'.format(self.skill, self.diff))
-        skills.add(self.skill, self.diff)
+goals = None
 
 
-def init_list(data):
-    rewards = []
-    for reward_data in data:
-        typ = reward_data.get('type')
-        reward = None
-        if typ == Reward.TYPE_MERCHANT:
-            reward = MerchantReward()
-        elif typ == Reward.TYPE_GUEST:
-            reward = GuestReward()
-        elif typ == Reward.TYPE_SKILL:
-            reward = SkillReward()
-        reward.init(reward_data)
-        rewards.append(reward)
-    return rewards
+def new_workday():
+    pass
+
+
+def after_work():
+   global goals
+   for goal in goals:
+       goal.check()
+
+
+def init(data):
+    global goals
+    goals = []
+    for goal_data in data:
+        typ = goal_data.get('type')
+        goal = None
+        if typ == Reward.TYPE_MONEY:
+            goal = MoneyGoal()
+        goal.init(goal_data)
+        goals.append(goal)
+    time.register_callback(time.Clock.TIME_WORK, new_workday)
+    time.register_callback(time.Clock.TIME_OFF, after_work)
+    return goals

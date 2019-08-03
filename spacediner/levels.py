@@ -9,6 +9,7 @@ from . import activities
 from . import cli
 from . import food
 from . import generic
+from . import goals
 from . import guests
 from . import kitchen
 from . import ingredients
@@ -30,6 +31,7 @@ class Level(generic.Thing):
             self.name = data.get('name')
             self.diner = data.get('diner')
             self.money = data.get('money')
+            goals.init(data.get('goals'))
             time.init(data.get('time'))
             skills.init(data.get('skills', []))
             ingredients.init(data.get('ingredients', []))
@@ -93,6 +95,7 @@ def init(name):
 
 
 def save(file):
+    # TODO: missing rewards? goals?
     global level
     pickle.dump(level, file)
     time.save(file)
