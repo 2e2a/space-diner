@@ -196,7 +196,7 @@ class ChoiceMode(Mode):
     def exec(self, cmd, cmd_input):
         if cmd == self.CMD_CHOICE:
             choice = int(cmd_input[0])
-            if choice < 0 or choice > (len(self.choices) + 2):
+            if choice < 0 or choice > len(self.choices):
                 print('Invalid choice.')
                 return self
             if choice == 0:
