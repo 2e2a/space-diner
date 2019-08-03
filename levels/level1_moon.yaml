@@ -1,0 +1,175 @@
+name: Moon - Diner Basics
+diner: Moon Diner
+money: 50
+
+goals:
+  - type: money
+    amount: 55
+    message: Money! Money! Money!
+
+
+ingredients:
+  - name: beef
+    storage: pantry
+    properties: [ meat ]
+
+  - name: pickles
+    storage: pantry
+    properties: []
+
+  - name: bun
+    storage: pantry
+    properties: []
+
+  - name: silkworm
+    storage: fridge
+    properties: [ meat ]
+
+storage:
+  - name: fridge
+    available: True
+    ingredients: []
+
+  - name: pantry
+    available: True
+    ingredients:
+      - name: beef
+        available: 5
+      - name: bun
+        available: 5
+      - name: pickles
+        available: 5
+
+kitchen:
+  - name: plate
+    available: True
+    preparation: plating raw
+    command: plate
+    result: raw
+    properties: [ ]
+
+  - name: pan
+    available: True
+    preparation: frying
+    command: fry
+    result: fried
+    properties: [ ]
+
+  - name: fryer
+    available: True
+    preparation: deep-frying
+    command: deep_fry
+    result: deep-fried
+    properties: [ ]
+
+merchants:
+  - name: Earth wholesale
+    available: True
+    ingredients:
+      - name: beef
+        cost: 2
+      - name: pickles
+        cost: 1
+      - name: bun
+        cost: 1
+
+  - name: Moon specialties
+    available: False
+    ingredients:
+      - name: silkworm
+        cost: 10
+
+recipes:
+  - name: Beef Burger
+    available: True
+    ingredients:
+      - [ fried, beef ]
+      - [ bun ]
+      - [ pickles ]
+    properties: [ burger ]
+
+  - name: Silkworm Burger
+    available: True
+    ingredients:
+      - [ fried, silkworm ]
+      - [ bun ]
+      - [ pickles ]
+    properties: [ burger ]
+
+  - name: Meat Plate
+    available: True
+    ingredients:
+      - [ fried, meat ]
+      - [ fried, meat ]
+      - [ fried, meat ]
+    properties: []
+
+  - name: Pickle salad
+    available: True
+    ingredients:
+      - [ pickles ]
+      - [ pickles ]
+      - [ pickles ]
+    properties: []
+
+  - name: Silkworm nuggets
+    available: True
+    ingredients:
+      - [ deep-fried, silkworm ]
+      - [ deep-fried, silkworm ]
+      - [ deep-fried, silkworm ]
+    properties: []
+
+guests:
+  groups:
+    - name: colonist
+      budget: 10
+      reactions:
+        - properties: [  ]
+          taste: +1
+          output: 
+      orders:
+        - beef burger
+        - meat plate
+        - pickle salad
+
+    - name: fancy colonist
+      budget: 20
+      reactions:
+        - properties: [ silkworm ]
+          taste: +1
+          output: I love silkworms!
+      orders:
+        - silkworm nuggets
+        - meat plate
+        - burger
+
+  factory:
+    - [ colonist ]
+    - [ fancy colonist ]
+
+  regulars:
+    - name: Sam
+      available: True
+      budget: 10
+      reactions:
+        - properties: [ pickles ]
+          taste: +1
+          output: Oh, pickles are my favourite.
+      orders:
+        - burger
+        - pickle salad
+
+social:
+  - name: Sam
+    chats:
+      - question: What a lovely day.
+        replies:
+          - [+1, "So true!",]
+          - [0, "Eh...",]
+          - [-1, "No!",]
+    rewards:
+        - type: merchant
+          level: 5
+          merchant: Moon specialties
+
