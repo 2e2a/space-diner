@@ -342,6 +342,7 @@ class DinerMode(Mode):
         if cmd == self.CMD_SKILLS:
             return SkillInfoMode()
         if cmd == self.CMD_CLOSE_UP:
+            actions.CloseUp().perform()
             time.tick()
             return AfterWorkMode()
         if cmd == self.CMD_SAVE:

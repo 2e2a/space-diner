@@ -59,6 +59,14 @@ class SendHome(Action):
             cli.print_message('{} bonding level is {}'.format(self.guest, social.level(self.guest)))
 
 
+class CloseUp(Action):
+
+    def perform(self):
+        for guest in guests.available_guests():
+            send_home = SendHome(guest)
+            send_home.perform()
+
+
 class BuyStorage(Action):
     storage = None
 

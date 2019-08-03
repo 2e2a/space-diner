@@ -77,7 +77,8 @@ class Guest(generic.Thing):
         return taste
 
     def send_home(self):
-        social.level_down(self.name)
+        if social.get(self.name):
+            social.level_down(self.name)
 
     def init(self, data):
         self.name = data.get('name')
@@ -111,7 +112,7 @@ class GuestFactory(generic.Thing):
         name = self.names[num]
         if not existing or not any(guest.name == name for guest in existing):
             return name
-        count = len([guest for guest in existing if name.split() == guest.name.split()[:-1]]) + 1
+        count = len([guest for guest in existing if name.split() == guest.name.split()[:-1]]) + 2
         name = '{} {}'.format(name, count)
         return name
 
