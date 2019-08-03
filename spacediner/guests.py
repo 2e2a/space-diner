@@ -6,6 +6,7 @@ from collections import OrderedDict
 from . import food
 from . import generic
 from . import levels
+from . import social
 from . import time
 
 
@@ -40,11 +41,6 @@ class Guest(generic.Thing):
             reaction.output
         ))
 
-    def print_taste(self, taste):
-        if taste > 4: taste = 4
-        elif taste < 0: taste = 0
-        print('{}: "{}"'.format(self.name, self.taste[taste]))
-
     def get_order(self):
         if self.order:
             return self.order
@@ -71,9 +67,11 @@ class Guest(generic.Thing):
             else:
                 print('{}: "Not really {}-ish..."'.format(self.name, self.order))
                 taste -= 2
-        self.print_taste(taste)
+        if taste > 4: taste = 4
+        elif taste < 0: taste = 0
         payment = int(self.budget/5 * taste)
         levels.level.money += payment
+        print('{}: "{}"'.format(self.name, self.taste[taste]))
         print('{} payed {} space dollars.'.format(self.name, payment))
         print('{} left.'.format(self.name))
         return taste
@@ -185,8 +183,6 @@ def unlock(name):
         guest = guest_factory.get(name)
     if guest:
         guest.available = True
-
-
 
 
 def init(data):
