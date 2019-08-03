@@ -41,7 +41,7 @@ class Guest(generic.Thing):
             reaction.output
         ))
 
-    def get_order(self):
+    def take_order(self):
         if self.order:
             return self.order
         if not self.orders:
@@ -75,6 +75,9 @@ class Guest(generic.Thing):
         print('{} payed {} space dollars.'.format(self.name, payment))
         print('{} left.'.format(self.name))
         return taste
+
+    def send_home(self):
+        social.level_down(self.name)
 
     def init(self, data):
         self.name = data.get('name')
@@ -156,9 +159,19 @@ def get(name):
     return None
 
 
-def get_order(name):
+def take_order(name):
     guest = get(name)
-    return guest.get_order()
+    return guest.take_order()
+
+
+def get_ordered(name):
+    guest = get(name)
+    return guest.ordered()
+
+
+def ordered():
+    global guests
+    return {guest.name: guest.order for guest in guests if guest.order}
 
 
 def serve(name, food):
@@ -168,6 +181,13 @@ def serve(name, food):
         taste = guest.serve(food)
         guests.remove(guest)
     return taste
+
+
+def send_home(name):
+    global guests
+    guest = get(name)
+    guest.send_home()
+    guests.remove(guest)
 
 
 def new_workday():
