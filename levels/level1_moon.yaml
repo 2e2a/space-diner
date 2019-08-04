@@ -4,24 +4,30 @@ money: 50
 
 goals:
   - type: money
-    amount: 55
-    message: Money! Money! Money!
+    amount: 100
+    message: You have earned enough money for a ticket to Mars. Let's move on.
 
 
 ingredients:
   - name: beef
+    description: Canned beef, imported from earth. Rather bland.
     storage: pantry
     properties: [ meat ]
 
   - name: pickles
+    description: Canned pickles, imported from earth. Good old pickles.
     storage: pantry
     properties: []
 
   - name: bun
+    description: A soft pre-baked burger bun, ready to serve.
     storage: pantry
     properties: []
 
   - name: silkworm
+    description:
+      Silkworms were brought to the dark side of the moon as part of a scientific experiment. Now they are cultivated as
+      a local delicacy.
     storage: fridge
     properties: [ meat ]
 
@@ -77,7 +83,7 @@ merchants:
     available: False
     ingredients:
       - name: silkworm
-        cost: 10
+        cost: 5
 
 recipes:
   - name: Beef Burger
@@ -133,12 +139,12 @@ guests:
         - meat plate
         - pickle salad
 
-    - name: fancy colonist
-      budget: 20
+    - name: tourist
+      budget: 25
       reactions:
         - properties: [ silkworm ]
           taste: +1
-          output: I love silkworms!
+          output: Great, a local specialty!
       orders:
         - silkworm nuggets
         - meat plate
@@ -146,7 +152,7 @@ guests:
 
   factory:
     - [ colonist ]
-    - [ fancy colonist ]
+    - [ tourist ]
 
   regulars:
     - name: Sam
@@ -155,7 +161,7 @@ guests:
       reactions:
         - properties: [ pickles ]
           taste: +1
-          output: Oh, pickles are my favourite.
+          output: Pickles are my favourite.
       orders:
         - burger
         - pickle salad
@@ -173,3 +179,15 @@ social:
           level: 5
           merchant: Moon specialties
 
+  - name: colonist
+    chats:
+      - question: There are more and more tourists from Earth. I hate them.
+      - question: Did you hear? They are building a Moon amusement park.
+      - question: I hope I can move to one of those fancy new apartments soon.
+      - question: The stars are beautiful today.
+      - question: I lifted 1000 kg in the gym today.
+      - question: Your furniture is not very comfortable.
+      - question: Stupid Armstrong Museum. Standing in line for hours just for a foot print.
+      - question: I wonder what is going on on Earth. I haven't been there for 8 years.
+      - question: The next ship from Earth will arrive tomorrow.
+      - question: My brother moved to Mars. I hope I can visit him soon.
