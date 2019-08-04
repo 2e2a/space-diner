@@ -28,7 +28,7 @@ class MoneyGoal(Reward):
         self.amount = data.get('amount')
 
     def reached(self):
-        cli.print_message('Reached {} space dollars.')
+        cli.print_message('Reached {} space dollars.'.format(self.amount))
         super().reached()
 
     def check(self):

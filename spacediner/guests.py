@@ -3,6 +3,7 @@ import pickle
 import random
 from collections import OrderedDict
 
+from . import cli  #  TODO: inject
 from . import food
 from . import generic
 from . import levels
@@ -35,11 +36,11 @@ class Guest(generic.Thing):
     chatted_today = False
 
     def react(self, reaction, properties):
-        print('{}: "{}, {}"'.format(
+        cli.print_dialog_with_info(
             self.name,
-            ', '.join(properties),
+            'likes something ({})'.format(', '.join(properties)),
             reaction.output
-        ))
+        )
 
     def take_order(self):
         if self.order:
@@ -59,21 +60,29 @@ class Guest(generic.Thing):
                 taste += reaction.taste
         if self.orders:
             if not self.order:
-                print('{}: "You could have taken my order first."'.format(self.name))
+                cli.print_dialog(self.name, 'You could have taken my order first.')
                 taste -= 1
             elif self.order in dish.properties:
-                print('{}: "Mhh... {}-ish, like ordered."'.format(self.name, self.order))
+                cli.print_dialog_with_info(
+                    self.name,
+                    'received what they ordered ({})'.format(self.order),
+                    'Thanks, that\'s what I wanted.',
+                )
                 taste += 2
             else:
-                print('{}: "Not really {}-ish..."'.format(self.name, self.order))
-                taste -= 2
+                cli.print_dialog_with_info(
+                    self.name,
+                    'did not receive what they ordered ({})'.format(self.order),
+                    'That\'s not what I wanted.',
+                )
+                taste -= 1
         if taste > 4: taste = 4
         elif taste < 0: taste = 0
         payment = int(self.budget/5 * taste)
         levels.level.money += payment
-        print('{}: "{}"'.format(self.name, self.taste[taste]))
-        print('{} payed {} space dollars.'.format(self.name, payment))
-        print('{} left.'.format(self.name))
+        cli.print_dialog(self.name, self.taste[taste])
+        cli.print_text('{} paid {} space dollars.'.format(self.name, payment))
+        cli.print_text('{} left.'.format(self.name))
         return taste
 
     def send_home(self):

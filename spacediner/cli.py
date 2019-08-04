@@ -16,8 +16,7 @@ from . import time
 
 
 def print_text(str):
-    # TODO: use everywhere instead of print
-    print(str.capitalize())
+    print(str.title())
 
 
 def print_title(str):
@@ -46,6 +45,10 @@ def print_message(msg):
 
 def print_dialog(name, msg):
     print('{}: "{}"'.format(name, msg))
+
+
+def print_dialog_with_info(name, info, msg):
+    print('{} {}: "{}"'.format(name, info, msg))
 
 
 class CommandCompleter:
@@ -689,7 +692,6 @@ class ShoppingMode(Mode):
                         for i, (a, c, s) in ingredients.items()])
         print_title('Storages for sale:')
         print_list(['{}: {} space dollars'.format(s.name, s.cost) for s in self.storages_for_sale.values()])
-
 
     def print_help(self):
         print('Help:')
