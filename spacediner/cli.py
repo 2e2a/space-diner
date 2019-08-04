@@ -746,12 +746,13 @@ class TalkMode(ChoiceMode):
                 print('{}: Surprise me.'.format(self.guest))
             return self
         elif choice == 2:
+            # TODO: move to action
             guest = guests.get(self.guest)
             if guest.chatted_today:
-                print('{}: "Enough chatting for today, I\'m hungry.".'.format(self.guest))
+                print_dialog(self.guest, 'Enough chatting for today, I\'m hungry.')
                 return self
             guest.chatted_today = True
-            if self.guest not in social.chats_available():
+            if not social.chat_available(self.guest):
                 print_text('{} is not in the mood for chatting.'.format(self.guest))
                 return self
             chat = social.next_chat(self.guest)

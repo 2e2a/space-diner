@@ -63,6 +63,13 @@ class Relation:
         self.level -= 1
         return self.level
 
+    def next_chat(self):
+        chat = self.chats[self.chats_done]
+        self.chats_done += 1
+        if self.chats_done >= len(self.chats):
+            self.chats_done = 0
+        return chat
+
     def chat(self, reply):
         chat = self.chats[self.chats_done]
         effect = chat.effect(reply)
@@ -71,9 +78,6 @@ class Relation:
             self.level_up()
         elif effect < 0:
             self.level_down()
-        self.chats_done += 1
-        if self.chats_done >= len(self.chats):
-            self.chats_done = 0
         return effect, reaction
 
     def taste(self, taste):
@@ -101,11 +105,14 @@ def chats_available():
     return chats
 
 
+def chat_available(name):
+    global relations
+    return get(name).chats
+
+
 def next_chat(name):
     global relations
-    guest_relations = get(name)
-    chat = guest_relations.chats[guest_relations.chats_done]
-    return chat
+    return get(name).next_chat()
 
 
 def chat(name, reply):
