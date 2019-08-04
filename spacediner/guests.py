@@ -27,6 +27,8 @@ class Reaction(generic.Thing):
 
 class Guest(generic.Thing):
     name = None
+    base_name = None
+    groups = None
     budget = 0
     available = False
     reactions = None
@@ -86,8 +88,7 @@ class Guest(generic.Thing):
         return taste
 
     def send_home(self):
-        if social.get(self.name):
-            social.level_down(self.name)
+        social.level_down(self.name)
 
     def init(self, data):
         self.name = data.get('name')
@@ -98,7 +99,7 @@ class Guest(generic.Thing):
             reaction = Reaction()
             reaction.init(reaction_data)
             self.reactions.append(reaction)
-        self.taste = data.get('taste', ['Very Bad', 'Bad', 'OK', 'Good', 'Very Good' ])
+        self.taste = data.get('taste', ['Very bad', 'Bad', 'OK', 'Good', 'Very good' ])
         self.orders = data.get('orders', [])
 
 
@@ -117,11 +118,10 @@ class GuestFactory(generic.Thing):
             self.groups.append(groups)
             self.names.append(' '.join(group for group in groups))
 
-    def _unique_name(self, num, existing=None):
-        name = self.names[num]
+    def _unique_name(self, name, existing=None):
         if not existing or not any(guest.name == name for guest in existing):
             return name
-        count = len([guest for guest in existing if name.split() == guest.name.split()[:-1]]) + 2
+        count = len([guest for guest in existing if name == guest.base_name]) + 1
         name = '{} {}'.format(name, count)
         return name
 
@@ -129,8 +129,10 @@ class GuestFactory(generic.Thing):
         global guest_groups
         num = random.SystemRandom().randint(0, len(self.groups) - 1)
         guest = Guest()
-        guest.name = self._unique_name(num, existing)
+        guest.base_name = self.names[num]
+        guest.name = self._unique_name(guest.base_name, existing)
         groups = [guest_groups.get(name) for name in self.groups[num]]
+        guest.groups = groups
         guest.reactions = list(itertools.chain.from_iterable(group.reactions for group in groups))
         guest.budget = max([group.budget for group in groups])
         guest.available = True
@@ -154,6 +156,12 @@ def get_names():
     names = [name for name in regulars.keys()]
     names.extend(guest_factory.names)
     return names
+
+
+def get_base_name(name):
+    global guests
+    guest = get(name)
+    return guest.base_name
 
 
 def available_guests():
@@ -208,7 +216,7 @@ def new_workday():
     for regular in guests:
         regular.order = None
         regular.chatted_today = False
-    for i in range(2):  # TODO: guest max
+    for i in range(3):  # TODO: guest max
         guest = guest_factory.create(existing=guests)
         guests.append(guest)
 

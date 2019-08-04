@@ -52,11 +52,10 @@ class SendHome(Action):
         self.guest = guest
 
     def perform(self):
-        guests.send_home(self.guest)
         cli.print_dialog(self.guest, 'No more food?')
         cli.print_text('{} left.'.format(self.guest))
-        if social.get(self.guest):
-            cli.print_message('{} bonding level is {}'.format(self.guest, social.level(self.guest)))
+        cli.print_message('{} bonding level is {}'.format(self.guest, social.level(self.guest)))
+        guests.send_home(self.guest)
 
 
 class CloseUp(Action):

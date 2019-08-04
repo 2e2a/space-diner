@@ -53,9 +53,10 @@ class Relation:
 
     def level_up(self):
         self.level += 1
-        reward = self.rewards.get(self.level)
-        if reward:
-            reward.apply()
+        if self.rewards:
+            reward = self.rewards.get(self.level)
+            if reward:
+                reward.apply()
         return self.level
 
     def level_down(self):
@@ -87,7 +88,11 @@ relations = None
 
 def get(name):
     global relations
-    return relations.get(name)
+    relation = relations.get(name)
+    if relation:
+        return relation
+    base_name = guests.get_base_name(name)
+    return relations.get(base_name)
 
 
 def chats_available():
@@ -98,38 +103,38 @@ def chats_available():
 
 def next_chat(name):
     global relations
-    guest_relations = relations.get(name)
+    guest_relations = get(name)
     chat = guest_relations.chats[guest_relations.chats_done]
     return chat
 
 
 def chat(name, reply):
     global relations
-    guest_relation = relations.get(name)
+    guest_relation = get(name)
     return guest_relation.chat(reply)
 
 
 def taste(name, taste):
     global relations
-    relation = relations.get(name)
+    relation = get(name)
     relation.taste(taste)
 
 
 def level(name):
     global relations
-    guest_relation = relations.get(name)
+    guest_relation = get(name)
     return guest_relation.level
 
 
 def level_up(name):
     global relations
-    guest_relation = relations.get(name)
+    guest_relation = get(name)
     return guest_relation.level_up()
 
 
 def level_down(name):
     global relations
-    guest_relation = relations.get(name)
+    guest_relation = get(name)
     return guest_relation.level_down()
 
 
