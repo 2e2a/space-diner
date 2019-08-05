@@ -28,6 +28,7 @@ class Reaction(generic.Thing):
 class Guest(generic.Thing):
     name = None
     base_name = None
+    description = None
     groups = None
     budget = 0
     available = False
@@ -92,6 +93,7 @@ class Guest(generic.Thing):
 
     def init(self, data):
         self.name = data.get('name')
+        self.description = data.get('description')
         self.budget = data.get('budget')
         self.available = data.get('available')
         self.reactions = []
@@ -150,10 +152,20 @@ guest_groups = None
 guest_factory = None
 
 
+def get_available_groups():
+    global guest_groups
+    return [group.name for group in guest_groups.values() if group.available]
+
+
+def get_group(name):
+    global guest_groups
+    return guest_groups.get(name)
+
+
 def get_names():
     global regulars
     global guest_factory
-    names = [name for name in regulars.keys()]
+    names = [name for name in regulars]
     names.extend(guest_factory.names)
     return names
 

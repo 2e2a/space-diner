@@ -64,6 +64,15 @@ def ingredients_for_sale():
     return OrderedDict({merchant.name: merchant.for_sale() for merchant in merchants.values() if merchant.available})
 
 
+def available_ingredients():
+    global merchants
+    available_ingredients = []
+    for merchant in merchants.values():
+        if merchant.available:
+            available_ingredients.extend(merchant.ingredients.keys())
+    return available_ingredients
+
+
 def unlock(name):
     global merchants
     merchant = merchants.get(name)

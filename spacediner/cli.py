@@ -8,6 +8,7 @@ from . import guests
 from . import kitchen
 from . import merchants
 from . import levels
+from . import ingredients
 from . import settings
 from . import skills
 from . import social
@@ -16,7 +17,8 @@ from . import time
 
 
 def print_text(str):
-    print(str.title())
+    # TODO: capitalize just the first letter.
+    print(str)
 
 
 def print_title(str):
@@ -312,15 +314,17 @@ class LoadGameMode(ChoiceMode):
 class DinerMode(Mode):
     CMD_COOKING = 1
     CMD_SERVICE = 2
-    CMD_CLOSE_UP = 3
-    CMD_SKILLS = 4
-    CMD_SAVE = 5
-    CMD_EXIT = 6
+    CMD_SKILLS = 3
+    CMD_COMPENDIUM = 4
+    CMD_CLOSE_UP = 5
+    CMD_SAVE = 6
+    CMD_EXIT = 7
     commands = [
         (['cooking'],),
         (['service'],),
-        (['close_up'],),
         (['skills'],),
+        (['compendium'],),
+        (['close_up'],),
         (['save'],),
         (['exit'],),
     ]
@@ -344,6 +348,8 @@ class DinerMode(Mode):
             return ServiceMode()
         if cmd == self.CMD_SKILLS:
             return SkillInfoMode()
+        if cmd == self.CMD_COMPENDIUM:
+            return CompendiumMode()
         if cmd == self.CMD_CLOSE_UP:
             actions.CloseUp().perform()
             time.tick()
@@ -532,14 +538,12 @@ class CookingMode(Mode):
 
 class RecipeMode(ChoiceMode):
     prompt = 'recipe #'
-    recipes = None
     choices = None
     title = 'Recipes'
 
     def __init__(self):
         super().__init__()
-        self.recipes = food.get_recipes()
-        self.choices = self.recipes
+        self.choices = food.get_recipes()
 
     def _print_recipe(self, recipe):
         print_title(recipe.name)
@@ -547,7 +551,7 @@ class RecipeMode(ChoiceMode):
         print_list(ingredient_list)
 
     def exec_choice(self, choice):
-        recipe = food.get_recipe(self.recipes[choice - 1])
+        recipe = food.get_recipe(self.choices[choice - 1])
         self._print_recipe(recipe)
         return self
 
@@ -792,6 +796,62 @@ class ChatMode(ChoiceMode):
 
     def back(self):
         return TalkMode(self.guest)
+
+
+class CompendiumMode(ChoiceMode):
+    prompt = 'choice #'
+    choices = ['Guests', 'Ingredients']
+    title = 'Compendium'
+
+    def exec_choice(self, choice):
+        if choice == 1:
+            return GuestCompendiumMode()
+        if choice == 2:
+            return IngredientCompendiumMode()
+        return self
+
+    def back(self):
+        return DinerMode()
+
+
+class GuestCompendiumMode(ChoiceMode):
+    prompt = 'guest #'
+    choices = None
+    title = 'Guest compendium'
+
+    def __init__(self):
+        self.choices = sorted(guests.get_available_groups())
+        super().__init__()
+
+    def exec_choice(self, choice):
+        group = guests.get_group(self.choices[choice - 1])
+        print_text(group.description)
+        return self
+
+    def back(self):
+        return CompendiumMode()
+
+
+class IngredientCompendiumMode(ChoiceMode):
+    prompt = 'ingredient #'
+    choices = None
+    title = 'Ingredient compendium'
+
+    def __init__(self):
+        ingredients = set(storage.available_ingredients().keys())
+        ingredients.update(merchants.available_ingredients())
+        self.choices = sorted(ingredients)
+        super().__init__()
+
+    def exec_choice(self, choice):
+        ingredient = ingredients.get(self.choices[choice - 1])
+        print_text(ingredient.description)
+        return self
+
+    def back(self):
+        return CompendiumMode()
+
+
 
 
 class AfterWorkMode(Mode):
