@@ -1,0 +1,584 @@
+name: Titan
+diner: The Pit
+money: 50
+
+time:
+    morning_greeting: morning...
+    evening_greeting: evening...
+
+skills:
+  proficiency: 2.0
+
+ingredients:
+  - name: canned beef
+    storage: pantry
+    properties:
+      - meat
+      - canned
+      - animal product
+
+  - name: pickles
+    storage: pantry
+    properties:
+      - vegetable
+      - canned
+
+  - name: tomato
+    storage: pantry
+    properties:
+      - vegetable
+      - fresh
+
+  - name: lettuce
+    storage: fridge
+    properties:
+      - vegetable
+      - fresh
+  
+  - name: bristleworm medallion
+    storage: fridge
+    properties:
+      - meat
+      - fresh
+      - spicy
+      - animal product
+
+  - name: bristleworm egg
+    storage: fridge
+    properties:
+      - egg
+      - animal product
+
+  - name: bun
+    storage: pantry
+    properties:
+      - bread
+      - starch
+
+  - name: old cheddar
+    storage: fridge
+    properties:
+      - cheese
+      - animal product
+
+  - name: potato
+    storage: pantry
+    properties:
+      - vegetable
+      - starch
+
+storage:
+  - name: fridge
+    available: True
+    ingredients: []
+
+  - name: pantry
+    available: True
+    ingredients:
+      - name: canned beef
+        available: 5
+      - name: bun
+        available: 5
+
+kitchen:
+  - name: plate
+    available: True
+    preparation: plating raw
+    command: plate
+    result: raw
+    properties: []
+
+  - name: pot
+    available: True
+    preparation: boiling
+    command: boil
+    result: boiled
+    properties: []
+
+  - name: pan
+    available: True
+    preparation: frying
+    command: fry
+    result: fried
+    properties: [ ]
+
+  - name: fryer
+    available: True
+    preparation: deep-frying
+    command: deep_fry
+    result: deep-fried
+    properties: [ ]
+
+  - name: blender
+    available: True
+    preparation: blending
+    command: blend
+    result: blended
+    properties: [ raw ]
+
+
+merchants:
+  - name: Roberta's Canned Goods
+    available: True
+    ingredients:
+      - name: canned beef
+        cost: 2
+        available: 19
+      - name: pickles
+        cost: 1
+        available: 17
+  
+  - name: Pete's Worms
+    available: True
+    ingredients:
+      - name: bristleworm medallion
+        cost: 12
+        available: 60
+      - name: bristleworm egg
+        cost: 4
+        available: 211
+
+  - name: Eddie's Laboratory Waste
+    available: False
+    ingredients:
+      - name: bristleworm medallion
+        cost: 6
+        available: 40
+      - name: bristleworm egg
+        cost: 2
+        available: 60
+
+  - name: Samira's Greenhouse
+    available: True
+    ingredients:
+      - name: tomato
+        cost: 5
+        available: 25
+      - name: lettuce
+        cost: 5
+        available: 17
+      - name: potato
+        cost: 2
+        available: 77
+
+  - name: Yumiko's Earth Imports
+    available: True
+    ingredients:
+      - name: canned beef
+        cost: 3
+        available: 99
+      - name: pickles
+        cost: 2
+        available: 199
+      - name: old cheddar
+        cost: 10
+        available: 60
+      - name: bun
+        cost: 1
+        available: 205
+
+recipes:
+  - name: Classic Bristleworm Burger
+    available: True
+    ingredients:
+      - [ fried, bristleworm medallion ]
+      - [ bun ]
+      - [ vegetable ]
+    properties:
+      - greasy
+      - burger
+      - classic burger
+      - specialty
+
+  - name: Bristleworm Breakfast Burger
+    available: True
+    ingredients:
+      - [ fried, bristleworm medallion ]
+      - [ bun ]
+      - [ fried, egg ]
+    properties:
+      - greasy
+      - burger
+      - breakfast burger
+      - specialty
+
+  - name: Bristleworm Cheese Burger
+    available: True
+    ingredients:
+      - [ fried, bristleworm medallion ]
+      - [ bun ]
+      - [ cheese ]
+    properties:
+      - greasy
+      - burger
+      - cheese burger
+      - specialty
+
+  - name: Classic Beef Burger
+    available: True
+    ingredients:
+      - [ fried, canned beef ]
+      - [ bun ]
+      - [ vegetable ]
+    properties:
+      - greasy
+      - burger
+      - classic burger
+
+  - name: Beef Breakfast Burger
+    available: True
+    ingredients:
+      - [ fried, canned beef ]
+      - [ bun ]
+      - [ fried, egg ]
+    properties:
+      - greasy
+      - burger
+      - breakfast burger
+
+  - name: Beef Cheese Burger
+    available: True
+    ingredients:
+      - [ fried, canned beef ]
+      - [ bun ]
+      - [ cheese ]
+    properties:
+      - greasy
+      - burger
+      - cheese burger
+
+  - name: Veggie Sandwich
+    available: True
+    ingredients:
+      - [ bun ]
+      - [ fresh, vegetable ]
+      - [ fresh, vegetable ]
+    properties:
+      - sandwich
+      - healthy
+
+  - name: Cheese Sandwich
+    available: True
+    ingredients:
+      - [ bun ]
+      - [ cheese ]
+      - [ fresh, vegetable ]
+    properties:
+      - sandwich
+
+  - name: Mixed Salad
+    available: True
+    ingredients:
+      - [ raw, fresh, vegetable ]
+      - [ raw, fresh, vegetable ]
+      - [ raw, fresh, vegetable ]
+    properties:
+      - healthy
+      - salad
+
+  - name: Titanian Salad
+    available: True
+    ingredients:
+      - [ raw, lettuce ]
+      - [ raw, tomato ]
+      - [ boiled, bristleworm egg ]
+    properties:
+      - healthy
+      - specialty
+      - salad
+
+  - name: Titanian Tatar
+    available: True
+    ingredients:
+      - [ raw, bristleworm medallion ]
+      - [ raw, bristleworm egg ]
+      - [ raw, pickles ]
+    properties:
+      - specialty
+
+  - name: Classic Fries
+    available: True
+    ingredients:
+      - [ deep-fried, potato ]
+      - [ deep-fried, potato ]
+      - [ deep-fried, potato ]
+    properties:
+      - greasy
+      - fries
+
+  - name: Cheesy Fries
+    available: True
+    ingredients:
+      - [ deep-fried, potato ]
+      - [ deep-fried, potato ]
+      - [ cheese ]
+    properties:
+      - greasy
+      - fries
+
+  - name: Classic Omelet
+    available: True
+    ingredients:
+      - [ fried, egg ]
+      - [ fried, egg ]
+      - [ fried, egg ]
+    properties:
+      - greasy
+      - omelet
+
+  - name: Veggie Omelet
+    available: True
+    ingredients:
+      - [ fried, egg ]
+      - [ fried, egg ]
+      - [ fried, vegetable ]
+    properties:
+      - greasy
+      - omelet
+
+  - name: Meat Omelet
+    available: True
+    ingredients:
+      - [ fried, egg ]
+      - [ fried, egg ]
+      - [ fried, meat ]
+    properties:
+      - greasy
+      - omelet
+
+  - name: Cheese Omelet
+    available: True
+    ingredients:
+      - [ fried, egg ]
+      - [ fried, egg ]
+      - [ cheese ]
+    properties:
+      - greasy
+      - omelet
+
+  - name: Protein Shake
+    available: True
+    ingredients:
+      - [ blended, egg ]
+      - [ blended, egg ]
+      - [ blended, egg ]
+    properties:
+      - healthy
+
+  - name: Smoothie
+    available: True
+    ingredients:
+      - [ blended, vegetable ]
+      - [ blended, vegetable ]
+      - [ blended, vegetable ]
+    properties:
+      - healthy
+
+  - name: Miners' soup
+    available: False
+    ingredients:
+      - [ boiled, meat ]
+      - [ boiled, meat ]
+      - [ boiled, pickles ]
+    properties:
+      - specialty
+
+guests:
+  taste:
+    - Disgusting.
+    - Not great.
+    - That was ok.
+    - Not bad.
+    - Pretty good.
+  groups:
+    - name: mine worker
+      budget: 10
+      reactions:
+        - properties: [ meat ]
+          taste: +1
+          output: Man! The mine makes me hungry for meat.
+      orders:
+        - burger
+        - fries
+        - egg
+    - name: Human
+      budget: 10
+      reactions:
+        - properties: [ bristleworm egg ]
+          taste: -10
+          output: Argh! Bristleworm eggs are poisonous to Humans.
+        - properties: [ raw, potato ]
+          taste: -3
+          output: Argh! Humans cannot digest raw potatoes.
+    - name: scientist
+      budget: 20
+      reactions:
+        - properties: [ old cheddar ]
+          taste: +2
+          output: Bringing cheddar from Earth up here is a scientific miracle!
+        - properties: [ fresh ]
+          taste: +1
+          output: It is incredible that fresh products are cultivated on Titan!
+        - properties: [ spicy ]
+          taste: -2
+          output: Cough! This is much too spicy for my sensitive palate.
+      orders:
+        - classic burger
+        - breakfast burger
+        - cheese burger
+        - omelet
+        - salad
+        - sandwich
+    - name: Alpha-Centaurian
+      budget: 10
+      reactions:
+        - properties: [ raw, vegetable ]
+          taste: -3
+          output: Argh! Alpha-Centaurians cannot digest raw vegetables.
+    - name: Tau-Cetian
+      budget: 10
+      reactions:
+        - properties: [ tomato ]
+          taste: -10
+          output: Argh! Tomatoes are poisonous to Tau-Cetians.
+        - properties: [ potato ]
+          taste: -10
+          output: Argh! Potatoes are poisonous to Tau-Cetians.
+    - name: tourist
+      budget: 50
+      reactions:
+        - properties: [ greasy ]
+          taste: -2
+          output: Yuck! This is so greasy.
+        - properties: [ specialty ]
+          taste: +2
+          output: Oh! I love local specialties.
+        - properties: [ healthy ]
+          taste: +1
+          output: Oh! I like healthy food.
+
+      orders:
+        - Titanian Salad
+        - Titanian Tatar
+        - Classic Bristleworm Burger
+        - Bristleworm Breakfast Burger
+        - Bristleworm Cheese Burger
+        - Smoothie
+        - Protein Shake
+
+  factory:
+    - [ Human, mine worker ]
+    - [ Human, scientist ]
+    - [ Alpha-Centaurian, mine worker ]
+    - [ Alpha-Centaurian, scientist ]
+    - [ Tau-Cetian, tourist ]
+ 
+  regulars:
+    - name: Oom Ra Oomy-Ha (Alpha-Centaurian mine worker)
+      available: True
+      budget: 10
+      reactions:
+        - properties: [ boiled ]
+          taste: +1
+          output: Ah, boiled food is good for my sensitive stomach.
+        - properties: [ fried ]
+          taste: -1
+          output: Fried food gives me heartburn.
+        - properties: [ deep-fried ]
+          taste: -1
+          output: Deep-fried food gives me heartburn.
+        - properties: [ spicy ]
+          taste: -1
+          output: Spicy food gives me heartburn.
+        - properties: [ greasy ]
+          taste: -1
+          output: Greasy food gives me heartburn.
+      orders:
+        - vegetable
+        - meat
+        - egg
+        - sandwich
+
+    - name: Valentina (Human scientist)
+      available: True
+      budget: 18
+      reactions:
+        - properties: [ bristleworm medallion ]
+          taste: -10
+          output: I don't eat bristleworm meat!
+        - properties: [ pickles ]
+          taste: +1
+          output: Yum, I love pickles.
+      orders:
+        - Veggie Sandwich
+        - Mixed Salad
+        - Cheese Sandwich
+        - Classic Burger
+        - cheese
+
+
+social:
+  - name: Oom Ra Oomy-Ha (Alpha-Centaurian mine worker)
+    chats:
+      - question: Ah, the weather...
+        replies:
+          - [+1, "I think it's getting a bit warmer again, isn't it?", "Ah, yes, I feel it, too. Finally."]
+          - [0, "Yes, what about the weather?", "Ah, you don't feel it? Must just be me, then."]
+          - [-1, "Who cares? It's always the same weather on Titan, ice-cold.", "Ah, not everyone is able to notice the subtle changes..."]
+        rewards:
+          - typ: unlock_recipe
+            level: 8
+            recipe: Miners' Soup
+
+  - name: Valentina (Human scientist)
+    chats:
+      - question: I can't stop thinking about my work in the lab...
+        replies:
+          - [+1, "Tell me about it! What are you working on?", "I would love to talk about it... but it's top secret."]
+          - [0, "Relax and enjoy the food.", "You're right. I'll try."]
+          - [-1, "Boring!", "Hey! Maybe for you, idiot."]
+        rewards:
+        - typ: unlock_merchant
+          level: 8
+          merchant: Eddie's Laboratory Waste
+
+
+  - name: Human mine worker
+    chats:
+      - question: It's been a hard day.
+      - question: Oh, the darkness in the mines...
+      - question: I don't know how much longer I can do this job.
+      - question: I'm not in the mood to chat.
+      - question: I'm starving.
+
+  - name: Alpha-Centaurian mine worker
+    chats:
+      - question: It's been a hard day.
+      - question: Oh, the darkness in the mines...
+      - question: I don't know how much longer I can do this job.
+      - question: I'm not in the mood to chat.
+      - question: I'm starving.
+
+  - name: Human scientist
+    chats:
+      - question: What day is it?
+      - question: Oh no, I forgot something in the lab.
+      - question: I just had a brilliant idea! Oh, no, wait... it's nothing.
+      - question: Sigh... so much work.
+      - question: I wonder when my paper will be accepted!
+
+  - name: Alpha-Centaurian scientist
+    chats:
+      - question: What day is it?
+      - question: Oh no, I forgot something in the lab.
+      - question: I just had a brilliant idea! Oh, no, wait... it's nothing.
+      - question: Sigh... so much work.
+      - question: I wonder when my paper will be accepted!
+
+  - name: Tau-Cetian tourist
+    chats:
+      - question: The landscape is so EXTREME.
+      - question: Oh, look at all those wondrous local people!
+      - question: It's so COLD here! How can you live here?
+      - question: I want to visit the research facilities today!
+      - quesiton: I want to visit the mines today!
