@@ -383,11 +383,13 @@ class ServiceMode(Mode):
     CMD_SERVE = 1
     CMD_TALK = 2
     CMD_SEND_HOME = 3
-    CMD_DONE = 4
+    CMD_COOKING = 4
+    CMD_DONE = 5
     commands = [
         (['serve'], [], ['to'], []),
         (['talk_to'], []),
         (['send_home'], []),
+        (['cooking'], ),
         (['done'], ),
     ]
     prompt = 'service >>'
@@ -428,6 +430,8 @@ class ServiceMode(Mode):
             action.perform()
             self.update_commands()
             return self
+        if cmd == self.CMD_COOKING:
+            return CookingMode()
         if cmd == self.CMD_DONE:
             return DinerMode()
 
@@ -438,6 +442,7 @@ class CookingMode(Mode):
     CMD_RECIPES = 3
     CMD_COOKING_BOT = 4
     CMD_ABORT = 5
+    CMD_SERVICE = 7
     CMD_DONE = 6
     commands = [
         (['cook'], [], ),
@@ -445,6 +450,7 @@ class CookingMode(Mode):
         (['recipes'], ),
         (['bot'], ),
         (['abort'], ),
+        (['service'], ),
         (['done'], ),
     ]
     prompt = 'cooking >>'
@@ -531,6 +537,9 @@ class CookingMode(Mode):
             self.action = actions.Cook()
             self.prepared_components = []
             return self
+        if cmd == self.CMD_DONE:
+            actions_saved.append(self.action)
+            return ServiceMode()
         if cmd == self.CMD_DONE:
             actions_saved.append(self.action)
             return DinerMode()
