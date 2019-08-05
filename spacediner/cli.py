@@ -834,7 +834,10 @@ class GuestCompendiumMode(ChoiceMode):
 
     def exec_choice(self, choice):
         group = guests.get_group(self.choices[choice - 1])
-        print_text(group.description)
+        if group.description:
+            print_text(group.description)
+        else:
+            print_text('Unknown.')
         return self
 
     def back(self):
@@ -854,7 +857,10 @@ class IngredientCompendiumMode(ChoiceMode):
 
     def exec_choice(self, choice):
         ingredient = ingredients.get(self.choices[choice - 1])
-        print_text(ingredient.description)
+        if ingredient.description:
+            print_text(ingredient.description)
+        else:
+            print_text('Unknown.')
         return self
 
     def back(self):

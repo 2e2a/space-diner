@@ -129,6 +129,7 @@ recipes:
 guests:
   groups:
     - name: colonist
+      available: True
       budget: 10
       reactions:
         - properties: [  ]
@@ -140,6 +141,7 @@ guests:
         - pickle salad
 
     - name: tourist
+      available: True
       budget: 25
       reactions:
         - properties: [ silkworm ]
