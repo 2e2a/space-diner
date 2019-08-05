@@ -37,6 +37,7 @@ class Guest(generic.Thing):
     orders = None
     order = None
     chatted_today = False
+    served = False
 
     def react(self, reaction, properties):
         cli.print_dialog_with_info(
@@ -53,7 +54,17 @@ class Guest(generic.Thing):
         self.order = random.SystemRandom().choice(self.orders)
         return self.order
 
+    def _save_rating(self, taste):
+        global ratings
+        rating, count = ratings.get(self.base_name)
+        if not rating:
+            ratings.update({self.base_name: (taste, 1)})
+        else:
+            rating = (count*rating + taste)/(count + 1)
+            ratings.update({self.base_name: (rating, count + 1)})
+
     def serve(self, food_name):
+        self.served = True
         dish = food.take(food_name)
         taste = 2
         for reaction in self.reactions:
@@ -81,11 +92,11 @@ class Guest(generic.Thing):
                 taste -= 1
         if taste > 4: taste = 4
         elif taste < 0: taste = 0
+        self._save_rating(taste)
         payment = int(self.budget/5 * taste)
         levels.level.money += payment
         cli.print_dialog(self.name, self.taste[taste])
         cli.print_text('{} paid {} space dollars.'.format(self.name, payment))
-        cli.print_text('{} left.'.format(self.name))
         return taste
 
     def send_home(self):
@@ -150,6 +161,7 @@ guests = None
 regulars = None
 guest_groups = None
 guest_factory = None
+ratings = None
 
 
 def get_available_groups():
@@ -223,6 +235,11 @@ def send_home(name):
     guests.remove(guest)
 
 
+def get_ratings():
+    global ratings
+    return ratings
+
+
 def new_workday():
     global guests
     global regulars
@@ -254,12 +271,15 @@ def init(data):
         guest.init(guest_data)
         regulars.update({guest.name: guest})
 
+    global ratings
+    ratings = OrderedDict()
     global guest_groups
     guest_groups = OrderedDict()
     for group_data in data.get('groups'):
         group = GuestGroup()
         group.init(group_data)
         guest_groups.update({group.name: group})
+        ratings.update({group.name: (None, 0)})
 
     global guest_factory
     guest_factory = GuestFactory()
