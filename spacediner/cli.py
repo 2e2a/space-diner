@@ -658,85 +658,6 @@ class CookingBotListMode(RecipeMode):
         return CookingBotMenuMode()
 
 
-class ShoppingMode(Mode):
-    CMD_BUY_STORAGE = 1
-    CMD_BUY_INGREDIENT = 2
-    CMD_DONE = 3
-    commands = [
-        (['buy'], []),
-        (['buy'], int, [], ['from'], []),
-        (['done'], ),
-    ]
-    prompt = 'shopping >>'
-    storages_for_sale = None
-    available_ingredients = None
-    ingredients_for_sale = None
-
-    def __init__(self):
-        self.storages_for_sale = storage.for_sale()
-        self.available_ingredients = storage.available_ingredients()
-        self.ingredients_for_sale = merchants.ingredients_for_sale()
-        super().__init__()
-
-    def update_commands(self):
-        available_storages = []
-        for storage in self.storages_for_sale.values():
-            if storage.cost < levels.level.money:
-                available_storages.append(self.name_for_command(storage.name))
-        self.commands[0] = (['buy'], available_storages)
-
-        merchants = [self.name_for_command(m) for m in self.ingredients_for_sale.keys()]
-        ingredients = []
-        for mi in self.ingredients_for_sale.values():
-            ingredients.extend([self.name_for_command(i) for i in mi.keys()])
-        self.commands[1] = (['buy'], int, ingredients, ['from'], merchants,)
-
-        super().update_commands()
-
-    def print_info(self):
-        super().print_info()
-        print_value('Money', levels.level.money, 'space dollars')
-        print_title('Available Ingredients:')
-        print_list(['{} {}s'.format(a, i) for i, a in self.available_ingredients.items()])
-        print_title('Ingredients for sale:')
-        for merchant, ingredients in  self.ingredients_for_sale.items():
-            print('Merchant: {}'.format(merchant))
-            print_list(['{}: {} space dollars, {} in stock, {} required'.format(i, c, a, s)
-                        for i, (a, c, s) in ingredients.items()])
-        print_title('Storages for sale:')
-        print_list(['{}: {} space dollars'.format(s.name, s.cost) for s in self.storages_for_sale.values()])
-
-    def print_help(self):
-        print('Help:')
-        print(self.commands)
-
-    def exec(self, cmd, cmd_input):
-        if cmd == self.CMD_BUY_STORAGE:
-            storage = self.original_name(cmd_input[1])
-            action = actions.BuyStorage(storage)
-            action.perform()
-            self.storages_for_sale.pop(storage)
-            self.update_commands()
-            return self
-        if cmd == self.CMD_BUY_INGREDIENT:
-            amount = int(cmd_input[1])
-            ingredient = self.original_name(cmd_input[2])
-            merchant = self.original_name(cmd_input[4])
-            action = actions.BuyIngredients(merchant, ingredient, amount)
-            try:
-                action.perform()
-                self.update_commands()
-                merchant_ingredients = self.ingredients_for_sale.get(merchant)
-                ingredient_amount, ingredient_cost, ingredient_storage = merchant_ingredients.get(ingredient)
-                merchant_ingredients.update({ingredient: (ingredient_amount - amount, ingredient_cost, ingredient_storage)})
-                self.available_ingredients.update({ingredient: self.available_ingredients.get(ingredient, 0) + amount})
-            except RuntimeError as e:
-                print(e)
-            return self
-        if cmd == self.CMD_DONE:
-            return AfterWorkMode()
-
-
 class TalkMode(ChoiceMode):
     prompt = 'talk #'
     guest = None
@@ -867,8 +788,6 @@ class IngredientCompendiumMode(ChoiceMode):
         return CompendiumMode()
 
 
-
-
 class AfterWorkMode(Mode):
     CMD_ACTIVITY = 1
     CMD_SHOPPING = 2
@@ -914,6 +833,85 @@ class AfterWorkMode(Mode):
                 return self
             activity = self.original_name(cmd_input[0])
             activities.do(activity)
+
+
+class ShoppingMode(Mode):
+    CMD_BUY_STORAGE = 1
+    CMD_BUY_INGREDIENT = 2
+    CMD_DONE = 3
+    commands = [
+        (['buy'], []),
+        (['buy'], int, [], ['from'], []),
+        (['done'], ),
+    ]
+    prompt = 'shopping >>'
+    storages_for_sale = None
+    available_ingredients = None
+    ingredients_for_sale = None
+
+    def __init__(self):
+        self.storages_for_sale = storage.for_sale()
+        self.available_ingredients = storage.available_ingredients()
+        self.ingredients_for_sale = merchants.ingredients_for_sale()
+        super().__init__()
+
+    def update_commands(self):
+        available_storages = []
+        for storage in self.storages_for_sale.values():
+            if storage.cost < levels.level.money:
+                available_storages.append(self.name_for_command(storage.name))
+        self.commands[0] = (['buy'], available_storages)
+
+        merchants = [self.name_for_command(m) for m in self.ingredients_for_sale.keys()]
+        ingredients = []
+        for mi in self.ingredients_for_sale.values():
+            ingredients.extend([self.name_for_command(i) for i in mi.keys()])
+        self.commands[1] = (['buy'], int, ingredients, ['from'], merchants,)
+
+        super().update_commands()
+
+    def print_info(self):
+        super().print_info()
+        print_value('Money', levels.level.money, 'space dollars')
+        print_title('Available Ingredients:')
+        print_list(['{} {}s'.format(a, i) for i, a in self.available_ingredients.items()])
+        print_title('Ingredients for sale:')
+        for merchant, ingredients in  self.ingredients_for_sale.items():
+            print('Merchant: {}'.format(merchant))
+            print_list(['{}: {} space dollars, {} in stock, {} required'.format(i, c, a, s)
+                        for i, (a, c, s) in ingredients.items()])
+        print_title('Storages for sale:')
+        print_list(['{}: {} space dollars'.format(s.name, s.cost) for s in self.storages_for_sale.values()])
+
+    def print_help(self):
+        print('Help:')
+        print(self.commands)
+
+    def exec(self, cmd, cmd_input):
+        if cmd == self.CMD_BUY_STORAGE:
+            storage = self.original_name(cmd_input[1])
+            action = actions.BuyStorage(storage)
+            action.perform()
+            self.storages_for_sale.pop(storage)
+            self.update_commands()
+            return self
+        if cmd == self.CMD_BUY_INGREDIENT:
+            amount = int(cmd_input[1])
+            ingredient = self.original_name(cmd_input[2])
+            merchant = self.original_name(cmd_input[4])
+            action = actions.BuyIngredients(merchant, ingredient, amount)
+            try:
+                action.perform()
+                self.update_commands()
+                merchant_ingredients = self.ingredients_for_sale.get(merchant)
+                ingredient_amount, ingredient_cost, ingredient_storage = merchant_ingredients.get(ingredient)
+                merchant_ingredients.update({ingredient: (ingredient_amount - amount, ingredient_cost, ingredient_storage)})
+                self.available_ingredients.update({ingredient: self.available_ingredients.get(ingredient, 0) + amount})
+            except RuntimeError as e:
+                print(e)
+            return self
+        if cmd == self.CMD_DONE:
+            return AfterWorkMode()
 
 
 mode = None
