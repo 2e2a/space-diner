@@ -42,7 +42,6 @@ def print_value(key, *values):
 
 def print_message(msg):
     print('*** {} ***'.format(msg))
-    print('')
 
 
 def print_dialog(name, msg):
@@ -442,8 +441,8 @@ class CookingMode(Mode):
     CMD_RECIPES = 3
     CMD_COOKING_BOT = 4
     CMD_ABORT = 5
-    CMD_SERVICE = 7
-    CMD_DONE = 6
+    CMD_SERVICE = 6
+    CMD_DONE = 7
     commands = [
         (['cook'], [], ),
         (['trash'], ),
@@ -537,7 +536,7 @@ class CookingMode(Mode):
             self.action = actions.Cook()
             self.prepared_components = []
             return self
-        if cmd == self.CMD_DONE:
+        if cmd == self.CMD_SERVICE:
             actions_saved.append(self.action)
             return ServiceMode()
         if cmd == self.CMD_DONE:

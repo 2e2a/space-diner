@@ -209,9 +209,12 @@ def serve(name, food):
     guest = get(name)
     if guest and guest.available:
         taste = guest.serve(food)
-        guests.remove(guest)
     return taste
 
+def leave(name):
+    global guests
+    guest = get(name)
+    guests.remove(guest)
 
 def send_home(name):
     global guests

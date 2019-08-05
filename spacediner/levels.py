@@ -48,7 +48,7 @@ level = None
 
 
 def list():
-    return [level_file for level_file in os.listdir('levels/')]
+    return sorted([level_file for level_file in os.listdir('levels/')])
 
 
 def saved_games():
