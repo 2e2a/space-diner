@@ -9,6 +9,7 @@ from . import kitchen
 from . import merchants
 from . import levels
 from . import ingredients
+from . import reviews
 from . import settings
 from . import skills
 from . import social
@@ -314,16 +315,14 @@ class DinerMode(Mode):
     CMD_COOKING = 1
     CMD_SERVICE = 2
     CMD_SKILLS = 3
-    CMD_RATINGS = 4
-    CMD_COMPENDIUM = 5
-    CMD_CLOSE_UP = 6
-    CMD_SAVE = 7
-    CMD_EXIT = 8
+    CMD_COMPENDIUM = 4
+    CMD_CLOSE_UP = 5
+    CMD_SAVE = 6
+    CMD_EXIT = 7
     commands = [
         (['cooking'],),
         (['service'],),
         (['skills'],),
-        (['ratings'],),
         (['compendium'],),
         (['close_up'],),
         (['save'],),
@@ -349,8 +348,6 @@ class DinerMode(Mode):
             return ServiceMode()
         if cmd == self.CMD_SKILLS:
             return SkillInfoMode()
-        if cmd == self.CMD_RATINGS:
-            return RatingsInfoMode()
         if cmd == self.CMD_COMPENDIUM:
             return CompendiumMode()
         if cmd == self.CMD_CLOSE_UP:
@@ -731,32 +728,6 @@ class ChatMode(ChoiceMode):
         return TalkMode(self.guest)
 
 
-class RatingsInfoMode(InfoMode):
-    prompt = 'ratings >>'
-
-    def back(self):
-        return DinerMode()
-
-    def print_info(self):
-        super().print_info()
-        print_title('Ratings')
-        ratings = []
-        for group, (rating, count) in guests.get_ratings().items():
-            if count > 0:
-                n_stars = round(rating)
-                rating = '{}:\t[{}{}] ({}) based on {} reviews'.format(
-                    group,
-                    '*'*n_stars,
-                    '-'*(5-n_stars),
-                    rating,
-                    count,
-                )
-            else:
-                rating = '{}:\tno reviews yet'.format(group)
-            ratings.append(rating)
-        print_list(ratings)
-
-
 class CompendiumMode(ChoiceMode):
     prompt = 'choice #'
     choices = ['Guests', 'Ingredients']
@@ -820,10 +791,12 @@ class IngredientCompendiumMode(ChoiceMode):
 class AfterWorkMode(Mode):
     CMD_ACTIVITY = 1
     CMD_SHOPPING = 2
-    CMD_SLEEP = 3
+    CMD_RATINGS = 3
+    CMD_SLEEP = 4
     commands = [
         ([], ),
         (['shopping'],),
+        (['ratings'],),
         (['sleep'], ),
     ]
     prompt = 'after work >>'
@@ -852,6 +825,8 @@ class AfterWorkMode(Mode):
     def exec(self, cmd, cmd_input):
         if cmd == self.CMD_SHOPPING:
             return ShoppingMode()
+        if cmd == self.CMD_RATINGS:
+            return RatingsInfoMode()
         if cmd == self.CMD_SLEEP:
             time.tick()
             return DinerMode()
@@ -941,6 +916,50 @@ class ShoppingMode(Mode):
             return self
         if cmd == self.CMD_DONE:
             return AfterWorkMode()
+
+
+class RatingsInfoMode(InfoMode):
+    # TODO: rename to review
+    prompt = 'ratings >>'
+
+    def back(self):
+        return AfterWorkMode()
+
+    def print_info(self):
+        super().print_info()
+        print_title('Ratings')
+        ratings = []
+        for group, (rating, count) in reviews.get_ratings().items():
+            if count > 0:
+                n_stars = round(rating)
+                rating = '{}:\t[{}{}] ({}) based on {} reviews'.format(
+                    group,
+                    '*'*n_stars,
+                    '-'*(5-n_stars),
+                    rating,
+                    count,
+                    )
+            else:
+                rating = '{}:\tno reviews yet'.format(group)
+            ratings.append(rating)
+        print_list(ratings)
+
+        print_title('Today\'s reviews')
+        todays_reviews = reviews.get_reviews()
+        print_list(todays_reviews)
+
+        print_title('Discovered preferences')
+        guest_likes = []
+        for guest, (likes, dislikes) in reviews.get_likes().items():
+            if not likes and not dislikes:
+                continue
+            guest_like = '{}: '.format(guest)
+            if likes:
+                guest_like += ','.join(map(lambda x: '+' + x, likes))
+            if dislikes:
+                guest_like += ','.join(map(lambda x: '+' + x, dislikes))
+            guest_likes.append(guest_like)
+        print_list(guest_likes)
 
 
 mode = None

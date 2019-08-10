@@ -7,6 +7,7 @@ from . import cli  #  TODO: inject
 from . import food
 from . import generic
 from . import levels
+from . import reviews
 from . import social
 from . import time
 
@@ -39,13 +40,6 @@ class Guest(generic.Thing):
     chatted_today = False
     served = False
 
-    def react(self, reaction, properties):
-        cli.print_dialog_with_info(
-            self.name,
-            'likes something ({})'.format(', '.join(properties)),
-            reaction.output
-        )
-
     def take_order(self):
         if self.order:
             return self.order
@@ -54,28 +48,35 @@ class Guest(generic.Thing):
         self.order = random.SystemRandom().choice(self.orders)
         return self.order
 
-    def _save_rating(self, taste):
-        global ratings
-        rating, count = ratings.get(self.base_name)
-        if not rating:
-            ratings.update({self.base_name: (taste, 1)})
-        else:
-            rating = (count*rating + taste)/(count + 1)
-            ratings.update({self.base_name: (rating, count + 1)})
-
     def serve(self, food_name):
+        # TODO: split in sub-functions
         self.served = True
         dish = food.take(food_name)
         taste = 2
+        review = '{}:'.format(self.name)
         for reaction in self.reactions:
             matching_properties = set(reaction.properties).intersection(dish.properties)
             if matching_properties:
-                self.react(reaction, matching_properties)
+                cli.print_dialog_with_info(
+                    self.name,
+                    '{} something ({})'.format(
+                        'likes' if reaction.taste  > 0 else 'does not like',
+                        ', '.join(matching_properties)
+                    ),
+                    reaction.output
+                )
                 taste += reaction.taste
+                review += ' I {} the {}.'.format(
+                    'liked' if reaction.taste  > 0 else 'did not like',
+                    'and '.join(matching_properties)
+                )
+                reviews.add_likes(self.base_name, matching_properties)
+
         if self.orders:
             if not self.order:
                 cli.print_dialog(self.name, 'You could have taken my order first.')
                 taste -= 1
+                review += ' My order was not taken.'
             elif self.order in dish.properties:
                 cli.print_dialog_with_info(
                     self.name,
@@ -83,6 +84,7 @@ class Guest(generic.Thing):
                     'Thanks, that\'s what I wanted.',
                 )
                 taste += 2
+                review += ' I got what I ordered ({}).'.format(self.order)
             else:
                 cli.print_dialog_with_info(
                     self.name,
@@ -90,16 +92,26 @@ class Guest(generic.Thing):
                     'That\'s not what I wanted.',
                 )
                 taste -= 1
+                review += ' I did not get what I ordered ({} instead of {}).'.format(
+                    food_name,
+                    self.order,
+                )
         if taste > 4: taste = 4
         elif taste < 0: taste = 0
-        self._save_rating(taste)
+        review += ' {}. (Rating: {})'.format(self.taste[taste], taste)
         payment = int(self.budget/5 * taste)
         levels.level.money += payment
         cli.print_dialog(self.name, self.taste[taste])
         cli.print_text('{} paid {} space dollars.'.format(self.name, payment))
+        reviews.add_rating(self.base_name, taste)
+        reviews.add_review(review)
         return taste
 
     def send_home(self):
+        reviews.add_rating(self.base_name, 0)
+        reviews.add_review(
+            '{}: Did not get any food.'.format(self.name)
+        )
         social.level_down(self.name)
 
     def init(self, data):
@@ -161,7 +173,6 @@ guests = None
 regulars = None
 guest_groups = None
 guest_factory = None
-ratings = None
 
 
 def get_available_groups():
@@ -228,16 +239,12 @@ def leave(name):
     guest = get(name)
     guests.remove(guest)
 
+
 def send_home(name):
     global guests
     guest = get(name)
     guest.send_home()
     guests.remove(guest)
-
-
-def get_ratings():
-    global ratings
-    return ratings
 
 
 def new_workday():
@@ -269,21 +276,22 @@ def init(data):
     for guest_data in data.get('regulars'):
         guest = Guest()
         guest.init(guest_data)
+        guest.base_name = guest.name
         regulars.update({guest.name: guest})
 
-    global ratings
-    ratings = OrderedDict()
     global guest_groups
     guest_groups = OrderedDict()
     for group_data in data.get('groups'):
         group = GuestGroup()
         group.init(group_data)
         guest_groups.update({group.name: group})
-        ratings.update({group.name: (None, 0)})
 
     global guest_factory
     guest_factory = GuestFactory()
     guest_factory.init(data.get('factory'))
+
+    reviewing_guests = list(regulars.keys()) + list(guest_groups.keys())
+    reviews.init(reviewing_guests)
 
     time.register_callback(time.Clock.TIME_WORK, new_workday)
 
