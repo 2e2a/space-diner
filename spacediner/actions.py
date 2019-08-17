@@ -13,6 +13,9 @@ class Action:
     def perform(self, *args, **kwargs):
         raise NotImplemented
 
+    def abort(self, *args, **kwargs):
+        raise NotImplemented
+
 
 class Cook(Action):
     food = None
@@ -28,6 +31,11 @@ class Cook(Action):
 
     def perform(self):
         self.food.plate()
+
+    def abort(self):
+        cli.print_message('throw away {}'.format(', '.join(self.food.ingredients)))
+        self.food = None
+
 
 
 class Serve(Action):

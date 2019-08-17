@@ -351,6 +351,10 @@ class DinerMode(Mode):
         if cmd == self.CMD_COMPENDIUM:
             return CompendiumMode()
         if cmd == self.CMD_CLOSE_UP:
+            global actions_saved
+            for action in actions_saved:
+                action.abort()
+            actions_saved.clear()
             actions.CloseUp().perform()
             time.tick()
             return AfterWorkMode()
@@ -523,8 +527,7 @@ class CookingMode(Mode):
                 self.prepared_components = []
             return self
         if cmd == self.CMD_TRASH:
-            print_message('throw away {}'.format(', '.join(self.prepared_components)))
-            self.action = actions.Cook()
+            self.action.abort()
             self.prepared_components = []
             return self
         if cmd == self.CMD_COOKING_BOT:
