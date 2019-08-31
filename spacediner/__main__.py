@@ -5,6 +5,8 @@ from . import settings
 # TODO: Trash food on close-up
 # TODO: Do not allow to serve without taking the order first
 # TODO: Remove bonding from groups
+# TODO: Chatting with regulars: chat after serving; only available if satisfied
+# TODO: Chatting with regulars: chatting always increases bonding, good answers only speed it up
 # TODO: personalize review texts per group
 # TODO: not matching order -> max rating ok(2)
 # TODO: toggle verbose mode on/off --> more/less info in output

@@ -1,11 +1,11 @@
-name: Moon - Diner Basics
-diner: Moon Diner
+name: Moon - Cooking basics
+diner: Little Lunar Diner
 money: 50
 
 goals:
   - type: money
     amount: 100
-    message: You have earned enough money for a ticket to Mars. Let's move on.
+    message: You have earned enough money for an interplanetary ticket. Let's move on.
 
 
 ingredients:
@@ -118,6 +118,14 @@ recipes:
       - [ pickles ]
     properties: []
 
+  - name: Bread basket
+    available: True
+    ingredients:
+      - [ bun ]
+      - [ bun ]
+      - [ bun ]
+    properties: []
+
   - name: Silkworm nuggets
     available: True
     ingredients:
@@ -132,13 +140,14 @@ guests:
       available: True
       budget: 10
       reactions:
-        - properties: [  ]
+        - properties: [ fried ]
           taste: +1
-          output: 
+          output: I love fried food!
       orders:
         - beef burger
         - meat plate
         - pickle salad
+	- bread basket
 
     - name: tourist
       available: True
@@ -184,12 +193,25 @@ social:
   - name: colonist
     chats:
       - question: There are more and more tourists from Earth. I hate them.
-      - question: Did you hear? They are building a Moon amusement park.
+      - question: All my friends are moving away. Sigh.
       - question: I hope I can move to one of those fancy new apartments soon.
       - question: The stars are beautiful today.
       - question: I lifted 1000 kg in the gym today.
       - question: Your furniture is not very comfortable.
-      - question: Stupid Armstrong Museum. Standing in line for hours just for a foot print.
+      - question: I hate the new Armstrong Museum. The idiots stand in line for hours just for a foot print.
       - question: I wonder what is going on on Earth. I haven't been there for 8 years.
       - question: The next ship from Earth will arrive tomorrow.
       - question: My brother moved to Mars. I hope I can visit him soon.
+
+  - name: tourist
+    chats:
+      - question: It is wonderful to visit all these little local business here.
+      - question: Did you hear? They are building a Moon amusement park. Amazing!
+      - question: I love the low gravity here. I could jump around all day.
+      - question: I cannot get enough of seeing Earth from here. It is so small! Can you believe it?
+      - question: I cannot wait to tell all my friends on Earth about my Moon adventures.
+      - question: I am so excited. Can I take a picture of this diner? I already did. Thank you!
+      - question: I love the new Armstrong Museum. The foot print is amazing.
+      - question: I love it here on the Moon! ...maybe it could just be a little bit warmer.
+      - question: Everything is so exotic here, I love it.
+      - question: I am returning to Earth tomorrow. What a shame! I would love to stay a bit longer.
