@@ -33,7 +33,7 @@ class Cook(Action):
         self.food.plate()
 
     def abort(self):
-        cli.print_message('throw away {}'.format(', '.join(self.food.ingredients)))
+        cli.print_message('throw away {}'.format(', '.join(self.food.get_prepared_ingredients())))
         self.food = None
 
 

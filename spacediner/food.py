@@ -44,6 +44,9 @@ class Food(generic.Thing):
             self.name = default_name
         cooked.append(self)
 
+    def get_prepared_ingredients(self):
+        return ['{} {}'.format(preparation, ingredient) for preparation, ingredient in self.ingredients]
+
 
 class Recipe(generic.Thing):
     available = False
