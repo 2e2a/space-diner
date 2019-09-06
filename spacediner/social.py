@@ -80,12 +80,6 @@ class Relation:
             self.level_down()
         return effect, reaction
 
-    def taste(self, taste):
-        if taste >= 4:
-            self.level_up()
-        elif taste <= 0:
-            self.level_down()
-
 
 relations = None
 
@@ -119,12 +113,6 @@ def chat(name, reply):
     global relations
     guest_relation = get(name)
     return guest_relation.chat(reply)
-
-
-def taste(name, taste):
-    global relations
-    relation = get(name)
-    relation.taste(taste)
 
 
 def level(name):

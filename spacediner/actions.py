@@ -46,15 +46,9 @@ class Serve(Action):
         self.guest = guest
 
     def perform(self):
-        base_name = guests.get_base_name(self.guest)
-        taste = guests.serve(self.guest, self.food)
-        social.taste(self.guest, taste)
+        guests.serve(self.guest, self.food)
         guests.leave(self.guest)
         cli.print_text('{} left.'.format(self.guest))
-        cli.print_message('{} bonding level is {}'.format(
-            base_name,
-            social.level(base_name))
-        )
 
 
 class SendHome(Action):
