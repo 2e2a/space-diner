@@ -37,7 +37,6 @@ class Cook(Action):
         self.food = None
 
 
-
 class Serve(Action):
     food = None
     guest = None
@@ -65,7 +64,6 @@ class SendHome(Action):
         self.guest = guest
 
     def perform(self):
-        cli.print_dialog(self.guest, 'No more food?')
         cli.print_text('{} left.'.format(self.guest))
         cli.print_message('{} bonding level is {}'.format(self.guest, social.level(self.guest)))
         guests.send_home(self.guest)

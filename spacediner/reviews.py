@@ -39,13 +39,17 @@ def add_review(review):
     reviews.append(review)
 
 
-def add_likes(name, taste, new_likes):
+def add_likes(name, new_likes):
     global likes
     guest_likes, guest_dislikes = likes.get(name)
-    if taste > 0:
-        guest_likes = guest_likes.extend(new_likes)
-    else:
-        guest_dislikes = guest_dislikes.extend(new_likes)
+    guest_likes = guest_likes.extend(new_likes)
+    likes.update({name: (guest_likes, guest_dislikes)})
+
+
+def add_dislikes(name, new_dislikes):
+    global likes
+    guest_likes, guest_dislikes = likes.get(name)
+    guest_likes = guest_likes.extend(new_dislikes)
     likes.update({name: (guest_likes, guest_dislikes)})
 
 

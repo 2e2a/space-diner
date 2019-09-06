@@ -799,7 +799,7 @@ class AfterWorkMode(Mode):
     commands = [
         ([], ),
         (['shopping'],),
-        (['ratings'],),
+        (['reviews'],),
         (['sleep'], ),
     ]
     prompt = 'after work >>'
@@ -829,7 +829,7 @@ class AfterWorkMode(Mode):
         if cmd == self.CMD_SHOPPING:
             return ShoppingMode()
         if cmd == self.CMD_RATINGS:
-            return RatingsInfoMode()
+            return ReviewsInfoMode()
         if cmd == self.CMD_SLEEP:
             time.tick()
             return DinerMode()
@@ -921,9 +921,8 @@ class ShoppingMode(Mode):
             return AfterWorkMode()
 
 
-class RatingsInfoMode(InfoMode):
-    # TODO: rename to review
-    prompt = 'ratings >>'
+class ReviewsInfoMode(InfoMode):
+    prompt = 'reviews >>'
 
     def back(self):
         return AfterWorkMode()

@@ -160,6 +160,19 @@ guests:
         - silkworm nuggets
         - meat plate
         - burger
+      # TODO: Use custom output per guest/group. E.g.:
+      output:
+        taste:
+          - Disgusting.
+          - Not great.
+          - That was ok.
+          - Not bad.
+          - Pretty good.
+        review_like: 'Mhh... {}.'
+        review_dislike: 'Bleh... {}.'
+        review_order_met: 'Looked like {}.'
+        review_order_not_met: 'Did not look like {}.'
+        review_no_food: 'We want food!'
 
   factory:
     - [ colonist ]

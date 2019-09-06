@@ -8,7 +8,6 @@ from . import food
 from . import generic
 from . import levels
 from . import reviews
-from . import social
 from . import time
 
 
@@ -26,6 +25,25 @@ class Reaction(generic.Thing):
         return '{} -> {}'.format(str(self.properties), str(self.taste))
 
 
+class GuestOutput:
+    is_default = True
+    taste = None
+    review_like = None
+    review_dislike = None
+    review_order_met = None
+    review_order_not_met = None
+    review_no_food = None
+
+    def init(self, data):
+        self.is_default = data is None
+        self.taste = data.get('taste') if data and 'taste' in data else ['Very bad', 'Bad', 'OK', 'Good', 'Very good']
+        self.review_like = data.get('review_like') if data and 'review_like' in data else 'I liked the {}.'
+        self.review_dislike = data.get('review_dislike') if data and 'review_dislike' in data else 'I did not like the {}.'
+        self.review_order_met = data.get('review_order_met') if data and 'review_order_met' in data else 'I got what I ordered ({}).'
+        self.review_order_not_met = data.get('review_order_not_met') if data and 'review_order_not_met' in data else 'I got not what I ordered ({}).'
+        self.review_no_food = data.get('review_no_food') if data and 'review_no_food' in data else 'I did not get any food.'
+
+
 class Guest(generic.Thing):
     name = None
     base_name = None
@@ -34,8 +52,9 @@ class Guest(generic.Thing):
     budget = 0
     available = False
     reactions = None
-    taste = None
     orders = None
+    output = None
+
     order = None
     chatted_today = False
     served = False
@@ -57,62 +76,38 @@ class Guest(generic.Thing):
         for reaction in self.reactions:
             matching_properties = set(reaction.properties).intersection(dish.properties)
             if matching_properties:
-                cli.print_dialog_with_info(
-                    self.name,
-                    '{} something ({})'.format(
-                        'likes' if reaction.taste  > 0 else 'does not like',
-                        ', '.join(matching_properties)
-                    ),
-                    reaction.output
-                )
                 taste += reaction.taste
-                review += ' I {} the {}.'.format(
-                    'liked' if reaction.taste  > 0 else 'did not like',
-                    'and '.join(matching_properties)
-                )
-                reviews.add_likes(self.base_name, matching_properties)
-
+                if reaction.taste > 0:
+                    cli.print_dialog_with_info(
+                        self.name,
+                        'likes something ({})'.format(', '.join(matching_properties)),
+                        reaction.output
+                    )
+                    reviews.add_likes(self.base_name, matching_properties)
+                    review += self.output.review_like.format('and '.join(matching_properties))
         if self.orders:
-            if not self.order:
-                cli.print_dialog(self.name, 'You could have taken my order first.')
-                taste -= 1
-                review += ' My order was not taken.'
-            elif self.order in dish.properties:
-                cli.print_dialog_with_info(
-                    self.name,
-                    'received what they ordered ({})'.format(self.order),
-                    'Thanks, that\'s what I wanted.',
-                )
+            if self.order in dish.properties:
                 taste += 2
-                review += ' I got what I ordered ({}).'.format(self.order)
+                cli.print_message('{} received what they ordered ({})'.format(self.name, self.order))
+                review += ' ' + self.output.review_order_met.format(self.order)
             else:
-                cli.print_dialog_with_info(
-                    self.name,
-                    'did not receive what they ordered ({})'.format(self.order),
-                    'That\'s not what I wanted.',
-                )
                 taste -= 1
-                review += ' I did not get what I ordered ({} instead of {}).'.format(
-                    food_name,
-                    self.order,
-                )
+                cli.print_message('{} did not receive what they ordered ({})'.format(self.name, self.order))
+                review += ' ' + self.output.review_order_not_met.format(self.order)
         if taste > 4: taste = 4
         elif taste < 0: taste = 0
-        review += ' {}. (Rating: {})'.format(self.taste[taste], taste)
-        payment = int(self.budget/5 * taste)
-        levels.level.money += payment
-        cli.print_dialog(self.name, self.taste[taste])
-        cli.print_text('{} paid {} space dollars.'.format(self.name, payment))
+        review += ' {}. (Rating: {})'.format(self.output.taste[taste], taste)
         reviews.add_rating(self.base_name, taste)
         reviews.add_review(review)
+        cli.print_dialog(self.name, self.output.taste[taste])
+        payment = int(self.budget/5 * taste)
+        levels.level.money += payment
+        cli.print_text('{} paid {} space dollars.'.format(self.name, payment))
         return taste
 
     def send_home(self):
         reviews.add_rating(self.base_name, 0)
-        reviews.add_review(
-            '{}: Did not get any food.'.format(self.name)
-        )
-        social.level_down(self.name)
+        reviews.add_review('{}: {}'.format(self.name, self.output.review_no_food))
 
     def init(self, data):
         self.name = data.get('name')
@@ -120,12 +115,15 @@ class Guest(generic.Thing):
         self.budget = data.get('budget')
         self.available = data.get('available')
         self.reactions = []
-        for reaction_data in data.get('reactions'):
+        for reaction_data in data.get('reactions', []):
             reaction = Reaction()
             reaction.init(reaction_data)
             self.reactions.append(reaction)
-        self.taste = data.get('taste', ['Very bad', 'Bad', 'OK', 'Good', 'Very good' ])
         self.orders = data.get('orders', [])
+        output_data = data.get('output', None)
+        output = GuestOutput()
+        output.init(output_data)
+        self.output = output
 
 
 class GuestGroup(Guest):
@@ -160,12 +158,13 @@ class GuestFactory(generic.Thing):
         guest.groups = groups
         guest.reactions = list(itertools.chain.from_iterable(group.reactions for group in groups))
         guest.budget = max([group.budget for group in groups])
-        guest.available = True
-        guest.taste = []
-        for i in range(5):
-            group = random.SystemRandom().randint(0, len(groups) - 1)
-            guest.taste.append(groups[group].taste[i])
         guest.orders = list(itertools.chain.from_iterable(group.orders for group in groups))
+        guest.output = groups[0].output
+        for group in groups:
+            if group.output.is_default:
+                guest.output = group.output
+                break
+        guest.available = True
         return guest
 
 
