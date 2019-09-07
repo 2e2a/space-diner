@@ -5,7 +5,7 @@ money: 50
 goals:
   - type: money
     amount: 100
-    message: You have earned enough money for an interplanetary ticket. Let's move on.
+    message: You have earned enough money for an interplanetary ticket. Let's get out of here.
 
 
 ingredients:
@@ -193,11 +193,16 @@ guests:
 social:
   - name: Sam
     chats:
-      - Blbablablablablablabla
-      - Blbalbalbalbalablabalb
+      - Your food is always so comforting.
+      - Last week, I tried to eat at the other diner. It's just not the same.
+      - Sometimes I feel like nothing new is ever happening in the colony anymore. Sigh.
+      - Hey, did you change the color of the curtains? I like it.
     story:
       meetings:
-        - meeting: Sam invites you to a bar. It is the oldest bar in the colony.
+        - meeting: >
+            Sam invites you to the "Crater". It is the oldest bar in the colony. Like every night, it is
+            pretty crowded. Sam seems to know every single person here. You recognize some people who sometimes
+            eat at your diner. You find two seats at a small table. Sam orders two beers for you.
           question: Today is my Moon anniversary. I arrived here exactly 20 years ago. Can you imagine? Sigh.
           good replies:
             - reply: Wow, 20 years. I'm sure it hasn't always been easy.
@@ -209,7 +214,9 @@ social:
               reaction: >
                No... It makes me feel old. Perhaps I should have moved away a long time ago.
                But now it's too late. Sigh.
-        - meeting: ....
+        - meeting: >
+            Sam wants to walk around in the large Moon Mall. Your diner is also in the mall. When you walk past it,
+            Sam remembers something.
           question: >
             I met my friend Muriel yesterday. She has a new business. You know these little worms that live on the
             dark side? Silkworms? She is breeding and selling them. Apparently all those tourists that are coming to
@@ -229,7 +236,8 @@ social:
           merchant: Muriel's Moon specialties
 
   - name: colonist
-    chats: There are more and more tourists from Earth. I hate them.
+    chats:
+      - There are more and more tourists from Earth. I hate them.
       - All my friends are moving away. Noone wants to stay in this colony.
       - I hope I can move to one of those fancy new apartments soon.
       - The stars are beautiful today.
