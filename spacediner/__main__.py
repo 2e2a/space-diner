@@ -2,10 +2,14 @@ import argparse
 from . import cli
 from . import settings
 
+# TODO: add_likes broken
+# TODO: "throw away" when closing up: only when there were leftovers
+# TODO: also trash plated food that was not served
+# TODO: discovered preferences broken
 # TODO: Do not allow to serve without taking the order first
 # TODO: Show bonding somewhere?
-# TODO: Chatting with regulars: chat after serving; only available if satisfied... different for regulars talk->server->leave
-# TODO: ...chatting always increases bonding, good answers only speed it up...
+# TODO: Socializing with regulars: they propose meeting (evening activity) when satisfied
+# TODO: ...meeting always increases bonding, good answers only speed it up...
 # TODO: ...reward level specifies necessary number of good answers...
 # TODO: ...otherwise reward is triggered after all questions have been asked.
 # TODO: not matching order -> max rating ok(2)

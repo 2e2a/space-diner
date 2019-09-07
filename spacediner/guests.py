@@ -36,7 +36,7 @@ class GuestOutput:
 
     def init(self, data):
         self.is_default = data is None
-        self.taste = data.get('taste') if data and 'taste' in data else ['Very bad', 'Bad', 'OK', 'Good', 'Very good']
+        self.taste = data.get('taste') if data and 'taste' in data else ['Very bad.', 'Bad.', 'OK.', 'Good.', 'Very good.']
         self.review_like = data.get('review_like') if data and 'review_like' in data else 'I liked the {}.'
         self.review_dislike = data.get('review_dislike') if data and 'review_dislike' in data else 'I did not like the {}.'
         self.review_order_met = data.get('review_order_met') if data and 'review_order_met' in data else 'I got what I ordered ({}).'
@@ -84,19 +84,19 @@ class Guest(generic.Thing):
                         reaction.output
                     )
                     reviews.add_likes(self.base_name, matching_properties)
-                    review += self.output.review_like.format('and '.join(matching_properties))
+                    review += ' ' + self.output.review_like.format('and '.join(matching_properties))
         if self.orders:
             if self.order in dish.properties:
                 taste += 2
-                cli.print_message('{} received what they ordered ({})'.format(self.name, self.order))
+                cli.print_message('{} received what they ordered ({}).'.format(self.name, self.order))
                 review += ' ' + self.output.review_order_met.format(self.order)
             else:
                 taste -= 1
-                cli.print_message('{} did not receive what they ordered ({})'.format(self.name, self.order))
+                cli.print_message('{} did not receive what they ordered ({}).'.format(self.name, self.order))
                 review += ' ' + self.output.review_order_not_met.format(self.order)
         if taste > 4: taste = 4
         elif taste < 0: taste = 0
-        review += ' {}. (Rating: {})'.format(self.output.taste[taste], taste)
+        review += ' {} (Rating: {})'.format(self.output.taste[taste], taste)
         reviews.add_rating(self.base_name, taste)
         reviews.add_review(review)
         cli.print_dialog(self.name, self.output.taste[taste])

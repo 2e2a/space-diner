@@ -934,7 +934,7 @@ class ReviewsInfoMode(InfoMode):
         for group, (rating, count) in reviews.get_ratings().items():
             if count > 0:
                 n_stars = round(rating)
-                rating = '{}:\t[{}{}] ({}) based on {} reviews'.format(
+                rating = '{}:\t[{}{}] ({}) based on {} review(s)'.format(
                     group,
                     '*'*n_stars,
                     '-'*(5-n_stars),
