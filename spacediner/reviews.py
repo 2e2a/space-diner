@@ -42,14 +42,14 @@ def add_review(review):
 def add_likes(name, new_likes):
     global likes
     guest_likes, guest_dislikes = likes.get(name)
-    guest_likes = guest_likes.extend(new_likes)
+    guest_likes.extend(new_likes)
     likes.update({name: (guest_likes, guest_dislikes)})
 
 
 def add_dislikes(name, new_dislikes):
     global likes
     guest_likes, guest_dislikes = likes.get(name)
-    guest_likes = guest_likes.extend(new_dislikes)
+    guest_likes.extend(new_dislikes)
     likes.update({name: (guest_likes, guest_dislikes)})
 
 

@@ -2,7 +2,6 @@ import argparse
 from . import cli
 from . import settings
 
-# TODO: add_likes broken
 # TODO: "throw away" when closing up: only when there were leftovers
 # TODO: also trash plated food that was not served
 # TODO: discovered preferences broken
