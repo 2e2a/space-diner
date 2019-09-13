@@ -2,7 +2,7 @@ import argparse
 from . import cli
 from . import settings
 
-# TODO: Do not allow to serve without taking the order first
+# TODO: Use separate command for chat and take_order
 # TODO: Show bonding somewhere?
 # TODO: Socializing with regulars: they propose meeting (evening activity) when satisfied
 # TODO: ...meeting always increases bonding, good answers only speed it up...

@@ -203,6 +203,11 @@ def available_guests():
     return [guest.name for guest in guests]
 
 
+def guests_with_orderes():
+    global guests
+    return [guest.name for guest in filter(lambda guest: guest.order, guests)]
+
+
 def get(name):
     global guests
     for guest in guests:

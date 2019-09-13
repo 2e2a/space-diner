@@ -401,7 +401,8 @@ class ServiceMode(Mode):
     def update_commands(self):
         cooked_food = [self.name_for_command(f) for f in food.plated()]
         available_guests = [self.name_for_command(g) for g in guests.available_guests()]
-        self.commands[self.CMD_SERVE - 1] = (['serve'], cooked_food, ['to'], available_guests)
+        guests_with_orders = [self.name_for_command(g) for g in guests.guests_with_orderes()]
+        self.commands[self.CMD_SERVE - 1] = (['serve'], cooked_food, ['to'], guests_with_orders)
         self.commands[self.CMD_TALK - 1] = (['talk_to'], available_guests)
         self.commands[self.CMD_SEND_HOME - 1] = (['send_home'], available_guests)
         super().update_commands()
