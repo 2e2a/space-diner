@@ -2,14 +2,12 @@ import argparse
 from . import cli
 from . import settings
 
-# TODO: discovered preferences broken
 # TODO: Do not allow to serve without taking the order first
 # TODO: Show bonding somewhere?
 # TODO: Socializing with regulars: they propose meeting (evening activity) when satisfied
 # TODO: ...meeting always increases bonding, good answers only speed it up...
 # TODO: ...reward level specifies necessary number of good answers...
 # TODO: ...otherwise reward is triggered after all questions have been asked.
-# TODO: not matching order -> max rating ok(2)
 # TODO: toggle verbose mode on/off --> more/less info in output
 # TODO: Fix output that plural is not needed
 # TODO: log all commands into file on exception

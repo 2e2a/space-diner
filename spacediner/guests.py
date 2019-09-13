@@ -91,7 +91,7 @@ class Guest(generic.Thing):
                 cli.print_message('{} received what they ordered ({}).'.format(self.name, self.order))
                 review += ' ' + self.output.review_order_met.format(self.order)
             else:
-                taste -= 1
+                taste = min(2, taste - 1)
                 cli.print_message('{} did not receive what they ordered ({}).'.format(self.name, self.order))
                 review += ' ' + self.output.review_order_not_met.format(self.order)
         if taste > 4: taste = 4
