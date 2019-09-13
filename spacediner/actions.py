@@ -33,7 +33,9 @@ class Cook(Action):
         self.food.plate()
 
     def abort(self):
-        cli.print_message('throw away {}'.format(', '.join(self.food.get_prepared_ingredients())))
+        prepared_ingredients = self.food.get_prepared_ingredients()
+        if prepared_ingredients:
+            cli.print_message('throw away {}'.format(', '.join(prepared_ingredients)))
         self.food = None
 
 
@@ -66,6 +68,8 @@ class SendHome(Action):
 class CloseUp(Action):
 
     def perform(self):
+        for plated_food in food.plated():
+            cli.print_message('throw away {}'.format(plated_food))
         for guest in guests.available_guests():
             send_home = SendHome(guest)
             send_home.perform()

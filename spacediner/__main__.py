@@ -2,8 +2,6 @@ import argparse
 from . import cli
 from . import settings
 
-# TODO: "throw away" when closing up: only when there were leftovers
-# TODO: also trash plated food that was not served
 # TODO: discovered preferences broken
 # TODO: Do not allow to serve without taking the order first
 # TODO: Show bonding somewhere?
