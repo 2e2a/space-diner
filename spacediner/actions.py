@@ -39,6 +39,17 @@ class Cook(Action):
         self.food = None
 
 
+class TakeOrder(Action):
+    guest = None
+
+    def __init__(self, guest):
+        self.guest = guest
+
+    def perform(self):
+        order = guests.take_order(self.guest)
+        cli.print_dialog(self.guest, 'I\'ll have something {}-ish.'.format(order))
+
+
 class Serve(Action):
     food = None
     guest = None
@@ -116,6 +127,18 @@ class BuyIngredients(Action):
 
 
 class Chat(Action):
+    guest = None
+
+    def __init__(self, guest):
+        self.guest = guest
+
+    def perform(self):
+        social.next_chat(self.guest)
+        guest = guests.get(self.guest)
+        guest.chatted_today = True
+
+
+class Meet(Action):
     guest = None
 
     def __init__(self, guest, reply):

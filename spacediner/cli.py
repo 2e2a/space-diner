@@ -384,14 +384,16 @@ class SkillInfoMode(InfoMode):
 
 
 class ServiceMode(Mode):
-    CMD_SERVE = 1
-    CMD_TALK = 2
-    CMD_SEND_HOME = 3
-    CMD_COOKING = 4
-    CMD_DONE = 5
+    CMD_TAKE_ORDER = 1
+    CMD_CHAT = 2
+    CMD_SERVE = 3
+    CMD_SEND_HOME = 4
+    CMD_COOKING = 5
+    CMD_DONE = 6
     commands = [
+        (['chat_with'], []),
+        (['take_order_from'], []),
         (['serve'], [], ['to'], []),
-        (['talk_to'], []),
         (['send_home'], []),
         (['cooking'], ),
         (['done'], ),
@@ -401,9 +403,12 @@ class ServiceMode(Mode):
     def update_commands(self):
         cooked_food = [self.name_for_command(f) for f in food.plated()]
         available_guests = [self.name_for_command(g) for g in guests.available_guests()]
-        guests_with_orders = [self.name_for_command(g) for g in guests.guests_with_orderes()]
+        guests_with_chats = [self.name_for_command(g) for g in guests.guests_with_chats()]
+        guests_with_orders = [self.name_for_command(g) for g in guests.guests_with_orders()]
+        guests_without_orders = [self.name_for_command(g) for g in guests.guests_without_orders()]
+        self.commands[self.CMD_TAKE_ORDER - 1] = (['take_order_from'], guests_without_orders)
+        self.commands[self.CMD_CHAT - 1] = (['chat_with'], guests_with_chats)
         self.commands[self.CMD_SERVE - 1] = (['serve'], cooked_food, ['to'], guests_with_orders)
-        self.commands[self.CMD_TALK - 1] = (['talk_to'], available_guests)
         self.commands[self.CMD_SEND_HOME - 1] = (['send_home'], available_guests)
         super().update_commands()
 
@@ -419,6 +424,19 @@ class ServiceMode(Mode):
         print(self.commands)
 
     def exec(self, cmd, cmd_input):
+        if cmd == self.CMD_TAKE_ORDER:
+            guest = self.original_name(cmd_input[1])
+            action = actions.TakeOrder(guest)
+            action.perform()
+            self.update_commands()
+            return self  # TODO: Add a mode to wait for enter, then return to service
+        if cmd == self.CMD_CHAT:
+            guest = self.original_name(cmd_input[1])
+            chat = social.next_chat(guest)
+            if chat:
+                action = actions.Chat(guest)
+                action.perform()
+                return ChatMode(guest, chat) # TODO: Need it?
         if cmd == self.CMD_SERVE:
             food = self.original_name(cmd_input[1])
             guest = self.original_name(cmd_input[3])
@@ -426,9 +444,6 @@ class ServiceMode(Mode):
             action.perform()
             self.update_commands()
             return self
-        if cmd == self.CMD_TALK:
-            guest = self.original_name(cmd_input[1])
-            return TalkMode(guest)
         if cmd == self.CMD_SEND_HOME:
             guest = self.original_name(cmd_input[1])
             action = actions.SendHome(guest)
@@ -663,6 +678,7 @@ class CookingBotListMode(RecipeMode):
 
 
 class TalkMode(ChoiceMode):
+    # TODO: Remove
     prompt = 'talk #'
     guest = None
     choices = ['take order', 'chat']
@@ -703,16 +719,14 @@ class TalkMode(ChoiceMode):
         return ServiceMode()
 
 
-class ChatMode(ChoiceMode):
-    prompt = 'chat #'
+class ChatMode(InfoMode):
+    prompt = 'chat >>'
     guest = None
     chat = None
-    choices = None
 
     def __init__(self, guest, chat):
         self.guest = guest
         self.chat = chat
-        self.choices = self.chat.replies
         super().__init__()
 
     @property
@@ -720,16 +734,11 @@ class ChatMode(ChoiceMode):
         return 'Chatting with {}'.format(self.guest)
 
     def print_info(self):
-        print_dialog(self.guest, self.chat.question)
+        print_dialog(self.guest, self.chat)
         super().print_info()
 
-    def exec_choice(self, choice):
-        action = actions.Chat(self.guest, choice - 1)
-        action.perform()
-        return TalkMode(self.guest)
-
     def back(self):
-        return TalkMode(self.guest)
+        return ServiceMode()
 
 
 class CompendiumMode(ChoiceMode):

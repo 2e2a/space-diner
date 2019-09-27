@@ -8,6 +8,7 @@ from . import food
 from . import generic
 from . import levels
 from . import reviews
+from . import social
 from . import time
 
 
@@ -104,6 +105,15 @@ class Guest(generic.Thing):
         levels.level.money += payment
         cli.print_text('{} paid {} space dollars.'.format(self.name, payment))
         return taste
+
+    def has_chatted_today(self):
+        return self.chatted_today
+
+    def set_chatted_today(self):
+        self.chatted_today = True
+
+    def has_chat_available(self):
+        return not self.chatted_today and social.chat(self.base_name)
 
     def send_home(self):
         reviews.add_rating(self.base_name, 0)
@@ -203,9 +213,19 @@ def available_guests():
     return [guest.name for guest in guests]
 
 
-def guests_with_orderes():
+def guests_with_orders():
     global guests
     return [guest.name for guest in filter(lambda guest: guest.order, guests)]
+
+
+def guests_without_orders():
+    global guests
+    return [guest.name for guest in filter(lambda guest: not guest.order, guests)]
+
+
+def guests_with_chats():
+    global guests
+    return [guest.name for guest in filter(lambda guest: guest.has_chat_available(), guests)]
 
 
 def get(name):
@@ -237,6 +257,7 @@ def serve(name, food):
     if guest and guest.available:
         taste = guest.serve(food)
     return taste
+
 
 def leave(name):
     global guests

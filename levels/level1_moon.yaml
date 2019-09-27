@@ -197,43 +197,42 @@ social:
       - Last week, I tried to eat at the other diner. It's just not the same.
       - Sometimes I feel like nothing new is ever happening in the colony anymore. Sigh.
       - Hey, did you change the color of the curtains? I like it.
-    story:
-      meetings:
-        - meeting: >
-            Sam invites you to the "Crater". It is the oldest bar in the colony. Like every night, it is
-            pretty crowded. Sam seems to know every single person here. You recognize some people who sometimes
-            eat at your diner. You find two seats at a small table. Sam orders two beers for you.
-          question: Today is my Moon anniversary. I arrived here exactly 20 years ago. Can you imagine? Sigh.
-          good replies:
-            - reply: Wow, 20 years. I'm sure it hasn't always been easy.
-              reaction: >
-                Yes, life in the colony can be hard. I feel old. Perhaps I should have moved away a long time ago.
-                Sigh. But it helps that you always listen to me and my complaints.
-          bad replies:
-            - reply: Why are you so depressed about it? That's something to celebrate!
-              reaction: >
-               No... It makes me feel old. Perhaps I should have moved away a long time ago.
-               But now it's too late. Sigh.
-        - meeting: >
-            Sam wants to walk around in the large Moon Mall. Your diner is also in the mall. When you walk past it,
-            Sam remembers something.
-          question: >
-            I met my friend Muriel yesterday. She has a new business. You know these little worms that live on the
-            dark side? Silkworms? She is breeding and selling them. Apparently all those tourists that are coming to
-            the Moon are crazy about silkworms. Maybe you could put them in your burgers, the tourists would love that.
-            I should introduce you to Muriel some day.
-          good replies:
-            - reply: Sure, why not, I guess I could try that.
-              reaction: Great! I will introduce you to Muriel once I know you a little better.
-          bad replies:
-            - reply: Worms? Disgusting.
-          reaction: >
-            You're right, but think about it, they could make you rich.
-            I will introduce you to Muriel anyway... a bit later.
-      rewards:
-        - type: merchant
-          level: 5
-          merchant: Muriel's Moon specialties
+    meetings:
+      - meeting: >
+          Sam invites you to the "Crater". It is the oldest bar in the colony. Like every night, it is
+          pretty crowded. Sam seems to know every single person here. You recognize some people who sometimes
+          eat at your diner. You find two seats at a small table. Sam orders two beers for you.
+        question: Today is my Moon anniversary. I arrived here exactly 20 years ago. Can you imagine? Sigh.
+        good replies:
+          - reply: Wow, 20 years. I'm sure it hasn't always been easy.
+            reaction: >
+              Yes, life in the colony can be hard. I feel old. Perhaps I should have moved away a long time ago.
+              Sigh. But it helps that you always listen to me and my complaints.
+        bad replies:
+          - reply: Why are you so depressed about it? That's something to celebrate!
+            reaction: >
+             No... It makes me feel old. Perhaps I should have moved away a long time ago.
+             But now it's too late. Sigh.
+      - meeting: >
+          Sam wants to walk around in the large Moon Mall. Your diner is also in the mall. When you walk past it,
+          Sam remembers something.
+        question: >
+          I met my friend Muriel yesterday. She has a new business. You know these little worms that live on the
+          dark side? Silkworms? She is breeding and selling them. Apparently all those tourists that are coming to
+          the Moon are crazy about silkworms. Maybe you could put them in your burgers, the tourists would love that.
+          I should introduce you to Muriel some day.
+        good replies:
+          - reply: Sure, why not, I guess I could try that.
+            reaction: Great! I will introduce you to Muriel once I know you a little better.
+        bad replies:
+          - reply: Worms? Disgusting.
+        reaction: >
+          You're right, but think about it, they could make you rich.
+          I will introduce you to Muriel anyway... a bit later.
+        rewards:
+          - type: merchant
+            level: 5
+            merchant: Muriel's Moon specialties
 
   - name: colonist
     chats:
