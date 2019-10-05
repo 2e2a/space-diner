@@ -112,8 +112,8 @@ def get(name):
     guest_social = social.get(name)
     if guest_social:
         return guest_social
-    base_name = guests.get_base_name(name)
-    return social.get(base_name)
+    main_group = guests.get_main_group(name)
+    return social.get(main_group)
 
 
 def chats_available():

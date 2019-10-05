@@ -12,6 +12,7 @@ from . import generic
 from . import goals
 from . import guests
 from . import kitchen
+from . import languages
 from . import ingredients
 from . import merchants
 from . import social
@@ -37,6 +38,7 @@ class Level(generic.Thing):
             ingredients.init(data.get('ingredients', []))
             storage.init(data.get('storage', []))
             kitchen.init(data.get('kitchen', []))
+            languages.init(data.get('languages', []))
             merchants.init(data.get('merchants', []))
             food.init(data.get('recipes', []))
             guests.init(data.get('guests', []))
@@ -103,6 +105,7 @@ def save(file):
     ingredients.save(file)
     storage.save(file)
     kitchen.save(file)
+    languages.save(file)
     merchants.save(file)
     food.save(file)
     guests.save(file)
@@ -118,6 +121,7 @@ def load(file):
     ingredients.load(file)
     storage.load(file)
     kitchen.load(file)
+    languages.load(file)
     merchants.load(file)
     food.load(file)
     guests.load(file)

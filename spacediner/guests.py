@@ -7,6 +7,7 @@ from . import cli  #  TODO: inject
 from . import food
 from . import generic
 from . import levels
+from . import languages
 from . import reviews
 from . import social
 from . import time
@@ -26,35 +27,21 @@ class Reaction(generic.Thing):
         return '{} -> {}'.format(str(self.properties), str(self.taste))
 
 
-class GuestOutput:
-    is_default = True
-    taste = None
-    review_like = None
-    review_dislike = None
-    review_order_met = None
-    review_order_not_met = None
-    review_no_food = None
 
     def init(self, data):
         self.is_default = data is None
-        self.taste = data.get('taste') if data and 'taste' in data else ['Very bad.', 'Bad.', 'OK.', 'Good.', 'Very good.']
-        self.review_like = data.get('review_like') if data and 'review_like' in data else 'I liked the {}.'
-        self.review_dislike = data.get('review_dislike') if data and 'review_dislike' in data else 'I did not like the {}.'
-        self.review_order_met = data.get('review_order_met') if data and 'review_order_met' in data else 'I got what I ordered ({}).'
-        self.review_order_not_met = data.get('review_order_not_met') if data and 'review_order_not_met' in data else 'I got not what I ordered ({}).'
-        self.review_no_food = data.get('review_no_food') if data and 'review_no_food' in data else 'I did not get any food.'
 
 
 class Guest(generic.Thing):
     name = None
-    base_name = None
     description = None
     groups = None
+    main_group = None
     budget = 0
     available = False
     reactions = None
     orders = None
-    output = None
+    language = None
 
     order = None
     chatted_today = False
@@ -84,7 +71,7 @@ class Guest(generic.Thing):
                         'likes something ({})'.format(', '.join(matching_properties)),
                         reaction.output
                     )
-                    reviews.add_likes(self.base_name, matching_properties)
+                    reviews.add_likes(self.name, matching_properties)
                     review += ' ' + self.output.review_like.format('and '.join(matching_properties))
         if self.orders:
             if self.order in dish.properties:
@@ -98,7 +85,7 @@ class Guest(generic.Thing):
         if taste > 4: taste = 4
         elif taste < 0: taste = 0
         review += ' {} (Rating: {})'.format(self.output.taste[taste], taste)
-        reviews.add_rating(self.base_name, taste)
+        reviews.add_rating(self.name, taste)
         reviews.add_review(review)
         cli.print_dialog(self.name, self.output.taste[taste])
         payment = int(self.budget/5 * taste)
@@ -113,15 +100,16 @@ class Guest(generic.Thing):
         self.chatted_today = True
 
     def has_chat_available(self):
-        return not self.chatted_today and social.chat(self.base_name)
+        return not self.chatted_today and social.chat(self.name)
 
     def send_home(self):
-        reviews.add_rating(self.base_name, 0)
+        reviews.add_rating(self.name, 0)
         reviews.add_review('{}: {}'.format(self.name, self.output.review_no_food))
 
     def init(self, data):
         self.name = data.get('name')
         self.description = data.get('description')
+        self.language = data.get('language')
         self.budget = data.get('budget')
         self.available = data.get('available')
         self.reactions = []
@@ -130,10 +118,6 @@ class Guest(generic.Thing):
             reaction.init(reaction_data)
             self.reactions.append(reaction)
         self.orders = data.get('orders', [])
-        output_data = data.get('output', None)
-        output = GuestOutput()
-        output.init(output_data)
-        self.output = output
 
 
 class GuestGroup(Guest):
@@ -151,29 +135,23 @@ class GuestFactory(generic.Thing):
             self.groups.append(groups)
             self.names.append(' '.join(group for group in groups))
 
-    def _unique_name(self, name, existing=None):
-        if not existing or not any(guest.name == name for guest in existing):
-            return name
-        count = len([guest for guest in existing if name == guest.base_name]) + 1
-        name = '{} {}'.format(name, count)
-        return name
+    def _unique_name(self, group, existing=None):
+        while True:
+            name = languages.get(group.language).name_factory.create()
+            if not existing or not any(guest.name == name for guest in existing):
+                return name
 
     def create(self, existing=None):
         global guest_groups
         num = random.SystemRandom().randint(0, len(self.groups) - 1)
-        guest = Guest()
-        guest.base_name = self.names[num]
-        guest.name = self._unique_name(guest.base_name, existing)
         groups = [guest_groups.get(name) for name in self.groups[num]]
+        guest = Guest()
         guest.groups = groups
+        guest.main_group = groups[0].name
+        guest.name = '{} ({})'.format(self._unique_name(groups[0], existing), guest.main_group)
         guest.reactions = list(itertools.chain.from_iterable(group.reactions for group in groups))
         guest.budget = max([group.budget for group in groups])
         guest.orders = list(itertools.chain.from_iterable(group.orders for group in groups))
-        guest.output = groups[0].output
-        for group in groups:
-            if group.output.is_default:
-                guest.output = group.output
-                break
         guest.available = True
         return guest
 
@@ -202,12 +180,6 @@ def get_names():
     return names
 
 
-def get_base_name(name):
-    global guests
-    guest = get(name)
-    return guest.base_name
-
-
 def available_guests():
     global guests
     return [guest.name for guest in guests]
@@ -234,6 +206,11 @@ def get(name):
         if guest.name == name:
             return guest
     return None
+
+
+def get_main_group(name):
+    global guests
+    return get(name).main_group
 
 
 def take_order(name):
@@ -301,7 +278,6 @@ def init(data):
     for guest_data in data.get('regulars'):
         guest = Guest()
         guest.init(guest_data)
-        guest.base_name = guest.name
         regulars.update({guest.name: guest})
 
     global guest_groups
