@@ -1,5 +1,5 @@
-name: Moon - Cooking basics
-diner: Little Lunar Diner
+name: Moon
+diner: The Bright Side
 money: 50
 
 goals:
@@ -19,6 +19,11 @@ ingredients:
     storage: pantry
     properties: []
 
+  - name: potato
+    description: A potato, imported from earth. A starchy root vegetable.
+    storage: pantry
+    properties: []
+
   - name: bun
     description: A soft pre-baked burger bun, ready to serve.
     storage: pantry
@@ -29,7 +34,7 @@ ingredients:
       Silkworms were brought to the dark side of the moon as part of a scientific experiment. Now they are cultivated as
       a local delicacy.
     storage: fridge
-    properties: [ meat ]
+    properties: [ meat, local ]
 
 storage:
   - name: fridge
@@ -69,7 +74,7 @@ kitchen:
     properties: [ ]
 
 merchants:
-  - name: Earth wholesale
+  - name: Earth Wholesale
     available: True
     ingredients:
       - name: beef
@@ -79,7 +84,7 @@ merchants:
       - name: bun
         cost: 1
 
-  - name: Moon delicacies
+  - name: Moon Delicacies
     available: True
     ingredients:
       - name: silkworm
@@ -106,7 +111,7 @@ recipes:
       - [ fried, silkworm ]
       - [ bun ]
       - [ pickles ]
-    properties: [ burger ]
+    properties: [ burger, fancy ]
 
   - name: Meat Plate
     available: True
@@ -114,7 +119,7 @@ recipes:
       - [ fried, meat ]
       - [ fried, meat ]
       - [ fried, meat ]
-    properties: []
+    properties: [ ]
 
   - name: Pickle salad
     available: True
@@ -122,7 +127,15 @@ recipes:
       - [ pickles ]
       - [ pickles ]
       - [ pickles ]
-    properties: []
+    properties: [ ]
+
+  - name: Fries
+    available: True
+    ingredients:
+      - [ deep-fried, potato ]
+      - [ deep-fried, potato ]
+      - [ deep-fried, potato ]
+    properties: [ ]
 
   - name: Bread basket
     available: True
@@ -130,7 +143,7 @@ recipes:
       - [ bun ]
       - [ bun ]
       - [ bun ]
-    properties: []
+    properties: [ ]
 
   - name: Silkworm nuggets
     available: True
@@ -138,51 +151,80 @@ recipes:
       - [ deep-fried, silkworm ]
       - [ deep-fried, silkworm ]
       - [ deep-fried, silkworm ]
-    properties: []
+    properties: [ fancy ]
 
 guests:
   groups:
+    - name: Human
+      available: True
+      reactions:
+        - properties: [ raw, potato ]
+          taste: -3
+          output: Argh, Humans cannot digest raw potatoes.
+
     - name: colonist
+      name-factory: Moon-English
       available: True
       budget: 10
       reactions:
         - properties: [ fried ]
           taste: +1
           output: I love fried food!
+        - properties: [ deep-fried ]
+          taste: +1
+          output: I love deep-fried food!
+        - properties: [ fancy ]
+          taste: -1
+          output: I don't like this kind of fancy, pretentious food.
       orders:
         - beef burger
         - meat plate
         - pickle salad
         - bread basket
+      output:
+        taste:
+          - Disgusting.
+          - Bad.
+          - It's ok.
+          - Good.
+          - Very good.
+        review_like: 'I liked the {}.'
+        review_dislike: 'I did not like the {}.'
+        review_order_met: 'They managed to serve me what I ordered: {}.'
+        review_order_not_met: 'The idiot did not serve me what I ordered: {}.'
+        review_no_food: 'I did not get anything to eat.'
 
     - name: tourist
+      name-factory: Earth-English
       available: True
       budget: 25
       reactions:
-        - properties: [ silkworm ]
+        - properties: [ local ]
           taste: +1
           output: Great, a local specialty!
+        - properties: [ fancy ]
+          taste: +1
+          output: Wow, that's fancy!
       orders:
         - silkworm nuggets
         - meat plate
         - burger
-      # TODO: Use custom output per guest/group. E.g.:
       output:
         taste:
-          - Disgusting.
-          - Not great.
-          - That was ok.
-          - Not bad.
-          - Pretty good.
-        review_like: 'Mhh... {}.'
-        review_dislike: 'Bleh... {}.'
-        review_order_met: 'Looked like {}.'
-        review_order_not_met: 'Did not look like {}.'
-        review_no_food: 'We want food!'
+          - Sadly, pretty bad.
+          - Not so good.
+          - Average.
+          - Pretty good!
+          - Amazing!
+        review_like: 'I will tell you what was excellent: the {}.'
+        review_dislike: 'What did I not like? Well, the {}.'
+        review_order_met: 'I received exactly what I ordered: {}.'
+        review_order_not_met: 'I did not receive exactly what I ordered: {}.'
+        review_no_food: 'Unfortunately, I did not receive any food.'
 
   factory:
-    - [ colonist ]
-    - [ tourist ]
+    - [ Human colonist ]
+    - [ Human tourist ]
 
   regulars:
     - name: Dr. Ozabela Ruizy
