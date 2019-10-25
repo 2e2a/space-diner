@@ -1,8 +1,10 @@
 import pickle
+import random
 from collections import OrderedDict
 
 from . import guests
 from . import rewards
+from . import time
 
 
 class Chats:
@@ -26,59 +28,89 @@ class Chats:
 
 
 class Meeting:
+    text = None
     question = None
     replies = None
-    reactions = None
-    effects = None
 
     def init(self, data):
-        return
+        self.text = data.get('meeting')
         self.question = data.get('question')
-        self.effects = []
         self.replies = []
-        self.reactions = []
-        for reply_data in data.get('replies', []):
-            self.effects.append(reply_data[0])
-            if len(reply_data) > 1:
-                self.replies.append(reply_data[1])
-            if len(reply_data) > 2:
-                self.reactions.append(reply_data[2])
+        for reply_data in data.get('good replies', []):
+            self.replies.append((reply_data.get('reply'), reply_data.get('reaction'), True))
+        for reply_data in data.get('bad replies', []):
+            self.replies.append((reply_data.get('reply'), reply_data.get('reaction'), False))
+        random.SystemRandom().shuffle(self.replies)
 
-    def effect(self, reply):
-        return self.effects[reply] if self.replies else None
+    def get_replies(self):
+        return [reply for reply, _, _ in self.replies]
 
     def reaction(self, reply):
-        return self.reactions[reply] if self.reactions else None
+        _, reaction, is_good = self.replies[reply]
+        return reaction, is_good
+
+
+class Friendship:
+    meetings = None
+    meetings_done = 0
+    rewards = None
+    level = 0
+    unlocked = False
+
+    def init(self, data):
+        self.meetings = []
+        if 'meetings' in data:
+            for meeting_data in data.get('meetings'):
+                meeting = Meeting()
+                meeting.init(meeting_data)
+                self.meetings.append(meeting)
+        if 'rewards' in data:
+            self.rewards = {}
+            for reward in rewards.init_list(data.get('rewards')):
+                if reward.level in self.rewards:
+                    self.rewards[reward.level].append(reward)
+                else:
+                    self.rewards.update({reward.level: [reward]})
+
+    def has_meeting(self):
+        return self.meetings and self.meetings_done < len(self.meetings)
+
+    def get_meeting(self):
+        if self.has_meeting():
+            return self.meetings[self.meetings_done]
+
+    def meet(self, reply):
+        return self.get_meeting().reaction(reply)
+
+    def level_up(self):
+        self.level += 1
+        if self.level in self.rewards:
+            for reward in self.rewards.get(self.level):
+                reward.apply()
+
+    def is_last_meeting(self):
+        return len(self.meetings) == self.meetings_done + 1
+
+    def unlock_all_rewards(self):
+        for level_rewards in self.rewards.values():
+            for reward in level_rewards:
+                reward.apply()
+
 
 
 class Social:
     name = None
-    level = 0
     chats = None
-    meetings = None
-    meetings_done = None
-    rewards = None
+    friendship = None
 
     def init(self, data):
         self.name = data.get('name')
-        self.level = 0
         if 'chats' in data:
             self.chats = Chats()
             self.chats.init(data.get('chats'))
-        if 'rewards' in data:
-            self.rewards = {reward.level: reward for reward in rewards.init_list(data.get('rewards'))}
-
-    def level_up(self):
-        self.level += 1
-        if self.rewards:
-            reward = self.rewards.get(self.level)
-            if reward:
-                reward.apply()
-        return self.level
-
-    def level_down(self):
-        self.level -= 1
-        return self.level
+        if 'friendship' in data:
+            self.friendship = Friendship()
+            self.friendship.init(data.get('friendship'))
 
     def chat(self):
         return self.chats.chat() if self.chats else None
@@ -86,22 +118,30 @@ class Social:
     def next_chat(self):
         return self.chats.next() if self.chats else None
 
-    def next_meeting(self):
-        chat = self.chats[self.chats_done]
-        self.chats_done += 1
-        if self.chats_done >= len(self.chats):
-            self.chats_done = 0
-        return chat
+    def has_meeting(self):
+        return self.friendship and self.friendship.has_meeting()
+
+    def get_meeting(self):
+        if self.friendship:
+            return self.friendship.get_meeting()
 
     def meet(self, reply):
-        chat = self.chats[self.chats_done]
-        effect = chat.effect(reply)
-        reaction = chat.reaction(reply)
-        if effect > 0:
-            self.level_up()
-        elif effect < 0:
-            self.level_down()
-        return effect, reaction
+        return self.friendship.meet(reply)
+
+    def level_up(self):
+        return self.friendship.level_up()
+
+    def is_last_meeting(self):
+        return self.friendship.is_last_meeting()
+
+    def unlock_all_rewards(self):
+        return self.friendship.unlock_all_rewards()
+
+    def unlock_friendship(self):
+        self.friendship.unlocked = True
+
+    def lock_friendship(self):
+        self.friendship.unlocked = True
 
 
 social = None
@@ -118,8 +158,16 @@ def get(name):
 
 def chats_available():
     global social
-    chats = [guest for guest, social in social.items() if social.chats.chat()]
+    chats = [guest for guest, social in social.items() if social.chat()]
     return chats
+
+
+def has_chats(name):
+    global social
+    guest_social = social.get(name)
+    if guest_social:
+        return guest_social.chats is not None
+    return False
 
 
 def chat(name):
@@ -130,20 +178,40 @@ def next_chat(name):
     return get(name).next_chat()
 
 
-def level(name):
+def available_meetings():
     global social
-    guest_social = get(name)
-    return guest_social.level
+    meetings = [guest for guest, social in social.items() if social.has_meeting()]
+    return meetings
+
+
+def meet(name, reply):
+    global social
+    return social.get(name).meet(reply)
 
 
 def level_up(name):
-    guest_social = get(name)
-    return guest_social.level_up()
+    global social
+    return social.get(name).level_up()
 
 
-def level_down(name):
-    guest_social = get(name)
-    return guest_social.level_down()
+def is_last_meeting(name):
+    global social
+    return social.get(name).is_last_meeting()
+
+
+def unlock_all_rewards(name):
+    global social
+    return social.get(name).unlock_all_rewards()
+
+
+def unlock_friendship(name):
+    global social
+    social.get(name).unlock_friendship()
+
+
+def lock_friendship(name):
+    global social
+    social.get(name).lock_friendship()
 
 
 def init(data):

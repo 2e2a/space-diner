@@ -223,8 +223,8 @@ guests:
         review_no_food: 'Unfortunately, I did not receive any food.'
 
   factory:
-    - [ Human colonist ]
-    - [ Human tourist ]
+    - [ Human, colonist ]
+    - [ Human, tourist ]
 
   regulars:
     - name: Dr. Ozabela Ruizy
@@ -240,7 +240,7 @@ guests:
 
 languages:
   - name: Earth-English
-    guests: 
+    guests:
       - [Mohamed, Youssef, Ahmed, Junior, Mehdi, Fatima, Aya, Salma, Precious, Mariam, Santiago, Noah, Miguel, Jayden, Ramón, Luis, Agustín, Sofía, Alysha, Alice, Olivia, Emma, Mariana, Widelene, Gabrielle, Ximena, Mary, Camila, An, Wei, Aarav, Amir, Ori, Amit, George, Minato, Yerasyl, Kiran, Min-jun, Chia-hao, Somchai, Ai, Cai, Jing, Aadya, Tamar, Eden, Sekura, Rimas, Ayzere, Nor, Odval, Shristi, Angel, Seo-yeon, Sara, Shu-fen, Sumayah, Noel, Marc, Davit, Lukas, Yusif, Adam, Stefan, Georgi, Rasmus, Benjamin, Onni, Adrian, Gabriel, Malik, Georgios, Francesco, Mihail, Daan, William, Antoni, Dragan, Hugo, Amelia, Nareh, Laia, Zahra, Viktoria, Tereza, Mia, Margret, Daisy, Ivaana, Zuzanna, Anastasia, Darina, Nikau, Teiki, Maeva, Hina]
       - [Mammadov, Aktar, Wong, Chu, Beridze, Lomidze, Cohen, Levi, Tanaka, Sasaki, Kim, Seo, Santos, Aquino, Perera, Gamage, Can, Lau, Kaya, Aslan, Phan, Lý, Gruber, Auer, Peeters, Delić, Savić, Iliev, Nielsen, Kask, Koppel, Rebane, Sepp, Andrejev, Ivanov, Hansen, Poulsen, Laine, Virtanen, Salonen, Johansson, Bernard, Dubois, Roux, Wagner, Becker, Papp, Kiss, Briem, Blöndal, Murphy, Quinn, Russo, Esposito, Krasniqi, Shala, Ozols, Kazlauskas, Schiltz, Vella, Grech, Popa, De Jong, De Boer, Berg, Krawczyk, Costa, Silva, Sokolov, Balog, García, Pérez, Fontana, Bondarenko, Melnyk, Wright, Wilson, Moore, Tremblay, Flores, Morais, Azevedo, Mohan]
   - name: Moon-English
@@ -261,29 +261,30 @@ social:
       - I wonder when my paper will be accepted.
       - These reviewers... they know nothing!
       - Experiments, sigh... why do they always go wrong.
-    meetings:
-      - meeting: >
-          Ozabela invites you to the research facility where she works. Access to the area is restricted, but with Ozabela, 
-          the security guards let you enter. Ozabela shows you what she is currently working on in her lab: silkworms.   
-          A couple of them were brought to the Dark Side of the moon a long time ago in a box as part of a research project. 
-          Some of them managed to survive outside, but they are very rate. Ozabela's team collects them and studies how they
-          have adapted to life on the moon surface. As you look at them through the terrarium glass, you remember another
-          time when you encountered this species: as an appetizer in an expensive restaurant on the Dark Side.
-        question: Just look at them... how they wriggle...
-        good replies:
-          - reply: They're fascinating.
-            reaction: >
-              Yes, they are. It is incredible that they are able to survive out there. We are still not sure how they do it.
-        bad replies:
-          - reply: They're disgusting.
-            reaction: >
-             Well, not everyone is able to appreciate their beauty.
-        rewards:
-          - type: merchant
-            level: 5
-            merchant: Oddie's Laboratory Waste
+    friendship:
+      meetings:
+        - meeting: >
+            Ozabela invites you to the research facility where she works. Access to the area is restricted, but with Ozabela,
+            the security guards let you enter. Ozabela shows you what she is currently working on in her lab: silkworms.
+            A couple of them were brought to the Dark Side of the moon a long time ago in a box as part of a research project.
+            Some of them managed to survive outside, but they are very rate. Ozabela's team collects them and studies how they
+            have adapted to life on the moon surface. As you look at them through the terrarium glass, you remember another
+            time when you encountered this species: as an appetizer in an expensive restaurant on the Dark Side.
+          question: Just look at them... how they wriggle...
+          good replies:
+            - reply: They're fascinating.
+              reaction: >
+                Yes, they are. It is incredible that they are able to survive out there. We are still not sure how they do it.
+          bad replies:
+            - reply: They're disgusting.
+              reaction: >
+               Well, not everyone is able to appreciate their beauty.
+      rewards:
+        - type: merchant
+          level: 5
+          merchant: Oddie's Laboratory Waste
 
-  - name: colonist
+  - name: Human colonist
     chats:
       - There are more and more tourists from Earth. I hate them.
       - The stars are beautiful today.
@@ -296,7 +297,7 @@ social:
       - My brother moved to Mars. I hope I can visit him soon.
       - I have never been to the Dark Side, I hope to see it some day.
 
-  - name: tourist
+  - name: Human tourist
     chats:
       - It is wonderful to visit all these little local business here.
       - I am so excited. Can I take a picture of this diner? I already did. Thank you!

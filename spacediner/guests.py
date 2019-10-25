@@ -69,7 +69,6 @@ class Guest(generic.Thing):
         return self.order
 
     def serve(self, food_name):
-        # TODO: split in sub-functions
         self.served = True
         dish = food.take(food_name)
         taste = 2
@@ -104,6 +103,8 @@ class Guest(generic.Thing):
         payment = int(self.budget/5 * taste)
         levels.level.money += payment
         cli.print_text('{} paid {} space dollars.'.format(self.name, payment))
+        if taste == 4:
+            social.unlock_friendship(self.name)
         return taste
 
     def has_chatted_today(self):
@@ -113,7 +114,7 @@ class Guest(generic.Thing):
         self.chatted_today = True
 
     def has_chat_available(self):
-        return not self.chatted_today and social.chat(self.base_name)
+        return not self.chatted_today and social.has_chats(self.base_name) and social.chat(self.base_name)
 
     def send_home(self):
         reviews.add_rating(self.base_name, 0)
@@ -167,7 +168,7 @@ class GuestFactory(generic.Thing):
         groups = [guest_groups.get(name) for name in self.groups[num]]
         guest.groups = groups
         guest.reactions = list(itertools.chain.from_iterable(group.reactions for group in groups))
-        guest.budget = max([group.budget for group in groups])
+        guest.budget = max([group.budget for group in groups if group.budget])
         guest.orders = list(itertools.chain.from_iterable(group.orders for group in groups))
         guest.output = groups[0].output
         for group in groups:
@@ -272,6 +273,16 @@ def send_home(name):
     guests.remove(guest)
 
 
+def unlock(name):
+    global regulars
+    global guest_factory
+    guest = regulars.get(name)
+    if not guest:
+        guest = guest_factory.get(name)
+    if guest:
+        guest.available = True
+
+
 def new_workday():
     global guests
     global regulars
@@ -283,16 +294,6 @@ def new_workday():
     for i in range(3):  # TODO: guest max
         guest = guest_factory.create(existing=guests)
         guests.append(guest)
-
-
-def unlock(name):
-    global regulars
-    global guest_factory
-    guest = regulars.get(name)
-    if not guest:
-        guest = guest_factory.get(name)
-    if guest:
-        guest.available = True
 
 
 def init(data):
@@ -315,7 +316,7 @@ def init(data):
     guest_factory = GuestFactory()
     guest_factory.init(data.get('factory'))
 
-    reviewing_guests = list(regulars.keys()) + list(guest_groups.keys())
+    reviewing_guests = list(regulars.keys()) + guest_factory.names
     reviews.init(reviewing_guests)
 
     time.register_callback(time.Clock.TIME_WORK, new_workday)

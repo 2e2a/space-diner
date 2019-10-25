@@ -58,7 +58,6 @@ def new_workday():
     reviews = []
 
 
-
 def init(guests):
     # TODO: consider group/guest availability
     global ratings

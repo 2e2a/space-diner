@@ -177,6 +177,7 @@ class ChoiceMode(Mode):
         (int,),
     ]
     choices = []
+    back_enabled = True
     back_label = 'Back'
     title = None
 
@@ -191,7 +192,8 @@ class ChoiceMode(Mode):
         if self.title:
             print_title(self.title)
         choice_info = ['{}: {}'.format(i, choice) for i, choice in enumerate(self.choices, 1)]
-        choice_info += ['0: {}'.format(self.back_label)]
+        if self.back_enabled:
+            choice_info += ['0: {}'.format(self.back_label)]
         print_list(choice_info)
 
     def print_help(self):
@@ -204,7 +206,7 @@ class ChoiceMode(Mode):
             if choice < 0 or choice > len(self.choices):
                 print('Invalid choice.')
                 return self
-            if choice == 0:
+            if self.back_enabled and choice == 0:
                 return self.back()
             return self.exec_choice(choice)
 
@@ -677,48 +679,6 @@ class CookingBotListMode(RecipeMode):
         return CookingBotMenuMode()
 
 
-class TalkMode(ChoiceMode):
-    # TODO: Remove
-    prompt = 'talk #'
-    guest = None
-    choices = ['take order', 'chat']
-
-    def __init__(self, guest):
-        self.guest = guest
-        super().__init__()
-
-    @property
-    def title(self):
-        return 'Talking to {}'.format(self.guest)
-
-    def exec_choice(self, choice):
-        if choice == 1:
-            order = guests.take_order(self.guest)
-            if order:
-                print('{}: I\'ll have something {}-ish.'.format(self.guest, order))
-            else:
-                print('{}: Surprise me.'.format(self.guest))
-            return self
-        elif choice == 2:
-            # TODO: move to action
-            guest = guests.get(self.guest)
-            if guest.chatted_today:
-                print_dialog(self.guest, 'Enough chatting for today, I\'m hungry.')
-                return self
-            guest.chatted_today = True
-            if not social.chat_available(self.guest):
-                print_text('{} is not in the mood for chatting.'.format(self.guest))
-                return self
-            chat = social.next_chat(self.guest)
-            if not chat.replies:
-                print_dialog(self.guest, chat.question)
-                return self
-            return ChatMode(self.guest, chat)
-
-    def back(self):
-        return ServiceMode()
-
-
 class ChatMode(InfoMode):
     prompt = 'chat >>'
     guest = None
@@ -805,25 +765,31 @@ class AfterWorkMode(Mode):
     CMD_ACTIVITY = 1
     CMD_SHOPPING = 2
     CMD_RATINGS = 3
-    CMD_SLEEP = 4
+    CMD_MEET = 4
+    CMD_SLEEP = 5
     commands = [
         ([], ),
         (['shopping'],),
         (['reviews'],),
-        (['sleep'], ),
+        (['meet'],  []),
+        (['sleep'],),
     ]
     prompt = 'after work >>'
     activities =  None
     activities_done = 0
+    meetings = None
 
     def __init__(self):
         self.activities_done = 0
         self.activities = activities.available_activities()
+        self.meetings = social.available_meetings()
         super().__init__()
 
     def update_commands(self):
         activities = [self.name_for_command(activity) for activity in self.activities]
+        meetings = [self.name_for_command(meeting) for meeting in self.meetings]
         self.commands[self.CMD_ACTIVITY - 1] = (activities,)
+        self.commands[self.CMD_MEET - 1] = (['meet'],  meetings)
         super().update_commands()
 
     def print_info(self):
@@ -840,6 +806,9 @@ class AfterWorkMode(Mode):
             return ShoppingMode()
         if cmd == self.CMD_RATINGS:
             return ReviewsInfoMode()
+        if cmd == self.CMD_MEET:
+            guest = self.original_name(cmd_input[1])
+            return MeetingMode(guest)
         if cmd == self.CMD_SLEEP:
             time.tick()
             return DinerMode()
@@ -972,6 +941,40 @@ class ReviewsInfoMode(InfoMode):
                 guest_like += ','.join(map(lambda x: '+' + x, dislikes))
             guest_likes.append(guest_like)
         print_list(guest_likes)
+
+
+class MeetingMode(ChoiceMode):
+    prompt = 'reply #'
+    choices = None
+    title = 'Answer'
+    back_enabled = False
+
+    guest = None
+    meeting = None
+
+    def __init__(self, guest):
+        self.guest = guest
+        super().__init__()
+        self.meeting = social.get(self.guest).get_meeting()
+        self.choices = self.meeting.get_replies()
+
+    def print_info(self):
+        print_text(self.meeting.text)
+        print_dialog(self.guest, self.meeting.question)
+        super().print_info()
+
+    def exec_choice(self, choice):
+        reply = choice - 1
+        action = actions.Meet(self.guest, reply)
+        action.perform()
+        return MeetingResultMode()
+
+
+class MeetingResultMode(InfoMode):
+    prompt = 'meeting >>'
+
+    def back(self):
+        return AfterWorkMode()
 
 
 mode = None

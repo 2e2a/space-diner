@@ -72,7 +72,6 @@ class SendHome(Action):
 
     def perform(self):
         cli.print_text('{} left.'.format(self.guest))
-        cli.print_message('{} bonding level is {}'.format(self.guest, social.level(self.guest)))
         guests.send_home(self.guest)
 
 
@@ -146,16 +145,12 @@ class Meet(Action):
         self.reply = reply
 
     def perform(self):
-        effect, reaction = social.chat(self.guest, self.reply)
-        if reaction:
-            cli.print_dialog(self.guest, reaction)
-        if effect > 0:
-            cli.print_text('{} liked your reply.'.format(self.guest))
-        elif effect < 0:
-            cli.print_text('{} did not like your reply.'.format(self.guest))
-        else:
-            cli.print_text('{} does not care.'.format(self.guest))
-        cli.print_message('{} bonding level is {}'.format(self.guest, social.level(self.guest)))
+        reply, liked = social.meet(self.guest, self.reply)
+        cli.print_dialog(self.guest, reply)
+        if liked:
+            social.level_up(self.guest)
+        if social.is_last_meeting(self.guest):
+            social.unlock_all_rewards(self.guest)
 
 
 class SaveDish(Action):
