@@ -2,9 +2,8 @@ import pickle
 import random
 from collections import OrderedDict
 
-from . import guests
+from . import cli
 from . import rewards
-from . import time
 
 
 class Chats:
@@ -80,7 +79,9 @@ class Friendship:
             return self.meetings[self.meetings_done]
 
     def meet(self, reply):
-        return self.get_meeting().reaction(reply)
+        reaction, liked = self.get_meeting().reaction(reply)
+        self.meetings_done += 1
+        return reaction, liked
 
     def level_up(self):
         self.level += 1
@@ -119,7 +120,7 @@ class Social:
         return self.chats.next() if self.chats else None
 
     def has_meeting(self):
-        return self.friendship and self.friendship.has_meeting()
+        return self.friendship and self.friendship.unlocked and self.friendship.has_meeting()
 
     def get_meeting(self):
         if self.friendship:
@@ -139,9 +140,13 @@ class Social:
 
     def unlock_friendship(self):
         self.friendship.unlocked = True
+        if self.friendship.has_meeting():
+            cli.print_message('Meeting with {} unlocked'.format(self.name))
 
     def lock_friendship(self):
-        self.friendship.unlocked = True
+        self.friendship.unlocked = False
+        if self.friendship.has_meeting():
+            cli.print_message('Meeting with {} locked'.format(self.name))
 
 
 social = None
