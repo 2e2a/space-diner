@@ -58,6 +58,16 @@ def new_workday():
     reviews = []
 
 
+def add(guests):
+    global ratings
+    global reviews
+    global likes
+    for guest in guests:
+        if guest not in ratings:
+            ratings.update({guest: (None, 0)})
+            likes.update({guest: ([], [])})
+
+
 def init(guests):
     # TODO: consider group/guest availability
     global ratings
@@ -66,9 +76,7 @@ def init(guests):
     ratings = OrderedDict()
     likes = OrderedDict()
     reviews = []
-    for guest in guests:
-        ratings.update({guest: (None, 0)})
-        likes.update({guest: ([], [])})
+    add(guests)
     time.register_callback(time.Clock.TIME_WORK, new_workday)
 
 

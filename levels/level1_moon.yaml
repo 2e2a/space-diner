@@ -163,7 +163,7 @@ guests:
           output: Argh, Humans cannot digest raw potatoes.
 
     - name: colonist
-      name-factory: Moon-English
+      name_factory: Moon-English
       available: True
       budget: 10
       reactions:
@@ -195,7 +195,7 @@ guests:
         review_no_food: 'I did not get anything to eat.'
 
     - name: tourist
-      name-factory: Earth-English
+      name_factory: Earth-English
       available: True
       budget: 25
       reactions:
@@ -222,6 +222,38 @@ guests:
         review_order_not_met: 'I did not receive exactly what I ordered: {}.'
         review_no_food: 'Unfortunately, I did not receive any food.'
 
+  names:
+    - name: Earth-English
+      factory:
+        - [Mohamed, Youssef, Ahmed, Junior, Mehdi, Fatima, Aya, Salma, Precious, Mariam, Santiago, Noah, Miguel, Jayden,
+           Ramón, Luis, Agustín, Sofía, Alysha, Alice, Olivia, Emma, Mariana, Widelene, Gabrielle, Ximena, Mary, Camila,
+           An, Wei, Aarav, Amir, Ori, Amit, George, Minato, Yerasyl, Kiran, Min-jun, Chia-hao, Somchai, Ai, Cai, Jing,
+           Aadya, Tamar, Eden, Sekura, Rimas, Ayzere, Nor, Odval, Shristi, Angel, Seo-yeon, Sara, Shu-fen, Sumayah,
+           Noel, Marc, Davit, Lukas, Yusif, Adam, Stefan, Georgi, Rasmus, Benjamin, Onni, Adrian, Gabriel, Malik,
+           Georgios, Francesco, Mihail, Daan, William, Antoni, Dragan, Hugo, Amelia, Nareh, Laia, Zahra, Viktoria,
+           Tereza, Mia, Margret, Daisy, Ivaana, Zuzanna, Anastasia, Darina, Nikau, Teiki, Maeva, Hina]
+        - [Mammadov, Aktar, Wong, Chu, Beridze, Lomidze, Cohen, Levi, Tanaka, Sasaki, Kim, Seo, Santos, Aquino, Perera,
+           Gamage, Can, Lau, Kaya, Aslan, Phan, Lý, Gruber, Auer, Peeters, Delić, Savić, Iliev, Nielsen, Kask, Koppel,
+           Rebane, Sepp, Andrejev, Ivanov, Hansen, Poulsen, Laine, Virtanen, Salonen, Johansson, Bernard, Dubois, Roux,
+           Wagner, Becker, Papp, Kiss, Briem, Blöndal, Murphy, Quinn, Russo, Esposito, Krasniqi, Shala, Ozols,
+           Kazlauskas, Schiltz, Vella, Grech, Popa, De Jong, De Boer, Berg, Krawczyk, Costa, Silva, Sokolov, Balog,
+           García, Pérez, Fontana, Bondarenko, Melnyk, Wright, Wilson, Moore, Tremblay, Flores, Morais, Azevedo, Mohan]
+    - name: Moon-English
+      factory:
+        - [Ossef, Ohdi, Otima, Oya, Olma, Ocious, Oriam, Ontiago, Oah, Oguel, Oyden, Omón, Ois, Ogustín, Ofía, Olysha,
+           Olice, Oriana, Odelene, Obrielle, Omena, Ory, Omila, On, Oi, Oorav, Omir, Omit, Orge, Onato, Orasyl, Oran,
+           On-jun, Oia-hao, Omchai, Ong, Oodya, Omar, Oden, Okura, Omas, Oyzere, Or, Oristi, Ongel, Oo-yeon, Ou-fen,
+           Omaya, Oel, Oarc, Ovit, Oukas, Osif, Odam, Ofan, Orgi, Osmus, Ojamin, Odrian, Obriel, Olik, Orgios, Oncesco,
+           Ohail, Oon, Olliam, Ontoni, Ogan, Ogo, Omelia, Oreh, Olaia, Ohra, Oktoria, Oreza, Orgret, Oisy, Ovaana, Ozanna,
+           Onastastia, Orina, Okau, Oiki, Oeva, Ona]
+        - [Mammadovy, Aktary, Wongy, Chuy, Beridzey, Lomidzey, Coheny, Levy, Tanaky, Sasaky, Kimy, Seoy, Santosy, Aquiny,
+           Pereray, Gamagey, Cany, Lauy, Kayay, Aslany, Phany, Ly, Grubery, Auery, Peetersy, Delicy, Savicy, Ilievy,
+           Nielsy, Kasky, Kopply, Rebany, Seppy, Andrejevy, Ivanovy, Hansy, Poulsy, Lainy, Virtany, Salony, Johansy,
+           Bernardy, Duboisy, Rouxy, Wagnery, Beckery, Pappy, Kissy, Briemy, Blöndaly, Murphy, Quinny, Russy, Esposity,
+           Krasniqy, Shaly, Ozolsy, Kazlauskasy, Schiltzy, Velly, Grechy, Popy, Dejongy, Deboery, Bergy, Krawczyky, Costy,
+           Silvy, Sokolovy, Balogy, Garcy, Pérezy, Fontany, Bondarenky, Melny, Wrighty, Wilsony, Moory, Trembly, Flory,
+           Moraisy, Azevedy, Mohany]
+
   factory:
     - [ Human, colonist ]
     - [ Human, tourist ]
@@ -237,16 +269,6 @@ guests:
       orders:
         - burger
         - pickle salad
-
-languages:
-  - name: Earth-English
-    guests:
-      - [Mohamed, Youssef, Ahmed, Junior, Mehdi, Fatima, Aya, Salma, Precious, Mariam, Santiago, Noah, Miguel, Jayden, Ramón, Luis, Agustín, Sofía, Alysha, Alice, Olivia, Emma, Mariana, Widelene, Gabrielle, Ximena, Mary, Camila, An, Wei, Aarav, Amir, Ori, Amit, George, Minato, Yerasyl, Kiran, Min-jun, Chia-hao, Somchai, Ai, Cai, Jing, Aadya, Tamar, Eden, Sekura, Rimas, Ayzere, Nor, Odval, Shristi, Angel, Seo-yeon, Sara, Shu-fen, Sumayah, Noel, Marc, Davit, Lukas, Yusif, Adam, Stefan, Georgi, Rasmus, Benjamin, Onni, Adrian, Gabriel, Malik, Georgios, Francesco, Mihail, Daan, William, Antoni, Dragan, Hugo, Amelia, Nareh, Laia, Zahra, Viktoria, Tereza, Mia, Margret, Daisy, Ivaana, Zuzanna, Anastasia, Darina, Nikau, Teiki, Maeva, Hina]
-      - [Mammadov, Aktar, Wong, Chu, Beridze, Lomidze, Cohen, Levi, Tanaka, Sasaki, Kim, Seo, Santos, Aquino, Perera, Gamage, Can, Lau, Kaya, Aslan, Phan, Lý, Gruber, Auer, Peeters, Delić, Savić, Iliev, Nielsen, Kask, Koppel, Rebane, Sepp, Andrejev, Ivanov, Hansen, Poulsen, Laine, Virtanen, Salonen, Johansson, Bernard, Dubois, Roux, Wagner, Becker, Papp, Kiss, Briem, Blöndal, Murphy, Quinn, Russo, Esposito, Krasniqi, Shala, Ozols, Kazlauskas, Schiltz, Vella, Grech, Popa, De Jong, De Boer, Berg, Krawczyk, Costa, Silva, Sokolov, Balog, García, Pérez, Fontana, Bondarenko, Melnyk, Wright, Wilson, Moore, Tremblay, Flores, Morais, Azevedo, Mohan]
-  - name: Moon-English
-    guests:
-      - [Ossef, Ohdi, Otima, Oya, Olma, Ocious, Oriam, Ontiago, Oah, Oguel, Oyden, Omón, Ois, Ogustín, Ofía, Olysha, Olice, Oriana, Odelene, Obrielle, Omena, Ory, Omila, On, Oi, Oorav, Omir, Omit, Orge, Onato, Orasyl, Oran, On-jun, Oia-hao, Omchai, Ong, Oodya, Omar, Oden, Okura, Omas, Oyzere, Or, Oristi, Ongel, Oo-yeon, Ou-fen, Omaya, Oel, Oarc, Ovit, Oukas, Osif, Odam, Ofan, Orgi, Osmus, Ojamin, Odrian, Obriel, Olik, Orgios, Oncesco, Ohail, Oon, Olliam, Ontoni, Ogan, Ogo, Omelia, Oreh, Olaia, Ohra, Oktoria, Oreza, Orgret, Oisy, Ovaana, Ozanna, Onastastia, Orina, Okau, Oiki, Oeva, Ona]
-      - [Mammadovy, Aktary, Wongy, Chuy, Beridzey, Lomidzey, Coheny, Levy, Tanaky, Sasaky, Kimy, Seoy, Santosy, Aquiny, Pereray, Gamagey, Cany, Lauy, Kayay, Aslany, Phany, Ly, Grubery, Auery, Peetersy, Delicy, Savicy, Ilievy, Nielsy, Kasky, Kopply, Rebany, Seppy, Andrejevy, Ivanovy, Hansy, Poulsy, Lainy, Virtany, Salony, Johansy, Bernardy, Duboisy, Rouxy, Wagnery, Beckery, Pappy, Kissy, Briemy, Blöndaly, Murphy, Quinny, Russy, Esposity, Krasniqy, Shaly, Ozolsy, Kazlauskasy, Schiltzy, Velly, Grechy, Popy, Dejongy, Deboery, Bergy, Krawczyky, Costy, Silvy, Sokolovy, Balogy, Garcy, Pérezy, Fontany, Bondarenky, Melny, Wrighty, Wilsony, Moory, Trembly, Flory, Moraisy, Azevedy, Mohany]
 
 social:
   - name: Dr. Ozabela Ruizy
@@ -278,7 +300,7 @@ social:
           bad replies:
             - reply: They're disgusting.
               reaction: >
-               Well, not everyone is able to appreciate their beauty.
+                Well, not everyone is able to appreciate their beauty.
       rewards:
         - type: merchant
           level: 5

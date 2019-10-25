@@ -149,11 +149,7 @@ social = None
 
 def get(name):
     global social
-    guest_social = social.get(name)
-    if guest_social:
-        return guest_social
-    base_name = guests.get_base_name(name)
-    return social.get(base_name)
+    return social.get(name)
 
 
 def chats_available():
