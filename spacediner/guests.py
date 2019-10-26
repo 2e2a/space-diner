@@ -78,21 +78,20 @@ class Guest(generic.Thing):
         taste = 2
         review = '{} ({}):'.format(self.name, self.group_name) if self.groups else '{}:'.format(self.name)
         for reaction in self.reactions:
-            matching_properties = set(reaction.properties).issubset(dish.properties)
-            if matching_properties:
+            if set(reaction.properties).issubset(dish.properties):
                 taste += reaction.taste
                 if reaction.taste > 0:
                     cli.print_dialog_with_info(
                         self.name,
-                        'likes something ({})'.format(', '.join(matching_properties)),
+                        'likes something ({})'.format(', '.join(reaction.properties)),
                         reaction.output
                     )
-                    reviews.add_likes(self.group_name, matching_properties)
-                    review += ' ' + self.output.review_like.format('and '.join(matching_properties))
+                    reviews.add_likes(self.group_name, reaction.properties)
+                    review += ' ' + self.output.review_like.format('and '.join(reaction.properties))
                 else:
                     cli.print_dialog_with_info(
                         self.name,
-                        'does not like something ({})'.format(', '.join(matching_properties)),
+                        'does not like something ({})'.format(', '.join(reaction.properties)),
                         reaction.output
                     )
                     reviews.add_dislikes(self.group_name, matching_properties)
