@@ -149,7 +149,7 @@ class Meet(Action):
         cli.print_dialog(self.guest, reply)
         if liked:
             social.level_up(self.guest)
-        if social.is_last_meeting(self.guest):
+        if social.was_last_meeting(self.guest):
             social.unlock_all_rewards(self.guest)
         social.lock_friendship(self.guest)
 

@@ -170,7 +170,6 @@ class Mode:
         return self.names.get(cmd_name)
 
 
-# TODO: pass back to constructor as in InfoMode .. what?
 class ChoiceMode(Mode):
     CMD_CHOICE = 1
     commands = [
@@ -438,7 +437,7 @@ class ServiceMode(Mode):
             if chat:
                 action = actions.Chat(guest)
                 action.perform()
-                return ChatMode(guest, chat) # TODO: Need it?
+                return ChatMode(guest, chat)
         if cmd == self.CMD_SERVE:
             food = self.original_name(cmd_input[1])
             guest = self.original_name(cmd_input[3])

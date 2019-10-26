@@ -89,8 +89,8 @@ class Friendship:
             for reward in self.rewards.get(self.level):
                 reward.apply()
 
-    def is_last_meeting(self):
-        return len(self.meetings) == self.meetings_done + 1
+    def was_last_meeting(self):
+        return len(self.meetings) == self.meetings_done
 
     def unlock_all_rewards(self):
         for level_rewards in self.rewards.values():
@@ -132,8 +132,8 @@ class Social:
     def level_up(self):
         return self.friendship.level_up()
 
-    def is_last_meeting(self):
-        return self.friendship.is_last_meeting()
+    def was_last_meeting(self):
+        return self.friendship.was_last_meeting()
 
     def unlock_all_rewards(self):
         return self.friendship.unlock_all_rewards()
@@ -195,9 +195,9 @@ def level_up(name):
     return social.get(name).level_up()
 
 
-def is_last_meeting(name):
+def was_last_meeting(name):
     global social
-    return social.get(name).is_last_meeting()
+    return social.get(name).was_last_meeting()
 
 
 def unlock_all_rewards(name):

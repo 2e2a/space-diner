@@ -287,6 +287,7 @@ def unlock(name):
         guest = guest_factory.get(name)
     if guest:
         guest.available = True
+    reviews.add([name])
 
 
 def new_workday():
@@ -332,7 +333,7 @@ def init(data):
     guest_factory = GuestFactory()
     guest_factory.init(data.get('factory'))
 
-    reviews.init(list(regulars.keys()))
+    reviews.init([regular.name for regular in regulars.values() if regular.available])
 
     time.register_callback(time.Clock.TIME_WORK, new_workday)
 
