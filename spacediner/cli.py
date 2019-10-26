@@ -430,10 +430,11 @@ class ServiceMode(Mode):
             action = actions.TakeOrder(guest)
             action.perform()
             self.update_commands()
-            return self  # TODO: Add a mode to wait for enter, then return to service
+            return self  # TODO: Add an Info Mode
         if cmd == self.CMD_CHAT:
             guest = self.original_name(cmd_input[1])
-            chat = social.next_chat(guest)
+            group = guests.get_group_name(guest)
+            chat = social.next_chat(group)
             if chat:
                 action = actions.Chat(guest)
                 action.perform()

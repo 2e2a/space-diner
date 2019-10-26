@@ -2,6 +2,8 @@ import argparse
 from . import cli
 from . import settings
 
+# TODO: info-mode: <press ENTER>
+# TODO: trash broken
 # TODO: serving food to normal customers broken
 # TODO: add group to customer names
 # TODO: chatting with normal customers does not work

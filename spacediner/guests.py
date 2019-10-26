@@ -60,6 +60,10 @@ class Guest(generic.Thing):
     chatted_today = False
     served = False
 
+    @property
+    def group_name(self):
+        return ' '.join(group.name for group in self.groups) if self.groups else self.name
+
     def take_order(self):
         if self.order:
             return self.order
@@ -72,7 +76,7 @@ class Guest(generic.Thing):
         self.served = True
         dish = food.take(food_name)
         taste = 2
-        review = '{}:'.format(self.name)
+        review = '{} ({}):'.format(self.name, self.group_name) if self.groups else '{}:'.format(self.name)
         for reaction in self.reactions:
             matching_properties = set(reaction.properties).intersection(dish.properties)
             if matching_properties:
@@ -83,8 +87,16 @@ class Guest(generic.Thing):
                         'likes something ({})'.format(', '.join(matching_properties)),
                         reaction.output
                     )
-                    reviews.add_likes(self.name, matching_properties)
+                    reviews.add_likes(self.group_name, matching_properties)
                     review += ' ' + self.output.review_like.format('and '.join(matching_properties))
+                else:
+                    cli.print_dialog_with_info(
+                        self.name,
+                        'does not like something ({})'.format(', '.join(matching_properties)),
+                        reaction.output
+                    )
+                    reviews.add_dislikes(self.group_name, matching_properties)
+                    review += ' ' + self.output.review_dislike.format('and '.join(matching_properties))
         if self.orders:
             if self.order in dish.properties:
                 taste += 2
@@ -97,14 +109,14 @@ class Guest(generic.Thing):
         if taste > 4: taste = 4
         elif taste < 0: taste = 0
         review += ' {} (Rating: {})'.format(self.output.taste[taste], taste)
-        reviews.add_rating(self.name, taste)
+        reviews.add_rating(self.group_name, taste)
         reviews.add_review(review)
         cli.print_dialog(self.name, self.output.taste[taste])
         payment = int(self.budget/5 * taste)
         levels.level.money += payment
         cli.print_text('{} paid {} space dollars.'.format(self.name, payment))
         if taste == 4:
-            social.unlock_friendship(self.name)
+            social.unlock_friendship(self.group_name)
         return taste
 
     def has_chatted_today(self):
@@ -114,11 +126,16 @@ class Guest(generic.Thing):
         self.chatted_today = True
 
     def has_chat_available(self):
-        return not self.chatted_today and social.has_chats(self.name) and social.chat(self.name)
+        return not self.chatted_today and social.has_chats(self.group_name) and social.chat(self.group_name)
 
     def send_home(self):
-        reviews.add_rating(self.name, 0)
-        reviews.add_review('{}: {}'.format(self.name, self.output.review_no_food))
+        reviews.add_rating(self.group_name, 0)
+        review = '{}{}: {}'.format(
+            self.name,
+            ' ({})'.format(self.group_name) if self.groups else '',
+            self.output.review_no_food
+        )
+        reviews.add_review(review)
 
     def init(self, data):
         self.name = data.get('name')
@@ -243,6 +260,10 @@ def get(name):
     return None
 
 
+def get_group_name(name):
+    return get(name).group_name
+
+
 def take_order(name):
     guest = get(name)
     return guest.take_order()
@@ -302,7 +323,7 @@ def new_workday():
     for i in range(3):  # TODO: guest max
         guest = guest_factory.create(existing=guests)
         guests.append(guest)
-        new_guests.append(guest.name)
+        new_guests.append(guest.group_name)
     reviews.add(new_guests)
 
 

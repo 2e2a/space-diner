@@ -127,12 +127,14 @@ class BuyIngredients(Action):
 
 class Chat(Action):
     guest = None
+    group = None
 
     def __init__(self, guest):
         self.guest = guest
+        self.group = guests.get_group_name(guest)
 
     def perform(self):
-        social.next_chat(self.guest)
+        social.next_chat(self.group)
         guest = guests.get(self.guest)
         guest.chatted_today = True
 

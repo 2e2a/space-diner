@@ -139,14 +139,16 @@ class Social:
         return self.friendship.unlock_all_rewards()
 
     def unlock_friendship(self):
-        self.friendship.unlocked = True
-        if self.friendship.has_meeting():
-            cli.print_message('Meeting with {} unlocked'.format(self.name))
+        if self.friendship:
+            self.friendship.unlocked = True
+            if self.friendship.has_meeting():
+                cli.print_message('Meeting with {} unlocked'.format(self.name))
 
     def lock_friendship(self):
-        self.friendship.unlocked = False
-        if self.friendship.has_meeting():
-            cli.print_message('Meeting with {} locked'.format(self.name))
+        if self.friendship:
+            self.friendship.unlocked = False
+            if self.friendship.has_meeting():
+                cli.print_message('Meeting with {} locked'.format(self.name))
 
 
 social = None
