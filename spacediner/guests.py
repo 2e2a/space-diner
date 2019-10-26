@@ -109,7 +109,7 @@ class Guest(generic.Thing):
         if taste > 4: taste = 4
         elif taste < 0: taste = 0
         review += ' {} (Rating: {})'.format(self.output.taste[taste], taste)
-        reviews.add_rating(self.group_name, taste)
+        reviews.add_rating(self.group_name, taste + 1)
         reviews.add_review(review)
         cli.print_dialog(self.name, self.output.taste[taste])
         payment = int(self.budget/5 * taste)
