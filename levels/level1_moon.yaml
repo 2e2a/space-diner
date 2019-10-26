@@ -1,12 +1,16 @@
 name: Moon
-diner: The Bright Side
+diner: Bright Side Diner
 money: 50
 
 goals:
   - type: money
     amount: 100
     message: You have earned enough money for an interplanetary ticket. Let's get out of here.
-
+    intro: >
+      The moon has been colonized. There are a couple of settlements on both the bright and the dark side.
+      You run a diner in one of them. It is not very lucrative, but you have a solid customer base, because
+      there are not many alternatives within the colony. Try to earn 100 space dollars - that's the amount
+      you need to buy an interplanetary ticket and open a diner in a more interesting place.
 
 ingredients:
   - name: beef
@@ -82,6 +86,8 @@ merchants:
       - name: pickles
         cost: 1
       - name: bun
+        cost: 1
+      - name: potato
         cost: 1
 
   - name: Moon Delicacies
@@ -286,25 +292,77 @@ social:
     friendship:
       meetings:
         - meeting: >
-            Ozabela invites you to the research facility where she works. Access to the area is restricted, but with Ozabela,
-            the security guards let you enter. Ozabela shows you what she is currently working on in her lab: silkworms.
-            A couple of them were brought to the Dark Side of the moon a long time ago in a box as part of a research project.
-            Some of them managed to survive outside, but they are very rate. Ozabela's team collects them and studies how they
-            have adapted to life on the moon surface. As you look at them through the terrarium glass, you remember another
-            time when you encountered this species: as an appetizer in an expensive restaurant on the Dark Side.
+            Ozabela invites you to the research facility where she works. Access to the area is restricted, but when
+            the security guards see Ozabela, they let you enter. Ozabela shows you what she is currently working on
+            in her lab: silkworms. A couple of them were brought to the Dark Side of the moon a long time ago in a
+            box as part of a research project. Some of them managed to survive outside, but they are very rare.
+            Ozabela's team collects them and studies how they have adapted to life on the moon surface. As you look
+            at them through the terrarium glass, you remember another time when you encountered this species: as an
+            appetizer in an expensive restaurant on the Dark Side.
           question: Just look at them... how they wriggle...
           good replies:
             - reply: They're fascinating.
               reaction: >
-                Yes, they are. It is incredible that they are able to survive out there. We are still not sure how they do it.
+                Yes, they are. It is incredible that they are able to survive out there. We are still not sure how
+                they do it.
           bad replies:
             - reply: They're disgusting.
               reaction: >
                 Well, not everyone is able to appreciate their beauty.
+        - meeting: >
+            Ozabela wants to walk around the underground mall. There are about 20 businesses in the mall, including
+            your diner. Only some of them are open at night: the bar, the cinema, and a fancy new restaurant. Plenty of
+            people are just walking around like you - there is only so much you can do in the evening in the colony.
+            When you walk past your diner, Ozabela stops.
+          question: So, what brought you here - to the moon?
+          good replies:
+            - reply: My goal is to see as much as I can of our galaxy. My first step was to leave Earth and come here.
+              reaction: I admire that. Send me postcards from all the other place you'll get to see!
+            - reply: I just rolled with the flow.
+              reaction: Fair enough. I wonder where you'll roll next.
+          bad replies:
+            - reply: Nothing in particular. I don't really care where I work.
+            - reaction: That's a pity. I like to hear about people's dreams and motivations.
+        - meeting: >
+            You meet Ozabela at The Lunatic, the first bar that ever opened on the moon. It is not located in the underground
+            mall, but in an older structure on the surface. It is officially recommended not to spend more than five hours
+            there, because radiation protection is less perfect there than in the underground parts of the colony. Nevertheless,
+            it is crowded, like every everning. You find a free table in the back. Ozabela orders two beers. She tells you a bit about
+            her day: a new experiment that they conducted failed in some way, but you only understand every other word.
+            She stops and looks around at the other people in the bar. You know every single person who is there, and
+            you are sure that Ozabela does, too. The colony is small.
+          question: Do you ever think about leaving the moon?
+          good replies:
+            - reply: I'm saving money to leave as soon as possible.
+              reaction: That's brave. I'm thinking about it, too, but I'm not sure I have it in me to quit and leave.
+          bad replies:
+            - reply: I'm not sure.
+              reaction: Me neither. It is a hard decision... I wish I was more decisive.
+            - reply: No, I like the colony.
+              reaction: I like it, too, but do you not feel trapped sometimes? I'm not so sure myself...
+        - meeting: >
+            Ozabela wants to see a movie. There is a brandnew cinema in the amusement park that they finished building
+            this year. However, you decide to go to the one in the mall. There are only 12 seats there. Most of them
+            are already taken when you enter, and you have to sit in the first row right in front of the screen. You 
+            watch a documentary about creatures living in the ocean on Earth. After the movie, Ozabela looks depressed.
+          question: So full of life. Earth, I mean. And we only have our little worms, nothing else.
+          good replies:
+            - reply: Yes, but they're really interesting worms.
+              reaction: >
+                Ha, you're right. There's easily a lifetime's worth of research in just this one species that we have here.
+          bad replies:
+            - reply: Cheer up. Less species means less work for you biologists!
+            - reaction: Not really. Just more repetitive work.
+            
       rewards:
         - type: merchant
           level: 5
           merchant: Oddie's Laboratory Waste
+          text: >
+            There's someone I would like to introduce you to. I saw how you looked at the silkworms in my lab... I know
+            what they are worth in the culinary world. My colleague Oddie has a secret business - he sells the dead worms
+            that we are supposed to dispose of after our experiments. Here's his address. I trust you to keep it confidential.
+          
 
   - name: Human colonist
     chats:
