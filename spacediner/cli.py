@@ -418,7 +418,16 @@ class ServiceMode(Mode):
         print_title('Food:')
         print_list(food.plated())
         print_title('Guests:')
-        print_list(guests.available_guests())
+        names_with_groups = []
+        for guest_name in guests.available_guests():
+            guest = guests.get(guest_name)
+            if guest.groups:
+                names_with_groups.append(
+                    '{} ({})'.format(guest.name, guest.group_name)
+                )
+            else:
+                names_with_groups.append(guest.name)
+        print_list(names_with_groups)
 
     def print_help(self):
         print('Help:')
