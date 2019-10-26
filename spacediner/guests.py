@@ -78,7 +78,7 @@ class Guest(generic.Thing):
         taste = 2
         review = '{} ({}):'.format(self.name, self.group_name) if self.groups else '{}:'.format(self.name)
         for reaction in self.reactions:
-            matching_properties = set(reaction.properties).intersection(dish.properties)
+            matching_properties = set(reaction.properties).issubset(dish.properties)
             if matching_properties:
                 taste += reaction.taste
                 if reaction.taste > 0:
