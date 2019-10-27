@@ -10,15 +10,20 @@ class Reward:
     TYPE_SKILL = 'skill'
 
     typ = None
+    text = None
 
     def apply(self):
         raise NotImplemented
+
+    def init(self, data):
+        self.text = data.get('text')
 
 
 class SocialReward(Reward):
     level = None
 
     def init(self, data):
+        super().init(data)
         self.level = data.get('level')
 
     def apply(self):
@@ -47,6 +52,7 @@ class GuestReward(Reward):
         self.typ = self.TYPE_GUEST
 
     def init(self, data):
+        super().init(data)
         self.level = data.get('level')
         self.guest = data.get('guest')
 
@@ -63,6 +69,7 @@ class SkillReward(Reward):
         self.typ = self.TYPE_SKILL
 
     def init(self, data):
+        super().init(data)
         self.skill = data.get('skill')
         self.diff = data.get('diff')
 
