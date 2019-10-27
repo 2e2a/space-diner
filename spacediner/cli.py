@@ -132,6 +132,7 @@ class Mode:
     prompt = None
     names = {}
     completer = None
+    empty_input = False
     no_input = False
 
     def __init__(self):
@@ -156,7 +157,9 @@ class Mode:
             cmd_input_list = cmd_input.split()
             matching_command = self.completer.match_command(cmd_input_list)
             if matching_command:
-                return self.exec(matching_command, cmd_input_list)
+               return self.exec(matching_command, cmd_input_list)
+        elif self.empty_input:
+            return self.exec(None, None)
         self.print_help()
         return None
 
@@ -211,10 +214,8 @@ class ChoiceMode(Mode):
 
 
 class InfoMode(Mode):
-    CMD_DONE = 1
-    commands = [
-        (['done'], ),
-    ]
+    prompt = '<press ENTER to continue>'
+    empty_input = True
 
     def print_help(self):
         print('Help:')
@@ -224,8 +225,7 @@ class InfoMode(Mode):
         raise NotImplemented
 
     def exec(self, cmd, cmd_input):
-        if cmd == self.CMD_DONE:
-            return self.back()
+        return self.back()
 
 
 class MenuMode(ChoiceMode):
@@ -367,7 +367,6 @@ class DinerMode(Mode):
 
 
 class SkillInfoMode(InfoMode):
-    prompt = 'skills >>'
 
     def back(self):
         return DinerMode()
@@ -436,17 +435,12 @@ class ServiceMode(Mode):
     def exec(self, cmd, cmd_input):
         if cmd == self.CMD_TAKE_ORDER:
             guest = self.original_name(cmd_input[1])
-            action = actions.TakeOrder(guest)
-            action.perform()
-            self.update_commands()
-            return self  # TODO: Add an Info Mode
+            return TakeOrderMode(guest)
         if cmd == self.CMD_CHAT:
             guest = self.original_name(cmd_input[1])
             group = guests.get_group_name(guest)
             chat = social.next_chat(group)
             if chat:
-                action = actions.Chat(guest)
-                action.perform()
                 return ChatMode(guest, chat)
         if cmd == self.CMD_SERVE:
             food = self.original_name(cmd_input[1])
@@ -688,8 +682,23 @@ class CookingBotListMode(RecipeMode):
         return CookingBotMenuMode()
 
 
+class TakeOrderMode(InfoMode):
+    guest = None
+
+    def __init__(self, guest):
+        self.guest = guest
+        super().__init__()
+
+    def print_info(self):
+        super().print_info()
+        action = actions.TakeOrder(self.guest)
+        action.perform()
+
+    def back(self):
+        return ServiceMode()
+
+
 class ChatMode(InfoMode):
-    prompt = 'chat >>'
     guest = None
     chat = None
 
@@ -698,13 +707,11 @@ class ChatMode(InfoMode):
         self.chat = chat
         super().__init__()
 
-    @property
-    def title(self):
-        return 'Chatting with {}'.format(self.guest)
-
     def print_info(self):
-        print_dialog(self.guest, self.chat)
         super().print_info()
+        action = actions.Chat(self.guest)
+        action.perform()
+        print_dialog(self.guest, self.chat)
 
     def back(self):
         return ServiceMode()
@@ -910,7 +917,6 @@ class ShoppingMode(Mode):
 
 
 class ReviewsInfoMode(InfoMode):
-    prompt = 'reviews >>'
 
     def back(self):
         return AfterWorkMode()
@@ -980,7 +986,6 @@ class MeetingMode(ChoiceMode):
 
 
 class MeetingResultMode(InfoMode):
-    prompt = 'meeting >>'
 
     def back(self):
         return AfterWorkMode()

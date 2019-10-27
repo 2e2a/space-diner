@@ -11,8 +11,6 @@ from . import settings
 # TODO: level intro text
 # TODO: player can enter a diner name when starting a level
 # TODO: output text when a reward is unlocked
-# TODO: info-mode: <press ENTER>
-# TODO: trash broken
 # TODO: remove debug
 # TODO: toggle verbose mode on/off --> more/less info in output
 # TODO: Fix output that plural is not needed
