@@ -1,16 +1,16 @@
 name: Moon
 diner: Bright Side Diner
 money: 50
+intro: >
+  The moon has been colonized. There are a couple of settlements on both the bright and the dark side.
+  You run a diner in one of them. It is not very lucrative, but you have a solid customer base, because
+  there are not many alternatives within the colony. Try to earn 100 space dollars - that's the amount
+  you need to buy an interplanetary ticket and open a diner in a more interesting place.
 
 goals:
   - type: money
     amount: 100
     message: You have earned enough money for an interplanetary ticket. Let's get out of here.
-    intro: >
-      The moon has been colonized. There are a couple of settlements on both the bright and the dark side.
-      You run a diner in one of them. It is not very lucrative, but you have a solid customer base, because
-      there are not many alternatives within the colony. Try to earn 100 space dollars - that's the amount
-      you need to buy an interplanetary ticket and open a diner in a more interesting place.
 
 ingredients:
   - name: beef
