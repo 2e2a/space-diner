@@ -2,6 +2,12 @@ import argparse
 from . import cli
 from . import settings
 
+# TODO: evening activities increase skills, e.g., cleaning --> ambience
+# TODO: ratings depend on more than one value: e.g. taste + service + ambience
+#       taste = whether they liked the food
+#       service = whether they got what they ordered
+#       ambience = how clean the diner is, decoration, etc.
+# TODO: regulars do not come every day
 # TODO: level intro text
 # TODO: player can enter a diner name when starting a level
 # TODO: output text when a reward is unlocked
