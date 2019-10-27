@@ -261,6 +261,9 @@ class NewGameMode(ChoiceMode):
 
     def exec_choice(self, choice):
         levels.init(self.levels[choice - 1])
+        diner_name = input('Diner name (default: {}): '.format(levels.level.diner))
+        if diner_name:
+            levels.level.diner = diner_name
         time.tick()
         return DinerMode()
 
@@ -334,6 +337,7 @@ class DinerMode(Mode):
     def print_info(self):
         super().print_info()
         print_text('--------------------------------')
+        print_value('Diner', levels.level.diner)
         print_value('Day', time.now())
         print_value('Money', levels.level.money, 'space dollars')
         print_text('--------------------------------')
