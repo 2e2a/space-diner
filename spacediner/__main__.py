@@ -8,9 +8,7 @@ from . import settings
 #       service = whether they got what they ordered
 #       ambience = how clean the diner is, decoration, etc.
 # TODO: regulars do not come every day
-# TODO: level intro text
 # TODO: player can enter a diner name when starting a level
-# TODO: output text when a reward is unlocked
 # TODO: remove debug
 # TODO: toggle verbose mode on/off --> more/less info in output
 # TODO: Fix output that plural is not needed
