@@ -36,7 +36,7 @@ class Cook(Action):
         prepared_ingredients = self.food.get_prepared_ingredients()
         if prepared_ingredients:
             cli.print_message('throw away {}'.format(', '.join(prepared_ingredients)))
-        self.food = None
+        self.food = food.Food()
 
 
 class TakeOrder(Action):

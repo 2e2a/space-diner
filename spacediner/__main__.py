@@ -13,9 +13,6 @@ from . import settings
 # TODO: output text when a reward is unlocked
 # TODO: info-mode: <press ENTER>
 # TODO: trash broken
-# TODO: serving food to normal customers broken
-# TODO: add group to customer names
-# TODO: chatting with normal customers does not work
 # TODO: remove debug
 # TODO: toggle verbose mode on/off --> more/less info in output
 # TODO: Fix output that plural is not needed
