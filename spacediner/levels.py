@@ -7,6 +7,7 @@ from datetime import datetime
 
 from . import activities
 from . import cli
+from . import diner
 from . import food
 from . import generic
 from . import goals
@@ -22,17 +23,18 @@ from . import time
 
 class Level(generic.Thing):
     name = None
-    diner = None
-    money = 0
     intro = None
+    money = 0
+    diner = None
 
     def init(self, filename):
         with open(filename, 'r') as stream:
             data = yaml.load(stream)
             self.name = data.get('name')
-            self.diner = data.get('diner')
-            self.money = data.get('money')
             self.intro = data.get('intro')
+            self.money = data.get('money')
+            self.diner = diner.Diner()
+            self.diner.init(data.get('diner'))
             goals.init(data.get('goals'))
             time.init(data.get('time'))
             skills.init(data.get('skills', []))
