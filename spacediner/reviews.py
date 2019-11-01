@@ -4,6 +4,29 @@ from collections import OrderedDict
 from . import time
 
 
+class Rating:
+    name = None
+    count = 0
+    aggregate = 0
+    taste = 0
+    service = 0
+    ambience = 0
+
+    TASTE_MULTIPLIER = 3
+
+    def __init__(self, name):
+        self.name = name
+
+    def add(self, taste, service, ambience):
+        self.taste = (self.count * self.taste + taste) / (self.count + 1)
+        self.service = (self.count * self.service + service) / (self.count + 1)
+        self.ambience = (self.count * self.ambience + ambience) / (self.count + 1)
+        aggregate = (self.TASTE_MULTIPLIER * taste + service + ambience) / (self.TASTE_MULTIPLIER + 2)
+        self.aggregate = (self.count * self.aggregate + aggregate) / (self.count + 1)
+        self.count += 1
+        return aggregate
+
+
 ratings = None
 reviews = None
 likes = None
@@ -24,14 +47,9 @@ def get_likes():
     return likes
 
 
-def add_rating(name, taste):
+def add_rating(name, taste, service, ambience):
     global ratings
-    rating, count = ratings.get(name)
-    if not rating:
-        ratings.update({name: (taste, 1)})
-    else:
-        rating = (count*rating + taste)/(count + 1)
-        ratings.update({name: (rating, count + 1)})
+    return ratings.get(name).add(taste + 1, service + 1, ambience + 1)
 
 
 def add_review(review):
@@ -42,14 +60,14 @@ def add_review(review):
 def add_likes(name, new_likes):
     global likes
     guest_likes, guest_dislikes = likes.get(name)
-    guest_likes.append(' '.join(new_likes))
+    guest_likes.add(' '.join(new_likes))
     likes.update({name: (guest_likes, guest_dislikes)})
 
 
 def add_dislikes(name, new_dislikes):
     global likes
     guest_likes, guest_dislikes = likes.get(name)
-    guest_dislikes.append(' '.join(new_dislikes))
+    guest_dislikes.add(' '.join(new_dislikes))
     likes.update({name: (guest_likes, guest_dislikes)})
 
 
@@ -64,8 +82,9 @@ def add(guests):
     global likes
     for guest in guests:
         if guest not in ratings:
-            ratings.update({guest: (None, 0)})
-            likes.update({guest: ([], [])})
+            ratings.update({guest: Rating(guest)})
+        if guest not in likes:
+            likes.update({guest: (set(), set())})
 
 
 def init(guests):

@@ -925,22 +925,24 @@ class ReviewsInfoMode(InfoMode):
     def back(self):
         return AfterWorkMode()
 
+    def _rating_info(self, name, count, rating):
+        if count == 0:
+            return '{}:\tno reviews yet'.format(name)
+        n_stars = round(rating)
+        return '{}:\t[{}{}] ({:0.2f}) based on {} review(s)'.format(
+            name,
+            '*' * n_stars,
+            '-' * (5 - n_stars),
+            float(rating),
+            count,
+            )
+
     def print_info(self):
         super().print_info()
         print_title('Ratings')
         ratings = []
-        for group, (rating, count) in reviews.get_ratings().items():
-            if count > 0:
-                n_stars = round(rating)
-                rating = '{}:\t[{}{}] ({}) based on {} review(s)'.format(
-                    group,
-                    '*'*n_stars,
-                    '-'*(5-n_stars),
-                    rating,
-                    count,
-                    )
-            else:
-                rating = '{}:\tno reviews yet'.format(group)
+        for group, rating in reviews.get_ratings().items():
+            rating = self._rating_info(group, rating.count, rating.aggregate)
             ratings.append(rating)
         print_list(ratings)
 

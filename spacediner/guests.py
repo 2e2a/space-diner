@@ -31,17 +31,18 @@ class GuestOutput:
     taste = None
     review_like = None
     review_dislike = None
-    review_order_met = None
     review_order_not_met = None
     review_no_food = None
 
     def init(self, data):
         self.is_default = data is None
-        self.taste = data.get('taste') if data and 'taste' in data else ['Very bad.', 'Bad.', 'OK.', 'Good.', 'Very good.']
+        self.scale = data.get('scale') if data and 'scale' in data else ['very bad', 'bad', 'ok', 'good', 'very good']
         self.review_like = data.get('review_like') if data and 'review_like' in data else 'I liked the {}.'
         self.review_dislike = data.get('review_dislike') if data and 'review_dislike' in data else 'I did not like the {}.'
-        self.review_order_met = data.get('review_order_met') if data and 'review_order_met' in data else 'I got what I ordered ({}).'
-        self.review_order_not_met = data.get('review_order_not_met') if data and 'review_order_not_met' in data else 'I got not what I ordered ({}).'
+        self.review_taste = data.get('review_taste') if data and 'review_taste' in data else 'The taste was {}.'
+        self.review_service = data.get('review_service') if data and 'review_service' in data else 'The service was {}.'
+        self.review_ambience = data.get('review_ambience') if data and 'review_ambience' in data else 'The ambience was {}.'
+        self.review_order_not_met = data.get('review_order_not_met') if data and 'review_order_not_met' in data else 'I did not get what I ordered ({}).'
         self.review_no_food = data.get('review_no_food') if data and 'review_no_food' in data else 'I did not get any food.'
 
 
@@ -60,6 +61,17 @@ class Guest(generic.Thing):
     chatted_today = False
     served = False
 
+    ambience = 2
+    first_review_choices = None
+    second_review_choices = None
+
+    def reset(self):
+        self.available = True
+        self.chatted_today = False
+        self.first_review_choices = []
+        self.second_review_choices = []
+        self.second_review_choices.append(self.output.review_ambience.format(self.output.scale[self.ambience]))
+
     @property
     def group_name(self):
         return ' '.join(group.name for group in self.groups) if self.groups else self.name
@@ -72,11 +84,18 @@ class Guest(generic.Thing):
         self.order = random.SystemRandom().choice(self.orders)
         return self.order
 
+    def add_review(self, aggregate_rating):
+        review = '{} ({}):'.format(self.name, self.group_name) if self.groups else '{}:'.format(self.name)
+        review += ' ' + random.SystemRandom().choice(self.first_review_choices)
+        review += ' ' + random.SystemRandom().choice(self.second_review_choices)
+        review += ' (Rating: {})'.format(aggregate_rating)
+        reviews.add_review(review)
+
     def serve(self, food_name):
         self.served = True
         dish = food.take(food_name)
         taste = 2
-        review = '{} ({}):'.format(self.name, self.group_name) if self.groups else '{}:'.format(self.name)
+        service = 2
         for reaction in self.reactions:
             if set(reaction.properties).issubset(dish.properties):
                 taste += reaction.taste
@@ -87,31 +106,29 @@ class Guest(generic.Thing):
                         reaction.output
                     )
                     reviews.add_likes(self.group_name, reaction.properties)
-                    review += ' ' + self.output.review_like.format('and '.join(reaction.properties))
+                    self.first_review_choices.append(self.output.review_like.format(' '.join(reaction.properties)))
                 else:
                     cli.print_dialog_with_info(
                         self.name,
                         'does not like something ({})'.format(', '.join(reaction.properties)),
                         reaction.output
                     )
-                    reviews.add_dislikes(self.group_name, matching_properties)
-                    review += ' ' + self.output.review_dislike.format('and '.join(matching_properties))
+                    reviews.add_dislikes(self.group_name, reaction.properties)
+                    self.first_review_choices.append(self.output.review_dislike.format(' '.join(reaction.properties)))
         if self.orders:
             if self.order in dish.properties:
-                taste += 2
                 cli.print_message('{} received what they ordered ({}).'.format(self.name, self.order))
-                review += ' ' + self.output.review_order_met.format(self.order)
             else:
-                taste = min(2, taste - 1)
+                service -= 1
+                self.second_review_choices.append(self.output.review_order_not_met.format(self.order))
                 cli.print_message('{} did not receive what they ordered ({}).'.format(self.name, self.order))
-                review += ' ' + self.output.review_order_not_met.format(self.order)
-        if taste > 4: taste = 4
-        elif taste < 0: taste = 0
-        review += ' {} (Rating: {})'.format(self.output.taste[taste], taste)
-        reviews.add_rating(self.group_name, taste + 1)
-        reviews.add_review(review)
-        cli.print_dialog(self.name, self.output.taste[taste])
-        payment = int(self.budget/5 * taste)
+        taste = min(4, max(0, taste))
+        cli.print_dialog(self.name, self.output.review_taste.format(self.output.scale[taste]))
+        self.first_review_choices.append(self.output.review_taste.format(self.output.scale[taste]))
+        self.second_review_choices.append(self.output.review_service.format(self.output.scale[service]))
+        aggregate_rating = reviews.add_rating(self.group_name, taste, service, self.ambience)
+        self.add_review(aggregate_rating)
+        payment = int(self.budget/5 * aggregate_rating)
         levels.level.money += payment
         cli.print_text('{} paid {} space dollars.'.format(self.name, payment))
         if taste == 4:
@@ -128,13 +145,9 @@ class Guest(generic.Thing):
         return not self.chatted_today and social.has_chats(self.group_name) and social.chat(self.group_name)
 
     def send_home(self):
-        reviews.add_rating(self.group_name, 0)
-        review = '{}{}: {}'.format(
-            self.name,
-            ' ({})'.format(self.group_name) if self.groups else '',
-            self.output.review_no_food
-        )
-        reviews.add_review(review)
+        aggregate_rating = reviews.add_rating(self.group_name, 0, 0, self.ambience)
+        self.first_review_choices.append(self.output.review_no_food)
+        self.add_review(aggregate_rating)
 
     def init(self, data):
         self.name = data.get('name')
@@ -202,7 +215,7 @@ class GuestFactory(generic.Thing):
             if group.output.is_default:
                 guest.output = group.output
                 break
-        guest.available = True
+        guest.reset()
         return guest
 
 
@@ -332,6 +345,7 @@ def init(data):
     for guest_data in data.get('regulars'):
         guest = Guest()
         guest.init(guest_data)
+        guest.reset()
         regulars.update({guest.name: guest})
 
     global guest_groups

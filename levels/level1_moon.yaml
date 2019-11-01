@@ -190,12 +190,12 @@ guests:
         - pickle salad
         - bread basket
       output:
-        taste:
-          - Disgusting.
-          - Bad.
-          - It's ok.
-          - Good.
-          - Very good.
+        scale:
+          - disgusting
+          - bad
+          - ok
+          - good
+          - very good
         review_like: 'I liked the {}.'
         review_dislike: 'I did not like the {}.'
         review_order_met: 'They managed to serve me what I ordered: {}.'
@@ -218,12 +218,12 @@ guests:
         - meat plate
         - burger
       output:
-        taste:
-          - Sadly, pretty bad.
-          - Not so good.
-          - Average.
-          - Pretty good!
-          - Amazing!
+        scale:
+          - sadly, pretty bad
+          - not so good
+          - average
+          - pretty good
+          - amazing
         review_like: 'I will tell you what was excellent: the {}.'
         review_dislike: 'What did I not like? Well, the {}.'
         review_order_met: 'I received exactly what I ordered: {}.'

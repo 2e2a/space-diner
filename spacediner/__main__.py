@@ -2,12 +2,10 @@ import argparse
 from . import cli
 from . import settings
 
+# TODO: hygiene = number decreasing after x days, cleaning increase
+# TODO: Holidays+events per guest -> diner full with guests of this type, holidays in cal
 # TODO: evening activities increase skills, e.g., cleaning --> ambience
-# TODO: ratings depend on more than one value: e.g. taste + service + ambience
-#       taste = whether they liked the food
-#       service = whether they got what they ordered
-#       ambience = how clean the diner is, decoration, etc.
-# TODO: regulars do not come every day
+# TODO: regulars do not come every day, weekdays
 # TODO: remove debug
 # TODO: toggle verbose mode on/off --> more/less info in output
 # TODO: Fix output that plural is not needed
