@@ -2,16 +2,22 @@ name: Moon
 diner: Bright Side Diner
 money: 50
 intro: >
-  The moon has been colonized. There are a couple of settlements on both the bright and the dark side.
+  The moon has been colonized. There are a couple of settlements, mainly on the bright side of the moon.
   You run a diner in one of them. It is not very lucrative, but you have a solid customer base, because
-  there are not many alternatives within the colony. Try to earn 100 space dollars - that's the amount
+  there are not many alternatives within the colony. Try to earn 1000 space dollars - that's the amount
   you need to buy an interplanetary ticket and open a diner in a more interesting place.
 calendar:
   week: ['Moonday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+  year: 365
+  holidays:
+  - holiday: Landing day
+    info: The colonists are celebrating the anniversary of the first person on the moon today!
+    date: 10
+    groups: [ Human colonist ]
 
 goals:
   - type: money
-    amount: 100
+    amount: 1000
     message: You have earned enough money for an interplanetary ticket. Let's get out of here.
 
 ingredients:
@@ -189,6 +195,7 @@ guests:
         - meat plate
         - pickle salad
         - bread basket
+        - fries
       output:
         scale:
           - disgusting
@@ -385,10 +392,10 @@ social:
           good replies:
             - reply: Congratulations. Sounds like a great opportunity.
               reaction: >
-                Thank you. I will accept it. I will miss your food and your company... Please stay in touch with me, will you?
+                Thank you. I will accept it. I am going to miss your food and your company... Please stay in touch with me, will you?
             - reply: I think you should stay here. You are so enthusiastic about your research on the moon.
               reaction: >
-                I am, but I think it's time for me to move on. I will miss your food and your company...
+                I am, but I think it's time for me to move on. I am going to miss your food and your company...
                 Please stay in touch with me, will you?
       rewards:
         - type: merchant
