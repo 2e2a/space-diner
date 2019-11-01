@@ -1,0 +1,10 @@
+name: Mars
+diner: Red Diner
+money: 100
+intro: >
+  You are starting a new life on Mars. Humans are terraforming it, but the cities on Mars still need
+  to be protected by domes. Your diner is located in a small city close to Pavonis Mons.
+  
+calendar:
+  week: ['Monsol', 'Tuessol', 'Wednessol', 'Thurssol', 'Frisol', 'Satursol', 'Sunsol']
+  cycle: 668

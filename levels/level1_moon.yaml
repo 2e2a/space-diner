@@ -10,7 +10,7 @@ diner:
   seats: 7
 calendar:
   week: ['Moonday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-  year: 365
+  cycle: 365
   holidays:
   - holiday: Landing day
     info: The colonists are celebrating the anniversary of the first person on the moon today!
@@ -282,7 +282,7 @@ guests:
       days: ['Moonday', 'Thurday', 'Saturday']
       reactions:
         - properties: [ pickles ]
-          taste: +1
+          taste: +2
           output: Pickles are my favourite.
       orders:
         - burger
@@ -373,9 +373,9 @@ social:
             You finally arrive at the spot, where you find a cluster of cocoons. While she scans them, Ozabela tells you something
             about the mutation that lets them survive without oxygen and in extreme temperatures. What is still entirely unclear
             to the researchers is what they feed on.
-            \"Only a few of them will make it out of the cocoons\", you hear Ozabela say through the audio system integrated in
-            your helmet. Her voice sounds metallic. \"They become silkmoths, but flying is impossible here. Instead, they use
-            strange low-gravity twitches to move.\"
+            "Only a few of them will make it out of the cocoons", you hear Ozabela say through the audio system integrated in
+            your helmet. Her voice sounds metallic. "They become silkmoths, but flying is impossible here. Instead, they use
+            strange low-gravity twitches to move."
             When you are done with the scanning and counting, Ozabela puts two of the 24 cocoons in a small cylinder. Then, she
             looks up to Earth, hanging in the sky above you.
           question: Do you miss it? The Earth? Its gravity? Its people?
@@ -389,8 +389,8 @@ social:
               reaction: Why? It's important to think about the past... and the future.
         - meeting: >
            Ozabela comes to the empty diner in the evening. You cook beef burgers with pickles just for the two of you.
-           \"I have to tell you something\", she says after finishing the burger. \"I was offered a professorship at the
-           University of Tokyo. On Earth.\"
+           "I have to tell you something", she says after finishing the burger. "I was offered a professorship at the
+           University of Tokyo. On Earth."
           good replies:
             - reply: Congratulations. Sounds like a great opportunity.
               reaction: >
