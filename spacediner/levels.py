@@ -25,7 +25,6 @@ class Level(generic.Thing):
     name = None
     intro = None
     money = 0
-    diner = None
 
     def init(self, filename):
         with open(filename, 'r') as stream:
@@ -33,8 +32,7 @@ class Level(generic.Thing):
             self.name = data.get('name')
             self.intro = data.get('intro')
             self.money = data.get('money')
-            self.diner = diner.Diner()
-            self.diner.init(data.get('diner'))
+            diner.init(data.get('diner'))
             goals.init(data.get('goals'))
             time.init(data.get('time'))
             skills.init(data.get('skills', []))

@@ -3,6 +3,7 @@ import readline
 
 from . import actions
 from . import activities
+from . import diner
 from . import food
 from . import guests
 from . import kitchen
@@ -261,9 +262,9 @@ class NewGameMode(ChoiceMode):
 
     def exec_choice(self, choice):
         levels.init(self.levels[choice - 1])
-        diner_name = input('Diner name (default: {}): '.format(levels.level.diner))
+        diner_name = input('Diner name (default: {}): '.format(diner.diner.name))
         if diner_name:
-            levels.level.diner.name = diner_name
+            diner.diner.name = diner_name
         time.tick()
         return DinerMode()
 
@@ -337,7 +338,7 @@ class DinerMode(Mode):
     def print_info(self):
         super().print_info()
         print_text('--------------------------------')
-        print_value('Diner', levels.level.diner.name)
+        print_value('Diner', diner.diner.name)
         print_value('Day', time.now())
         print_value('Money', levels.level.money, 'space dollars')
         print_text('--------------------------------')
