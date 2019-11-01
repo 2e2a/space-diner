@@ -339,11 +339,11 @@ social:
           good replies:
             - reply: I'm saving money to leave as soon as possible.
               reaction: That's brave. I'm thinking about it, too, but I'm not sure I have it in me to quit and leave.
+            - reply: No, I like the colony.
+              reaction: I like it, too, but do you not feel trapped sometimes? I'm not so sure myself...
           bad replies:
             - reply: I'm not sure.
               reaction: Me neither. It is a hard decision... I wish I was more decisive.
-            - reply: No, I like the colony.
-              reaction: I like it, too, but do you not feel trapped sometimes? I'm not so sure myself...
         - meeting: >
             Ozabela wants to see a movie. There is a brandnew cinema in the amusement park that they finished building
             this year. However, you decide to go to the one in the mall. There are only 12 seats there. Most of them
@@ -369,16 +369,30 @@ social:
             strange low-gravity twitches to move.\"
             When you are done with the scanning and counting, Ozabela puts two of the 24 cocoons in a small cylinder. Then, she
             looks up to Earth, hanging in the sky above you.
-            \"I have to tell you something. I was offered a professorship at the University of Tokyo. On Earth.\"
+          question: Do you miss it? The Earth? Its gravity? Its people?
+          good replies:
+            - reply: I think about it all the time.
+              reaction: Yes, it is not easy to forget. Look at it... I miss it sometimes.
+            - reply: No, I don't like to look back.
+              reaction: You're right. We should be looking forward. But what if moving forward means returning to Earth?
+          bad replies:
+            - reply: I don't like questions like that.
+              reaction: Why? It's important to think about the past... and the future.
+        - meeting: >
+           Ozabela comes to the empty diner in the evening. You cook beef burgers with pickles just for the two of you.
+           \"I have to tell you something\", she says after finishing the burger. \"I was offered a professorship at the
+           University of Tokyo. On Earth.\"
           good replies:
             - reply: Congratulations. Sounds like a great opportunity.
-              reaction: Thank you. I will accept it. I will miss our meetings... Let's go back.
+              reaction: >
+                Thank you. I will accept it. I will miss your food and your company... Please stay in touch with me, will you?
             - reply: I think you should stay here. You are so enthusiastic about your research on the moon.
-              reaction: I am, but I think it's time for me to move on. I will miss our meetings... Let's go back.
-            
+              reaction: >
+                I am, but I think it's time for me to move on. I will miss your food and your company...
+                Please stay in touch with me, will you?
       rewards:
         - type: merchant
-          level: 5
+          level: 4
           merchant: Oddie's Laboratory Waste
           text: >
             There's someone I would like to introduce you to. I saw how you looked at the silkworms in my lab... I know
