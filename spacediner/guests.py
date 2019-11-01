@@ -92,7 +92,7 @@ class Guest(generic.Thing):
         review = '{} ({}):'.format(self.name, self.group_name) if self.groups else '{}:'.format(self.name)
         review += ' ' + random.SystemRandom().choice(self.first_review_choices)
         review += ' ' + random.SystemRandom().choice(self.second_review_choices)
-        review += ' (Rating: {})'.format(aggregate_rating)
+        review += ' (Rating: {})'.format(round(aggregate_rating))
         reviews.add_review(review)
 
     def serve(self, food_name):

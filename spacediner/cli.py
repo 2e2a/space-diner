@@ -929,7 +929,7 @@ class ReviewsInfoMode(InfoMode):
         if count == 0:
             return '{}:\tno reviews yet'.format(name)
         n_stars = round(rating)
-        return '{}:\t[{}{}] ({:0.2f}) based on {} review(s)'.format(
+        return '{}:\t[{}{}] ({:0.1f}) based on {} review(s)'.format(
             name,
             '*' * n_stars,
             '-' * (5 - n_stars),
