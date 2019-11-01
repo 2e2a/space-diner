@@ -28,9 +28,12 @@ class Reaction(generic.Thing):
 
 class GuestOutput:
     is_default = True
-    taste = None
+    scale = None
     review_like = None
     review_dislike = None
+    review_taste = None
+    review_service = None
+    review_ambience = None
     review_order_not_met = None
     review_no_food = None
 
@@ -67,6 +70,7 @@ class Guest(generic.Thing):
 
     def reset(self):
         self.available = True
+        self.order = None
         self.chatted_today = False
         self.first_review_choices = []
         self.second_review_choices = []
@@ -210,9 +214,8 @@ class GuestFactory(generic.Thing):
         guest.reactions = list(itertools.chain.from_iterable(group.reactions for group in groups))
         guest.budget = max([group.budget for group in groups if group.budget])
         guest.orders = list(itertools.chain.from_iterable(group.orders for group in groups))
-        guest.output = groups[0].output
         for group in groups:
-            if group.output.is_default:
+            if not group.output.is_default:
                 guest.output = group.output
                 break
         guest.reset()
@@ -329,9 +332,8 @@ def new_workday():
     global guest_factory
     guests = [regular for regular in regulars.values() if regular.available]
     for regular in guests:
-        regular.order = None
-        regular.chatted_today = False
-    new_guests =  []
+        regular.reset()
+    new_guests = []
     for i in range(3):  # TODO: guest max
         guest = guest_factory.create(existing=guests)
         guests.append(guest)
