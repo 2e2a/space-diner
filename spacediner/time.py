@@ -1,16 +1,18 @@
 import pickle
 
 
-class Clock:
+class Calendar:
+    week = None
+    cycle = 0
+
     TIME_WORK = 'work'
     TIME_OFF = 'off'
+    day = 0
+    time = TIME_OFF
+    callbacks = []
+
     morning_greeting = None
     evening_greeting = None
-
-    def __init__(self):
-        self.day = 0
-        self.time = self.TIME_OFF
-        self.callbacks = []
 
     def get_greeting(self):
         if self.time == self.TIME_WORK:
@@ -22,55 +24,59 @@ class Clock:
         if self.time == self.TIME_WORK:
             self.time = self.TIME_OFF
         else:
-            self.day += 1
             self.time = self.TIME_WORK
+            self.day += 1
+            self.weekday
         for time, callback in self.callbacks:
             if time == self.time:
                 callback()
 
+    @property
+    def weekday(self):
+        return self.week[(self.day % len(self.week) - 1)]
+
+    @property
     def now(self):
-        return '{} - {}'.format(self.day, self.time)
+        return '{} - {}'.format(self.day, self.weekday, self.time)
 
     def register_callback(self, time, callback):
         self.callbacks.append((time, callback))
 
     def init(self, data):
-        if data:
-            self.morning_greeting = data.get('morning_greeting')
-            self.evening_greeting = data.get('evening_greeting')
-        else:
-            self.morning_greeting = 'A new morning...'
-            self.evening_greeting = 'The work\'s done...'
+        self.week = data.get('week', ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'])
+        self.cycle = int(data.get('cycle'))
+        self.morning_greeting = data.get('morning_greeting', 'A new morning...')
+        self.evening_greeting = data.get('evening_greeting', 'The work\'s done...')
 
 
-clock = Clock()
+calendar = Calendar()
 
 
 def tick():
-    global clock
-    clock.tick()
+    global calendar
+    calendar.tick()
 
 
 def now():
-    global clock
-    return clock.now()
+    global calendar
+    return calendar.now
 
 
 def register_callback(time, callback):
-    global clock
-    clock.register_callback(time, callback)
+    global calendar
+    calendar.register_callback(time, callback)
 
 
 def init(data):
-    global clock
-    clock.init(data)
+    global calendar
+    calendar.init(data)
 
 
 def save(file):
-    global clock
-    pickle.dump(clock, file)
+    global calendar
+    pickle.dump(calendar, file)
 
 
 def load(file):
-    global clock
-    clock = pickle.load(file)
+    global calendar
+    calendar = pickle.load(file)

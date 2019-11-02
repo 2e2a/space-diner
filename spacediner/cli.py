@@ -1014,7 +1014,7 @@ def run():
             levels.debug()
         if print_info:
             if time_ticked:
-                print(time.clock.get_greeting())
+                print(time.calendar.get_greeting())
                 time_ticked = None
             mode.print_info()
         if not mode.no_input:
@@ -1032,14 +1032,14 @@ def run():
 
 def worktime_callback():
     global time_ticked
-    time_ticked = time.Clock.TIME_WORK
+    time_ticked = time.Calendar.TIME_WORK
 
 
 def offtime_callback():
     global time_ticked
-    time_ticked = time.Clock.TIME_OFF
+    time_ticked = time.Calendar.TIME_OFF
 
 
 def init():
-    time.register_callback(time.Clock.TIME_WORK, worktime_callback)
-    time.register_callback(time.Clock.TIME_OFF, offtime_callback)
+    time.register_callback(time.Calendar.TIME_WORK, worktime_callback)
+    time.register_callback(time.Calendar.TIME_OFF, offtime_callback)

@@ -34,7 +34,7 @@ class Level(generic.Thing):
             self.money = data.get('money')
             diner.init(data.get('diner'))
             goals.init(data.get('goals'))
-            time.init(data.get('time'))
+            time.init(data.get('calendar'))
             skills.init(data.get('skills', []))
             ingredients.init(data.get('ingredients', []))
             storage.init(data.get('storage', []))
@@ -95,7 +95,7 @@ def init(name):
     level.init(file_name)
     cli.print_title(level.name)
     cli.print_text(level.intro)
-    time.register_callback(time.Clock.TIME_WORK, autosave_save)
+    time.register_callback(time.Calendar.TIME_WORK, autosave_save)
 
 
 def save(file):

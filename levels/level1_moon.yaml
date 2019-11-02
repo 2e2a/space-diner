@@ -9,7 +9,7 @@ diner:
   name: Bright Side Diner
   seats: 7
 calendar:
-  week: ['Moonday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+  week: [Moonday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday]
   cycle: 365
   holidays:
   - holiday: Landing day

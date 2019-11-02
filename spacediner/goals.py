@@ -60,6 +60,6 @@ def init(data):
             goal = MoneyGoal()
         goal.init(goal_data)
         goals.append(goal)
-    time.register_callback(time.Clock.TIME_WORK, new_workday)
-    time.register_callback(time.Clock.TIME_OFF, after_work)
+    time.register_callback(time.Calendar.TIME_WORK, new_workday)
+    time.register_callback(time.Calendar.TIME_OFF, after_work)
     return goals

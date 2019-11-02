@@ -371,7 +371,7 @@ def init(data):
 
     reviews.init([regular.name for regular in regulars.values() if regular.available])
 
-    time.register_callback(time.Clock.TIME_WORK, new_workday)
+    time.register_callback(time.Calendar.TIME_WORK, new_workday)
 
 
 def save(file):
