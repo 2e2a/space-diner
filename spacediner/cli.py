@@ -1000,12 +1000,10 @@ class MeetingResultMode(InfoMode):
 
 mode = None
 actions_saved = []
-time_ticked = None
 
 
 def run():
     global mode
-    global time_ticked
     mode = MenuMode()
     print_info = True
     print('################################  SPACE  DINER  ################################')
@@ -1013,9 +1011,6 @@ def run():
         if settings.DEBUG:
             levels.debug()
         if print_info:
-            if time_ticked:
-                print(time.calendar.get_greeting())
-                time_ticked = None
             mode.print_info()
         if not mode.no_input:
             prompt = '{} '.format(mode.prompt) if mode.prompt else ''
@@ -1030,16 +1025,5 @@ def run():
             print_info = False
 
 
-def worktime_callback():
-    global time_ticked
-    time_ticked = time.Calendar.TIME_WORK
-
-
-def offtime_callback():
-    global time_ticked
-    time_ticked = time.Calendar.TIME_OFF
-
-
 def init():
-    time.register_callback(time.Calendar.TIME_WORK, worktime_callback)
-    time.register_callback(time.Calendar.TIME_OFF, offtime_callback)
+    pass

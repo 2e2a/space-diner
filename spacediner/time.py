@@ -1,5 +1,20 @@
 import pickle
 
+from . import cli
+
+
+class Event:
+    name = None
+    day = 0
+    info = None
+    groups = None
+
+    def init(self, data):
+        self.name = data.get('holiday')
+        self.info = data.get('info')
+        self.day = int(data.get('day'))
+        self.groups = data.get('groups')
+
 
 class Calendar:
     week = None
@@ -14,19 +29,19 @@ class Calendar:
     morning_greeting = None
     evening_greeting = None
 
-    def get_greeting(self):
-        if self.time == self.TIME_WORK:
-            return self.morning_greeting
-        else:
-            return self.evening_greeting
+    events = {}
 
     def tick(self):
         if self.time == self.TIME_WORK:
             self.time = self.TIME_OFF
+            cli.print_message(self.evening_greeting)
         else:
             self.time = self.TIME_WORK
             self.day += 1
-            self.weekday
+            cli.print_message(self.morning_greeting)
+        for event in self.events.get(self.day, []):
+            cli.print_message('Today is "{}" for: {}.'.format(event.name, ', '.join(event.groups)))
+            cli.print_text(event.info)
         for time, callback in self.callbacks:
             if time == self.time:
                 callback()
@@ -47,6 +62,13 @@ class Calendar:
         self.cycle = int(data.get('cycle'))
         self.morning_greeting = data.get('morning_greeting', 'A new morning...')
         self.evening_greeting = data.get('evening_greeting', 'The work\'s done...')
+        for holiday_data in data.get('holidays', []):
+            holiday = Event()
+            holiday.init(holiday_data)
+            if holiday.day in self.events:
+                self.events.get(holiday.day).append(holiday)
+            else:
+                self.events.update({holiday.day: [holiday]})
 
 
 calendar = Calendar()
