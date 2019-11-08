@@ -4,6 +4,7 @@ import random
 from collections import OrderedDict
 
 from . import cli  #  TODO: inject
+from . import diner
 from . import food
 from . import generic
 from . import levels
@@ -204,11 +205,13 @@ class GuestFactory(generic.Thing):
             if not existing or not any(guest.name == name for guest in existing):
                 return name
 
-    def create(self, existing=None):
+    def get_names(self):
+        return [' '.join(group) for group in self.groups]
+
+    def create(self, name, existing=None):
         global guest_groups
-        num = random.SystemRandom().randint(0, len(self.groups) - 1)
         guest = Guest()
-        groups = [guest_groups.get(name) for name in self.groups[num]]
+        groups = [guest_groups.get(group_name) for group_name in name.split(' ')]
         guest.name = self._guest_name(groups, existing)
         guest.groups = groups
         guest.reactions = list(itertools.chain.from_iterable(group.reactions for group in groups))
@@ -326,6 +329,9 @@ def unlock(name):
     reviews.add([name])
 
 
+FULL_AFTER_RATINGS = 10
+
+
 def new_workday():
     global guests
     global regulars
@@ -334,11 +340,25 @@ def new_workday():
     for regular in guests:
         regular.reset()
     new_guests = []
-    for i in range(3):  # TODO: guest max
-        guest = guest_factory.create(existing=guests)
+    holidays = time.get_holidays()
+    seats = diner.diner.seats - len(guests)
+    groups = guest_factory.get_names()
+    seats_per_group = round(seats/len(groups))
+    ratings = reviews.get_ratings()
+    for name in groups:
+        rating = ratings.get(name)
+        if rating:
+            n_ratings = rating.count
+            n_seats = seats_per_group / FULL_AFTER_RATINGS * n_ratings
+            new_guests.extend(n_seats * [name])
+        else:
+            new_guests.append(name)
+    reviews.add(set(new_guests))
+    random.SystemRandom().shuffle(new_guests)
+    for name in new_guests:
+        guest = guest_factory.create(name, existing=guests)
         guests.append(guest)
-        new_guests.append(guest.group_name)
-    reviews.add(new_guests)
+    # TODO: print x/y seats taken
 
 
 def init(data):

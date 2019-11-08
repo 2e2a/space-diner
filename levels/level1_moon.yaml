@@ -14,7 +14,7 @@ calendar:
   holidays:
   - holiday: Landing day
     info: The colonists are celebrating the anniversary of the first person on the moon today!
-    date: 10
+    day: 10
     groups: [ Human colonist ]
 
 goals:

@@ -37,6 +37,10 @@ def get_ratings():
     return ratings
 
 
+def get_rating(name):
+    return get_ratings().get(name)
+
+
 def get_reviews():
     global reviews
     return reviews

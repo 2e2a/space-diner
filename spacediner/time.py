@@ -4,6 +4,9 @@ from . import cli
 
 
 class Event:
+    TYPE_HOLIDAY = 'holiday'
+
+    type = TYPE_HOLIDAY
     name = None
     day = 0
     info = None
@@ -82,6 +85,11 @@ def tick():
 def now():
     global calendar
     return calendar.now
+
+
+def get_holidays():
+    global calendar
+    return calendar.events.get(calendar.day)
 
 
 def register_callback(time, callback):
