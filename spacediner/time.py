@@ -1,4 +1,5 @@
 import pickle
+import random
 
 from . import cli
 
@@ -20,11 +21,15 @@ class Event:
         self.name = data.get('event')
         self.type = data.get('type')
         self.info = data.get('info', None)
-        self.day = int(data.get('day'))
+        self.day = int(data.get('day'), None)
+        if not self.day:
+            day_range = data.get('days').split('-')
+            self.day = random.SystemRandom().randint(day_range[0], day_range[1])
 
 
     def print_message(self):
         raise NotImplementedError
+
 
 class GroupEvent(Event):
     groups = None
@@ -37,7 +42,7 @@ class GroupEvent(Event):
         if self.type == self.TYPE_HOLIDAY:
             cli.print_message('Today is a holiday for: {}.'.format(', '.join(self.groups)))
         elif self.type == self.TYPE_BIRTHDAY:
-            cli.print_message('Today is a birthday for: {}.'.format(', '.join(self.groups)))
+            cli.print_message('Today is a(n) {} has a birthday.'.format('and a(n) '.join(self.groups)))
 
 
 class StorageEvent(Event):

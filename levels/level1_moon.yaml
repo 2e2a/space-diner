@@ -16,6 +16,7 @@ calendar:
     type: holiday
     info: The colonists are celebrating the anniversary of the first person on the moon today!
     day: 10
+    # days: 10-20
     groups: [ Human colonist ]
 
 goals:

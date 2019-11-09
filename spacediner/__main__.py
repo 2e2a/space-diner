@@ -4,7 +4,6 @@ from . import settings
 
 # TODO: only cooking+service mode, remove diner mode, most commands always available
 # TODO: hygiene = number decreasing after x days, cleaning increase
-# TODO: Holidays+events per guest -> diner full with guests of this type, holidays in cal
 # TODO: evening activities increase skills, e.g., cleaning --> ambience
 # TODO: regulars do not come every day, weekdays
 # TODO: remove debug
