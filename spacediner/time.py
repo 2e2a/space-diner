@@ -5,18 +5,47 @@ from . import cli
 
 class Event:
     TYPE_HOLIDAY = 'holiday'
+    TYPE_BIRTHDAY = 'birthday'
+    TYPE_RATS = 'rats'
 
-    type = TYPE_HOLIDAY
+    GROUP_EVENT_TYPES = [TYPE_HOLIDAY, TYPE_BIRTHDAY]
+    STORAGE_EVENT_TYPES = [TYPE_RATS]
+
+    type = None
     name = None
     day = 0
     info = None
+
+    def init(self, data):
+        self.name = data.get('event')
+        self.type = data.get('type')
+        self.info = data.get('info', None)
+        self.day = int(data.get('day'))
+
+
+    def print_message(self):
+        raise NotImplementedError
+
+class GroupEvent(Event):
     groups = None
 
     def init(self, data):
-        self.name = data.get('holiday')
-        self.info = data.get('info')
-        self.day = int(data.get('day'))
+        super().init(data)
         self.groups = data.get('groups')
+
+    def print_message(self):
+        if self.type == self.TYPE_HOLIDAY:
+            cli.print_message('Today is a holiday for: {}.'.format(', '.join(self.groups)))
+        elif self.type == self.TYPE_BIRTHDAY:
+            cli.print_message('Today is a birthday for: {}.'.format(', '.join(self.groups)))
+
+
+class StorageEvent(Event):
+    ingredients = None
+
+    def init(self, data):
+        super().init(data)
+        self.ingredients = data.get('ingredients')
 
 
 class Calendar:
@@ -43,8 +72,9 @@ class Calendar:
             self.day += 1
             cli.print_message(self.morning_greeting)
         for event in self.events.get(self.day, []):
-            cli.print_message('Today is "{}" for: {}.'.format(event.name, ', '.join(event.groups)))
-            cli.print_text(event.info)
+            event.print_message()
+            if event.info:
+                cli.print_text(event.info)
         for time, callback in self.callbacks:
             if time == self.time:
                 callback()
@@ -65,13 +95,17 @@ class Calendar:
         self.cycle = int(data.get('cycle'))
         self.morning_greeting = data.get('morning_greeting', 'A new morning...')
         self.evening_greeting = data.get('evening_greeting', 'The work\'s done...')
-        for holiday_data in data.get('holidays', []):
-            holiday = Event()
-            holiday.init(holiday_data)
-            if holiday.day in self.events:
-                self.events.get(holiday.day).append(holiday)
+        for event_data in data.get('events', []):
+            event_type = event_data.get('type')
+            if event_type in Event.GROUP_EVENT_TYPES:
+                event = GroupEvent()
+            elif event_type in Event.STORAGE_EVENT_TYPES:
+                event =  StorageEvent()
+            event.init(event_data)
+            if event.day in self.events:
+                self.events.get(event.day).append(event)
             else:
-                self.events.update({holiday.day: [holiday]})
+                self.events.update({event.day: [event]})
 
 
 calendar = Calendar()
@@ -89,7 +123,47 @@ def now():
 
 def get_holidays():
     global calendar
-    return calendar.events.get(calendar.day)
+    if calendar.day in calendar.events:
+        return list(filter(lambda event: event.type == Event.TYPE_HOLIDAY, calendar.events.get(calendar.day)))
+    return []
+
+
+def get_holidays_for(names):
+    global calendar
+    if not isinstance(names, list):
+        names = [names]
+    if calendar.day in calendar.events:
+        return list(filter(
+            lambda event: event.type == Event.TYPE_HOLIDAY and set(event.groups).intersection(names),
+            calendar.events.get(calendar.day)
+        ))
+    return []
+
+
+def get_birthdays():
+    global calendar
+    if calendar.day in calendar.events:
+        return list(filter(lambda event: event.type == Event.TYPE_BIRTHDAY, calendar.events.get(calendar.day)))
+    return []
+
+
+def get_birthdays_for(names):
+    global calendar
+    if not isinstance(names, list):
+        names = [names]
+    if calendar.day in calendar.events:
+        return list(filter(
+            lambda event: event.type == Event.TYPE_BIRTHDAY and set(event.groups).intersection(names),
+            calendar.events.get(calendar.day)
+        ))
+    return []
+
+
+def get_rat_days():  # TODO: fix me
+    global calendar
+    if calendar.day in calendar.events:
+        return filter(lambda event: event.type == Event.TYPE_RATS, calendar.events.get(calendar.day))
+    return []
 
 
 def register_callback(time, callback):

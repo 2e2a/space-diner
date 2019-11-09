@@ -332,6 +332,36 @@ def unlock(name):
 FULL_AFTER_RATINGS = 10
 
 
+def _new_guests(seats):
+    new_guests = []
+    groups = guest_factory.get_names()
+    seats_per_group = round(seats/len(groups))
+    ratings = reviews.get_ratings()
+    for name in groups:
+        birthday = time.get_birthdays_for(name)
+        if not birthday:
+            rating = ratings.get(name)
+            if rating:
+                n_ratings = rating.count
+                group_seats = seats_per_group / FULL_AFTER_RATINGS * n_ratings
+            else:
+                group_seats = 1
+        else:
+            group_seats = seats_per_group
+        new_guests.extend(group_seats * [name])
+        seats -= group_seats
+    holidays = time.get_holidays_for(groups)
+    seats_per_holiday = round(seats / len(holidays)) if holidays else 0
+    for holiday in holidays:
+        holiday_groups = set(holiday.groups).intersection(groups)
+        group_seats = round(seats_per_holiday / len(holiday_groups))
+        for group in holiday_groups:
+            new_guests.extend(group_seats * [group])
+        seats -= group_seats
+    random.SystemRandom().shuffle(new_guests)
+    return new_guests
+
+
 def new_workday():
     global guests
     global regulars
@@ -339,22 +369,9 @@ def new_workday():
     guests = [regular for regular in regulars.values() if regular.available]
     for regular in guests:
         regular.reset()
-    new_guests = []
-    holidays = time.get_holidays()
     seats = diner.diner.seats - len(guests)
-    groups = guest_factory.get_names()
-    seats_per_group = round(seats/len(groups))
-    ratings = reviews.get_ratings()
-    for name in groups:
-        rating = ratings.get(name)
-        if rating:
-            n_ratings = rating.count
-            n_seats = seats_per_group / FULL_AFTER_RATINGS * n_ratings
-            new_guests.extend(n_seats * [name])
-        else:
-            new_guests.append(name)
+    new_guests = _new_guests(seats)
     reviews.add(set(new_guests))
-    random.SystemRandom().shuffle(new_guests)
     for name in new_guests:
         guest = guest_factory.create(name, existing=guests)
         guests.append(guest)

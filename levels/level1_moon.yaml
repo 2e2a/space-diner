@@ -11,8 +11,9 @@ diner:
 calendar:
   week: [Moonday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday]
   cycle: 365
-  holidays:
-  - holiday: Landing day
+  events:
+  - event: Landing day
+    type: holiday
     info: The colonists are celebrating the anniversary of the first person on the moon today!
     day: 10
     groups: [ Human colonist ]
