@@ -113,19 +113,22 @@ def get(name):
 
 def new_workday():
     global storages
-    ingredients_lost = time.get_ingredients_lost()
-    if ingredients_lost:
-        ingredient_list = ['{}x{}'.format(amount, ingredient) for ingredient, amount in ingredients_lost.items()]
-        cli.print_message('Ingredients lost: {}.'.format(', '.join(ingredient_list)))
-    for ingredient, amount in ingredients_lost.items():
+    ingredients_lost = {}
+    for ingredient, amount in time.get_ingredients_lost().items():
         for storage in storages.values():
             if storage.is_ingredient_available(ingredient):
+                lost_amount = min(storage.ingredient_amount_available(ingredient), amount)
+                ingredients_lost.update({ingredient: lost_amount})
                 storage.take_ingredient(ingredient, amount)
+    if ingredients_lost:
+        ingredient_list = ['{}x{}'.format(amount, ingredient) for ingredient, amount in ingredients_lost.items()]
+        cli.print_message('Ingredients lost: {}'.format(', '.join(ingredient_list)))
 
     ingredients_won = time.get_ingredients_won()
     if ingredients_won:
+        # TODO: Check if storage available
         ingredient_list = ['{}x{}'.format(amount, ingredient) for ingredient, amount in ingredients_won.items()]
-        cli.print_message('Ingredients won: {}.'.format(', '.join(ingredient_list)))
+        cli.print_message('Ingredients won: {}'.format(', '.join(ingredient_list)))
     for ingredient, amount in ingredients_won.items():
         store_ingredient(ingredient, amount)
 
