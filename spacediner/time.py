@@ -7,42 +7,36 @@ from . import cli
 class Event:
     TYPE_HOLIDAY = 'holiday'
     TYPE_BIRTHDAY = 'birthday'
-    TYPE_RATS = 'rats'
+    TYPE_INGREDIENTS_LOOSE = 'loose ingredients'
+    TYPE_INGREDIENTS_WIN = 'win ingredients'
 
     GROUP_EVENT_TYPES = [TYPE_HOLIDAY, TYPE_BIRTHDAY]
-    STORAGE_EVENT_TYPES = [TYPE_RATS]
+    STORAGE_EVENT_TYPES = [TYPE_INGREDIENTS_LOOSE, TYPE_INGREDIENTS_WIN]
 
     type = None
-    name = None
     day = 0
     info = None
 
+    def __init__(self, type=None):
+        self.type = type
+
     def init(self, data):
-        self.name = data.get('event')
-        self.type = data.get('type')
         self.info = data.get('info', None)
-        self.day = int(data.get('day'), None)
-        if not self.day:
+        if 'day' in data:
+            self.day = int(data.get('day'))
+        else:
             day_range = data.get('days').split('-')
-            self.day = random.SystemRandom().randint(day_range[0], day_range[1])
-
-
-    def print_message(self):
-        raise NotImplementedError
+            self.day = random.SystemRandom().randint(int(day_range[0]), int(day_range[1]))
 
 
 class GroupEvent(Event):
+    name = None
     groups = None
 
     def init(self, data):
         super().init(data)
+        self.name = data.get('name')
         self.groups = data.get('groups')
-
-    def print_message(self):
-        if self.type == self.TYPE_HOLIDAY:
-            cli.print_message('Today is a holiday for: {}.'.format(', '.join(self.groups)))
-        elif self.type == self.TYPE_BIRTHDAY:
-            cli.print_message('Today is a(n) {} has a birthday.'.format('and a(n) '.join(self.groups)))
 
 
 class StorageEvent(Event):
@@ -50,7 +44,9 @@ class StorageEvent(Event):
 
     def init(self, data):
         super().init(data)
-        self.ingredients = data.get('ingredients')
+        self.ingredients = {}
+        for ingredient_data in data.get('ingredients'):
+            self.ingredients.update({ingredient_data.get('name'): ingredient_data.get('amount')})
 
 
 class Calendar:
@@ -77,7 +73,6 @@ class Calendar:
             self.day += 1
             cli.print_message(self.morning_greeting)
         for event in self.events.get(self.day, []):
-            event.print_message()
             if event.info:
                 cli.print_text(event.info)
         for time, callback in self.callbacks:
@@ -101,11 +96,13 @@ class Calendar:
         self.morning_greeting = data.get('morning_greeting', 'A new morning...')
         self.evening_greeting = data.get('evening_greeting', 'The work\'s done...')
         for event_data in data.get('events', []):
-            event_type = event_data.get('type')
+            event_type = event_data.get('event')
             if event_type in Event.GROUP_EVENT_TYPES:
-                event = GroupEvent()
+                event = GroupEvent(event_type)
             elif event_type in Event.STORAGE_EVENT_TYPES:
-                event =  StorageEvent()
+                event = StorageEvent(event_type)
+            else:
+                raise AssertionError('Unknown event type: {}'.format(event_type))
             event.init(event_data)
             if event.day in self.events:
                 self.events.get(event.day).append(event)
@@ -164,11 +161,24 @@ def get_birthdays_for(names):
     return []
 
 
-def get_rat_days():  # TODO: fix me
+def get_ingredients_lost():
     global calendar
+    ingredients = {}
     if calendar.day in calendar.events:
-        return filter(lambda event: event.type == Event.TYPE_RATS, calendar.events.get(calendar.day))
-    return []
+        events = filter(lambda event: event.type == Event.TYPE_INGREDIENTS_LOOSE, calendar.events.get(calendar.day))
+        for event in events:
+            ingredients.update(event.ingredients)
+    return ingredients
+
+
+def get_ingredients_won():
+    global calendar
+    ingredients = {}
+    if calendar.day in calendar.events:
+        events = filter(lambda event: event.type == Event.TYPE_INGREDIENTS_WIN, calendar.events.get(calendar.day))
+        for event in events:
+            ingredients.update(event.ingredients)
+    return ingredients
 
 
 def register_callback(time, callback):

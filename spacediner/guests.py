@@ -347,6 +347,7 @@ def _new_guests(seats):
             else:
                 group_seats = 1
         else:
+            cli.print_message('It\'s somebody\'s birthday: {}'.format(name))
             group_seats = seats_per_group
         new_guests.extend(group_seats * [name])
         seats -= group_seats
@@ -354,6 +355,7 @@ def _new_guests(seats):
     seats_per_holiday = round(seats / len(holidays)) if holidays else 0
     for holiday in holidays:
         holiday_groups = set(holiday.groups).intersection(groups)
+        cli.print_message('Today is a holiday for: {}.'.format(', '.join(holiday_groups)))
         group_seats = round(seats_per_holiday / len(holiday_groups))
         for group in holiday_groups:
             new_guests.extend(group_seats * [group])

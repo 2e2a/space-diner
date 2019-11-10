@@ -2,8 +2,10 @@ import pickle
 
 from collections import OrderedDict
 
+from . import cli
 from . import generic
 from . import ingredients
+from . import time
 
 
 class Storage(generic.Thing):
@@ -17,12 +19,14 @@ class Storage(generic.Thing):
             return True
         return False
 
-    def take_ingredient(self, name):
+    def ingredient_amount_available(self, name):
+        return self.ingredients.get(name) if name in self.ingredients else 0
+
+    def take_ingredient(self, name, amount=1):
         if name in self.ingredients:
-            availability = self.ingredients.get(name)
-            if availability > 0:
-                self.ingredients.update({name: availability - 1})
-                return ingredients.get(name)
+            availability = max(0, self.ingredients.get(name) - amount)
+            self.ingredients.update({name: availability})
+            return ingredients.get(name)
         return None
 
     def store_ingredient(self, name, amount):
@@ -97,13 +101,33 @@ def buy(name):
 
 def store_ingredient(name, amount):
     ingredient = ingredients.get(name)
-    storage = storages.get(ingredient.storage)
-    storage.store_ingredient(name, amount)
+    storage = storages.get(ingredient.storage, None)
+    if storage:
+        storage.store_ingredient(name, amount)
 
 
 def get(name):
     global storages
     return storages.get(name)
+
+
+def new_workday():
+    global storages
+    ingredients_lost = time.get_ingredients_lost()
+    if ingredients_lost:
+        ingredient_list = ['{}x{}'.format(amount, ingredient) for ingredient, amount in ingredients_lost.items()]
+        cli.print_message('Ingredients lost: {}.'.format(', '.join(ingredient_list)))
+    for ingredient, amount in ingredients_lost.items():
+        for storage in storages.values():
+            if storage.is_ingredient_available(ingredient):
+                storage.take_ingredient(ingredient, amount)
+
+    ingredients_won = time.get_ingredients_won()
+    if ingredients_won:
+        ingredient_list = ['{}x{}'.format(amount, ingredient) for ingredient, amount in ingredients_won.items()]
+        cli.print_message('Ingredients won: {}.'.format(', '.join(ingredient_list)))
+    for ingredient, amount in ingredients_won.items():
+        store_ingredient(ingredient, amount)
 
 
 def init(data):
@@ -113,6 +137,7 @@ def init(data):
         storage = Storage()
         storage.init(storage_data)
         storages.update({storage.name: storage})
+    time.register_callback(time.Calendar.TIME_WORK, new_workday)
 
 
 def save(file):

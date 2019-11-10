@@ -12,13 +12,19 @@ calendar:
   week: [Moonday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday]
   cycle: 365
   events:
-  - event: Landing day
-    type: holiday
-    info: The colonists are celebrating the anniversary of the first person on the moon today!
-    day: 10
-    # days: 10-20
-    groups: [ Human colonist ]
-
+    - event: loose ingredients
+      days: 3-5
+      info: Space-Rats!!!! Whaaaahh!!!!
+      ingredients:
+        - name: bun
+          amount: 10
+        - name: potato
+          amount: 1
+    - event: holiday
+      name: Landing day
+      info: The colonists are celebrating the anniversary of the first person on the moon today!
+      day: 10
+      groups: [ Human colonist ]
 goals:
   - type: money
     amount: 1000
