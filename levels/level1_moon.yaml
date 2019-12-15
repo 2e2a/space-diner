@@ -13,13 +13,13 @@ calendar:
   cycle: 365
   events:
     - event: lose ingredients
-      days: 3-5
-      info: Space-Rats!!!! Whaaaahh!!!!
+      days: 12-15
+      info: Rats ate some of the ingredients in your pantry! Who knew there were rats on the moon?
       ingredients:
         - name: bun
-          amount: 10
+          amount: 5
         - name: potato
-          amount: 1
+          amount: 5
     - event: holiday
       name: Landing day
       info: The colonists are celebrating the anniversary of the first person on the moon today!
