@@ -287,7 +287,7 @@ guests:
     - name: Dr. Ozabela Ruizy
       available: True
       budget: 10
-      days: ['Moonday', 'Thurday', 'Saturday']
+      days: ['Moonday', 'Thursday', 'Saturday']
       reactions:
         - properties: [ pickles ]
           taste: +2
@@ -316,8 +316,9 @@ social:
             Ozabela invites you to the research facility where she works. Access to the area is restricted, but when
             the security guards see Ozabela, they let you enter. Ozabela shows you what she is currently working on
             in her lab: silkworms. A couple of them were brought to the Dark Side of the moon a long time ago in a
-            box as part of a research project. Some of them managed to survive outside somehow, but they are very rare.
-            Ozabela's team collects them and studies how they have adapted to life on the moon surface. As you look
+            box as part of a research project. The project was abandoned, but the silkworms infested some of the
+            research facilities and somehow managed to survive there until today.
+            Ozabela's team collects them and studies how they have adapted to life on the moon. As you look
             at them through the terrarium glass, you remember another time when you encountered this species: as an
             appetizer in an expensive restaurant on the Dark Side.
           question: Just look at them... how they wriggle...
@@ -362,7 +363,7 @@ social:
             - reply: I'm not sure.
               reaction: Me neither. It is a hard decision... I wish I was more decisive.
         - meeting: >
-            Ozabela wants to see a movie. There is a brandnew cinema in the amusement park that they finished building
+            Ozabela wants to see a movie. There is a brand-new cinema in the amusement park that they finished building
             this year. However, you decide to go to the one in the mall. There are only 12 seats there. Most of them
             are already taken when you enter, and you have to sit in the first row right in front of the screen. You 
             watch a documentary about creatures living in the ocean on Earth. After the movie, Ozabela looks depressed.
@@ -375,17 +376,16 @@ social:
             - reply: Cheer up. Less species means less work for you biologists.
             - reaction: Not really. The work is just more repetitive.
         - meeting: >
-            A nest of silkworms has been spotted in the vicinity of the colony. Ozabela invites you to join her in counting,
-            examining, and documenting them. It is so close that you don't have to take one of the rovers - you can walk.
-            You are not used to wearing a spacesuit and you stumble along slowly and clumsily. Ozabela does not seem to mind.
-            You finally arrive at the spot, where you find a cluster of cocoons. While she scans them, Ozabela tells you something
-            about the mutation that lets them survive without oxygen and in extreme temperatures. What is still entirely unclear
-            to the researchers is what they feed on.
-            "Only a few of them will make it out of the cocoons", you hear Ozabela say through the audio system integrated in
-            your helmet. Her voice sounds metallic. "They become silkmoths, but flying is impossible here. Instead, they use
-            strange low-gravity twitches to move."
-            When you are done with the scanning and counting, Ozabela puts two of the 24 cocoons in a small cylinder. Then, she
-            looks up to Earth, hanging in the sky above you.
+            Silkworms have been spotted in an abandoned lab in the vicinity of the colony by a tourist guide.
+            Ozabela invites you to join her in counting, examining, and documenting them. It is so close that you don't
+            have to take one of the rovers - you can walk. You are not used to wearing a spacesuit and you stumble along
+            slowly and clumsily. Ozabela does not seem to mind. You finally arrive at the lab, where you find a cluster
+            of cocoons. While she scans them, Ozabela tells you something about the mutations that they have undergone.
+            "Only a few of them will make it out of the cocoons", you hear Ozabela say through the audio system
+            integrated in your helmet. Her voice sounds metallic. "They become silkmoths, but they do not fly here.
+            Instead, they use strange low-gravity twitches to move."
+            When you are done with the scanning and counting, Ozabela puts two of the 24 cocoons in a small cylinder.
+            Outside, she looks up to Earth, hanging in the sky above you.
           question: Do you miss it? The Earth? Its gravity? Its people?
           good replies:
             - reply: I think about it all the time.
@@ -402,7 +402,8 @@ social:
           good replies:
             - reply: Congratulations. Sounds like a great opportunity.
               reaction: >
-                Thank you. I will accept it. I am going to miss your food and your company... Please stay in touch with me, will you?
+                Thank you. I will accept it. I am going to miss your food and your company... Please stay in touch with
+                me, will you?
             - reply: I think you should stay here. You are so enthusiastic about your research on the moon.
               reaction: >
                 I am, but I think it's time for me to move on. I am going to miss your food and your company...
@@ -413,8 +414,9 @@ social:
           merchant: Oddie's Laboratory Waste
           text: >
             There's someone I would like to introduce you to. I saw how you looked at the silkworms in my lab... I know
-            what they are worth in the culinary world. My colleague Oddie has a secret business - he sells the dead worms
-            that we are supposed to dispose of after our experiments. Here's his address. I trust you to keep it confidential.
+            what they are worth in the culinary world. My colleague Oddie has a secret business - he sells the dead
+            worms that we are supposed to dispose of after our experiments. Here's his address. I trust you to keep it
+            confidential.
           
 
   - name: Human colonist
