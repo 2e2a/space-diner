@@ -7,11 +7,11 @@ from . import cli
 class Event:
     TYPE_HOLIDAY = 'holiday'
     TYPE_BIRTHDAY = 'birthday'
-    TYPE_INGREDIENTS_LOOSE = 'loose ingredients'
+    TYPE_INGREDIENTS_LOSE = 'lose ingredients'
     TYPE_INGREDIENTS_WIN = 'win ingredients'
 
     GROUP_EVENT_TYPES = [TYPE_HOLIDAY, TYPE_BIRTHDAY]
-    STORAGE_EVENT_TYPES = [TYPE_INGREDIENTS_LOOSE, TYPE_INGREDIENTS_WIN]
+    STORAGE_EVENT_TYPES = [TYPE_INGREDIENTS_LOSE, TYPE_INGREDIENTS_WIN]
 
     type = None
     day = 0
@@ -165,7 +165,7 @@ def get_ingredients_lost():
     global calendar
     ingredients = {}
     if calendar.day in calendar.events:
-        events = filter(lambda event: event.type == Event.TYPE_INGREDIENTS_LOOSE, calendar.events.get(calendar.day))
+        events = filter(lambda event: event.type == Event.TYPE_INGREDIENTS_LOSE, calendar.events.get(calendar.day))
         for event in events:
             ingredients.update(event.ingredients)
     return ingredients

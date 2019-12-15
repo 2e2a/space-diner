@@ -12,7 +12,7 @@ calendar:
   week: [Moonday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday]
   cycle: 365
   events:
-    - event: loose ingredients
+    - event: lose ingredients
       days: 3-5
       info: Space-Rats!!!! Whaaaahh!!!!
       ingredients:
