@@ -343,7 +343,7 @@ def _new_guests(seats):
             rating = ratings.get(name)
             if rating:
                 n_ratings = rating.count
-                group_seats = seats_per_group / FULL_AFTER_RATINGS * n_ratings
+                group_seats = max(1, round(seats_per_group / FULL_AFTER_RATINGS * n_ratings))
             else:
                 group_seats = 1
         else:
