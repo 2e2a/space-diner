@@ -377,7 +377,7 @@ def new_workday():
     for name in new_guests:
         guest = guest_factory.create(name, existing=guests)
         guests.append(guest)
-    # TODO: print x/y seats taken
+    cli.print_message('{}/{} seats taken.'.format(len(guests), seats))
 
 
 def init(data):
