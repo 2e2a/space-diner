@@ -25,7 +25,7 @@ def print_text(str):
 
 def print_title(str):
     print(str)
-    print('-'*(len(str)))
+    print('-' * (len(str)))
 
 
 def print_list(list):
@@ -121,7 +121,7 @@ class CommandCompleter:
             if text:
                 self.matches = [cmd for cmd in suggestions if cmd.startswith(text)]
             else:
-                self.matches =  suggestions
+                self.matches = suggestions
         try:
             return self.matches[state] + ' '
         except IndexError:
@@ -149,8 +149,26 @@ class Mode:
         print('')
 
     def print_help(self):
-        # TODO: add simple help
-        raise NotImplemented()
+        if self.commands:
+            print_text('')
+            print_title('Available commands')
+            command_list = []
+            for command in self.commands:
+                text = ''
+                is_available = True
+                for words in command:
+                    if isinstance(words, list):
+                        if len(words) == 1:
+                            text += '{} '.format(words[0])
+                        elif len(words) > 1:
+                            text += '{}/{}/etc. '.format(words[0], words[1])
+                        else:
+                            is_available = False
+                    elif words == int:
+                        text += 'NUMBER '
+                if is_available:
+                    command_list.append(text)
+            print_list(command_list)
 
     def exec(self, cmd, cmd_input):
         raise NotImplemented()
@@ -165,14 +183,14 @@ class Mode:
             cmd_input_list = cmd_input.split()
             matching_command = self.completer.match_command(cmd_input_list)
             if matching_command:
-               return self.exec(matching_command, cmd_input_list)
+                return self.exec(matching_command, cmd_input_list)
         elif self.empty_input:
             return self.exec(None, None)
         self.print_help()
         return None
 
     def name_for_command(self, name):
-        cmd_name = re.sub(r'[^a-zA-Z0-9]+','_',name.lower(), count=16)
+        cmd_name = re.sub(r'[^a-zA-Z0-9]+', '_', name.lower(), count=16)
         cmd_name = cmd_name.strip('_')
         self.names.update({cmd_name: name})
         return cmd_name
@@ -192,7 +210,7 @@ class ChoiceMode(Mode):
     title = None
 
     def exec_choice(self, choice):
-        raise  NotImplemented
+        raise NotImplemented
 
     def print_info(self):
         super().print_info()
@@ -204,8 +222,7 @@ class ChoiceMode(Mode):
         print_list(choice_info)
 
     def print_help(self):
-        print('Help:')
-        print(self.commands)
+        print_text('Select a number.')
 
     def exec(self, cmd, cmd_input):
         if cmd == self.CMD_CHOICE:
@@ -219,12 +236,9 @@ class ChoiceMode(Mode):
 
 
 class InfoMode(Mode):
+    # TODO: crashes when something else is entered
     prompt = '<press ENTER to continue>'
     empty_input = True
-
-    def print_help(self):
-        print('Help:')
-        print(self.commands)
 
     def exec(self, cmd, cmd_input):
         return self.back()
@@ -267,7 +281,6 @@ class NewGameMode(ChoiceMode):
         if diner_name:
             diner.diner.name = diner_name
         return FirstHelpMode()
-
 
     def back(self):
         return MenuMode()
@@ -317,10 +330,11 @@ class FirstHelpMode(InfoMode):
         print_text('')
         print_title('Welcome to your new diner!')
         print_text(
-            'How to play? Use auto-complete: type the first letters of a command and press TAB.\n'
+            'How to play? Use auto-complete: type the first letters of a command and press TAB. Type \'help\' to '
+            'display a list of available commands.\n'
             'What to do first? Take your guests\' orders in the diner, prepare food in the kitchen, and serve it.\n'
-            'Heads up: your guests have specific dietary restrictions and preferences -\n'
-            'make them happy, and they will repay you in space dollars and positive reviews!\n'
+            'Heads up: your guests have specific dietary restrictions and preferences. '
+            'Make them happy, and they will repay you in space dollars and positive reviews!\n'
         )
 
     def back(self):
@@ -386,12 +400,7 @@ class DinerMode(Mode):
                 names_with_groups.append(guest.name)
         print_list(names_with_groups)
 
-    def print_help(self):
-        print('Help:')
-        print(self.commands)
-
     def exec(self, cmd, cmd_input):
-        print(cmd)
         if cmd == self.CMD_KITCHEN:
             return KitchenMode()
         if cmd == self.CMD_TAKE_ORDER:
@@ -438,7 +447,7 @@ class DinerMode(Mode):
 class SkillInfoMode(InfoMode):
 
     def print_skill(self, skill, value):
-        progress = '#'*int(value) + '-'*(10 - int(value))
+        progress = '#' * int(value) + '-' * (10 - int(value))
         line = '[{}] {}/10 - {}'.format(progress, value, skill)
         return line
 
@@ -459,14 +468,14 @@ class KitchenMode(Mode):
     CMD_DINER = 6
     CMD_DONE = 7
     commands = [
-        (['cook'], [], ),
-        (['trash'], ),
-        (['recipes'], ),
+        (['cook'], [],),
+        (['trash'],),
+        (['recipes'],),
         (['skills'],),
         (['compendium'],),
         # (['bot'], ),
-        (['diner'], ),
-        (['done'], ),
+        (['diner'],),
+        (['done'],),
     ]
     prompt = 'kitchen >>'
     action = None
@@ -510,10 +519,6 @@ class KitchenMode(Mode):
         print_list(self.prepared_components)
         print_title('Plated:')
         print_list(list(food.plated()))
-
-    def print_help(self):
-        print('Help:')
-        print(self.commands)
 
     def _get_device(self, preparation_command):
         for device in self.available_devices.values():
@@ -651,7 +656,6 @@ class CookingBotListMode(RecipeMode):
     prompt = 'cooking bot #'
     title = 'Dish'
 
-
     def __init__(self):
         self.recipes = food.get_dishes()
         self.choices = self.recipes
@@ -753,38 +757,34 @@ class AfterWorkMode(Mode):
     CMD_MEET = 4
     CMD_SLEEP = 5
     commands = [
-        ([], ),
+        ([],),
         (['shopping'],),
         (['reviews'],),
-        (['meet'],  []),
+        (['meet'], []),
         (['sleep'],),
     ]
     prompt = 'after work >>'
-    activities =  None
+    activities = None
     activities_done = 0
     meetings = None
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         self.activities_done = 0
         self.activities = activities.available_activities()
         self.meetings = social.available_meetings()
-        super().__init__()
+        super().__init__(**kwargs)
 
     def update_commands(self):
         activities = [self.name_for_command(activity) for activity in self.activities]
         meetings = [self.name_for_command(meeting) for meeting in self.meetings]
         self.commands[self.CMD_ACTIVITY - 1] = (activities,)
-        self.commands[self.CMD_MEET - 1] = (['meet'],  meetings)
+        self.commands[self.CMD_MEET - 1] = (['meet'], meetings)
         super().update_commands()
 
     def print_info(self):
         super().print_info()
         print_title('Available activities')
         print_list(self.activities)
-
-    def print_help(self):
-        print('Help:')
-        print(self.commands)
 
     def exec(self, cmd, cmd_input):
         if cmd == self.CMD_SHOPPING:
@@ -813,18 +813,18 @@ class ShoppingMode(Mode):
     commands = [
         (['buy'], []),
         (['buy'], int, [], ['from'], []),
-        (['done'], ),
+        (['done'],),
     ]
     prompt = 'shopping >>'
     storages_for_sale = None
     available_ingredients = None
     ingredients_for_sale = None
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         self.storages_for_sale = storage.for_sale()
         self.available_ingredients = storage.available_ingredients()
         self.ingredients_for_sale = merchants.ingredients_for_sale()
-        super().__init__()
+        super().__init__(**kwargs)
 
     def update_commands(self):
         available_storages = []
@@ -847,16 +847,12 @@ class ShoppingMode(Mode):
         print_title('Available Ingredients:')
         print_list(['{} {}s'.format(a, i) for i, a in self.available_ingredients.items()])
         print_title('Ingredients for sale:')
-        for merchant, ingredients in  self.ingredients_for_sale.items():
+        for merchant, ingredients in self.ingredients_for_sale.items():
             print('Merchant: {}'.format(merchant))
             print_list(['{}: {} space dollars, {} in stock, {} required'.format(i, c, a, s)
                         for i, (a, c, s) in ingredients.items()])
         print_title('Storages for sale:')
         print_list(['{}: {} space dollars'.format(s.name, s.cost) for s in self.storages_for_sale.values()])
-
-    def print_help(self):
-        print('Help:')
-        print(self.commands)
 
     def exec(self, cmd, cmd_input):
         if cmd == self.CMD_BUY_STORAGE:
@@ -876,7 +872,8 @@ class ShoppingMode(Mode):
                 self.update_commands()
                 merchant_ingredients = self.ingredients_for_sale.get(merchant)
                 ingredient_amount, ingredient_cost, ingredient_storage = merchant_ingredients.get(ingredient)
-                merchant_ingredients.update({ingredient: (ingredient_amount - amount, ingredient_cost, ingredient_storage)})
+                merchant_ingredients.update(
+                    {ingredient: (ingredient_amount - amount, ingredient_cost, ingredient_storage)})
                 self.available_ingredients.update({ingredient: self.available_ingredients.get(ingredient, 0) + amount})
             except RuntimeError as e:
                 print(e)
@@ -897,7 +894,7 @@ class ReviewsInfoMode(InfoMode):
             '-' * (5 - n_stars),
             float(rating),
             count,
-            )
+        )
 
     def print_info(self):
         super().print_info()
