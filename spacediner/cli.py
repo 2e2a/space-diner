@@ -266,8 +266,11 @@ class NewGameMode(ChoiceMode):
         diner_name = input('Diner name (default: {}): '.format(diner.diner.name))
         if diner_name:
             diner.diner.name = diner_name
-        time.tick()
-        return DinerMode()
+        return FirstHelpMode()
+
+
+    def back(self):
+        return MenuMode()
 
 
 class SaveGameMode(ChoiceMode):
@@ -305,6 +308,23 @@ class LoadGameMode(ChoiceMode):
     def exec_choice(self, choice):
         levels.load_game(choice)
         print_value('Level', levels.level.name)
+        return FirstHelpMode()
+
+
+class FirstHelpMode(InfoMode):
+
+    def print_info(self):
+        print_text('')
+        print_title('Welcome to your new diner!')
+        print_text(
+            'How to play? Use auto-complete: type the first letters of a command and press TAB.\n'
+            'What to do first? Take your guests\' orders in the diner, prepare food in the kitchen, and serve it.\n'
+            'Heads up: your guests have specific dietary restrictions and preferences -\n'
+            'make them happy, and they will repay you in space dollars and positive reviews!\n'
+        )
+
+    def back(self):
+        time.tick()
         return DinerMode()
 
 

@@ -93,6 +93,7 @@ def init(name):
     level = Level()
     file_name = 'levels/{}'.format(name)
     level.init(file_name)
+    cli.print_text('')
     cli.print_title(level.name)
     cli.print_text(level.intro)
     time.register_callback(time.Calendar.TIME_WORK, autosave_save)
