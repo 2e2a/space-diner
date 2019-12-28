@@ -135,8 +135,10 @@ class Mode:
     completer = None
     empty_input = False
     no_input = False
+    back_mode = None
 
-    def __init__(self):
+    def __init__(self, back=None):
+        self.back_mode = back
         self.update_commands()
 
     def update_commands(self):
@@ -152,6 +154,11 @@ class Mode:
 
     def exec(self, cmd, cmd_input):
         raise NotImplemented()
+
+    def back(self):
+        if self.back_mode:
+            self.back_mode.update_commands()
+            return self.back_mode
 
     def parse(self, cmd_input):
         if cmd_input:
@@ -187,9 +194,6 @@ class ChoiceMode(Mode):
     def exec_choice(self, choice):
         raise  NotImplemented
 
-    def back(self):
-        raise NotImplemented
-
     def print_info(self):
         super().print_info()
         if self.title:
@@ -222,9 +226,6 @@ class InfoMode(Mode):
         print('Help:')
         print(self.commands)
 
-    def back(self):
-        raise NotImplemented
-
     def exec(self, cmd, cmd_input):
         return self.back()
 
@@ -241,9 +242,9 @@ class MenuMode(ChoiceMode):
             print_value('Level', levels.level.name)
             return DinerMode()
         elif choice == 2:
-            return NewGameMode()
+            return NewGameMode(back=self)
         elif choice == 3:
-            return LoadGameMode()
+            return LoadGameMode(back=self)
 
     def back(self):
         exit()
@@ -255,8 +256,8 @@ class NewGameMode(ChoiceMode):
     choices = None
     title = 'Select level'
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         self.levels = levels.list()
         self.choices = self.levels
 
@@ -268,9 +269,6 @@ class NewGameMode(ChoiceMode):
         time.tick()
         return DinerMode()
 
-    def back(self):
-        return MenuMode()
-
 
 class SaveGameMode(ChoiceMode):
     prompt = 'save #'
@@ -278,8 +276,8 @@ class SaveGameMode(ChoiceMode):
     choices = None
     title = 'Select slot'
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         self.saved_games = levels.saved_games()
         self.choices = []
         for slot in range(1, 9):
@@ -293,17 +291,14 @@ class SaveGameMode(ChoiceMode):
         levels.save_game(choice)
         return DinerMode()
 
-    def back(self):
-        return DinerMode()
-
 
 class LoadGameMode(ChoiceMode):
     prompt = 'load #'
     choices = None
     title = 'Select saved game'
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         self.saved_games = levels.saved_games()
         self.choices = self.saved_games.items()
 
@@ -312,21 +307,24 @@ class LoadGameMode(ChoiceMode):
         print_value('Level', levels.level.name)
         return DinerMode()
 
-    def back(self):
-        return MenuMode()
-
 
 class DinerMode(Mode):
-    CMD_COOKING = 1
-    CMD_SERVICE = 2
-    CMD_SKILLS = 3
-    CMD_COMPENDIUM = 4
-    CMD_CLOSE_UP = 5
-    CMD_SAVE = 6
-    CMD_EXIT = 7
+    CMD_KITCHEN = 1
+    CMD_TAKE_ORDER = 2
+    CMD_CHAT = 3
+    CMD_SERVE = 4
+    CMD_SEND_HOME = 5
+    CMD_SKILLS = 6
+    CMD_COMPENDIUM = 7
+    CMD_CLOSE_UP = 8
+    CMD_SAVE = 9
+    CMD_EXIT = 10
     commands = [
-        (['cooking'],),
-        (['service'],),
+        (['kitchen'],),
+        (['take_order_from'], []),
+        (['chat_with'], []),
+        (['serve'], [], ['to'], []),
+        (['send_home'], []),
         (['skills'],),
         (['compendium'],),
         (['close_up'],),
@@ -334,76 +332,6 @@ class DinerMode(Mode):
         (['exit'],),
     ]
     prompt = 'diner >>'
-
-    def print_info(self):
-        super().print_info()
-        print_text('--------------------------------')
-        print_value('Diner', diner.diner.name)
-        print_value('Day', time.now())
-        print_value('Money', levels.level.money, 'space dollars')
-        print_text('--------------------------------')
-
-    def print_help(self):
-        print('Help:')
-        print(self.commands)
-
-    def exec(self, cmd, cmd_input):
-        if cmd == self.CMD_COOKING:
-            return CookingMode()
-        if cmd == self.CMD_SERVICE:
-            return ServiceMode()
-        if cmd == self.CMD_SKILLS:
-            return SkillInfoMode()
-        if cmd == self.CMD_COMPENDIUM:
-            return CompendiumMode()
-        if cmd == self.CMD_CLOSE_UP:
-            global actions_saved
-            for action in actions_saved:
-                action.abort()
-            actions_saved.clear()
-            actions.CloseUp().perform()
-            time.tick()
-            return AfterWorkMode()
-        if cmd == self.CMD_SAVE:
-            return SaveGameMode()
-        if cmd == self.CMD_EXIT:
-            levels.autosave_save()
-            return MenuMode()
-
-
-class SkillInfoMode(InfoMode):
-
-    def back(self):
-        return DinerMode()
-
-    def print_skill(self, skill, value):
-        progress = '#'*int(value) + '-'*(10 - int(value))
-        line = '[{}] {}/10 - {}'.format(progress, value, skill)
-        return line
-
-    def print_info(self):
-        super().print_info()
-        print_title('Skills')
-        skill_values = [self.print_skill(skill, value) for skill, value in skills.get().items()]
-        print_list(skill_values)
-
-
-class ServiceMode(Mode):
-    CMD_TAKE_ORDER = 1
-    CMD_CHAT = 2
-    CMD_SERVE = 3
-    CMD_SEND_HOME = 4
-    CMD_COOKING = 5
-    CMD_DONE = 6
-    commands = [
-        (['chat_with'], []),
-        (['take_order_from'], []),
-        (['serve'], [], ['to'], []),
-        (['send_home'], []),
-        (['cooking'], ),
-        (['done'], ),
-    ]
-    prompt = 'service >>'
 
     def update_commands(self):
         cooked_food = [self.name_for_command(f) for f in food.plated()]
@@ -419,6 +347,11 @@ class ServiceMode(Mode):
 
     def print_info(self):
         super().print_info()
+        print_text('--------------------------------')
+        print_value('Diner', diner.diner.name)
+        print_value('Day', time.now())
+        print_value('Money', levels.level.money, 'space dollars')
+        print_text('--------------------------------')
         print_title('Food:')
         print_list(food.plated())
         print_title('Guests:')
@@ -438,15 +371,18 @@ class ServiceMode(Mode):
         print(self.commands)
 
     def exec(self, cmd, cmd_input):
+        print(cmd)
+        if cmd == self.CMD_KITCHEN:
+            return KitchenMode()
         if cmd == self.CMD_TAKE_ORDER:
             guest = self.original_name(cmd_input[1])
-            return TakeOrderMode(guest)
+            return TakeOrderMode(guest, back=self)
         if cmd == self.CMD_CHAT:
             guest = self.original_name(cmd_input[1])
             group = guests.get_group_name(guest)
             chat = social.next_chat(group)
             if chat:
-                return ChatMode(guest, chat)
+                return ChatMode(guest, chat, back=self)
         if cmd == self.CMD_SERVE:
             food = self.original_name(cmd_input[1])
             guest = self.original_name(cmd_input[3])
@@ -460,30 +396,59 @@ class ServiceMode(Mode):
             action.perform()
             self.update_commands()
             return self
-        if cmd == self.CMD_COOKING:
-            return CookingMode()
-        if cmd == self.CMD_DONE:
-            return DinerMode()
+        if cmd == self.CMD_SKILLS:
+            return SkillInfoMode(back=self)
+        if cmd == self.CMD_COMPENDIUM:
+            return CompendiumMode(back=self)
+        if cmd == self.CMD_CLOSE_UP:
+            global actions_saved
+            for action in actions_saved:
+                action.abort()
+            actions_saved.clear()
+            actions.CloseUp().perform()
+            time.tick()
+            return AfterWorkMode()
+        if cmd == self.CMD_SAVE:
+            return SaveGameMode(back=self)
+        if cmd == self.CMD_EXIT:
+            levels.autosave_save()
+            return MenuMode()
 
 
-class CookingMode(Mode):
+class SkillInfoMode(InfoMode):
+
+    def print_skill(self, skill, value):
+        progress = '#'*int(value) + '-'*(10 - int(value))
+        line = '[{}] {}/10 - {}'.format(progress, value, skill)
+        return line
+
+    def print_info(self):
+        super().print_info()
+        print_title('Skills')
+        skill_values = [self.print_skill(skill, value) for skill, value in skills.get().items()]
+        print_list(skill_values)
+
+
+class KitchenMode(Mode):
     CMD_COOK = 1
     CMD_TRASH = 2
     CMD_RECIPES = 3
-    CMD_COOKING_BOT = 4
-    CMD_ABORT = 5
-    CMD_SERVICE = 6
+    # CMD_COOKING_BOT = 4
+    CMD_SKILLS = 4
+    CMD_COMPENDIUM = 5
+    CMD_DINER = 6
     CMD_DONE = 7
     commands = [
         (['cook'], [], ),
         (['trash'], ),
         (['recipes'], ),
-        (['bot'], ),
-        (['abort'], ),
-        (['service'], ),
+        (['skills'],),
+        (['compendium'],),
+        # (['bot'], ),
+        (['diner'], ),
         (['done'], ),
     ]
-    prompt = 'cooking >>'
+    prompt = 'kitchen >>'
     action = None
     orders = None
     available_ingredients = None
@@ -556,19 +521,19 @@ class CookingMode(Mode):
             self.action.abort()
             self.prepared_components = []
             return self
-        if cmd == self.CMD_COOKING_BOT:
-            actions_saved.append(self.action)
-            return CookingBotMenuMode()
+        # if cmd == self.CMD_COOKING_BOT:
+        #     actions_saved.append(self.action)
+        #     return CookingBotMenuMode()
         if cmd == self.CMD_RECIPES:
             actions_saved.append(self.action)
-            return RecipeMode()
-        if cmd == self.CMD_ABORT:
-            self.action = actions.Cook()
-            self.prepared_components = []
-            return self
-        if cmd == self.CMD_SERVICE:
+            return RecipeMode(back=self)
+        if cmd == self.CMD_SKILLS:
+            return SkillInfoMode(back=self)
+        if cmd == self.CMD_COMPENDIUM:
+            return CompendiumMode(back=self)
+        if cmd == self.CMD_DINER:
             actions_saved.append(self.action)
-            return ServiceMode()
+            return DinerMode()
         if cmd == self.CMD_DONE:
             actions_saved.append(self.action)
             return DinerMode()
@@ -579,8 +544,8 @@ class RecipeMode(ChoiceMode):
     choices = None
     title = 'Recipes'
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         self.choices = food.get_recipes()
 
     def _print_recipe(self, recipe):
@@ -592,9 +557,6 @@ class RecipeMode(ChoiceMode):
         recipe = food.get_recipe(self.choices[choice - 1])
         self._print_recipe(recipe)
         return self
-
-    def back(self):
-        return CookingMode()
 
 
 class CookingBotMenuMode(ChoiceMode):
@@ -614,9 +576,6 @@ class CookingBotMenuMode(ChoiceMode):
         elif choice == 3:
             return CookingBotListMode()
         return self
-
-    def back(self):
-        return CookingMode()
 
 
 class CookingBotCookMode(ChoiceMode):
@@ -690,36 +649,30 @@ class CookingBotListMode(RecipeMode):
 class TakeOrderMode(InfoMode):
     guest = None
 
-    def __init__(self, guest):
+    def __init__(self, guest, **kwargs):
         self.guest = guest
-        super().__init__()
+        super().__init__(**kwargs)
 
     def print_info(self):
         super().print_info()
         action = actions.TakeOrder(self.guest)
         action.perform()
 
-    def back(self):
-        return ServiceMode()
-
 
 class ChatMode(InfoMode):
     guest = None
     chat = None
 
-    def __init__(self, guest, chat):
+    def __init__(self, guest, chat, **kwargs):
         self.guest = guest
         self.chat = chat
-        super().__init__()
+        super().__init__(**kwargs)
 
     def print_info(self):
         super().print_info()
         action = actions.Chat(self.guest)
         action.perform()
         print_dialog(self.guest, self.chat)
-
-    def back(self):
-        return ServiceMode()
 
 
 class CompendiumMode(ChoiceMode):
@@ -729,13 +682,10 @@ class CompendiumMode(ChoiceMode):
 
     def exec_choice(self, choice):
         if choice == 1:
-            return GuestCompendiumMode()
+            return GuestCompendiumMode(back=self)
         if choice == 2:
-            return IngredientCompendiumMode()
+            return IngredientCompendiumMode(back=self)
         return self
-
-    def back(self):
-        return DinerMode()
 
 
 class GuestCompendiumMode(ChoiceMode):
@@ -743,9 +693,9 @@ class GuestCompendiumMode(ChoiceMode):
     choices = None
     title = 'Guest compendium'
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         self.choices = sorted(guests.get_available_groups())
-        super().__init__()
+        super().__init__(**kwargs)
 
     def exec_choice(self, choice):
         group = guests.get_group(self.choices[choice - 1])
@@ -755,20 +705,17 @@ class GuestCompendiumMode(ChoiceMode):
             print_text('Unknown.')
         return self
 
-    def back(self):
-        return CompendiumMode()
-
 
 class IngredientCompendiumMode(ChoiceMode):
     prompt = 'ingredient #'
     choices = None
     title = 'Ingredient compendium'
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         ingredients = set(storage.available_ingredients().keys())
         ingredients.update(merchants.available_ingredients())
         self.choices = sorted(ingredients)
-        super().__init__()
+        super().__init__(**kwargs)
 
     def exec_choice(self, choice):
         ingredient = ingredients.get(self.choices[choice - 1])
@@ -777,9 +724,6 @@ class IngredientCompendiumMode(ChoiceMode):
         else:
             print_text('Unknown.')
         return self
-
-    def back(self):
-        return CompendiumMode()
 
 
 class AfterWorkMode(Mode):
@@ -824,9 +768,9 @@ class AfterWorkMode(Mode):
 
     def exec(self, cmd, cmd_input):
         if cmd == self.CMD_SHOPPING:
-            return ShoppingMode()
+            return ShoppingMode(back=self)
         if cmd == self.CMD_RATINGS:
-            return ReviewsInfoMode()
+            return ReviewsInfoMode(back=self)
         if cmd == self.CMD_MEET:
             guest = self.original_name(cmd_input[1])
             return MeetingMode(guest)
@@ -918,13 +862,10 @@ class ShoppingMode(Mode):
                 print(e)
             return self
         if cmd == self.CMD_DONE:
-            return AfterWorkMode()
+            return self.back_mode
 
 
 class ReviewsInfoMode(InfoMode):
-
-    def back(self):
-        return AfterWorkMode()
 
     def _rating_info(self, name, count, rating):
         if count == 0:
