@@ -57,6 +57,7 @@ class Guest(generic.Thing):
     groups = None
     budget = 0
     available = False
+    days = None
     reactions = None
     orders = None
     output = None
@@ -160,6 +161,7 @@ class Guest(generic.Thing):
         self.description = data.get('description')
         self.budget = data.get('budget')
         self.available = data.get('available')
+        self.days = data.get('days', None)
         self.reactions = []
         for reaction_data in data.get('reactions', []):
             reaction = Reaction()
@@ -368,9 +370,12 @@ def new_workday():
     global guests
     global regulars
     global guest_factory
-    guests = [regular for regular in regulars.values() if regular.available]
-    for regular in guests:
-        regular.reset()
+    guests = []
+    regulars_today = filter(
+        lambda regular: regular.available and not regular.days or time.weekday() in regular.days,
+        regulars.values()
+    )
+    guests.extend(regulars_today)
     seats = diner.diner.seats - len(guests)
     new_guests = _new_guests(seats)
     reviews.add(set(new_guests))
@@ -378,6 +383,8 @@ def new_workday():
         guest = guest_factory.create(name, existing=guests)
         guests.append(guest)
     cli.print_message('{}/{} seats taken.'.format(len(guests), seats))
+    for regular in regulars_today:
+        regular.reset()
 
 
 def init(data):

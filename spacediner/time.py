@@ -123,6 +123,11 @@ def now():
     return calendar.now
 
 
+def weekday():
+    global calendar
+    return calendar.weekday
+
+
 def get_holidays():
     global calendar
     if calendar.day in calendar.events:
