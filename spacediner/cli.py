@@ -405,7 +405,9 @@ class DinerMode(Mode):
             return KitchenMode()
         if cmd == self.CMD_TAKE_ORDER:
             guest = self.original_name(cmd_input[1])
-            return TakeOrderMode(guest, back=self)
+            action = actions.TakeOrder(guest)
+            action.perform()
+            return InfoMode(back=self)
         if cmd == self.CMD_CHAT:
             guest = self.original_name(cmd_input[1])
             group = guests.get_group_name(guest)
@@ -418,7 +420,7 @@ class DinerMode(Mode):
             action = actions.Serve(food, guest)
             action.perform()
             self.update_commands()
-            return self
+            return InfoMode(back=self)
         if cmd == self.CMD_SEND_HOME:
             guest = self.original_name(cmd_input[1])
             action = actions.SendHome(guest)
@@ -668,19 +670,6 @@ class CookingBotListMode(RecipeMode):
 
     def back(self):
         return CookingBotMenuMode()
-
-
-class TakeOrderMode(InfoMode):
-    guest = None
-
-    def __init__(self, guest, **kwargs):
-        self.guest = guest
-        super().__init__(**kwargs)
-
-    def print_info(self):
-        super().print_info()
-        action = actions.TakeOrder(self.guest)
-        action.perform()
 
 
 class ChatMode(InfoMode):
@@ -947,13 +936,7 @@ class MeetingMode(ChoiceMode):
         reply = choice - 1
         action = actions.Meet(self.guest, reply)
         action.perform()
-        return MeetingResultMode()
-
-
-class MeetingResultMode(InfoMode):
-
-    def back(self):
-        return AfterWorkMode()
+        return InfoMode(back=self)
 
 
 mode = None
