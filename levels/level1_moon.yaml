@@ -344,7 +344,7 @@ social:
               reaction: Fair enough. I wonder where you'll roll next.
           bad replies:
             - reply: Nothing in particular. I don't really care where I work.
-            - reaction: That's a pity. I like to hear about people's dreams and motivations.
+              reaction: That's a pity. I like to hear about people's dreams and motivations.
         - meeting: >
             You meet Ozabela at The Lunatic, the first bar that ever opened on the moon. It is not located in the underground
             mall, but in an older structure on the surface. It is officially recommended not to spend more than five hours
