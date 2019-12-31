@@ -371,10 +371,10 @@ def new_workday():
     global regulars
     global guest_factory
     guests = []
-    regulars_today = filter(
+    regulars_today = list(filter(
         lambda regular: regular.available and not regular.days or time.weekday() in regular.days,
         regulars.values()
-    )
+    ))
     guests.extend(regulars_today)
     seats = diner.diner.seats - len(guests)
     new_guests = _new_guests(seats)
