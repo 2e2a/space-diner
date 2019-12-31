@@ -335,33 +335,41 @@ FULL_AFTER_RATINGS = 10
 
 
 def _new_guests(seats):
+    # TODO: numbers are not completely right: e.g., 4 colonists and 2 tourists when 6 seats are available?
+    # TODO: consider rating (not just number of ratings)
+    seats_remaining = seats
     new_guests = []
     groups = guest_factory.get_names()
-    seats_per_group = round(seats/len(groups))
+    seats_per_group = int(seats/len(groups))
+    extra_seats = seats - (seats_per_group * len(groups))
     ratings = reviews.get_ratings()
+    random.SystemRandom().shuffle(groups)
     for name in groups:
+        available_seats = seats_per_group
+        if extra_seats > 0:
+            available_seats += 1
+            extra_seats -= 1
         birthday = time.get_birthdays_for(name)
         if not birthday:
             rating = ratings.get(name)
             if rating:
-                n_ratings = rating.count
-                group_seats = max(1, round(seats_per_group / FULL_AFTER_RATINGS * n_ratings))
+                taken_seats = min(available_seats, max(1, round((available_seats * rating.count) / FULL_AFTER_RATINGS)))
             else:
-                group_seats = 1
+                taken_seats = 1
         else:
             cli.print_message('It\'s somebody\'s birthday: {}'.format(name))
-            group_seats = seats_per_group
-        new_guests.extend(group_seats * [name])
-        seats -= group_seats
+            taken_seats = available_seats
+        new_guests.extend(taken_seats * [name])
+        seats_remaining -= taken_seats
     holidays = time.get_holidays_for(groups)
-    seats_per_holiday = round(seats / len(holidays)) if holidays else 0
+    seats_per_holiday = round(seats_remaining / len(holidays)) if holidays else 0
     for holiday in holidays:
         holiday_groups = set(holiday.groups).intersection(groups)
         cli.print_message('Today is a holiday for: {}.'.format(', '.join(holiday_groups)))
-        group_seats = round(seats_per_holiday / len(holiday_groups))
+        taken_seats = round(seats_per_holiday / len(holiday_groups))
         for group in holiday_groups:
-            new_guests.extend(group_seats * [group])
-        seats -= group_seats
+            new_guests.extend(taken_seats * [group])
+        seats_remaining -= taken_seats
     random.SystemRandom().shuffle(new_guests)
     return new_guests
 
