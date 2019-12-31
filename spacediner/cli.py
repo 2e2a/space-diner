@@ -513,8 +513,8 @@ class KitchenMode(Mode):
         super().print_info()
         print_title('Orders:')
         print_list(['{}: {}'.format(g, o) for g, o in self.orders.items()])
-        print_title('Available Ingredients:')
-        print_list(['{} {}s'.format(a, i) for i, a in self.available_ingredients.items()])
+        print_title('Available ingredients:')
+        print_list(['{} x {}'.format(a, i) for i, a in self.available_ingredients.items()])
         print_title('Kitchen:')
         print_list(['{} for {}'.format(d.name, d.preparation) for d in self.available_devices.values()])
         print_title('Prepared:')
@@ -833,8 +833,8 @@ class ShoppingMode(Mode):
     def print_info(self):
         super().print_info()
         print_value('Money', levels.level.money, 'space dollars')
-        print_title('Available Ingredients:')
-        print_list(['{} {}s'.format(a, i) for i, a in self.available_ingredients.items()])
+        print_title('Available ingredients:')
+        print_list(['{} x {}'.format(a, i) for i, a in self.available_ingredients.items()])
         print_title('Ingredients for sale:')
         for merchant, ingredients in self.ingredients_for_sale.items():
             print('Merchant: {}'.format(merchant))
