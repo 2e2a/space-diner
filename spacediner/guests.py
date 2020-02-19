@@ -354,7 +354,6 @@ FULL_AFTER_RATINGS = 10
 
 def _new_guests(seats):
     # TODO: numbers are not completely right: e.g., 4 colonists and 2 tourists when 6 seats are available?
-    # TODO: consider rating (not just number of ratings)
     seats_remaining = seats
     new_guests = []
     groups = guest_factory.get_names()
@@ -371,7 +370,10 @@ def _new_guests(seats):
         if not birthday:
             rating = ratings.get(name)
             if rating:
-                taken_seats = min(available_seats, max(1, round((available_seats * rating.count) / FULL_AFTER_RATINGS)))
+                taken_seats = min(
+                    available_seats,
+                    max(1, round((available_seats * rating.positive_count) / FULL_AFTER_RATINGS))
+                )
             else:
                 taken_seats = 1
         else:

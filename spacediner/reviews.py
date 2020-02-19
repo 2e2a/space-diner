@@ -7,10 +7,12 @@ from . import time
 class Rating:
     name = None
     count = 0
+    positive_count = 0
     aggregate = 0
     taste = 0
     service = 0
     ambience = 0
+
 
     TASTE_MULTIPLIER = 3
 
@@ -24,6 +26,8 @@ class Rating:
         aggregate = (self.TASTE_MULTIPLIER * taste + service + ambience) / (self.TASTE_MULTIPLIER + 2)
         self.aggregate = (self.count * self.aggregate + aggregate) / (self.count + 1)
         self.count += 1
+        if self.aggregate > 3:
+            self.positive_count += 1
         return aggregate
 
 
