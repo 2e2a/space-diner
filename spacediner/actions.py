@@ -1,4 +1,5 @@
 from . import cli  # TODO: inject
+from . import diner
 from . import food
 from . import guests
 from . import ingredients
@@ -154,6 +155,13 @@ class Meet(Action):
         if social.was_last_meeting(self.guest):
             social.unlock_all_rewards(self.guest)
         social.lock_friendship(self.guest)
+
+
+class CleanDiner(Action):
+
+    def perform(self):
+        diner.diner.clean()
+        cli.print_message('Diner cleaned.')
 
 
 class SaveDish(Action):

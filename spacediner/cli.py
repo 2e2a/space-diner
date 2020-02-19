@@ -744,12 +744,14 @@ class AfterWorkMode(Mode):
     CMD_SHOPPING = 2
     CMD_RATINGS = 3
     CMD_MEET = 4
-    CMD_SLEEP = 5
+    CMD_CLEAN_DINER = 5
+    CMD_SLEEP = 6
     commands = [
         ([],),
         (['shopping'],),
         (['reviews'],),
         (['meet'], []),
+        (['clean_diner'],),
         (['sleep'],),
     ]
     prompt = 'after work >>'
@@ -758,16 +760,22 @@ class AfterWorkMode(Mode):
     meetings = None
 
     def __init__(self, **kwargs):
-        self.activities_done = 0
+        self.activity_available = True
         self.activities = activities.available_activities()
         self.meetings = social.available_meetings()
         super().__init__(**kwargs)
 
     def update_commands(self):
-        activities = [self.name_for_command(activity) for activity in self.activities]
-        meetings = [self.name_for_command(meeting) for meeting in self.meetings]
-        self.commands[self.CMD_ACTIVITY - 1] = (activities,)
-        self.commands[self.CMD_MEET - 1] = (['meet'], meetings)
+        if self.activity_available:
+            activities = [self.name_for_command(activity) for activity in self.activities]
+            meetings = [self.name_for_command(meeting) for meeting in self.meetings]
+            self.commands[self.CMD_ACTIVITY - 1] = (activities,)
+            self.commands[self.CMD_MEET - 1] = (['meet'], meetings)
+            self.commands[self.CMD_CLEAN_DINER - 1] = (['clean_diner'],) if diner.diner.is_dirty else ([],)
+        else:
+            self.commands[self.CMD_ACTIVITY - 1] = ([],)
+            self.commands[self.CMD_MEET - 1] = ([],)
+            self.commands[self.CMD_CLEAN_DINER - 1] = ([],)
         super().update_commands()
 
     def print_info(self):
@@ -781,16 +789,20 @@ class AfterWorkMode(Mode):
         if cmd == self.CMD_RATINGS:
             return ReviewsInfoMode(back=self)
         if cmd == self.CMD_MEET:
+            self.activity_available = False
             guest = self.original_name(cmd_input[1])
             return MeetingMode(guest)
+        if cmd == self.CMD_CLEAN_DINER:
+            self.activity_available = False
+            self.update_commands()
+            action = actions.CleanDiner()
+            action.perform()
         if cmd == self.CMD_SLEEP:
             time.tick()
             return DinerMode()
         if cmd == self.CMD_ACTIVITY:
-            self.activities_done += 1
-            if self.activities_done > 1:
-                print('Let\'s not do this today.')
-                return self
+            self.activity_available = False
+            self.update_commands()
             activity = self.original_name(cmd_input[0])
             activities.do(activity)
 
