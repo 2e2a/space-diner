@@ -134,7 +134,6 @@ class Mode:
     names = {}
     completer = None
     empty_input = False
-    no_input = False
     back_mode = None
 
     def __init__(self, back=None):
@@ -142,8 +141,7 @@ class Mode:
         self.update_commands()
 
     def update_commands(self):
-        if not self.no_input:
-            self.completer = CommandCompleter(self.commands)
+        self.completer = CommandCompleter(self.commands)
 
     def print_info(self):
         print('')
@@ -438,7 +436,7 @@ class DinerMode(Mode):
             actions_saved.clear()
             actions.CloseUp().perform()
             time.tick()
-            return AfterWorkMode()
+            return ReviewsInfoMode(back=AfterWorkMode())
         if cmd == self.CMD_SAVE:
             return SaveGameMode(back=self)
         if cmd == self.CMD_EXIT:
@@ -739,6 +737,47 @@ class IngredientCompendiumMode(ChoiceMode):
         return self
 
 
+class ReviewsInfoMode(InfoMode):
+
+    def _rating_info(self, name, count, rating):
+        if count == 0:
+            return '{}:\tno reviews yet'.format(name)
+        n_stars = round(rating)
+        return '{}:\t[{}{}] ({:0.1f}) based on {} review(s)'.format(
+            name,
+            '*' * n_stars,
+            '-' * (5 - n_stars),
+            float(rating),
+            count,
+            )
+
+    def print_info(self):
+        super().print_info()
+        print_title('Ratings')
+        ratings = []
+        for group, rating in reviews.get_ratings().items():
+            rating = self._rating_info(group, rating.count, rating.aggregate)
+            ratings.append(rating)
+        print_list(ratings)
+
+        print_title('Today\'s reviews')
+        todays_reviews = reviews.get_reviews()
+        print_list(todays_reviews)
+
+        print_title('Discovered preferences')
+        guest_likes = []
+        for guest, (likes, dislikes) in reviews.get_likes().items():
+            if not likes and not dislikes:
+                continue
+            guest_like = '{}: '.format(guest)
+            if likes:
+                guest_like += ','.join(map(lambda x: '+' + x, likes))
+            if dislikes:
+                guest_like += ','.join(map(lambda x: '+' + x, dislikes))
+            guest_likes.append(guest_like)
+        print_list(guest_likes)
+
+
 class AfterWorkMode(Mode):
     CMD_ACTIVITY = 1
     CMD_SHOPPING = 2
@@ -748,8 +787,8 @@ class AfterWorkMode(Mode):
     CMD_SLEEP = 6
     commands = [
         ([],),
-        (['shopping'],),
         (['reviews'],),
+        (['shopping'],),
         (['meet'], []),
         (['clean_diner'],),
         (['sleep'],),
@@ -780,31 +819,38 @@ class AfterWorkMode(Mode):
 
     def print_info(self):
         super().print_info()
+        activities = (['clean diner'] if diner.diner.is_dirty else []) + self.activities
+        print_title('Available meetings')
+        if self.meetings:
+            print_list(self.meetings)
+        else:
+            print_list(['None'])
         print_title('Available activities')
-        print_list(self.activities)
+        if activities:
+            print_list(activities)
+        else:
+            print_list(['None'])
 
     def exec(self, cmd, cmd_input):
-        if cmd == self.CMD_SHOPPING:
-            return ShoppingMode(back=self)
         if cmd == self.CMD_RATINGS:
             return ReviewsInfoMode(back=self)
+        if cmd == self.CMD_SHOPPING:
+            return ShoppingMode(back=self)
         if cmd == self.CMD_MEET:
             self.activity_available = False
             guest = self.original_name(cmd_input[1])
             return MeetingMode(guest)
         if cmd == self.CMD_CLEAN_DINER:
             self.activity_available = False
-            self.update_commands()
-            action = actions.CleanDiner()
-            action.perform()
+            return CleanDinerMode(back=self)
         if cmd == self.CMD_SLEEP:
             time.tick()
             return DinerMode()
         if cmd == self.CMD_ACTIVITY:
             self.activity_available = False
-            self.update_commands()
             activity = self.original_name(cmd_input[0])
             activities.do(activity)
+            return self
 
 
 class ShoppingMode(Mode):
@@ -883,47 +929,6 @@ class ShoppingMode(Mode):
             return self.back_mode
 
 
-class ReviewsInfoMode(InfoMode):
-
-    def _rating_info(self, name, count, rating):
-        if count == 0:
-            return '{}:\tno reviews yet'.format(name)
-        n_stars = round(rating)
-        return '{}:\t[{}{}] ({:0.1f}) based on {} review(s)'.format(
-            name,
-            '*' * n_stars,
-            '-' * (5 - n_stars),
-            float(rating),
-            count,
-        )
-
-    def print_info(self):
-        super().print_info()
-        print_title('Ratings')
-        ratings = []
-        for group, rating in reviews.get_ratings().items():
-            rating = self._rating_info(group, rating.count, rating.aggregate)
-            ratings.append(rating)
-        print_list(ratings)
-
-        print_title('Today\'s reviews')
-        todays_reviews = reviews.get_reviews()
-        print_list(todays_reviews)
-
-        print_title('Discovered preferences')
-        guest_likes = []
-        for guest, (likes, dislikes) in reviews.get_likes().items():
-            if not likes and not dislikes:
-                continue
-            guest_like = '{}: '.format(guest)
-            if likes:
-                guest_like += ','.join(map(lambda x: '+' + x, likes))
-            if dislikes:
-                guest_like += ','.join(map(lambda x: '+' + x, dislikes))
-            guest_likes.append(guest_like)
-        print_list(guest_likes)
-
-
 class MeetingMode(ChoiceMode):
     prompt = 'reply #'
     choices = None
@@ -951,6 +956,14 @@ class MeetingMode(ChoiceMode):
         return InfoMode(back=self)
 
 
+class CleanDinerMode(InfoMode):
+
+    def print_info(self):
+        super().print_info()
+        action = actions.CleanDiner()
+        action.perform()
+
+
 mode = None
 actions_saved = []
 
@@ -965,12 +978,9 @@ def run():
             levels.debug()
         if print_info:
             mode.print_info()
-        if not mode.no_input:
-            prompt = '{} '.format(mode.prompt) if mode.prompt else ''
-            cmd = input('{} '.format(prompt))
-            next_mode = mode.parse(cmd)
-        else:
-            next_mode = mode.exec(None, None)
+        prompt = '{} '.format(mode.prompt) if mode.prompt else ''
+        cmd = input('{} '.format(prompt))
+        next_mode = mode.parse(cmd)
         if next_mode:
             mode = next_mode
             print_info = True

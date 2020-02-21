@@ -2,7 +2,6 @@ import argparse
 from . import cli
 from . import settings
 
-# TODO: automatically show reviews after workday
 # TODO: evening activities increase skills, e.g., cleaning --> ambience
 # TODO: remove debug
 # TODO: toggle verbose mode on/off --> more/less info in output
