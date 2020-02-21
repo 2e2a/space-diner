@@ -226,7 +226,7 @@ class ChoiceMode(Mode):
         if cmd == self.CMD_CHOICE:
             choice = int(cmd_input[0])
             if choice < 0 or choice > len(self.choices):
-                print('Invalid choice.')
+                print_message('Invalid choice.')
                 return self
             if self.back_enabled and choice == 0:
                 return self.back()
@@ -780,14 +780,16 @@ class ReviewsInfoMode(InfoMode):
 
 class AfterWorkMode(Mode):
     CMD_ACTIVITY = 1
-    CMD_SHOPPING = 2
-    CMD_RATINGS = 3
-    CMD_MEET = 4
-    CMD_CLEAN_DINER = 5
-    CMD_SLEEP = 6
+    CMD_RATINGS = 2
+    CMD_SKILLS = 3
+    CMD_SHOPPING = 4
+    CMD_MEET = 5
+    CMD_CLEAN_DINER = 6
+    CMD_SLEEP = 7
     commands = [
         ([],),
         (['reviews'],),
+        (['skills'],),
         (['shopping'],),
         (['meet'], []),
         (['clean_diner'],),
@@ -821,12 +823,12 @@ class AfterWorkMode(Mode):
         super().print_info()
         activities = (['clean diner'] if diner.diner.is_dirty else []) + self.activities
         print_title('Available meetings')
-        if self.meetings:
+        if self.activity_available and self.meetings:
             print_list(self.meetings)
         else:
             print_list(['None'])
         print_title('Available activities')
-        if activities:
+        if self.activity_available and activities:
             print_list(activities)
         else:
             print_list(['None'])
@@ -834,6 +836,8 @@ class AfterWorkMode(Mode):
     def exec(self, cmd, cmd_input):
         if cmd == self.CMD_RATINGS:
             return ReviewsInfoMode(back=self)
+        if cmd == self.CMD_SKILLS:
+            return SkillInfoMode(back=self)
         if cmd == self.CMD_SHOPPING:
             return ShoppingMode(back=self)
         if cmd == self.CMD_MEET:
@@ -849,8 +853,7 @@ class AfterWorkMode(Mode):
         if cmd == self.CMD_ACTIVITY:
             self.activity_available = False
             activity = self.original_name(cmd_input[0])
-            activities.do(activity)
-            return self
+            return ActivityMode(activity, back=self)
 
 
 class ShoppingMode(Mode):
@@ -895,7 +898,7 @@ class ShoppingMode(Mode):
         print_list(['{} x {}'.format(a, i) for i, a in self.available_ingredients.items()])
         print_title('Ingredients for sale:')
         for merchant, ingredients in self.ingredients_for_sale.items():
-            print('Merchant: {}'.format(merchant))
+            print_text('Merchant: {}'.format(merchant))
             print_list(['{}: {} space dollars, {} in stock, {} required'.format(i, c, a, s)
                         for i, (a, c, s) in ingredients.items()])
         print_title('Storages for sale:')
@@ -961,6 +964,19 @@ class CleanDinerMode(InfoMode):
     def print_info(self):
         super().print_info()
         action = actions.CleanDiner()
+        action.perform()
+
+
+class ActivityMode(InfoMode):
+    activity = None
+
+    def __init__(self, activity, **kwargs):
+        self.activity = activity
+        super().__init__(**kwargs)
+
+    def print_info(self):
+        super().print_info()
+        action = actions.DoActivity(self.activity)
         action.perform()
 
 

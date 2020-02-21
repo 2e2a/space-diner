@@ -444,3 +444,15 @@ social:
       - I love it here on the Moon! ...maybe it could just be a little bit warmer.
       - Oh, look at all those wondrous local people!
       - I am returning to Earth tomorrow. What a shame! I would love to stay longer.
+
+activities:
+  - name: watch cooking show
+    available: True
+    message: You watched some cooking shows.
+    rewards:
+      - type: skill
+        skill: seasoning
+        diff: +1
+        text: You learned something about seasoning
+
+

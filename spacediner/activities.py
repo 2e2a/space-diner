@@ -2,6 +2,7 @@ import pickle
 
 from collections import OrderedDict
 
+from . import cli
 from . import generic
 from . import rewards
 
@@ -16,10 +17,10 @@ class Activity(generic.Thing):
         self.name = data.get('name')
         self.available = data.get('available')
         self.message = data.get('message')
-        self.rewards = rewards.init_list(data)
+        self.rewards = rewards.init_list(data.get('rewards'))
 
     def do(self):
-        print(self.message)
+        cli.print_text(self.message)
         for reward in self.rewards:
             reward.apply()
 

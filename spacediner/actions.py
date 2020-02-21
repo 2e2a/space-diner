@@ -1,3 +1,4 @@
+from . import activities
 from . import cli  # TODO: inject
 from . import diner
 from . import food
@@ -155,6 +156,16 @@ class Meet(Action):
         if social.was_last_meeting(self.guest):
             social.unlock_all_rewards(self.guest)
         social.lock_friendship(self.guest)
+
+
+class DoActivity(Action):
+    activity = None
+
+    def __init__(self, activity):
+        self.activity = activity
+
+    def perform(self):
+        activities.do(self.activity)
 
 
 class CleanDiner(Action):

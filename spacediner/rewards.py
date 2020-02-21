@@ -46,6 +46,7 @@ class MerchantReward(SocialReward):
 
 
 class GuestReward(Reward):
+    level = None
     guest = None
 
     def __init__(self):

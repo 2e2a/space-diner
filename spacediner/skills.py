@@ -2,10 +2,9 @@ import pickle
 
 from collections import OrderedDict
 
-# TODO: range of cooking skills, e.g. seasoning skills, knife skills, plating skills...
 # TODO: cooking skills influence rating (like ambience and service) and reviews ("It was seasoned perfectly.")
 
-SKILLS = ['proficiency']
+SKILLS = ['seasoning']
 
 
 skills = None
