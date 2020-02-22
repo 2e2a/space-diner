@@ -302,6 +302,12 @@ def get_group_name(name):
     return get(name).group_name
 
 
+def chat(name):
+    guest = get(name)
+    guest.chatted_today = True
+    return social.next_chat(guest.group_name)
+
+
 def take_order(name):
     guest = get(name)
     return guest.take_order()

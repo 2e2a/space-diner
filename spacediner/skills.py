@@ -4,7 +4,10 @@ from collections import OrderedDict
 
 # TODO: cooking skills influence rating (like ambience and service) and reviews ("It was seasoned perfectly.")
 
-SKILLS = ['seasoning']
+SKILLS = [
+    'seasoning',
+    'knife'
+]
 
 
 skills = None
