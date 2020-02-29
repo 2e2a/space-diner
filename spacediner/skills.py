@@ -3,6 +3,8 @@ import pickle
 from collections import OrderedDict
 
 # TODO: cooking skills influence rating (like ambience and service) and reviews ("It was seasoned perfectly.")
+# TODO: define skills independently from activities
+# TODO: optionally define texts for each skill level which is shown when the skill level changes ("Your seasoning skill is now medium.")
 
 SKILLS = [
     'seasoning',

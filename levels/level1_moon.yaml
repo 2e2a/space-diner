@@ -234,6 +234,7 @@ guests:
         - silkworm nuggets
         - meat plate
         - burger
+        - silkworm burger
       output:
         scale:
           - sadly, pretty bad
@@ -448,11 +449,18 @@ social:
 activities:
   - name: watch cooking show
     available: True
-    message: You watched some cooking shows.
+    message: You watched a cooking show on TV.
     rewards:
       - type: skill
-        skill: seasoning
+        skill: seasoning skills
         diff: +1
-        text: You learned something about seasoning
-
+        text: You learned something about seasoning.
+  - name: practice knife skills
+    available: True
+    message: You practiced your knife skills.
+    rewards:
+      - type: skill
+        skill: knife skills
+        diff: +1
+        text: You learned something about chopping.
 
