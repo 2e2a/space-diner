@@ -29,11 +29,6 @@ class Diner:
 diner = None
 
 
-def new_day():
-    global diner
-    cli.print_message('Sanitation status of your diner: {}/5'.format(diner.sanitation))
-
-
 def new_evening():
     global diner
     if diner.sanitation > 0:
@@ -45,7 +40,6 @@ def init(data):
     global diner
     diner = Diner()
     diner.init(data)
-    time.register_callback(time.Calendar.TIME_WORK, new_day)
     time.register_callback(time.Calendar.TIME_OFF, new_evening)
 
 

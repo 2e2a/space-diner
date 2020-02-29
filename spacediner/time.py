@@ -65,13 +65,14 @@ class Calendar:
     events = {}
 
     def tick(self):
+        cli.print_message(self.now)
         if self.time == self.TIME_WORK:
             self.time = self.TIME_OFF
-            cli.print_message(self.evening_greeting)
+            cli.print_text(self.evening_greeting)
         else:
             self.time = self.TIME_WORK
             self.day += 1
-            cli.print_message(self.morning_greeting)
+            cli.print_text(self.morning_greeting)
         for event in self.events.get(self.day, []):
             if event.info:
                 cli.print_text(event.info)

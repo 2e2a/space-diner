@@ -383,16 +383,19 @@ class DinerMode(Mode):
 
     def print_info(self):
         super().print_info()
+        available_guests = guests.available_guests()
         print_text('--------------------------------')
         print_value('Diner', diner.diner.name)
         print_value('Day', time.now())
         print_value('Money', levels.level.money, 'space dollars')
+        print_value('Seats taken', '{}/{}'.format(len(available_guests), diner.diner.seats))
+        print_value('Sanitation', '{}/5'.format(diner.diner.sanitation))
         print_text('--------------------------------')
         print_title('Food:')
         print_list(food.plated())
         print_title('Guests:')
         names_with_groups = []
-        for guest_name in guests.available_guests():
+        for guest_name in available_guests:
             guest = guests.get(guest_name)
             if guest.groups:
                 names_with_groups.append(
@@ -437,7 +440,7 @@ class DinerMode(Mode):
             actions_saved.clear()
             actions.CloseUp().perform()
             time.tick()
-            return ReviewsInfoMode(back=AfterWorkMode())
+            return ReviewsInfoMode()
         if cmd == self.CMD_SAVE:
             return SaveGameMode(back=self)
         if cmd == self.CMD_EXIT:
@@ -719,6 +722,9 @@ class IngredientCompendiumMode(ChoiceMode):
 
 class ReviewsInfoMode(InfoMode):
 
+    def back(self):
+        return ActivityMode()
+
     def _rating_info(self, name, count, rating):
         if count == 0:
             return '{}:\tno reviews yet'.format(name)
@@ -733,6 +739,8 @@ class ReviewsInfoMode(InfoMode):
 
     def print_info(self):
         super().print_info()
+        print_text('You read the latest reviews of your diner.')
+        print_text('')
         print_title('Ratings')
         ratings = []
         for group, rating in reviews.get_ratings().items():
@@ -758,86 +766,43 @@ class ReviewsInfoMode(InfoMode):
         print_list(guest_likes)
 
 
-class AfterWorkMode(Mode):
-    CMD_ACTIVITY = 1
-    CMD_RATINGS = 2
-    CMD_SKILLS = 3
-    CMD_SHOPPING = 4
-    CMD_MEET = 5
-    CMD_CLEAN_DINER = 6
-    CMD_SLEEP = 7
-    commands = [
-        ([],),
-        (['reviews'],),
-        (['skills'],),
-        (['shopping'],),
-        (['meet'], []),
-        (['clean_diner'],),
-        (['sleep'],),
-    ]
-    prompt = 'after work >>'
+class ActivityMode(ChoiceMode):
+    prompt = 'menu #'
+    title = 'Available activities'
+    back_enabled = False
     activities = None
-    activities_done = 0
     meetings = None
 
     def __init__(self, **kwargs):
-        self.activity_available = True
-        self.activities = activities.available_activities()
-        self.meetings = social.available_meetings()
+        self.meetings = sorted(social.available_meetings())
+        meeting_choices = list(map(lambda name: 'meet ' + name, self.meetings))
+        self.activities = sorted(activities.available_activities())
+        self.fixed_activities = ['sleep']
+        if diner.diner.is_dirty:
+            self.fixed_activities.append('clean diner')
+        self.fixed_activities = sorted(self.fixed_activities)
+        self.choices = meeting_choices + self.activities + self.fixed_activities
         super().__init__(**kwargs)
 
-    def update_commands(self):
-        if self.activity_available:
-            activities = [self.name_for_command(activity) for activity in self.activities]
-            meetings = [self.name_for_command(meeting) for meeting in self.meetings]
-            self.commands[self.CMD_ACTIVITY - 1] = (activities,)
-            self.commands[self.CMD_MEET - 1] = (['meet'], meetings)
-            self.commands[self.CMD_CLEAN_DINER - 1] = (['clean_diner'],) if diner.diner.is_dirty else ([],)
-        else:
-            self.commands[self.CMD_ACTIVITY - 1] = ([],)
-            self.commands[self.CMD_MEET - 1] = ([],)
-            self.commands[self.CMD_CLEAN_DINER - 1] = ([],)
-        super().update_commands()
-
     def print_info(self):
+        print_text('Now you have time for one evening activity.')
         super().print_info()
-        activities = (['clean diner'] if diner.diner.is_dirty else []) + self.activities
-        print_title('Available meetings')
-        if self.activity_available and self.meetings:
-            print_list(self.meetings)
-        else:
-            print_list(['None'])
-        print_title('Available activities')
-        if self.activity_available and activities:
-            print_list(activities)
-        else:
-            print_list(['None'])
 
-    def exec(self, cmd, cmd_input):
-        if cmd == self.CMD_RATINGS:
-            return ReviewsInfoMode(back=self)
-        if cmd == self.CMD_SKILLS:
-            return SkillInfoMode(back=self)
-        if cmd == self.CMD_SHOPPING:
-            return ShoppingMode(back=self)
-        if cmd == self.CMD_MEET:
-            self.activity_available = False
-            guest = self.original_name(cmd_input[1])
-            return MeetingMode(guest, back=self)
-        if cmd == self.CMD_CLEAN_DINER:
-            self.activity_available = False
-            action = actions.CleanDiner()
-            action.perform()
-            return WaitForInputMode(back=self)
-        if cmd == self.CMD_SLEEP:
-            time.tick()
-            return DinerMode()
-        if cmd == self.CMD_ACTIVITY:
-            self.activity_available = False
-            activity = self.original_name(cmd_input[0])
+    def exec_choice(self, choice):
+        if choice <= len(self.meetings):
+            guest = self.meetings[choice - 1]
+            return MeetingMode(guest)
+        elif choice <= len(self.meetings) + len(self.activities):
+            choice -= len(self.meetings)
+            activity = self.activities[choice - 1]
             action = actions.DoActivity(activity)
             action.perform()
-            return WaitForInputMode(back=self)
+        else:
+            choice -= (len(self.meetings) + len(self.activities))
+            if self.fixed_activities[choice - 1] == 'clean diner':
+                action = actions.CleanDiner()
+                action.perform()
+        return WaitForInputMode(back=SleepMode())
 
 
 class ShoppingMode(Mode):
@@ -877,6 +842,8 @@ class ShoppingMode(Mode):
 
     def print_info(self):
         super().print_info()
+        print_text('You go shopping at the space market.')
+        print_text('')
         print_value('Money', levels.level.money, 'space dollars')
         print_title('Available ingredients:')
         print_list(['{} x {}'.format(a, i) for i, a in self.available_ingredients.items()])
@@ -913,7 +880,7 @@ class ShoppingMode(Mode):
                 print(e)
             return self
         if cmd == self.CMD_DONE:
-            return self.back_mode
+            return DinerMode()
 
 
 class MeetingMode(ChoiceMode):
@@ -943,15 +910,14 @@ class MeetingMode(ChoiceMode):
         return WaitForInputMode(back=self.back_mode)
 
 
-class ActivityMode(InfoMode):
-    activity = None
-
-    def __init__(self, activity, **kwargs):
-        self.activity = activity
-        super().__init__(**kwargs)
+class SleepMode(InfoMode):
 
     def print_info(self):
-        super().print_info()
+        print_text('You go to sleep.')
+        time.tick()
+
+    def back(self):
+        return ShoppingMode()
 
 
 mode = None

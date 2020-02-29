@@ -416,7 +416,6 @@ def new_workday():
     for name in new_guests:
         guest = guest_factory.create(name, existing=guests)
         guests.append(guest)
-    cli.print_message('{}/{} seats taken.'.format(len(guests), diner.diner.seats))
     for regular in regulars_today:
         regular.reset()
 

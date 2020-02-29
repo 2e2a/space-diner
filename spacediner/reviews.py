@@ -24,7 +24,7 @@ class Rating:
         self.service = (self.count * self.service + service) / (self.count + 1)
         self.ambience = (self.count * self.ambience + ambience) / (self.count + 1)
         aggregate = (self.TASTE_MULTIPLIER * taste + service + ambience) / (self.TASTE_MULTIPLIER + 2)
-        self.aggregate = (self.count * self.aggregate + aggregate) / (self.count + 1)
+        self.aggregate = round((self.count * self.aggregate + aggregate) / (self.count + 1))
         self.count += 1
         if self.aggregate > 3:
             self.positive_count += 1
