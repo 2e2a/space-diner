@@ -393,15 +393,6 @@ class DinerMode(Mode):
         self.commands[self.CMD_SEND_HOME - 1] = (['send_home'], available_guests)
         super().update_commands()
 
-    def print_header(self):
-        print_text('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-        print_value('Location', diner.diner.name, '(dining room)')
-        print_value('Day', time.now())
-        print_value('Money', levels.level.money, 'space dollars')
-        print_value('Seats taken', '{}/{}'.format(len(available_guests), diner.diner.seats))
-        print_value('Sanitation', '{}/5'.format(diner.diner.sanitation))
-        print_text('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-
     def print_info(self):
         available_guests = guests.available_guests()
         print_header([
