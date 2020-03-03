@@ -37,6 +37,14 @@ def print_list(list):
     print('')
 
 
+def print_header(header_values):
+    print_text('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+    for name, values in header_values:
+        print_value(name, *values)
+    print_text('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+    print_newline()
+
+
 def print_value(key, *values):
     value = ' '.join([str(v) for v in values])
     print('{}: {}'.format(key, value))
@@ -44,6 +52,7 @@ def print_value(key, *values):
 
 def print_message(msg):
     print('*** {} ***'.format(msg))
+    print_newline()
 
 
 def print_dialog(name, msg):
@@ -53,6 +62,9 @@ def print_dialog(name, msg):
 def print_dialog_with_info(name, info, msg):
     print('{} {}: "{}"'.format(name, info, msg))
 
+
+def print_newline():
+    print('')
 
 class CommandCompleter:
     commands = None
@@ -234,11 +246,11 @@ class ChoiceMode(Mode):
 
 
 class InfoMode(Mode):
-    # TODO: crashes when something else is entered
     prompt = '<press ENTER to continue>'
     empty_input = True
 
     def exec(self, cmd, cmd_input):
+        print_newline()
         return self.back()
 
 
@@ -381,16 +393,24 @@ class DinerMode(Mode):
         self.commands[self.CMD_SEND_HOME - 1] = (['send_home'], available_guests)
         super().update_commands()
 
-    def print_info(self):
-        super().print_info()
-        available_guests = guests.available_guests()
-        print_text('--------------------------------')
-        print_value('Diner', diner.diner.name)
+    def print_header(self):
+        print_text('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+        print_value('Location', diner.diner.name, '(dining room)')
         print_value('Day', time.now())
         print_value('Money', levels.level.money, 'space dollars')
         print_value('Seats taken', '{}/{}'.format(len(available_guests), diner.diner.seats))
         print_value('Sanitation', '{}/5'.format(diner.diner.sanitation))
-        print_text('--------------------------------')
+        print_text('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+
+    def print_info(self):
+        available_guests = guests.available_guests()
+        print_header([
+            ('Location', [diner.diner.name, '(dining room)']),
+            ('Day', [time.now()]),
+            ('Money', [levels.level.money, 'space dollars']),
+            ('Seats taken', ['{}/{}'.format(len(available_guests), diner.diner.seats)]),
+            ('Sanitation', ['{}/5'.format(diner.diner.sanitation)]),
+        ])
         print_title('Food:')
         print_list(food.plated())
         print_title('Guests:')
@@ -914,6 +934,7 @@ class SleepMode(InfoMode):
 
     def print_info(self):
         print_text('You go to sleep.')
+        print_newline()
         time.tick()
 
     def back(self):
