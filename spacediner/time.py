@@ -53,26 +53,27 @@ class Calendar:
     week = None
     cycle = 0
 
-    TIME_WORK = 'work'
-    TIME_OFF = 'off'
-    day = 0
-    time = TIME_OFF
+    TIME_MORNING = 'morning'
+    TIME_DAYTIME = 'daytime'
+    TIME_EVENING = 'evening'
+    day = 1
+    time = TIME_MORNING
     callbacks = []
 
-    morning_greeting = None
-    evening_greeting = None
+    daily_greeting = None
 
     events = {}
 
     def tick(self):
-        cli.print_message(self.now)
-        if self.time == self.TIME_WORK:
-            self.time = self.TIME_OFF
-            cli.print_text(self.evening_greeting)
+        if self.time == self.TIME_MORNING:
+            self.time = self.TIME_DAYTIME
+        elif self.time == self.TIME_DAYTIME:
+            self.time = self.TIME_EVENING
         else:
-            self.time = self.TIME_WORK
+            self.time = self.TIME_MORNING
             self.day += 1
-            cli.print_text(self.morning_greeting)
+            cli.print_text(self.daily_greeting)
+            cli.print_newline()
         for event in self.events.get(self.day, []):
             if event.info:
                 cli.print_text(event.info)
@@ -94,8 +95,7 @@ class Calendar:
     def init(self, data):
         self.week = data.get('week', ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'])
         self.cycle = int(data.get('cycle'))
-        self.morning_greeting = data.get('morning_greeting', 'A new morning...')
-        self.evening_greeting = data.get('evening_greeting', 'The work\'s done...')
+        self.daily_greeting = data.get('daily_greeting', 'A new morning...')
         for event_data in data.get('events', []):
             event_type = event_data.get('event')
             if event_type in Event.GROUP_EVENT_TYPES:

@@ -400,7 +400,7 @@ def _new_guests(seats):
     return new_guests
 
 
-def new_workday():
+def daytime():
     global guests
     global regulars
     global guest_factory
@@ -450,7 +450,7 @@ def init(data):
 
     reviews.init([regular.name for regular in regulars.values() if regular.available])
 
-    time.register_callback(time.Calendar.TIME_WORK, new_workday)
+    time.register_callback(time.Calendar.TIME_DAYTIME, daytime)
 
 
 def save(file):

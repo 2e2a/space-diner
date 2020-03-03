@@ -96,7 +96,7 @@ def init(name):
     cli.print_text('')
     cli.print_title(level.name)
     cli.print_text(level.intro)
-    time.register_callback(time.Calendar.TIME_WORK, autosave_save)
+    time.register_callback(time.Calendar.TIME_MORNING, autosave_save)
 
 
 def save(file):

@@ -111,7 +111,7 @@ def get(name):
     return storages.get(name)
 
 
-def new_workday():
+def daytime():
     global storages
     ingredients_lost = {}
     for ingredient, amount in time.get_ingredients_lost().items():
@@ -140,7 +140,7 @@ def init(data):
         storage = Storage()
         storage.init(storage_data)
         storages.update({storage.name: storage})
-    time.register_callback(time.Calendar.TIME_WORK, new_workday)
+    time.register_callback(time.Calendar.TIME_DAYTIME, daytime)
 
 
 def save(file):

@@ -79,7 +79,7 @@ def add_dislikes(name, new_dislikes):
     likes.update({name: (guest_likes, guest_dislikes)})
 
 
-def new_workday():
+def daytime():
     global reviews
     reviews = []
 
@@ -104,7 +104,7 @@ def init(guests):
     likes = OrderedDict()
     reviews = []
     add(guests)
-    time.register_callback(time.Calendar.TIME_WORK, new_workday)
+    time.register_callback(time.Calendar.TIME_DAYTIME, daytime)
 
 
 def save(file):

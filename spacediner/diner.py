@@ -40,7 +40,7 @@ def init(data):
     global diner
     diner = Diner()
     diner.init(data)
-    time.register_callback(time.Calendar.TIME_OFF, new_evening)
+    time.register_callback(time.Calendar.TIME_EVENING, new_evening)
 
 
 def save(file):

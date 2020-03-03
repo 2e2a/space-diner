@@ -40,11 +40,7 @@ class MoneyGoal(Reward):
 goals = None
 
 
-def new_workday():
-    pass
-
-
-def after_work():
+def goals_check():
    global goals
    for goal in goals:
        goal.check()
@@ -60,6 +56,7 @@ def init(data):
             goal = MoneyGoal()
         goal.init(goal_data)
         goals.append(goal)
-    time.register_callback(time.Calendar.TIME_WORK, new_workday)
-    time.register_callback(time.Calendar.TIME_OFF, after_work)
+    time.register_callback(time.Calendar.TIME_MORNING, goals_check)
+    time.register_callback(time.Calendar.TIME_DAYTIME, goals_check)
+    time.register_callback(time.Calendar.TIME_EVENING, goals_check)
     return goals
