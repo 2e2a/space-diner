@@ -446,6 +446,16 @@ social:
       - Oh, look at all those wondrous local people!
       - I am returning to Earth tomorrow. What a shame! I would love to stay longer.
 
+skills:
+  - type: cooking
+    name: knife skills
+    subskills:
+      - coarse chopping
+      - fine dicing
+      - Batonnet cut
+      - Allumette cut
+      - Julienne cut
+
 activities:
   - name: watch cooking show
     available: True

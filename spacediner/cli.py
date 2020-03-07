@@ -561,14 +561,14 @@ class KitchenMode(Mode):
 
 class SkillInfoMode(InfoMode):
 
-    def print_skill(self, skill, value):
-        progress = '#' * int(value) + '-' * (10 - int(value))
-        line = '[{} skill] {}/10 - {}'.format(progress, value, skill)
+    def print_skill(self, name, level):
+        progress = '#' * int(level) + '-' * (skills.MAX_SKILL_LEVEL - int(level))
+        line = '[{}] {}/{} - {}'.format(progress, level, skills.MAX_SKILL_LEVEL, name)
         return line
 
     def print_info(self):
         print_title('Skills')
-        skill_values = [self.print_skill(skill, value) for skill, value in skills.get().items()]
+        skill_values = [self.print_skill(name, skill.level) for name, skill in skills.skills.items()]
         print_list(skill_values)
 
 
