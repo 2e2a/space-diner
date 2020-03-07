@@ -82,9 +82,11 @@ class CloseUp(Action):
     def perform(self):
         for plated_food in food.plated():
             cli.print_message('throw away {}'.format(plated_food))
+        cli.print_newline()
         for guest in guests.available_guests():
             send_home = SendHome(guest)
             send_home.perform()
+        cli.print_newline()
 
 
 class BuyStorage(Action):

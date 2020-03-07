@@ -397,7 +397,7 @@ class DinerMode(Mode):
         available_guests = guests.available_guests()
         print_header([
             ('Location', [diner.diner.name, '(dining room)']),
-            ('Day', [time.now()]),
+            ('Time', [time.now()]),
             ('Money', [levels.level.money, 'space dollars']),
             ('Seats taken', ['{}/{}'.format(len(available_guests), diner.diner.seats)]),
             ('Sanitation', ['{}/5'.format(diner.diner.sanitation)]),
@@ -507,7 +507,6 @@ class KitchenMode(Mode):
         super().update_commands()
 
     def print_info(self):
-        super().print_info()
         print_title('Orders:')
         print_list(['{}: {}'.format(g, o) for g, o in self.orders.items()])
         print_title('Available ingredients:')
@@ -568,7 +567,6 @@ class SkillInfoMode(InfoMode):
         return line
 
     def print_info(self):
-        super().print_info()
         print_title('Skills')
         skill_values = [self.print_skill(skill, value) for skill, value in skills.get().items()]
         print_list(skill_values)
@@ -749,8 +747,11 @@ class ReviewsInfoMode(InfoMode):
             )
 
     def print_info(self):
-        super().print_info()
-        print_text('You read the latest reviews of your diner.')
+        print_header([
+            ('Location', [diner.diner.name, '(office)']),
+            ('Time', [time.now()]),
+        ])
+        print_text('You read today\'s reviews.')
         print_text('')
         print_title('Ratings')
         ratings = []
@@ -796,6 +797,10 @@ class ActivityMode(ChoiceMode):
         super().__init__(**kwargs)
 
     def print_info(self):
+        print_header([
+            ('Location', [diner.diner.name, '(outside)']),
+            ('Time', [time.now()]),
+        ])
         print_text('Now you have time for one evening activity.')
         super().print_info()
 
@@ -852,10 +857,11 @@ class ShoppingMode(Mode):
         super().update_commands()
 
     def print_info(self):
-        super().print_info()
-        print_text('You go shopping at the space market.')
-        print_text('')
-        print_value('Money', levels.level.money, 'space dollars')
+        print_header([
+            ('Location', ['space market']),
+            ('Time', [time.now()]),
+            ('Money', [levels.level.money, 'space dollars']),
+        ])
         print_title('Available ingredients:')
         print_list(['{} x {}'.format(a, i) for i, a in self.available_ingredients.items()])
         print_title('Ingredients for sale:')

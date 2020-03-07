@@ -2,6 +2,7 @@ import argparse
 from . import cli
 from . import settings
 
+# TODO: make discovered preferences available in compendium
 # TODO: property matches in substring, e.g. fried = deep-fried
 # TODO: remove debug
 # TODO: toggle verbose mode on/off --> more/less info in output

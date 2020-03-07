@@ -87,7 +87,7 @@ class Calendar:
 
     @property
     def now(self):
-        return '{} - {}'.format(self.day, self.weekday, self.time)
+        return 'day {}, {}, {}'.format(self.day, self.weekday, self.time)
 
     def register_callback(self, time, callback):
         self.callbacks.append((time, callback))
