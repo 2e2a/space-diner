@@ -223,7 +223,6 @@ class ChoiceMode(Mode):
         raise NotImplemented
 
     def print_info(self):
-        super().print_info()
         if self.title:
             print_title(self.title)
         choice_info = ['{}: {}'.format(i, choice) for i, choice in enumerate(self.choices, 1)]
@@ -347,7 +346,7 @@ class FirstHelpMode(InfoMode):
             'How to play? Use auto-complete: type the first letters of a command and press TAB. Type \'help\' to '
             'display a list of available commands.\n'
             'What to do first? Take your guests\' orders in the diner, prepare food in the kitchen, and serve it.\n'
-            'Heads up: your guests have specific dietary restrictions and preferences. '
+            'Heads up: your guests have specific dietary restrictions and preferences.'
             'Make them happy, and they will repay you in space dollars and positive reviews!\n'
         )
 
@@ -362,18 +361,16 @@ class DinerMode(Mode):
     CMD_CHAT = 3
     CMD_SERVE = 4
     CMD_SEND_HOME = 5
-    CMD_SKILLS = 6
-    CMD_COMPENDIUM = 7
-    CMD_CLOSE_UP = 8
-    CMD_SAVE = 9
-    CMD_EXIT = 10
+    CMD_COMPENDIUM = 6
+    CMD_CLOSE_UP = 7
+    CMD_SAVE = 8
+    CMD_EXIT = 9
     commands = [
         (['kitchen'],),
         (['take_order_from'], []),
         (['chat_with'], []),
         (['serve'], [], ['to'], []),
         (['send_home'], []),
-        (['skills'],),
         (['compendium'],),
         (['close_up'],),
         (['save'],),
@@ -440,8 +437,6 @@ class DinerMode(Mode):
             action = actions.SendHome(guest)
             action.perform()
             return WaitForInputMode(back=self)
-        if cmd == self.CMD_SKILLS:
-            return SkillInfoMode(back=self)
         if cmd == self.CMD_COMPENDIUM:
             return CompendiumMode(back=self)
         if cmd == self.CMD_CLOSE_UP:
@@ -557,19 +552,6 @@ class KitchenMode(Mode):
         if cmd == self.CMD_DINER:
             actions_saved.append(self.action)
             return self.back()
-
-
-class SkillInfoMode(InfoMode):
-
-    def print_skill(self, name, level):
-        progress = '#' * int(level) + '-' * (skills.MAX_SKILL_LEVEL - int(level))
-        line = '[{}] {}/{} - {}'.format(progress, level, skills.MAX_SKILL_LEVEL, name)
-        return line
-
-    def print_info(self):
-        print_title('Skills')
-        skill_values = [self.print_skill(name, skill.level) for name, skill in skills.skills.items()]
-        print_list(skill_values)
 
 
 class RecipeMode(ChoiceMode):
@@ -796,12 +778,24 @@ class ActivityMode(ChoiceMode):
         self.choices = meeting_choices + self.activities + self.fixed_activities
         super().__init__(**kwargs)
 
+    def print_skill(self, name, level):
+        progress = '#' * int(level) + '-' * (skills.MAX_SKILL_LEVEL - int(level))
+        line = '[{}] {}/{} - {}'.format(progress, level, skills.MAX_SKILL_LEVEL, name)
+        return line
+
+    def print_skills(self):
+        print_title('Skills')
+        skill_values = [self.print_skill(name, skill.level) for name, skill in skills.skills.items()]
+        print_list(skill_values)
+
     def print_info(self):
         print_header([
             ('Location', [diner.diner.name, '(outside)']),
             ('Time', [time.now()]),
         ])
         print_text('Now you have time for one evening activity.')
+        print_newline()
+        self.print_skills()
         super().print_info()
 
     def exec_choice(self, choice):

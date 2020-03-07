@@ -457,14 +457,6 @@ skills:
       - Julienne cut
 
 activities:
-  - name: watch cooking show
-    available: True
-    message: You watched a cooking show on TV.
-    rewards:
-      - type: skill
-        skill: seasoning skills
-        diff: +1
-        text: You learned something about seasoning.
   - name: practice knife skills
     available: True
     message: You practiced your knife skills.
@@ -472,5 +464,4 @@ activities:
       - type: skill
         skill: knife skills
         diff: +1
-        text: You learned something about chopping.
 
