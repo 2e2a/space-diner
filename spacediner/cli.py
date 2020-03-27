@@ -948,6 +948,7 @@ def run():
             mode.print_info()
         prompt = '{} '.format(mode.prompt) if mode.prompt else ''
         cmd = input('{} '.format(prompt))
+        print_newline()
         next_mode = mode.parse(cmd)
         if next_mode:
             mode = next_mode

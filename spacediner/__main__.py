@@ -2,7 +2,6 @@ import argparse
 from . import cli
 from . import settings
 
-# TODO: always newline after command
 # TODO: make discovered preferences available in compendium
 # TODO: property matches in substring, e.g. fried = deep-fried
 # TODO: remove debug
