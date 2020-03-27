@@ -2,10 +2,8 @@ import pickle
 
 from collections import OrderedDict
 
-from . import generic
 
-
-class Device(generic.Thing):
+class Device:
     name = None
     available = False
     preparation = None

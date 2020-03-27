@@ -9,7 +9,6 @@ from . import activities
 from . import cli
 from . import diner
 from . import food
-from . import generic
 from . import goals
 from . import guests
 from . import kitchen
@@ -21,7 +20,7 @@ from . import storage
 from . import time
 
 
-class Level(generic.Thing):
+class Level:
     name = None
     intro = None
     money = 0
@@ -128,15 +127,3 @@ def load(file):
     guests.load(file)
     social.load(file)
     activities.load(file)
-
-
-def debug():
-    global level
-    level.debug()
-    ingredients.debug()
-    storage.debug()
-    kitchen.debug()
-    merchants.debug()
-    food.debug()
-    guests.debug()
-    social.debug()

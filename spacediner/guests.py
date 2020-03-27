@@ -3,17 +3,16 @@ import pickle
 import random
 from collections import OrderedDict
 
-from . import cli  #  TODO: inject
+from . import cli
 from . import diner
 from . import food
-from . import generic
 from . import levels
 from . import reviews
 from . import social
 from . import time
 
 
-class Reaction(generic.Thing):
+class Reaction:
     properties = None
     taste = 0
     output = None
@@ -54,7 +53,7 @@ class GuestOutput:
         self.review_diner_dirty = data.get('review_diner_dirty') if data and 'review_diner_dirty' in data else 'Very dirty.'
 
 
-class Guest(generic.Thing):
+class Guest:
     name = None
     name_factory = None
     description = None
@@ -206,7 +205,7 @@ class NameFactory:
         return ' '.join(random.SystemRandom().choice(part) for part in self.names)
 
 
-class GuestFactory(generic.Thing):
+class GuestFactory:
     groups = None
 
     def init(self, data):
@@ -473,14 +472,3 @@ def load(file):
     regulars = pickle.load(file)
     guest_groups = pickle.load(file)
     guest_factory = pickle.load(file)
-
-
-def debug():
-    global guests
-    for guest in guests:
-        guest.debug()
-    global guest_groups
-    for guest_group in guest_groups.values():
-        guest_group.debug()
-    global guest_factory
-    guest_factory.debug()

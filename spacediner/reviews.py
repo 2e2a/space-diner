@@ -111,7 +111,7 @@ def save(file):
     global ratings
     global reviews
     global likes
-    pickle.dump(skills, file)
+    pickle.dump(ratings, file)
     pickle.dump(reviews, file)
     pickle.dump(likes, file)
 
@@ -120,12 +120,6 @@ def load(file):
     global ratings
     global reviews
     global likes
-    pickle.load(skills, file)
+    pickle.load(ratings, file)
     pickle.load(reviews, file)
     pickle.load(likes, file)
-
-
-def debug():
-    global skills
-    for skill in skills.values():
-        skill.debug()

@@ -2,10 +2,8 @@ import pickle
 
 from collections import OrderedDict
 
-from . import generic
 
-
-class Ingredient(generic.Thing):
+class Ingredient:
     name = None
     description = None
     storage = None
@@ -47,9 +45,3 @@ def save(file):
 def load(file):
     global ingredients
     ingredients = pickle.load(file)
-
-
-def debug():
-    global ingredients
-    for ingredient in ingredients.values():
-        ingredient.debug()

@@ -2,12 +2,11 @@ import pickle
 
 from collections import OrderedDict
 
-from . import generic
 from . import kitchen
 from . import storage
 
 
-class Food(generic.Thing):
+class Food:
     name = None
     ingredients = None
     properties = None
@@ -48,7 +47,7 @@ class Food(generic.Thing):
         return ['{} {}'.format(preparation, ingredient) for preparation, ingredient in self.ingredients]
 
 
-class Recipe(generic.Thing):
+class Recipe:
     available = False
     ingredient_properties = None
     properties = None
@@ -210,12 +209,3 @@ def load(file):
     recipes = pickle.load(file)
     dishes = pickle.load(file)
     cooked = pickle.load(file)
-
-
-def debug():
-    global recipes
-    global cooked
-    for recipe in recipes.values():
-        recipe.debug()
-    for food in cooked:
-        food.debug()

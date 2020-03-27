@@ -2,11 +2,10 @@ import pickle
 
 from collections import OrderedDict
 
-from . import generic
 from . import ingredients
 
 
-class Merchant(generic.Thing):
+class Merchant:
     name = None
     available = False
     ingredients = None
@@ -96,9 +95,3 @@ def save(file):
 def load(file):
     global merchants
     merchants = pickle.load(file)
-
-
-def debug():
-    global merchants
-    for merchant in merchants.values():
-        merchant.debug()

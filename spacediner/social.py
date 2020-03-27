@@ -236,9 +236,3 @@ def save(file):
 def load(file):
     global social
     social = pickle.load(file)
-
-
-def debug():
-    global social
-    for guest_social in social.values():
-        guest_social.debug()

@@ -942,8 +942,6 @@ def run():
     print_info = True
     print('################################  SPACE  DINER  ################################')
     while True:
-        if settings.DEBUG:
-            levels.debug()
         if print_info:
             mode.print_info()
         prompt = '{} '.format(mode.prompt) if mode.prompt else ''

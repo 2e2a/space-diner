@@ -2,8 +2,6 @@ import pickle
 
 from collections import OrderedDict
 
-from . import generic
-
 # TODO: cooking skills influence rating (like ambience and service) and reviews ("It was seasoned perfectly.")
 # TODO: define skills independently from activities
 # TODO: optionally define texts for each skill level which is shown when the skill level changes ("Your seasoning skill is now medium.")
@@ -11,7 +9,7 @@ from . import generic
 MAX_SKILL_LEVEL = 5
 
 
-class Skill(generic.Thing):
+class Skill:
     TYPE_COOKING = 'cooking'
     TYPE_SERVICE = 'service'
     TYPE_AMBIENCE = 'ambience'
@@ -49,16 +47,10 @@ def init(data):
 
 
 def save(file):
-    global slice
+    global skills
     pickle.dump(skills, file)
 
 
 def load(file):
     global skills
     skills = pickle.load(file)
-
-
-def debug():
-    global skills
-    for skill in skills.values():
-        skill.debug()

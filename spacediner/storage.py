@@ -3,12 +3,11 @@ import pickle
 from collections import OrderedDict
 
 from . import cli
-from . import generic
 from . import ingredients
 from . import time
 
 
-class Storage(generic.Thing):
+class Storage:
     name = None
     available = False
     cost = 0
@@ -151,9 +150,3 @@ def save(file):
 def load(file):
     global storages
     storages = pickle.load(file)
-
-
-def debug():
-    global storages
-    for storage in storages.values():
-        storage.debug()

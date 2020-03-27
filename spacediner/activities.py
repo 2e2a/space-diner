@@ -3,11 +3,10 @@ import pickle
 from collections import OrderedDict
 
 from . import cli
-from . import generic
 from . import rewards
 
 
-class Activity(generic.Thing):
+class Activity:
     name = None
     available = False
     message = None
@@ -56,9 +55,3 @@ def save(file):
 def load(file):
     global activities
     activities = pickle.load(file)
-
-
-def debug():
-    global activities
-    for activity in activities.values():
-        activity.debug()
