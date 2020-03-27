@@ -75,10 +75,6 @@ class SkillReward(Reward):
         self.diff = data.get('diff')
 
     def apply(self):
-        if self.diff > 0:
-            cli.print_message('{} increased by {}'.format(self.skill, self.diff))
-        else:
-            cli.print_message('{} decreased by {}'.format(self.skill, self.diff))
         skills.add(self.skill, self.diff)
 
 
