@@ -66,6 +66,7 @@ def print_dialog_with_info(name, info, msg):
 def print_newline():
     print('')
 
+
 class CommandCompleter:
     commands = None
     matches = []

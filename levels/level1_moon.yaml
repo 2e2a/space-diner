@@ -206,18 +206,12 @@ guests:
         - pickle salad
         - bread basket
         - fries
-      output:
-        scale:
-          - disgusting
-          - bad
-          - ok
-          - good
-          - very good
-        review_like: 'I liked the {}.'
-        review_dislike: 'I did not like the {}.'
-        review_order_met: 'They managed to serve me what I ordered: {}.'
-        review_order_not_met: 'The idiot did not serve me what I ordered: {}.'
-        review_no_food: 'I did not get anything to eat.'
+      positive_phrases:
+        - Grunz...
+        - Yeah!
+      negative_phrases:
+        - Buuh.
+        - Yikes!
 
     - name: tourist
       name_factory: Earth-English
@@ -235,18 +229,10 @@ guests:
         - meat plate
         - burger
         - silkworm burger
-      output:
-        scale:
-          - sadly, pretty bad
-          - not so good
-          - average
-          - pretty good
-          - amazing
-        review_like: 'I will tell you what was excellent: the {}.'
-        review_dislike: 'What did I not like? Well, the {}.'
-        review_order_met: 'I received exactly what I ordered: {}.'
-        review_order_not_met: 'I did not receive exactly what I ordered: {}.'
-        review_no_food: 'Unfortunately, I did not receive any food.'
+      positive_phrases:
+        - O-la-la.
+      negative_phrases:
+        - Pfft...
 
   names:
     - name: Earth-English

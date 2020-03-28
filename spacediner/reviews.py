@@ -1,6 +1,8 @@
 import pickle
+import random
 from collections import OrderedDict
 
+from . import cli
 from . import time
 
 
@@ -12,7 +14,6 @@ class Rating:
     taste = 0
     service = 0
     ambience = 0
-
 
     TASTE_MULTIPLIER = 3
 
@@ -31,6 +32,72 @@ class Rating:
         return aggregate
 
 
+class Review:
+
+    name = None
+    group_name = None
+
+    first_choices = None
+    second_choices = None
+
+    scale = ['very bad', 'bad', 'ok', 'good', 'very good']
+    like = 'I liked the {}.'
+    dislike = 'I did not like the {}.'
+    taste = 'The taste was {}.'
+    service = 'The service was {}.'
+    ambience = 'The ambience was {}.'
+    order_not_met = 'I did not get what I ordered ({}).'
+    no_food = 'I did not get any food.'
+    chatted = 'Had a nice chat with the owner.'
+    diner_clean = 'Very clean diner.'
+    diner_dirty = 'Very dirty.'
+
+    def __init__(self, name, group_name):
+        self.name = name
+        self.group_name = group_name
+        self.first_choices = []
+        self.second_choices = []
+
+    def get(self, name, *args):
+        if len(args) > 0 and isinstance(args[0], int):
+            message = getattr(self, name).format(self.scale[args[0]])
+        else:
+            message = getattr(self, name).format(*args)
+        return message
+
+    def add(self, prio, name, *args, **kwargs):
+        choices = self.first_choices if prio == 1 else self.second_choices
+        message = self.get(name, *args)
+        choices.append(message)
+        if kwargs.get('print', False):
+            cli.print_dialog(self.name, message)
+
+    def add_message(self, prio, message):
+        choices = self.first_choices if prio == 1 else self.second_choices
+        choices.append(message)
+
+    def generate(self, taste, service, ambience, positive_phrases, negative_phrases):
+        global reviews
+        self.add(2, 'ambience', ambience)
+        self.add(2, 'service', service)
+        aggregate_rating = add_rating(self.group_name, taste, service, ambience)
+        message = ''
+        if self.group_name != self.name:
+            message += '{} ({}):'.format(self.name, self.group_name)
+        else:
+            message += '{}:'.format(self.name)
+        if negative_phrases and aggregate_rating <= 2:
+            message += ' ' + random.SystemRandom().choice(negative_phrases)
+        elif positive_phrases and aggregate_rating >= 4:
+            message += ' ' + random.SystemRandom().choice(positive_phrases)
+        message += ' ' + random.SystemRandom().choice(self.first_choices)
+        message += ' ' + random.SystemRandom().choice(self.second_choices)
+        message += ' (Rating: {})'.format(round(aggregate_rating))
+        self.message = message
+        reviews.append(self)
+        return aggregate_rating
+
+
 ratings = None
 reviews = None
 likes = None
@@ -47,7 +114,7 @@ def get_rating(name):
 
 def get_reviews():
     global reviews
-    return reviews
+    return [review.message for review in reviews]
 
 
 def get_likes():
@@ -58,11 +125,6 @@ def get_likes():
 def add_rating(name, taste, service, ambience):
     global ratings
     return ratings.get(name).add(taste + 1, service + 1, ambience + 1)
-
-
-def add_review(review):
-    global reviews
-    reviews.append(review)
 
 
 def add_likes(name, new_likes):
