@@ -86,6 +86,10 @@ class Calendar:
         return self.week[(self.day % len(self.week) - 1)]
 
     @property
+    def is_first_day(self):
+        return self.day == 1 or (self.day == 2 and self.time == self.TIME_MORNING)
+
+    @property
     def now(self):
         return 'day {}, {}, {}'.format(self.day, self.weekday, self.time)
 
@@ -127,7 +131,6 @@ def now():
 def weekday():
     global calendar
     return calendar.weekday
-
 
 def get_holidays():
     global calendar

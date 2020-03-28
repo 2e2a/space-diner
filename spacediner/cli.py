@@ -148,6 +148,7 @@ class Mode:
     completer = None
     empty_input = False
     back_mode = None
+    hint = None
 
     def __init__(self, back=None):
         self.back_mode = back
@@ -180,6 +181,12 @@ class Mode:
                 if is_available:
                     command_list.append(text)
             print_list(command_list)
+
+    def print_hint(self):
+        if self.hint:
+            hint_text = '(Hint: {})'.format(self.hint)
+            print_text(hint_text)
+            print_newline()
 
     def exec(self, cmd, cmd_input):
         raise NotImplemented()
@@ -345,9 +352,9 @@ class FirstHelpMode(InfoMode):
         print_title('Welcome to your new diner!')
         print_text(
             'How to play? Use auto-complete: type the first letters of a command and press TAB. Type \'help\' to '
-            'display a list of available commands.\n'
+            'display a list of available commands. During your first day, you will receive general gameplay hints.\n'
             'What to do first? Take your guests\' orders in the diner, prepare food in the kitchen, and serve it.\n'
-            'Heads up: your guests have specific dietary restrictions and preferences.'
+            'Heads up: your guests have specific dietary restrictions and preferences. '
             'Make them happy, and they will repay you in space dollars and positive reviews!\n'
         )
 
@@ -378,6 +385,11 @@ class DinerMode(Mode):
         (['exit'],),
     ]
     prompt = 'diner >>'
+    hint = (
+        'In the dining room, you can chat with your guests, take their orders, and serve them food '
+        '(for preparing it, go to the kitchen). When all the guests are gone, close up the diner - '
+        'new guests will come tomorrow.'
+    )
 
     def update_commands(self):
         cooked_food = [self.name_for_command(f) for f in food.plated()]
@@ -460,14 +472,12 @@ class KitchenMode(Mode):
     CMD_TRASH = 2
     CMD_RECIPES = 3
     # CMD_COOKING_BOT = 4
-    CMD_SKILLS = 4
-    CMD_COMPENDIUM = 5
-    CMD_DINER = 6
+    CMD_COMPENDIUM = 4
+    CMD_DINER = 5
     commands = [
         (['cook'], [],),
         (['trash'],),
         (['recipes'],),
-        (['skills'],),
         (['compendium'],),
         # (['bot'], ),
         (['diner'],),
@@ -478,6 +488,11 @@ class KitchenMode(Mode):
     available_ingredients = None
     available_devices = None
     prepared_components = None
+    hint = (
+        'You can follow the available recipes or create your own dishes. Every dish consists of three ingredients. '
+        'Once you have prepared them, they will be automatically plated as a completed dish. Try to include what your '
+        'guests ordered and to satisfy their general preferences.'
+    )
 
     def __init__(self, **kwargs):
         global actions_saved
@@ -546,8 +561,6 @@ class KitchenMode(Mode):
         if cmd == self.CMD_RECIPES:
             actions_saved.append(self.action)
             return RecipeMode(back=self)
-        if cmd == self.CMD_SKILLS:
-            return SkillInfoMode(back=self)
         if cmd == self.CMD_COMPENDIUM:
             return CompendiumMode(back=self)
         if cmd == self.CMD_DINER:
@@ -713,6 +726,11 @@ class IngredientCompendiumMode(ChoiceMode):
 
 
 class ReviewsInfoMode(InfoMode):
+    hint = (
+        'The daily reviews provide pointers for ways to improve your food and your diner. Pay attention to the '
+        'general preferences (+) and aversions (-) of your target groups and the individual taste of your regulars - '
+        'you might be able to elevate their orders with something they like.'
+    )
 
     def back(self):
         return ActivityMode()
@@ -767,6 +785,11 @@ class ActivityMode(ChoiceMode):
     back_enabled = False
     activities = None
     meetings = None
+    hint = (
+        'Evening activities can advance your social relationships (when you make your regulars happy, they might '
+        'invite you to social events) or have an effect on your skills. Do not forget to clean your diner '
+        'once in a while.'
+    )
 
     def __init__(self, **kwargs):
         self.meetings = sorted(social.available_meetings())
@@ -829,6 +852,10 @@ class ShoppingMode(Mode):
     storages_for_sale = None
     available_ingredients = None
     ingredients_for_sale = None
+    hint = (
+        'Every morning you have the opportunity to stock up on supplies. Try to plan ahead and to be prepared even '
+        'for unexpectedly crowded days at the diner. New merchants might become available during the game.'
+    )
 
     def __init__(self, **kwargs):
         self.storages_for_sale = storage.for_sale()
@@ -946,6 +973,8 @@ def run():
     while True:
         if print_info:
             mode.print_info()
+            if time.calendar.is_first_day:
+                mode.print_hint()
         prompt = '{} '.format(mode.prompt) if mode.prompt else ''
         cmd = input('{} '.format(prompt))
         print_newline()
