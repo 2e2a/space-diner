@@ -76,7 +76,7 @@ class Review:
         choices = self.first_choices if prio == 1 else self.second_choices
         choices.append(message)
 
-    def generate(self, taste, service, ambience, positive_phrases, negative_phrases):
+    def generate(self, taste, service, ambience, positive_phrases, neutral_phrases, negative_phrases):
         global reviews
         self.add(2, 'ambience', ambience)
         self.add(2, 'service', service)
@@ -90,6 +90,8 @@ class Review:
             message += ' ' + random.SystemRandom().choice(negative_phrases)
         elif positive_phrases and aggregate_rating >= 4:
             message += ' ' + random.SystemRandom().choice(positive_phrases)
+        elif neutral_phrases:
+            message += ' ' + random.SystemRandom().choice(neutral_phrases)
         message += ' ' + random.SystemRandom().choice(self.first_choices)
         message += ' ' + random.SystemRandom().choice(self.second_choices)
         message += ' (Rating: {})'.format(round(aggregate_rating))

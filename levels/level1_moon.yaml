@@ -209,6 +209,8 @@ guests:
       positive_phrases:
         - Grunz...
         - Yeah!
+      neutral_phrases:
+        - Whatever.
       negative_phrases:
         - Buuh.
         - Yikes!
@@ -231,6 +233,8 @@ guests:
         - silkworm burger
       positive_phrases:
         - O-la-la.
+      neutral_phrases:
+        - Meh.
       negative_phrases:
         - Pfft...
 

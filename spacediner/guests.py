@@ -37,6 +37,7 @@ class Guest:
     reactions = None
     orders = None
     positive_phrases = None
+    neutral_phrases = None
     negative_phrases = None
 
     order = None
@@ -50,6 +51,7 @@ class Guest:
 
     def __init__(self):
         self.positive_phrases = []
+        self.neutral_phrases = []
         self.negative_phrases = []
 
     @property
@@ -89,6 +91,7 @@ class Guest:
             self.service,
             self.ambience,
             self.positive_phrases,
+            self.neutral_phrases,
             self.negative_phrases,
         )
 
@@ -162,6 +165,7 @@ class Guest:
             self.reactions.append(reaction)
         self.orders = data.get('orders', [])
         self.positive_phrases = data.get('positive_phrases', [])
+        self.neutral_phrases = data.get('neutral_phrases', [])
         self.negative_phrases = data.get('negative_phrases', [])
 
 
@@ -212,6 +216,7 @@ class GuestFactory:
         guest.orders = list(itertools.chain.from_iterable(group.orders for group in groups))
         for group in groups:
             guest.positive_phrases += group.positive_phrases
+            guest.neutral_phrases += group.neutral_phrases
             guest.negative_phrases += group.negative_phrases
         guest.reset()
         return guest
