@@ -892,6 +892,7 @@ class ShoppingMode(Mode):
                 print(e)
             return self
         if cmd == self.CMD_DONE:
+            time.tick()
             return DinerMode()
 
 
