@@ -2,11 +2,13 @@ name: Moon
 intro: >
   The moon has been colonized. There are a couple of settlements, mainly on the bright side of the moon.
   You run a diner in one of them. It is not very lucrative, but you have a solid customer base, because
-  there are not many alternatives within the colony. Try to earn 1000 space dollars - that's the amount
-  you need to buy an interplanetary ticket and open a diner in a more interesting place.
-money: 50
+  there are not many alternatives within the colony. The colony is too insignificant to have visitors from other
+  planets or even solar system, but it is a quite popular spot for human tourists from Earth.
+  Try to earn 500 space dollars - that's the amount you need to buy an interplanetary ticket and open a diner
+  in a more interesting place.
+money: 500
 diner:
-  name: Bright Side Diner
+  name: Space Diner
   seats: 7
 calendar:
   week: [Moonday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday]
@@ -206,14 +208,21 @@ guests:
         - pickle salad
         - bread basket
         - fries
+        - beef
+        - fried
+        - meat
       positive_phrases:
-        - Grunz...
-        - Yeah!
+        - Awesome!
+        - Amazing!
+        - I loved it here!
       neutral_phrases:
-        - Whatever.
+        - Pretty decent.
+        - It was alright.
+        - It was fine.
       negative_phrases:
-        - Buuh.
-        - Yikes!
+        - Very bad.
+        - Horrible.
+        - Awful.
 
     - name: tourist
       name_factory: Earth-English
@@ -231,12 +240,20 @@ guests:
         - meat plate
         - burger
         - silkworm burger
+        - local
+        - potato
       positive_phrases:
-        - O-la-la.
+        - Ooh la la!
+        - Lovely!
+        - Extraordinary!
       neutral_phrases:
-        - Meh.
+        - Mediocre.
+        - Acceptable.
+        - Adequate.
       negative_phrases:
-        - Pfft...
+        - Appalling.
+        - Abysmal.
+        - I was shocked.
 
   names:
     - name: Earth-English
@@ -286,6 +303,13 @@ guests:
       orders:
         - burger
         - pickle salad
+        - deep-fried
+      positive_phrases:
+        - Wonderful!
+      neutral_phrases:
+        - It was nice.
+      negative_phrases:
+        - This, it was not so great.
 
 social:
   - name: Dr. Ozabela Ruizy
