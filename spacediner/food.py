@@ -24,6 +24,12 @@ class Food:
             ingredient.properties.update(device.properties)
             self.ingredients.append((preparation, ingredient))
 
+    def ingredient_properties(self, num):
+        if num < len(self.ingredients):
+            _, ingredient = self.ingredients[num]
+            return list(ingredient.properties)
+
+
     def plate(self):
         global cooked
         self.properties = set()
@@ -138,6 +144,14 @@ def plated():
     return [dish.name for dish in cooked]
 
 
+def save_as_recipe(name, sub_properties):
+    global recipes
+    global cooked
+    dish = cooked.get(name)
+    dish.properties =  sub_properties
+    recipes.update({dish.name, dish})
+
+
 def get_recipes():
     global recipes
     return [recipe.name for recipe in recipes.values() if recipe.available]
@@ -160,7 +174,8 @@ def match_recipe(ingredients):
 def save_dish(name, new_name):
     global dishes
     global cooked
-    if name in dishes: dishes.remove(name)
+    if name in dishes:
+        dishes.remove(name)
     cooked_dish = get(name)
     recipe = SavedDish(new_name, cooked_dish)
     dishes.append(recipe)
