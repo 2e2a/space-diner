@@ -581,6 +581,10 @@ class RecipeMode(ChoiceMode):
         print_title(recipe.name)
         ingredient_list = [' '.join(properties) for properties in recipe.ingredient_properties]
         print_list(ingredient_list)
+        if recipe.properies:
+            properties = filter(lambda p: p != recipe.name.lower(), recipe.properties)
+            print_value('Properties of the dish: ', ', '.join(properties))
+            print_newline()
 
     def exec_choice(self, choice):
         recipe = food.get_recipe(self.choices[choice - 1])
@@ -839,6 +843,44 @@ class ActivityMode(ChoiceMode):
         return WaitForInputMode(back=SleepMode())
 
 
+class MeetingMode(ChoiceMode):
+    prompt = 'reply #'
+    choices = None
+    title = 'Answer'
+    back_enabled = False
+
+    guest = None
+    meeting = None
+
+    def __init__(self, guest, **kwargs):
+        self.guest = guest
+        super().__init__(**kwargs)
+        self.meeting = social.get(self.guest).get_meeting()
+        self.choices = self.meeting.get_replies()
+
+    def print_info(self):
+        print_text(self.meeting.text)
+        print_dialog(self.guest, self.meeting.question)
+        super().print_info()
+
+    def exec_choice(self, choice):
+        reply = choice - 1
+        action = actions.Meet(self.guest, reply)
+        action.perform()
+        return WaitForInputMode(back=SleepMode())
+
+
+class SleepMode(InfoMode):
+
+    def print_info(self):
+        print_text('You go to sleep.')
+        print_newline()
+
+    def back(self):
+        time.tick()
+        return ShoppingMode()
+
+
 class ShoppingMode(Mode):
     CMD_BUY_STORAGE = 1
     CMD_BUY_INGREDIENT = 2
@@ -921,44 +963,6 @@ class ShoppingMode(Mode):
         if cmd == self.CMD_DONE:
             time.tick()
             return DinerMode()
-
-
-class MeetingMode(ChoiceMode):
-    prompt = 'reply #'
-    choices = None
-    title = 'Answer'
-    back_enabled = False
-
-    guest = None
-    meeting = None
-
-    def __init__(self, guest, **kwargs):
-        self.guest = guest
-        super().__init__(**kwargs)
-        self.meeting = social.get(self.guest).get_meeting()
-        self.choices = self.meeting.get_replies()
-
-    def print_info(self):
-        print_text(self.meeting.text)
-        print_dialog(self.guest, self.meeting.question)
-        super().print_info()
-
-    def exec_choice(self, choice):
-        reply = choice - 1
-        action = actions.Meet(self.guest, reply)
-        action.perform()
-        return WaitForInputMode(back=self.back_mode)
-
-
-class SleepMode(InfoMode):
-
-    def print_info(self):
-        print_text('You go to sleep.')
-        print_newline()
-        time.tick()
-
-    def back(self):
-        return ShoppingMode()
 
 
 mode = None
