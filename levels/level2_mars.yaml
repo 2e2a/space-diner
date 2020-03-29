@@ -1,10 +1,237 @@
 name: Mars
-diner: Red Diner
+diner:
+  name: Space Diner
+  seats: 7
 money: 100
 intro: >
-  You are starting a new life on Mars. Humans are terraforming it, but the cities on Mars still need
-  to be protected by domes. Your diner is located in a small city close to Pavonis Mons.
-  
+  You are starting a new life on Mars. Humans are terra-forming it, but the cities on Mars still need
+  to be protected by domes. Fresh crops grown in the Martian greenhouses complement the supplies imported from Earth and
+  other planets. Some (edible?) life forms are even beginning to cover the rocky surface outside of the domes.
+  Your diner is located in a small city close to Pavonis Mons. Most of the settlers
+  seeking their fortunes on Mars are humans, but there are also reptiloids and bovids. Make sure that they all
+  feel at home in your diner! Your goal is to get 25 positive reviews from each group. This will help you to establish
+  a reputation as a versatile chef.
+goals:
+  - type: money
+    amount: 1000
+    message: You win.
+#  - type: positive reviews
+#    group: reptiloid
+#    amount: 25
+#    message: Congratulations, you have received 25 positive reviews from reptiloids!
+#  - type: positive reviews
+#    group: bovid
+#    amount: 25
+#    message: Congratulations, you have received 25 positive reviews from bovids!
+#  - type: positive reviews
+#    group: human
+#    amount: 25
+#    message: Congratulations, you have received 25 positive reviews from humans!
+
 calendar:
   week: ['Monsol', 'Tuessol', 'Wednessol', 'Thurssol', 'Frisol', 'Satursol', 'Sunsol']
   cycle: 668
+
+ingredients:
+  - name: Martian lichen
+    description: A composite algae/fungus organism. Grows on the surface of Mars.
+    storage: pantry
+    properties: [ local, fresh, spicy ]
+
+  - name: Martian moss
+    description: Small green plants forming a soft, dense mat. Grows on the surface of Mars.
+    storage: pantry
+    properties: [ local, fresh ]
+
+  - name: tomato
+    description: Red and juicy.
+    storage: pantry
+    properties: [ fresh ]
+
+  - name: chicken egg
+    description: Egg laid by an Earth chicken. Consists of a shell, egg white, and egg yolk.
+    storage: pantry
+    properties: [ egg, animal product ]
+
+  - name: blizzard-bird egg
+    description: Egg laid by a Tau-Cetian blizzard bird. Consists of a shell and purple, spicy goo.
+    storage: pantry
+    properties: [ egg, animal product ]
+
+storage:
+  - name: fridge
+    available: True
+    ingredients: []
+
+  - name: pantry
+    available: True
+    ingredients:
+      - name: tomato
+        available: 5
+
+kitchen:
+  - name: plate
+    available: True
+    preparation: plating raw
+    command: plate
+    result: raw
+    properties: [ ]
+
+  - name: pan
+    available: True
+    preparation: frying
+    command: fry
+    result: fried
+    properties: [ ]
+
+  - name: fryer
+    available: True
+    preparation: deep-frying
+    command: deep_fry
+    result: deep-fried
+    properties: [ ]
+
+merchants:
+  - name: Earth Imports
+    available: True
+    ingredients:
+      - name: chicken egg
+        cost: 2
+
+  - name: Fresh greens
+    available: True
+    ingredients:
+      - name: tomato
+        cost: 1
+
+  - name: Tau-Cetian Imports
+    available: True
+    ingredients:
+      - name: blizzard-bird egg
+        cost: 3
+
+recipes:
+  - name: Veggie Omelette
+    available: True
+    ingredients:
+      - [ fried, egg ]
+      - [ fried, egg ]
+      - [ fried, vegetable ]
+    properties: [ omelette ]
+
+guests:
+  groups:
+    - name: Human
+      name_factory: Martian-Human
+      available: True
+      reactions:
+        - properties: [ tomato ]
+          taste: +1
+          output: Humans like tomatoes.
+
+    - name: Reptiloid
+      name_factory: Martian-Reptiloid
+      available: True
+      reactions:
+        - properties: [ egg ]
+          taste: +1
+          output: Reptiloids like eggs.
+
+    - name: Bovid
+      name_factory: Martian-Bovid
+      available: True
+      reactions:
+        - properties: [ animal product ]
+          taste: -2
+          output: Bovids cannot digest animal products.
+
+    - name: colonist
+      available: True
+      budget: 10
+      reactions:
+        - properties: [ fried ]
+          taste: +1
+          output: I love fried food!
+      orders:
+        - veggie omelette
+      positive_phrases:
+        - Great!
+      neutral_phrases:
+        - It was fine.
+      negative_phrases:
+        - Horrible!
+
+  names:
+    - name: Martian-Human
+      factory:
+        - [Mohamed, Youssef, Ahmed, Junior, Mehdi, Fatima, Aya, Salma, Precious, Mariam, Santiago, Noah, Miguel, Jayden,
+           Ramón, Luis, Agustín, Sofía, Alysha, Alice, Olivia, Emma, Mariana, Widelene, Gabrielle, Ximena, Mary, Camila,
+           An, Wei, Aarav, Amir, Ori, Amit, George, Minato, Yerasyl, Kiran, Min-jun, Chia-hao, Somchai, Ai, Cai, Jing,
+           Aadya, Tamar, Eden, Sekura, Rimas, Ayzere, Nor, Odval, Shristi, Angel, Seo-yeon, Sara, Shu-fen, Sumayah,
+           Noel, Marc, Davit, Lukas, Yusif, Adam, Stefan, Georgi, Rasmus, Benjamin, Onni, Adrian, Gabriel, Malik,
+           Georgios, Francesco, Mihail, Daan, William, Antoni, Dragan, Hugo, Amelia, Nareh, Laia, Zahra, Viktoria,
+           Tereza, Mia, Margret, Daisy, Ivaana, Zuzanna, Anastasia, Darina, Nikau, Teiki, Maeva, Hina]
+        - [Mammadov, Aktar, Wong, Chu, Beridze, Lomidze, Cohen, Levi, Tanaka, Sasaki, Kim, Seo, Santos, Aquino, Perera,
+           Gamage, Can, Lau, Kaya, Aslan, Phan, Lý, Gruber, Auer, Peeters, Delić, Savić, Iliev, Nielsen, Kask, Koppel,
+           Rebane, Sepp, Andrejev, Ivanov, Hansen, Poulsen, Laine, Virtanen, Salonen, Johansson, Bernard, Dubois, Roux,
+           Wagner, Becker, Papp, Kiss, Briem, Blöndal, Murphy, Quinn, Russo, Esposito, Krasniqi, Shala, Ozols,
+           Kazlauskas, Schiltz, Vella, Grech, Popa, De Jong, De Boer, Berg, Krawczyk, Costa, Silva, Sokolov, Balog,
+           García, Pérez, Fontana, Bondarenko, Melnyk, Wright, Wilson, Moore, Tremblay, Flores, Morais, Azevedo, Mohan]
+
+    - name: Martian-Reptiloid
+      factory:
+        - [S, Z, Sh, Zh, H, F, V, R]
+        - [a,e,i,o,u,aa,ee,oo,ou,ea]
+        - [ss, ff, sh, r]
+        - [y, o]
+
+    - name: Martian-Bovid
+      factory:
+        - [ Hornless, one-horned, two-horned, three-horned, four-horned, multi-horned]
+        - [ Mm, Nn, B, D]
+        - [ aa, oo, ee,]
+        - [ d, b, m, n,]
+        - [ '-' ]
+        - [ b, d, m, n]
+        - [ a, e, i, o, u]
+
+  factory:
+    - [ Human, colonist ]
+    - [ Reptiloid, colonist ]
+    - [ Bovid, colonist ]
+
+  regulars:
+    - name: Bob
+      available: True
+      budget: 10
+      reactions:
+        - properties: [ tomato ]
+          taste: +1
+          output: I like tomatoes.
+      orders:
+        - tomato
+      positive_phrases:
+        - Good!
+      neutral_phrases:
+        - Fine!
+      negative_phrases:
+        - Bad!
+
+  skills:
+    - type: cooking
+      name: knife skills
+      subskills:
+        - coarse chopping
+        - fine dicing
+        - Batonnet cut
+        - Allumette cut
+        - Julienne cut
+
+  activities:
+    - name: practice knife skills
+      available: True
+      message: You practiced your knife skills.
+      rewards:
+        - type: skill
+          skill: knife skills
+          diff: +1

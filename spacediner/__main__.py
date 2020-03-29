@@ -15,6 +15,8 @@ from . import settings
 # TODO: after increasing/decreasing a skill: show bar again (#----); add "Now your knife skill include: ..."
 # TODO: orders: when ordering sth from the menu, use standard phrase: "I'll have the ..."
 # TODO: orders: when ordering sth not on the menu, use custom phrase defined in level file
+# TODO: player can enter a name and will be addressed as "Chef [name]"
+# TODO: make defining regulars optional
 
 parser = argparse.ArgumentParser(description='Space diner')
 parser.add_argument(

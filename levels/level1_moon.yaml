@@ -29,7 +29,7 @@ calendar:
       groups: [ Human colonist ]
 goals:
   - type: money
-    amount: 1000
+    amount: 500
     message: You have earned enough money for an interplanetary ticket. Let's get out of here.
 
 ingredients:
@@ -73,6 +73,8 @@ storage:
       - name: bun
         available: 5
       - name: pickles
+        available: 5
+      - name: potato
         available: 5
 
 kitchen:
