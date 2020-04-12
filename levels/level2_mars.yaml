@@ -36,25 +36,40 @@ ingredients:
   - name: Martian lichen
     description: A composite algae/fungus organism. Grows on the surface of Mars.
     storage: pantry
-    properties: [ local, fresh, spicy ]
+    properties: [ local specialty, fresh, sweet ]
 
   - name: Martian moss
     description: Small green plants forming a soft, dense mat. Grows on the surface of Mars.
     storage: pantry
-    properties: [ local, fresh ]
+    properties: [ local specialty, fresh, spicy ]
+
+  - name: Moss milk
+    description: A milky fluid extracted from Martian moss.
+    storage: pantry
+    properties: [ local specialty, milk, spicy ]
 
   - name: tomato
     description: Red and juicy.
     storage: pantry
     properties: [ fresh ]
 
+  - name: basil
+    description: An aromatic green herb.
+    storage: pantry
+    properties: [ fresh ]
+
+  - name: cow milk
+    description: A milky fluid produced by cows (an Earth mammal).
+    storage: fridge
+    properties: [ milk, animal product ]
+
   - name: chicken egg
-    description: Egg laid by an Earth chicken. Consists of a shell, egg white, and egg yolk.
+    description: Egg laid by a chicken (an Earth bird). Consists of a shell, egg white, and egg yolk.
     storage: pantry
     properties: [ egg, animal product ]
 
   - name: blizzard-bird egg
-    description: Egg laid by a Tau-Cetian blizzard bird. Consists of a shell and purple, spicy goo.
+    description: Egg laid by a blizzard bird (a Tau-Cetian bird). Consists of a shell and purple, spicy goo.
     storage: pantry
     properties: [ egg, animal product ]
 
@@ -77,11 +92,18 @@ kitchen:
     result: raw
     properties: [ ]
 
+  - name: pot
+    available: True
+    preparation: boiling
+    command: boil
+    result: boiled
+    properties: [ ]
+
   - name: pan
     available: True
-    preparation: frying
-    command: fry
-    result: fried
+    preparation: pan-frying
+    command: pan-fry
+    result: pan-fried
     properties: [ ]
 
   - name: fryer
@@ -91,17 +113,35 @@ kitchen:
     result: deep-fried
     properties: [ ]
 
+  - name: blender
+    available: False
+    preparation: blending
+    command: blend
+    result: blended
+    properties: [ ]
+
 merchants:
   - name: Earth Imports
     available: True
     ingredients:
       - name: chicken egg
         cost: 2
+      - name: cow milk
+        cost: 2
+    devices:
+      - name: blender
+        cost: 70
 
   - name: Fresh greens
     available: True
     ingredients:
       - name: tomato
+        cost: 1
+      - name: Martian lichen
+        cost: 1
+      - name: Martian moss
+        cost: 1
+      - name: Martian moss milk
         cost: 1
 
   - name: Tau-Cetian Imports
@@ -118,6 +158,20 @@ recipes:
       - [ fried, egg ]
       - [ fried, vegetable ]
     properties: [ omelette ]
+  - name: Tomato Soup
+    available: True
+    ingredients:
+      - [ boiled, tomato ]
+      - [ boiled, tomato ]
+      - [ basil ]
+    properties: [ soup ]
+  - name: Martian Milkshake
+    available: True
+    ingredients:
+      - [ blended, Martian moss ]
+      - [ blended, Martian lichen ]
+      - [ milk ]
+    properties: [ shake ]
 
 guests:
   groups:
@@ -125,17 +179,20 @@ guests:
       name_factory: Martian-Human
       available: True
       reactions:
-        - properties: [ tomato ]
-          taste: +1
-          output: Humans like tomatoes.
+        - properties: [ blizzard-bird egg ]
+          taste: -2
+          output: Humans cannot digest blizzard-bird eggs.
 
     - name: Reptiloid
       name_factory: Martian-Reptiloid
       available: True
       reactions:
-        - properties: [ egg ]
-          taste: +1
-          output: Reptiloids like eggs.
+        - properties: [ deep-fried ]
+          taste: -2
+          output: Reptiloids cannot digest spicy food.
+      orders:
+        - egg
+        - blizard-bird egg
 
     - name: Bovid
       name_factory: Martian-Bovid
@@ -144,6 +201,12 @@ guests:
         - properties: [ animal product ]
           taste: -2
           output: Bovids cannot digest animal products.
+      orders:
+        - raw
+        - Martian moss
+        - Martian lichen
+        - fresh
+        - lichen
 
     - name: colonist
       available: True
@@ -153,30 +216,64 @@ guests:
           taste: +1
           output: I love fried food!
       orders:
-        - veggie omelette
+        - omelette
       positive_phrases:
         - Great!
+        - Wonderful!
+        - Perfect!
       neutral_phrases:
-        - It was fine.
+        - OK.
+        - Quite good.
+        - Not bad.
       negative_phrases:
-        - Horrible!
+        - Pretty bad.
+        - I did not enjoy this.
+        - I didn't like it.
 
+    - name: teenager
+      available: False
+      budget: 10
+      reactions:
+        - properties: [ deep-fried ]
+          taste: +1
+          output: I love deep-fried food!
+        - properties: [ sweet ]
+          taste: +1
+          output: I love sweet food!
+        - properties: [ shake ]
+          taste: +1
+          output: I love shakes!
+      orders:
+        - deep-fried
+        - sweet
+        - shake
+      positive_phrases:
+        - ":D"
+        - ":))"
+        - "<3"
+      neutral_phrases:
+        - ":/"
+        - ":|"
+      negative_phrases:
+        - ":(("
+        - "D:"
+        - "-_-"
   names:
     - name: Martian-Human
       factory:
-        - [Mohamed, Youssef, Ahmed, Junior, Mehdi, Fatima, Aya, Salma, Precious, Mariam, Santiago, Noah, Miguel, Jayden,
-           Ramón, Luis, Agustín, Sofía, Alysha, Alice, Olivia, Emma, Mariana, Widelene, Gabrielle, Ximena, Mary, Camila,
-           An, Wei, Aarav, Amir, Ori, Amit, George, Minato, Yerasyl, Kiran, Min-jun, Chia-hao, Somchai, Ai, Cai, Jing,
-           Aadya, Tamar, Eden, Sekura, Rimas, Ayzere, Nor, Odval, Shristi, Angel, Seo-yeon, Sara, Shu-fen, Sumayah,
-           Noel, Marc, Davit, Lukas, Yusif, Adam, Stefan, Georgi, Rasmus, Benjamin, Onni, Adrian, Gabriel, Malik,
-           Georgios, Francesco, Mihail, Daan, William, Antoni, Dragan, Hugo, Amelia, Nareh, Laia, Zahra, Viktoria,
-           Tereza, Mia, Margret, Daisy, Ivaana, Zuzanna, Anastasia, Darina, Nikau, Teiki, Maeva, Hina]
-        - [Mammadov, Aktar, Wong, Chu, Beridze, Lomidze, Cohen, Levi, Tanaka, Sasaki, Kim, Seo, Santos, Aquino, Perera,
-           Gamage, Can, Lau, Kaya, Aslan, Phan, Lý, Gruber, Auer, Peeters, Delić, Savić, Iliev, Nielsen, Kask, Koppel,
-           Rebane, Sepp, Andrejev, Ivanov, Hansen, Poulsen, Laine, Virtanen, Salonen, Johansson, Bernard, Dubois, Roux,
-           Wagner, Becker, Papp, Kiss, Briem, Blöndal, Murphy, Quinn, Russo, Esposito, Krasniqi, Shala, Ozols,
-           Kazlauskas, Schiltz, Vella, Grech, Popa, De Jong, De Boer, Berg, Krawczyk, Costa, Silva, Sokolov, Balog,
-           García, Pérez, Fontana, Bondarenko, Melnyk, Wright, Wilson, Moore, Tremblay, Flores, Morais, Azevedo, Mohan]
+        - [Mohomot, Youssef, Ahmet, Junior, Mehti, Fatima, Aya, Salma, Precious, Mariam, Santiako, Noah, Mikuel, Chayten,
+           Ramón, Luis, Akustín, Sofía, Alysha, Alice, Oliphia, Emma, Mariana, Phidelene, Kaprielle, Ximena, Mary, Camila,
+           An, Phei, Aaraph, Amir, Ori, Amit, Keorch, Minato, Yerasyl, Kiran, Min-chun, Chia-hao, Somchai, Ai, Cai, Ching,
+           Aatya, Tamar, Eten, Sekura, Rimas, Aysere, Nor, Otphal, Shristi, Anchel, Seo-yeon, Sara, Shu-fen, Sumayah,
+           Noel, Marc, Tavit, Lukas, Yusif, Atam, Stefan, Cheorchi, Rasmus, Penchamin, Onni, Atrian, Kapriel, Malik,
+           Cheorchios, Francesco, Mihail, Taan, Philliam, Antoni, Trakan, Huko, Amelia, Nareh, Laia, Sahra,
+           Teresa, Mia, Margret, Taisy, Iphaana, Susanna, Anastasia, Tarina, Nikau, Teiki, Maepha, Hina,
+           Mammatoph, Aktar, Wong, Chu, Peritse, Lomitse, Cohen, Lephi, Tanaka, Sasaki, Kim, Seo, Santos, Aquino, Perera,
+           Kamake, Can, Lau, Kaya, Aslan, Phan, Lý, Kruber, Auer, Peeters, Telić, Savić, Iliev, Nielsen, Kask, Koppel,
+           Repane, Sepp, Antrejev, Iphanoph, Hansen, Poulsen, Laine, Phirtanen, Salonen, Chohansson, Pernart, Tubois, Roux,
+           Phagner, Pecker, Papp, Kiss, Priem, Plöntal, Murphy, Quinn, Russo, Esposito, Krasniqi, Shala, Osols,
+           Kaslauskas, Schiltz, Fella, Crech, Popa, Te Chong, Te Poer, Perg, Krafczyk, Costa, Silpha, Sokoloph, Palok,
+           Karcía, Pérez, Fontana, Pontarenko, Melnyk, Wright, Wilson, Moore, Tremplay, Flores, Morais, Asepheto, Mohan]
 
     - name: Martian-Reptiloid
       factory:
@@ -187,13 +284,16 @@ guests:
 
     - name: Martian-Bovid
       factory:
-        - [ Hornless, one-horned, two-horned, three-horned, four-horned, multi-horned]
-        - [ Mm, Nn, B, D]
-        - [ aa, oo, ee,]
-        - [ d, b, m, n,]
-        - [ '-' ]
-        - [ b, d, m, n]
-        - [ a, e, i, o, u]
+        - [ One-horned, Two-horned, Three-horned, Four-horned, Multi-horned ]
+        - [ A, Aa, E, Ee, Ou]
+        - [ d, b, g, l, rg, rk, tch, rb, z, dge, mb, sk, w]
+
+    - name: Martian-Bovid-Teenager
+      factory:
+        - [ Hornless ]
+        - [ A, Aa, E, Ee, Ou]
+        - [ dd, bb, gg, ll, rg, rk, tch, rb, zz, dge, mb, sk, w]
+        - [ i]
 
   factory:
     - [ Human, colonist ]
@@ -201,7 +301,7 @@ guests:
     - [ Bovid, colonist ]
 
   regulars:
-    - name: Bob
+    - name: Hornless Abbi
       available: True
       budget: 10
       reactions:
@@ -226,12 +326,27 @@ guests:
         - Batonnet cut
         - Allumette cut
         - Julienne cut
+    - type: service
+      name: wittiness
+      subskills:
+        - old jokes
+        - modern jokes
+        - puns
+        - impersonations
+        - stand-up comedy
 
   activities:
     - name: practice knife skills
       available: True
-      message: You practiced your knife skills.
+      message: You practiced your knife skills. This should improve the quality of your food.
       rewards:
         - type: skill
           skill: knife skills
+          diff: +1
+    - name: watch comedy channel on TV
+      available: True
+      message: You watched some comedy. This should improve the quality of your service.
+      rewards:
+        - type: skill
+          skill: wittiness
           diff: +1

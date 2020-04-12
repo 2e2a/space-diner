@@ -15,7 +15,7 @@ calendar:
   cycle: 365
   events:
     - event: lose ingredients
-      days: 12-15
+      days: 6-9
       info: Rats ate some of the ingredients in your pantry! Who knew there were rats on the moon?
       ingredients:
         - name: bun
@@ -27,6 +27,21 @@ calendar:
       info: The colonists are celebrating the anniversary of the first person on the moon today!
       day: 5
       groups: [ Human colonist ]
+    - event: holiday
+      name: Lunatic Rollercoaster Opening
+      info: A new attraction is opening today in the Moon amusement park. The tourists are celebrating!
+      day: 10
+      groups: [ Human tourist ]
+    - event: holiday
+      name: Colony day
+      info: The colonists are celebrating the anniversary of the first colony on the moon today!
+      day: 15
+      groups: [ Human colonist ]
+    - event: holiday
+      name: Free-Ride-to-the-Moon day
+      info: Some lucky Earthlings have won free tickets to the Moon. The colony is crowded!
+      day: 20
+      groups: [ Human tourist ]
 goals:
   - type: money
     amount: 500
@@ -58,7 +73,7 @@ ingredients:
       Silkworms were brought to the dark side of the moon as part of a scientific experiment. Now they are cultivated as
       a local delicacy.
     storage: fridge
-    properties: [ meat, local ]
+    properties: [ meat, local specialty]
 
 storage:
   - name: fridge
@@ -87,9 +102,9 @@ kitchen:
 
   - name: pan
     available: True
-    preparation: frying
-    command: fry
-    result: fried
+    preparation: pan-frying
+    command: pan-fry
+    result: pan-fried
     properties: [ ]
 
   - name: fryer
@@ -231,7 +246,7 @@ guests:
       available: True
       budget: 25
       reactions:
-        - properties: [ local ]
+        - properties: [ local  specialty]
           taste: +1
           output: Great, a local specialty!
         - properties: [ fancy ]
@@ -242,7 +257,7 @@ guests:
         - meat plate
         - burger
         - silkworm burger
-        - local
+        - local specialty
         - potato
       positive_phrases:
         - Ooh la la!
@@ -453,7 +468,7 @@ social:
     chats:
       - It is wonderful to visit all these little local business here.
       - I am so excited. Can I take a picture of this diner? I already did. Thank you!
-      - Did you hear? They are building a Moon amusement park. Amazing!
+      - Did you hear? There is a Moon amusement park. Amazing!
       - I love the low gravity here. I could jump around all day.
       - I cannot get enough of seeing Earth from here. It is so small! Can you believe it?
       - I cannot wait to tell all my friends on Earth about my Moon adventures.
@@ -462,21 +477,36 @@ social:
       - Oh, look at all those wondrous local people!
       - I am returning to Earth tomorrow. What a shame! I would love to stay longer.
 
-skills:
-  - type: cooking
-    name: knife skills
-    subskills:
-      - coarse chopping
-      - fine dicing
-      - Batonnet cut
-      - Allumette cut
-      - Julienne cut
+  skills:
+    - type: cooking
+      name: knife skills
+      subskills:
+        - coarse chopping
+        - fine dicing
+        - Batonnet cut
+        - Allumette cut
+        - Julienne cut
+    - type: service
+      name: wittiness
+      subskills:
+        - old jokes
+        - modern jokes
+        - puns
+        - impersonations
+        - stand-up comedy
 
-activities:
-  - name: practice knife skills
-    available: True
-    message: You practiced your knife skills.
-    rewards:
-      - type: skill
-        skill: knife skills
-        diff: +1
+  activities:
+    - name: practice knife skills
+      available: True
+      message: You practiced your knife skills. This should improve the quality of your food.
+      rewards:
+        - type: skill
+          skill: knife skills
+          diff: +1
+    - name: watch comedy channel on TV
+      available: True
+      message: You watched some comedy. This should improve the quality of your service.
+      rewards:
+        - type: skill
+          skill: wittiness
+          diff: +1
