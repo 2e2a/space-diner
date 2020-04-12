@@ -487,13 +487,13 @@ social:
         - Allumette cut
         - Julienne cut
     - type: service
-      name: wittiness
+      name: etiquette
       subskills:
-        - old jokes
-        - modern jokes
-        - puns
-        - impersonations
-        - stand-up comedy
+        - friendly greeting
+        - announcing day's specials
+        - refilling drinks
+        - proper cutlery placement
+        - serving and clearing from the correct side
 
   activities:
     - name: practice knife skills
@@ -503,10 +503,10 @@ social:
         - type: skill
           skill: knife skills
           diff: +1
-    - name: watch comedy channel on TV
+    - name: read up on etiquette for restaurant staff
       available: True
-      message: You watched some comedy. This should improve the quality of your service.
+      message: You read a chapter of the book Elegant Etiquette. This should improve the quality of your service.
       rewards:
         - type: skill
-          skill: wittiness
+          skill: etiquette
           diff: +1

@@ -319,13 +319,13 @@ guests:
 
   skills:
     - type: cooking
-      name: knife skills
+      name: seasoning skills
       subskills:
-        - coarse chopping
-        - fine dicing
-        - Batonnet cut
-        - Allumette cut
-        - Julienne cut
+        - proper salting
+        - using spices
+        - balancing the level of acidity
+        - combining flavors
+        - creating unique flavors
     - type: service
       name: wittiness
       subskills:
@@ -334,14 +334,24 @@ guests:
         - puns
         - impersonations
         - stand-up comedy
+    - type: ambience
+      name: napkin-folding techniques
+      subskills:
+        - The Palm Leaf
+        - The Lily
+        - The Classic Fan
+        - The Bishop's Hat
+        - The Rose
 
   activities:
-    - name: practice knife skills
+    - name: watch cooking show on TV
       available: True
-      message: You practiced your knife skills. This should improve the quality of your food.
+      message: >
+        You watched an episode of Intergalactic Chef. You learned something about seasoning. This should improve the
+        quality of your food.
       rewards:
         - type: skill
-          skill: knife skills
+          skill: seasoning skills
           diff: +1
     - name: watch comedy channel on TV
       available: True
@@ -349,4 +359,11 @@ guests:
       rewards:
         - type: skill
           skill: wittiness
+          diff: +1
+    - name: learn napkin-folding techniques
+      available: True
+      message: You followed a napkin-folding tutorial. This should improve the ambience of your restaurant.
+      rewards:
+        - type: skill
+          skill: napkin-folding techniques
           diff: +1
