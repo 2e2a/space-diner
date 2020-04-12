@@ -89,6 +89,8 @@ class CommandCompleter:
     def matching_commands(self, cmd_input):
         matching_commands = []
         for cmd in self.commands:
+            if not cmd:
+                continue
             arg_type_match = True
             for arg_type, arg in zip(cmd, cmd_input):
                 if not self.match_arg(arg_type, arg):
@@ -468,19 +470,19 @@ class DinerMode(Mode):
 
 
 class KitchenMode(Mode):
-    CMD_COOK = 1
-    CMD_TRASH = 2
-    CMD_RECIPES = 3
-    # CMD_COOKING_BOT = 4
-    CMD_COMPENDIUM = 4
-    CMD_DINER = 5
+    CMD_DINER = 1
+    CMD_COOK = 2
+    CMD_COMPENDIUM = 3
+    CMD_TRASH = 4
+    CMD_RECIPES = 5
+    CMD_SAVE_RECIPE = 6
     commands = [
+        (['diner'],),
         (['cook'], [],),
+        (['compendium'],),
         (['trash'],),
         (['recipes'],),
-        (['compendium'],),
-        # (['bot'], ),
-        (['diner'],),
+        (['save_recipe'],),
     ]
     prompt = 'kitchen >>'
     action = None
@@ -514,7 +516,9 @@ class KitchenMode(Mode):
         for ingredient, available in self.available_ingredients.items():
             if available: ingredients.append(self.name_for_command(ingredient))
         preparations = [d.command for d in self.available_devices.values()]
-        self.commands[0] = (preparations, ingredients)
+        self.commands[self.CMD_COOK - 1] = (preparations, ingredients)
+        recipe_choices = [self.name_for_command(dish) for dish in food.plated()]
+        self.commands[self.CMD_SAVE_RECIPE - 1] = (['save_recipe'], recipe_choices)
         super().update_commands()
 
     def print_info(self):
@@ -537,6 +541,9 @@ class KitchenMode(Mode):
 
     def exec(self, cmd, cmd_input):
         global actions_saved
+        if cmd == self.CMD_DINER:
+            actions_saved.append(self.action)
+            return self.back()
         if cmd == self.CMD_COOK:
             preparation_command = cmd_input[0]
             device = self._get_device(preparation_command)
@@ -544,28 +551,27 @@ class KitchenMode(Mode):
             self.available_ingredients.update({ingredient: self.available_ingredients.get(ingredient) - 1})
             self.action.add_ingredients([(device.result, ingredient)])
             self.prepared_components.append('{} {}'.format(device.result, ingredient))
-            self.update_commands()
             if len(self.prepared_components) == 3:
                 self.action.perform()
                 print_message('Plated {}'.format(self.action.food.name))
                 self.action = actions.Cook()
                 self.prepared_components = []
+            self.update_commands()
             return self
+        if cmd == self.CMD_COMPENDIUM:
+            return CompendiumMode(back=self)
         if cmd == self.CMD_TRASH:
             self.action.abort()
             self.prepared_components = []
+            # TODO: trash action
             return self
-        # if cmd == self.CMD_COOKING_BOT:
-        #     actions_saved.append(self.action)
-        #     return CookingBotMenuMode()
         if cmd == self.CMD_RECIPES:
             actions_saved.append(self.action)
             return RecipeMode(back=self)
-        if cmd == self.CMD_COMPENDIUM:
-            return CompendiumMode(back=self)
-        if cmd == self.CMD_DINER:
+        if cmd == self.CMD_SAVE_RECIPE:
             actions_saved.append(self.action)
-            return self.back()
+            dish = self.original_name(cmd_input[1])
+            return SaveRecipeMode(dish, back=self)
 
 
 class RecipeMode(ChoiceMode):
@@ -581,7 +587,7 @@ class RecipeMode(ChoiceMode):
         print_title(recipe.name)
         ingredient_list = [' '.join(properties) for properties in recipe.ingredient_properties]
         print_list(ingredient_list)
-        if recipe.properies:
+        if recipe.properties:
             properties = filter(lambda p: p != recipe.name.lower(), recipe.properties)
             print_value('Properties of the dish: ', ', '.join(properties))
             print_newline()
@@ -590,6 +596,57 @@ class RecipeMode(ChoiceMode):
         recipe = food.get_recipe(self.choices[choice - 1])
         self._print_recipe(recipe)
         return self
+
+
+class SaveRecipeMode(ChoiceMode):
+    choices = None
+    prompt = 'Add property:'
+
+    ingredient = 0
+    dish = None
+    ingredient_property_choices = None
+
+    @property
+    def title(self):
+        return 'Add ingredient {} properties'.format(self.ingredient + 1)
+
+    def __init__(self, dish, **kwargs):
+        self.dish = food.get(dish)
+        self.ingredient_property_choices = [[], [], []]
+        self.choices = self.dish.ingredient_properties(self.ingredient)
+        super().__init__(**kwargs)
+
+    def _print_recipce(self):
+        print_title('Recipe:')
+        print_list(', '.join(ingredient_properties) for ingredient_properties in self.ingredient_property_choices)
+
+    def print_info(self):
+        self._print_recipce()
+        super().print_info()
+
+    def exec_choice(self, choice):
+        self.ingredient_property_choices[self.ingredient].append(self.choices[choice - 1])
+        del self.choices[choice - 1]
+        if not self.choices:
+            return self.back()
+        return self
+
+    def back(self):
+        if not self.ingredient_property_choices[self.ingredient]:
+            return self
+        self.ingredient += 1
+        if self.ingredient < 3:
+            self.choices = self.dish.ingredient_properties(self.ingredient)
+            return self
+        else:
+            self._print_recipce()
+            name = None
+            while not name:
+                name = input('Recipe name: '.format(self.prompt))
+            self.action = actions.SaveRecipe(name, self.ingredient_property_choices)
+            self.action.perform()
+            print_message('saved {}.'.format(name))
+            return super().back()
 
 
 class CookingBotMenuMode(ChoiceMode):
@@ -604,8 +661,6 @@ class CookingBotMenuMode(ChoiceMode):
     def exec_choice(self, choice):
         if choice == 1:
             return CookingBotCookMode()
-        elif choice == 2:
-            return CookingBotSaveMode()
         elif choice == 3:
             return CookingBotListMode()
         return self
@@ -625,35 +680,11 @@ class CookingBotCookMode(ChoiceMode):
         dish = self.choices[choice - 1]
         dish_recipe = food.get_dish(dish)
         if dish_recipe.can_be_cooked():
-            ingredients = dish_recipe.get_prepared_ingredients()
-            self.action = actions.Cook(ingredients)
+            self.action = actions.Cook(dish_recipe.ingredient_properties)
             self.action.perform()
             print_dialog('KiBo3000', 'Cooking {}...'.format(dish))
         else:
             print_dialog('KiBo3000', 'Not enough ingredients or equipment not available anymore.')
-        return CookingBotMenuMode()
-
-    def back(self):
-        return CookingBotMenuMode()
-
-
-class CookingBotSaveMode(ChoiceMode):
-    prompt = 'cooking bot #'
-    choices = None
-    title = 'Select dish'
-
-    def __init__(self):
-        super().__init__()
-        print_dialog('KiBo3000', 'bleep ... blup ...')
-
-    def exec_choice(self, choice):
-        dish = self.choices[choice - 1]
-        print('')
-        print_dialog('KiBo3000', 'Custom name for {}?'.format(dish))
-        name = input('dish name: '.format(self.prompt))
-        self.action = actions.SaveDish(dish, new_name=name)
-        self.action.perform()
-        print_message('saved {} ... bleep ... blup...'.format(name if name else dish))
         return CookingBotMenuMode()
 
     def back(self):
