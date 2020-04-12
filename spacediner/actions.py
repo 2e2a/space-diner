@@ -20,7 +20,6 @@ class Action:
 
 
 class Cook(Action):
-    food = None
 
     def __init__(self, ingredients=None):
         self.food = food.Food(ingredients)
@@ -42,7 +41,6 @@ class Cook(Action):
 
 
 class TakeOrder(Action):
-    guest = None
 
     def __init__(self, guest):
         self.guest = guest
@@ -53,8 +51,6 @@ class TakeOrder(Action):
 
 
 class Serve(Action):
-    food = None
-    guest = None
 
     def __init__(self, food, guest):
         self.food = food
@@ -67,7 +63,6 @@ class Serve(Action):
 
 
 class SendHome(Action):
-    guest = None
 
     def __init__(self, guest):
         self.guest = guest
@@ -90,7 +85,6 @@ class CloseUp(Action):
 
 
 class BuyStorage(Action):
-    storage = None
 
     def __init__(self, storage):
         self.storage = storage
@@ -104,9 +98,6 @@ class BuyStorage(Action):
 
 
 class BuyIngredients(Action):
-    merchant = None
-    ingredient = None
-    amount = 0
 
     def __init__(self, merchant, ingredient, amount):
         self.merchant = merchant
@@ -130,7 +121,6 @@ class BuyIngredients(Action):
 
 
 class Chat(Action):
-    guest = None
 
     def __init__(self, guest):
         self.guest = guest
@@ -141,7 +131,6 @@ class Chat(Action):
 
 
 class Meet(Action):
-    guest = None
 
     def __init__(self, guest, reply):
         self.guest = guest
@@ -158,7 +147,6 @@ class Meet(Action):
 
 
 class DoActivity(Action):
-    activity = None
 
     def __init__(self, activity):
         self.activity = activity
@@ -175,8 +163,6 @@ class CleanDiner(Action):
 
 
 class SaveDish(Action):
-    dish = None
-    name = None
 
     def __init__(self, dish, new_name=None):
         self.dish = dish
@@ -184,3 +170,13 @@ class SaveDish(Action):
 
     def perform(self):
         food.save_dish(self.dish, self.name)
+
+
+class SaveRecipe(Action):
+
+    def __init__(self, name, ingredient_properties):
+        self.name = name
+        self.ingredient_properties = ingredient_properties
+
+    def perform(self):
+        food.save_as_recipe(self.name, self.ingredient_properties)
