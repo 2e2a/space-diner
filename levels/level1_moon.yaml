@@ -6,7 +6,7 @@ intro: >
   planets or even solar system, but it is a quite popular spot for human tourists from Earth.
   Try to earn 500 space dollars - that's the amount you need to buy an interplanetary ticket and open a diner
   in a more interesting place.
-money: 500
+money: 50
 diner:
   name: Space Diner
   seats: 7
@@ -220,14 +220,9 @@ guests:
           taste: -1
           output: I don't like this kind of fancy, pretentious food.
       orders:
-        - beef burger
-        - meat plate
-        - pickle salad
-        - bread basket
-        - fries
-        - beef
-        - pan-fried
-        - meat
+        - wish: beef
+        - wish: pan-fried
+        - wish: meat
       positive_phrases:
         - Awesome!
         - Amazing!
@@ -253,12 +248,12 @@ guests:
           taste: +1
           output: Wow, that's fancy!
       orders:
-        - silkworm nuggets
-        - meat plate
-        - burger
-        - silkworm burger
-        - local specialty
-        - potato
+        - wish: burger
+          text: Can I have a burger, please?
+        - wish: local specialty
+          text: I would really like to try a local specialty.
+        - wish: potato
+          text: Can you make me something with potatoes, please?
       positive_phrases:
         - Ooh la la!
         - Lovely!
@@ -318,15 +313,18 @@ guests:
           taste: +2
           output: Pickles are my favourite.
       orders:
-        - burger
-        - pickle salad
-        - deep-fried
+        - wish: burger
+          text: I'll have a burger!
+        - wish: pickle salad
+          text: I'll have a pickle salad!
+        - wish: deep-fried
+          text: I feel like eating something deep-fried today.
       positive_phrases:
         - Wonderful!
       neutral_phrases:
         - It was nice.
       negative_phrases:
-        - This, it was not so great.
+        - I like this diner, but this time, it was not so great.
 
 social:
   - name: Dr. Ozabela Ruizy

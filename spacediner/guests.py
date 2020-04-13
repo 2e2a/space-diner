@@ -25,6 +25,14 @@ class Reaction:
     def __str__(self):
         return '{} -> {}'.format(str(self.properties), str(self.taste))
 
+class Order:
+    wish = None
+    text = None
+
+    def init(self, data):
+        self.wish = data.get('wish')
+        self.text = data.get('text', 'I\'ll have something {}-ish.'.format(self.wish))
+
 
 class Guest:
     name = None
@@ -62,7 +70,7 @@ class Guest:
         pass
 
     def init_ambience(self):
-        if not  diner.diner.is_dirty:
+        if not diner.diner.is_dirty:
             self.ambience += 1
             self.review.add(2, 'diner_clean')
         elif diner.diner.is_very_dirty:
@@ -79,11 +87,11 @@ class Guest:
 
     def take_order(self):
         if self.order:
-            return self.order
+            return self.order.text
         if not self.orders:
             return None
         self.order = random.SystemRandom().choice(self.orders)
-        return self.order
+        return self.order.text
 
     def add_review(self):
         return self.review.generate(
@@ -118,12 +126,12 @@ class Guest:
                     reviews.add_dislikes(self.group_name, reaction.properties)
                     self.review.add(1, 'dislike', ' '.join(reaction.properties))
         if self.orders:
-            if self.order in dish.properties:
-                cli.print_message('{} received what they ordered ({}).'.format(self.name, self.order))
+            if self.order.wish in dish.properties:
+                cli.print_message('{} received what they ordered ({}).'.format(self.name, self.order.wish))
             else:
                 self.service -= 1
-                self.review.add(2, 'order_not_met', self.order)
-                cli.print_message('{} did not receive what they ordered ({}).'.format(self.name, self.order))
+                self.review.add(2, 'order_not_met', self.order.wish)
+                cli.print_message('{} did not receive what they ordered ({}).'.format(self.name, self.order.wish))
         self.taste = min(4, max(0, self.taste))
         self.review.add(1, 'taste', self.taste, print=True)
         aggregate_rating = self.add_review()
@@ -163,7 +171,11 @@ class Guest:
             reaction = Reaction()
             reaction.init(reaction_data)
             self.reactions.append(reaction)
-        self.orders = data.get('orders', [])
+        self.orders = []
+        for order_data in data.get('orders', []):
+            order = Order()
+            order.init(order_data)
+            self.orders.append(order)
         self.positive_phrases = data.get('positive_phrases', [])
         self.neutral_phrases = data.get('neutral_phrases', [])
         self.negative_phrases = data.get('negative_phrases', [])
@@ -297,7 +309,7 @@ def get_ordered(name):
 
 def ordered():
     global guests
-    return {guest.name: guest.order for guest in guests if guest.order}
+    return {guest.name: guest.order.wish for guest in guests if guest.order}
 
 
 def serve(name, food):

@@ -47,7 +47,7 @@ class TakeOrder(Action):
 
     def perform(self):
         order = guests.take_order(self.guest)
-        cli.print_dialog(self.guest, 'I\'ll have something {}-ish.'.format(order))
+        cli.print_dialog(self.guest, order)
 
 
 class Serve(Action):

@@ -12,11 +12,10 @@ from . import settings
 # TODO: introduce menu: select recipes for menu, guests will sometimes order something from the menu
 # TODO: (diner) temperature can be adjusted - some guests like it cold/medium/hot (affects ambience)
 # TODO: furniture shopping --> affects ambience
-# TODO: after increasing/decreasing a skill: show bar again (#----); add "Now your knife skill include: ..."
-# TODO: orders: when ordering sth from the menu, use standard phrase: "I'll have the ..."
-# TODO: orders: when ordering sth not on the menu, use custom phrase defined in level file
+# TODO: after increasing/decreasing a skill: show bar again (#----); add "Now your knife skills include: ..."
 # TODO: player can enter a name and will be addressed as "Chef [name]"
 # TODO: make defining regulars optional
+# TODO: sometimes broken: NameFactory create (some names cause a problem?)
 
 parser = argparse.ArgumentParser(description='Space diner')
 parser.add_argument(
