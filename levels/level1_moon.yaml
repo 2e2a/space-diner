@@ -143,7 +143,7 @@ recipes:
   - name: Beef Burger
     available: True
     ingredients:
-      - [ fried, beef ]
+      - [ pan-fried, beef ]
       - [ bun ]
       - [ pickles ]
     properties: [ burger ]
@@ -151,7 +151,7 @@ recipes:
   - name: Silkworm Burger
     available: True
     ingredients:
-      - [ fried, silkworm ]
+      - [ pan-fried, silkworm ]
       - [ bun ]
       - [ pickles ]
     properties: [ burger, fancy ]
@@ -159,9 +159,9 @@ recipes:
   - name: Meat Plate
     available: True
     ingredients:
-      - [ fried, meat ]
-      - [ fried, meat ]
-      - [ fried, meat ]
+      - [ pan-fried, meat ]
+      - [ pan-fried, meat ]
+      - [ pan-fried, meat ]
     properties: [ ]
 
   - name: Pickle salad
@@ -210,9 +210,9 @@ guests:
       available: True
       budget: 10
       reactions:
-        - properties: [ fried ]
+        - properties: [ pan-fried ]
           taste: +1
-          output: I love fried food!
+          output: I love pan-fried food!
         - properties: [ deep-fried ]
           taste: +1
           output: I love deep-fried food!
@@ -226,7 +226,7 @@ guests:
         - bread basket
         - fries
         - beef
-        - fried
+        - pan-fried
         - meat
       positive_phrases:
         - Awesome!
@@ -477,36 +477,36 @@ social:
       - Oh, look at all those wondrous local people!
       - I am returning to Earth tomorrow. What a shame! I would love to stay longer.
 
-  skills:
-    - type: cooking
-      name: knife skills
-      subskills:
-        - coarse chopping
-        - fine dicing
-        - Batonnet cut
-        - Allumette cut
-        - Julienne cut
-    - type: service
-      name: etiquette
-      subskills:
-        - friendly greeting
-        - announcing day's specials
-        - refilling drinks
-        - proper cutlery placement
-        - serving and clearing from the correct side
+skills:
+  - type: cooking
+    name: knife skills
+    subskills:
+      - coarse chopping
+      - fine dicing
+      - Batonnet cut
+      - Allumette cut
+      - Julienne cut
+  - type: service
+    name: etiquette
+    subskills:
+      - friendly greeting
+      - announcing day's specials
+      - refilling drinks
+      - proper cutlery placement
+      - serving and clearing from the correct side
 
-  activities:
-    - name: practice knife skills
-      available: True
-      message: You practiced your knife skills. This should improve the quality of your food.
-      rewards:
-        - type: skill
-          skill: knife skills
-          diff: +1
-    - name: read up on etiquette for restaurant staff
-      available: True
-      message: You read a chapter of the book Elegant Etiquette. This should improve the quality of your service.
-      rewards:
-        - type: skill
-          skill: etiquette
-          diff: +1
+activities:
+  - name: practice knife skills
+    available: True
+    message: You practiced your knife skills. This should improve the quality of your food.
+    rewards:
+      - type: skill
+        skill: knife skills
+        diff: +1
+  - name: read up on etiquette for restaurant staff
+    available: True
+    message: You read a chapter of the book Elegant Etiquette. This should improve the quality of your service.
+    rewards:
+      - type: skill
+        skill: etiquette
+        diff: +1
