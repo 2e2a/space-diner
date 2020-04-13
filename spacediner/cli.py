@@ -11,7 +11,6 @@ from . import merchants
 from . import levels
 from . import ingredients
 from . import reviews
-from . import settings
 from . import skills
 from . import social
 from . import storage
@@ -267,11 +266,11 @@ class WaitForInputMode(InfoMode):
     pass
 
 
-class MenuMode(ChoiceMode):
-    prompt = 'menu #'
+class StartMode(ChoiceMode):
+    prompt = 'start #'
     choices = ['Continue', 'New game', 'Load game']
     back_label = 'Exit'
-    title = 'Menu'
+    title = 'Start menu'
 
     def exec_choice(self, choice):
         if choice == 1:
@@ -306,7 +305,7 @@ class NewGameMode(ChoiceMode):
         return FirstHelpMode()
 
     def back(self):
-        return MenuMode()
+        return StartMode()
 
 
 class SaveGameMode(ChoiceMode):
@@ -466,7 +465,7 @@ class DinerMode(Mode):
             return SaveGameMode(back=self)
         if cmd == self.CMD_EXIT:
             levels.autosave_save()
-            return MenuMode()
+            return StartMode()
 
 
 class KitchenMode(Mode):
@@ -601,6 +600,7 @@ class RecipeMode(ChoiceMode):
 class SaveRecipeMode(ChoiceMode):
     choices = None
     prompt = 'Add property:'
+    back_label = 'Done'
 
     ingredient = 0
     dish = None
@@ -649,7 +649,7 @@ class SaveRecipeMode(ChoiceMode):
             return super().back()
 
 
-class CookingBotMenuMode(ChoiceMode):
+class CookingBotMode(ChoiceMode):
     prompt = 'cooking bot #'
     choices = ['Cook saved dish', 'Save plated dish', 'View saved dishes']
     title = 'Input'
@@ -685,10 +685,10 @@ class CookingBotCookMode(ChoiceMode):
             print_dialog('KiBo3000', 'Cooking {}...'.format(dish))
         else:
             print_dialog('KiBo3000', 'Not enough ingredients or equipment not available anymore.')
-        return CookingBotMenuMode()
+        return CookingBotMode()
 
     def back(self):
-        return CookingBotMenuMode()
+        return CookingBotMode()
 
 
 class CookingBotListMode(RecipeMode):
@@ -706,7 +706,7 @@ class CookingBotListMode(RecipeMode):
         return self
 
     def back(self):
-        return CookingBotMenuMode()
+        return CookingBotMode()
 
 
 class CompendiumMode(ChoiceMode):
@@ -909,7 +909,43 @@ class SleepMode(InfoMode):
 
     def back(self):
         time.tick()
+        if time.calendar.is_week_start:
+            return DinerMenuMode()
         return ShoppingMode()
+
+
+class DinerMenuMode(ChoiceMode):
+    prompt = 'edit #'
+    choices = None
+    title = 'Update weekly diner menu'
+    back_label = 'Done'
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.choices = food.get_menu()
+
+    def exec_choice(self, choice):
+        return DinerMenuItemMode(item=choice, back=self)
+
+    def back(self):
+        return ShoppingMode()
+
+
+class DinerMenuItemMode(ChoiceMode):
+    prompt = 'add to menu #'
+    choices = None
+    title = 'Select recipe'
+    item = None
+
+    def __init__(self, item, **kwargs):
+        super().__init__(**kwargs)
+        self.item = item
+        self.choices = food.not_on_menu()
+
+    def exec_choice(self, choice):
+        action = actions.UpdateMenu(self.item, self.choices[choice - 1])
+        action.perform()
+        return self.back()
 
 
 class ShoppingMode(Mode):
@@ -1002,7 +1038,7 @@ actions_saved = []
 
 def run():
     global mode
-    mode = MenuMode()
+    mode = StartMode()
     print_info = True
     print('################################  SPACE  DINER  ################################')
     while True:

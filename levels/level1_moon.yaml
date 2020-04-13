@@ -139,62 +139,70 @@ merchants:
       - name: silkworm
         cost: 3
 
-recipes:
-  - name: Beef Burger
-    available: True
-    ingredients:
-      - [ pan-fried, beef ]
-      - [ bun ]
-      - [ pickles ]
-    properties: [ burger ]
+food:
+  recipes:
+    - name: Beef Burger
+      available: True
+      ingredients:
+        - [ pan-fried, beef ]
+        - [ bun ]
+        - [ pickles ]
+      properties: [ burger ]
 
-  - name: Silkworm Burger
-    available: True
-    ingredients:
-      - [ pan-fried, silkworm ]
-      - [ bun ]
-      - [ pickles ]
-    properties: [ burger, fancy ]
+    - name: Silkworm Burger
+      available: True
+      ingredients:
+        - [ pan-fried, silkworm ]
+        - [ bun ]
+        - [ pickles ]
+      properties: [ burger, fancy ]
 
-  - name: Meat Plate
-    available: True
-    ingredients:
-      - [ pan-fried, meat ]
-      - [ pan-fried, meat ]
-      - [ pan-fried, meat ]
-    properties: [ ]
+    - name: Meat Plate
+      available: True
+      ingredients:
+        - [ pan-fried, meat ]
+        - [ pan-fried, meat ]
+        - [ pan-fried, meat ]
+      properties: [ ]
 
-  - name: Pickle salad
-    available: True
-    ingredients:
-      - [ pickles ]
-      - [ pickles ]
-      - [ pickles ]
-    properties: [ ]
+    - name: Pickle salad
+      available: True
+      ingredients:
+        - [ pickles ]
+        - [ pickles ]
+        - [ pickles ]
+      properties: [ ]
 
-  - name: Fries
-    available: True
-    ingredients:
-      - [ deep-fried, potato ]
-      - [ deep-fried, potato ]
-      - [ deep-fried, potato ]
-    properties: [ ]
+    - name: Fries
+      available: True
+      ingredients:
+        - [ deep-fried, potato ]
+        - [ deep-fried, potato ]
+        - [ deep-fried, potato ]
+      properties: [ ]
 
-  - name: Bread basket
-    available: True
-    ingredients:
-      - [ bun ]
-      - [ bun ]
-      - [ bun ]
-    properties: [ ]
+    - name: Bread basket
+      available: True
+      ingredients:
+        - [ bun ]
+        - [ bun ]
+        - [ bun ]
+      properties: [ ]
 
-  - name: Silkworm nuggets
-    available: True
-    ingredients:
-      - [ deep-fried, silkworm ]
-      - [ deep-fried, silkworm ]
-      - [ deep-fried, silkworm ]
-    properties: [ fancy ]
+    - name: Silkworm nuggets
+      available: True
+      ingredients:
+        - [ deep-fried, silkworm ]
+        - [ deep-fried, silkworm ]
+        - [ deep-fried, silkworm ]
+      properties: [ fancy ]
+
+  menu:
+    - Beef Burger
+    - Fries
+    - Bread basket
+    - Meat Plate
+    - Pickle salad
 
 guests:
   groups:

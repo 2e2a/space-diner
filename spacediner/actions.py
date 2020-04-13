@@ -180,3 +180,13 @@ class SaveRecipe(Action):
 
     def perform(self):
         food.save_as_recipe(self.name, self.ingredient_properties)
+
+
+class UpdateMenu(Action):
+
+    def __init__(self, item, recipe):
+        self.item = item
+        self.recipe = recipe
+
+    def perform(self):
+        food.update_menu(self.item, self.recipe)

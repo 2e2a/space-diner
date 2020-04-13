@@ -129,8 +129,9 @@ class SavedDish(Recipe):
 
 
 recipes = None
-dishes = []
 cooked = []
+menu = []
+dishes = []
 
 
 def get(name):
@@ -181,6 +182,20 @@ def match_recipe(ingredients):
     return None
 
 
+def get_menu():
+    global menu
+    return menu
+
+
+def update_menu(item, name):
+    global menu
+    menu[item - 1] = name
+
+
+def not_on_menu():
+    return list(set(get_recipes()) - set(get_menu()))
+
+
 def update_plated():
     global cooked
     global recipes
@@ -215,11 +230,17 @@ def get_dish(name):
 
 def init(data):
     global recipes
+    global menu
     recipes = OrderedDict()
-    for recipe_data in data:
+    for recipe_data in data.get('recipes'):
         recipe = Recipe()
         recipe.init(recipe_data)
         recipes.update({recipe.name: recipe})
+    menu = data.get('menu', [])
+    assert len(set(menu)) == 5
+    for menu_item in menu:
+        print(menu_item)
+        assert get_recipe(menu_item) is not None
 
 
 def save(file):

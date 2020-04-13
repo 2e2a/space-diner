@@ -39,7 +39,7 @@ class Level:
             storage.init(data.get('storage', []))
             kitchen.init(data.get('kitchen', []))
             merchants.init(data.get('merchants', []))
-            food.init(data.get('recipes', []))
+            food.init(data.get('food'))
             guests.init(data.get('guests', []))
             social.init(data.get('social', []))
             activities.init(data.get('activities', []))

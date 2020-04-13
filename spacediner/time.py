@@ -86,6 +86,10 @@ class Calendar:
         return self.week[(self.day % len(self.week) - 1)]
 
     @property
+    def is_week_start(self):
+        return (self.day % len(self.week) - 1) == 0
+
+    @property
     def is_first_day(self):
         return self.day == 1 or (self.day == 2 and self.time == self.TIME_MORNING)
 
