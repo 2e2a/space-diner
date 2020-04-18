@@ -6,6 +6,7 @@ from . import time
 
 class Diner:
     name = None
+    chef = 'the chef'
     seats = 0
 
     sanitation = 5

@@ -4,7 +4,7 @@ from collections import OrderedDict
 
 from . import cli
 from . import time
-
+from . import diner
 
 class Rating:
     name = None
@@ -41,22 +41,23 @@ class Review:
     second_choices = None
 
     scale = ['very bad', 'bad', 'ok', 'good', 'very good']
-    like = 'I liked the {}.'
-    dislike = 'I did not like the {}.'
+    like = 'I liked something about the food ({}).'
+    dislike = 'There was something about the food that I did not like ({}).'
     taste = 'The taste was {}.'
     service = 'The service was {}.'
     ambience = 'The ambience was {}.'
     order_not_met = 'I did not get what I ordered ({}).'
     no_food = 'I did not get any food.'
-    chatted = 'Had a nice chat with the owner.'
+    chatted = 'I had a nice chat with {}.'
     diner_clean = 'Very clean diner.'
-    diner_dirty = 'Very dirty.'
+    diner_dirty = 'Very dirty diner.'
 
     def __init__(self, name, group_name):
         self.name = name
         self.group_name = group_name
         self.first_choices = []
         self.second_choices = []
+        self.chatted = self.chatted.format(diner.diner.chef)
 
     def get(self, name, *args):
         if len(args) > 0 and isinstance(args[0], int):

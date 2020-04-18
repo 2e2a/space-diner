@@ -302,6 +302,9 @@ class NewGameMode(ChoiceMode):
         diner_name = input('Diner name (default: {}): '.format(diner.diner.name))
         if diner_name:
             diner.diner.name = diner_name
+        chef_name = input('Your name:')
+        if chef_name:
+            diner.diner.chef = chef_name
         return FirstHelpMode()
 
     def back(self):
