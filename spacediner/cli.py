@@ -106,7 +106,7 @@ class CommandCompleter:
         command = matching_commands[0]
         if len(command) != len(cmd_input):
             return None
-        return self.commands.index(command) + 1
+        return self.commands.index(command)
 
     def _get_completed_args(self):
         buffer = readline.get_line_buffer()
@@ -201,7 +201,7 @@ class Mode:
         if cmd_input and self.commands:
             cmd_input_list = cmd_input.split()
             matching_command = self.completer.match_command(cmd_input_list)
-            if matching_command:
+            if matching_command is not None:
                 return self.exec(matching_command, cmd_input_list)
         elif self.empty_input:
             return self.exec(None, None)
@@ -219,7 +219,7 @@ class Mode:
 
 
 class ChoiceMode(Mode):
-    CMD_CHOICE = 1
+    CMD_CHOICE = 0
     commands = [
         (int,),
     ]
@@ -250,7 +250,7 @@ class ChoiceMode(Mode):
                 return self
             if self.back_enabled and choice == 0:
                 return self.back()
-            return self.exec_choice(choice)
+            return self.exec_choice(choice - 1)
 
 
 class InfoMode(Mode):
@@ -273,13 +273,13 @@ class StartMode(ChoiceMode):
     title = 'Start menu'
 
     def exec_choice(self, choice):
-        if choice == 1:
+        if choice == 0:
             levels.autosave_load()
             print_value('Level', levels.level.name)
             return DinerMode()
-        elif choice == 2:
+        elif choice == 1:
             return NewGameMode(back=self)
-        elif choice == 3:
+        elif choice == 2:
             return LoadGameMode(back=self)
 
     def back(self):
@@ -298,7 +298,7 @@ class NewGameMode(ChoiceMode):
         self.choices = self.levels
 
     def exec_choice(self, choice):
-        levels.init(self.levels[choice - 1])
+        levels.init(self.levels[choice])
         diner_name = input('Diner name (default: {}): '.format(diner.diner.name))
         if diner_name:
             diner.diner.name = diner_name
@@ -368,11 +368,12 @@ class FirstHelpMode(InfoMode):
 
 
 class DinerMode(Mode):
-    CMD_KITCHEN = 1
-    CMD_TAKE_ORDER = 2
-    CMD_CHAT = 3
-    CMD_SERVE = 4
-    CMD_SEND_HOME = 5
+    CMD_KITCHEN = 0
+    CMD_TAKE_ORDER = 1
+    CMD_CHAT = 2
+    CMD_SERVE = 3
+    CMD_SEND_HOME = 4
+    CMD_MENU = 5
     CMD_COMPENDIUM = 6
     CMD_CLOSE_UP = 7
     CMD_SAVE = 8
@@ -383,6 +384,7 @@ class DinerMode(Mode):
         (['chat_with'], []),
         (['serve'], [], ['to'], []),
         (['send_home'], []),
+        (['menu'],),
         (['compendium'],),
         (['close_up'],),
         (['save'],),
@@ -401,10 +403,10 @@ class DinerMode(Mode):
         guests_with_chats = [self.name_for_command(g) for g in guests.guests_with_chats()]
         guests_with_orders = [self.name_for_command(g) for g in guests.guests_with_orders()]
         guests_without_orders = [self.name_for_command(g) for g in guests.guests_without_orders()]
-        self.commands[self.CMD_TAKE_ORDER - 1] = (['take_order_from'], guests_without_orders)
-        self.commands[self.CMD_CHAT - 1] = (['chat_with'], guests_with_chats)
-        self.commands[self.CMD_SERVE - 1] = (['serve'], cooked_food, ['to'], guests_with_orders)
-        self.commands[self.CMD_SEND_HOME - 1] = (['send_home'], available_guests)
+        self.commands[self.CMD_TAKE_ORDER] = (['take_order_from'], guests_without_orders)
+        self.commands[self.CMD_CHAT] = (['chat_with'], guests_with_chats)
+        self.commands[self.CMD_SERVE] = (['serve'], cooked_food, ['to'], guests_with_orders)
+        self.commands[self.CMD_SEND_HOME] = (['send_home'], available_guests)
         super().update_commands()
 
     def print_info(self):
@@ -454,6 +456,8 @@ class DinerMode(Mode):
             action = actions.SendHome(guest)
             action.perform()
             return WaitForInputMode(back=self)
+        if cmd == self.CMD_MENU:
+            return DinerMenuMode(back=self)
         if cmd == self.CMD_COMPENDIUM:
             return CompendiumMode(back=self)
         if cmd == self.CMD_CLOSE_UP:
@@ -471,13 +475,20 @@ class DinerMode(Mode):
             return StartMode()
 
 
+class DinerMenuMode(InfoMode):
+
+    def print_info(self):
+        print_title('{} menu'.format(diner.diner.name))
+        print_list(food.get_menu())
+
+
 class KitchenMode(Mode):
-    CMD_DINER = 1
-    CMD_COOK = 2
-    CMD_COMPENDIUM = 3
-    CMD_TRASH = 4
-    CMD_RECIPES = 5
-    CMD_SAVE_RECIPE = 6
+    CMD_DINER = 0
+    CMD_COOK = 1
+    CMD_COMPENDIUM = 2
+    CMD_TRASH = 3
+    CMD_RECIPES = 4
+    CMD_SAVE_RECIPE = 5
     commands = [
         (['diner'],),
         (['cook'], [],),
@@ -518,9 +529,9 @@ class KitchenMode(Mode):
         for ingredient, available in self.available_ingredients.items():
             if available: ingredients.append(self.name_for_command(ingredient))
         preparations = [d.command for d in self.available_devices.values()]
-        self.commands[self.CMD_COOK - 1] = (preparations, ingredients)
+        self.commands[self.CMD_COOK] = (preparations, ingredients)
         recipe_choices = [self.name_for_command(dish) for dish in food.plated()]
-        self.commands[self.CMD_SAVE_RECIPE - 1] = (['save_recipe'], recipe_choices)
+        self.commands[self.CMD_SAVE_RECIPE] = (['save_recipe'], recipe_choices)
         super().update_commands()
 
     def print_info(self):
@@ -595,7 +606,7 @@ class RecipeMode(ChoiceMode):
             print_newline()
 
     def exec_choice(self, choice):
-        recipe = food.get_recipe(self.choices[choice - 1])
+        recipe = food.get_recipe(self.choices[choice])
         self._print_recipe(recipe)
         return self
 
@@ -628,8 +639,8 @@ class SaveRecipeMode(ChoiceMode):
         super().print_info()
 
     def exec_choice(self, choice):
-        self.ingredient_property_choices[self.ingredient].append(self.choices[choice - 1])
-        del self.choices[choice - 1]
+        self.ingredient_property_choices[self.ingredient].append(self.choices[choice])
+        del self.choices[choice]
         if not self.choices:
             return self.back()
         return self
@@ -680,7 +691,7 @@ class CookingBotCookMode(ChoiceMode):
         super().__init__()
 
     def exec_choice(self, choice):
-        dish = self.choices[choice - 1]
+        dish = self.choices[choice]
         dish_recipe = food.get_dish(dish)
         if dish_recipe.can_be_cooked():
             self.action = actions.Cook(dish_recipe.ingredient_properties)
@@ -704,7 +715,7 @@ class CookingBotListMode(RecipeMode):
         super().__init__()
 
     def exec_choice(self, choice):
-        recipe = food.get_dish(self.recipes[choice - 1])
+        recipe = food.get_dish(self.recipes[choice])
         self._print_recipe(recipe)
         return self
 
@@ -735,7 +746,7 @@ class GuestCompendiumMode(ChoiceMode):
         super().__init__(**kwargs)
 
     def exec_choice(self, choice):
-        group = guests.get_group(self.choices[choice - 1])
+        group = guests.get_group(self.choices[choice])
         if group.description:
             print_text(group.description)
         else:
@@ -755,7 +766,7 @@ class IngredientCompendiumMode(ChoiceMode):
         super().__init__(**kwargs)
 
     def exec_choice(self, choice):
-        ingredient = ingredients.get(self.choices[choice - 1])
+        ingredient = ingredients.get(self.choices[choice])
         if ingredient.description:
             print_text(ingredient.description)
         else:
@@ -862,16 +873,16 @@ class ActivityMode(ChoiceMode):
 
     def exec_choice(self, choice):
         if choice <= len(self.meetings):
-            guest = self.meetings[choice - 1]
+            guest = self.meetings[choice]
             return MeetingMode(guest)
         elif choice <= len(self.meetings) + len(self.activities):
             choice -= len(self.meetings)
-            activity = self.activities[choice - 1]
+            activity = self.activities[choice]
             action = actions.DoActivity(activity)
             action.perform()
         else:
             choice -= (len(self.meetings) + len(self.activities))
-            if self.fixed_activities[choice - 1] == 'clean diner':
+            if self.fixed_activities[choice] == 'clean diner':
                 action = actions.CleanDiner()
                 action.perform()
         return WaitForInputMode(back=SleepMode())
@@ -898,7 +909,7 @@ class MeetingMode(ChoiceMode):
         super().print_info()
 
     def exec_choice(self, choice):
-        reply = choice - 1
+        reply = choice
         action = actions.Meet(self.guest, reply)
         action.perform()
         return WaitForInputMode(back=SleepMode())
@@ -913,11 +924,11 @@ class SleepMode(InfoMode):
     def back(self):
         time.tick()
         if time.calendar.is_week_start:
-            return DinerMenuMode()
+            return DinerMenuEditMode()
         return ShoppingMode()
 
 
-class DinerMenuMode(ChoiceMode):
+class DinerMenuEditMode(ChoiceMode):
     prompt = 'edit #'
     choices = None
     title = 'Update weekly diner menu'
@@ -946,15 +957,15 @@ class DinerMenuItemMode(ChoiceMode):
         self.choices = food.not_on_menu()
 
     def exec_choice(self, choice):
-        action = actions.UpdateMenu(self.item, self.choices[choice - 1])
+        action = actions.UpdateMenu(self.item, self.choices[choice])
         action.perform()
         return self.back()
 
 
 class ShoppingMode(Mode):
-    CMD_BUY_STORAGE = 1
-    CMD_BUY_INGREDIENT = 2
-    CMD_DONE = 3
+    CMD_BUY_STORAGE = 0
+    CMD_BUY_INGREDIENT = 1
+    CMD_DONE = 2
     commands = [
         (['buy'], []),
         (['buy'], int, [], ['from'], []),
