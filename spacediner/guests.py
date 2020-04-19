@@ -25,6 +25,7 @@ class Reaction:
     def __str__(self):
         return '{} -> {}'.format(str(self.properties), str(self.taste))
 
+
 class Order:
     wish = None
     text = None
@@ -32,6 +33,10 @@ class Order:
     def init(self, data):
         self.wish = data.get('wish')
         self.text = data.get('text', 'I\'ll have something {}-ish.'.format(self.wish))
+
+    def from_menu(self):
+        self.wish = random.choice(food.get_menu())
+        self.text = 'I\'ll have the {} from the menu.'.format(self.wish)
 
 
 class Guest:
@@ -88,9 +93,13 @@ class Guest:
     def take_order(self):
         if self.order:
             return self.order.text
-        if not self.orders:
-            return None
-        self.order = random.SystemRandom().choice(self.orders)
+        random.seed()
+        custom_order = random.choice([True, False])
+        if custom_order and self.orders:
+            self.order = random.choice(self.orders)
+        else:
+            self.order = Order()
+            self.order.from_menu()
         return self.order.text
 
     def add_review(self):
