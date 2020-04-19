@@ -39,7 +39,8 @@ class Meeting:
             self.replies.append((reply_data.get('reply'), reply_data.get('reaction'), True))
         for reply_data in data.get('bad replies', []):
             self.replies.append((reply_data.get('reply'), reply_data.get('reaction'), False))
-        random.SystemRandom().shuffle(self.replies)
+        random.seed()
+        random.shuffle(self.replies)
 
     def get_replies(self):
         return [reply for reply, _, _ in self.replies]

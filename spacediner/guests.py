@@ -192,7 +192,8 @@ class NameFactory:
         self.names = data
 
     def create(self):
-        return ' '.join(random.SystemRandom().choice(part) for part in self.names)
+        random.seed()
+        return ' '.join(random.choice(part) for part in self.names)
 
 
 class GuestFactory:
@@ -355,7 +356,8 @@ def _new_guests(seats):
     seats_per_group = int(seats/len(groups))
     extra_seats = seats - (seats_per_group * len(groups))
     ratings = reviews.get_ratings()
-    random.SystemRandom().shuffle(groups)
+    random.seed()
+    random.shuffle(groups)
     for name in groups:
         available_seats = seats_per_group
         if extra_seats > 0:
@@ -385,7 +387,7 @@ def _new_guests(seats):
         for group in holiday_groups:
             new_guests.extend(taken_seats * [group])
         seats_remaining -= taken_seats
-    random.SystemRandom().shuffle(new_guests)
+    random.shuffle(new_guests)
     return new_guests
 
 

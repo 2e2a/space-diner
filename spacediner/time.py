@@ -26,7 +26,8 @@ class Event:
             self.day = int(data.get('day'))
         else:
             day_range = data.get('days').split('-')
-            self.day = random.SystemRandom().randint(int(day_range[0]), int(day_range[1]))
+            random.seed()
+            self.day = random.randint(int(day_range[0]), int(day_range[1]))
 
 
 class GroupEvent(Event):

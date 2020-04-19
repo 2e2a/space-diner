@@ -83,18 +83,19 @@ class Review:
         self.add(2, 'service', service)
         aggregate_rating = add_rating(self.group_name, taste, service, ambience)
         message = ''
+        random.seed()
         if self.group_name != self.name:
             message += '{} ({}):'.format(self.name, self.group_name)
         else:
             message += '{}:'.format(self.name)
         if negative_phrases and aggregate_rating <= 2:
-            message += ' ' + random.SystemRandom().choice(negative_phrases)
+            message += ' ' + random.choice(negative_phrases)
         elif positive_phrases and aggregate_rating >= 4:
-            message += ' ' + random.SystemRandom().choice(positive_phrases)
+            message += ' ' + random.choice(positive_phrases)
         elif neutral_phrases:
-            message += ' ' + random.SystemRandom().choice(neutral_phrases)
-        message += ' ' + random.SystemRandom().choice(self.first_choices)
-        message += ' ' + random.SystemRandom().choice(self.second_choices)
+            message += ' ' + random.choice(neutral_phrases)
+        message += ' ' + random.choice(self.first_choices)
+        message += ' ' + random.choice(self.second_choices)
         message += ' (Rating: {})'.format(round(aggregate_rating))
         self.message = message
         reviews.append(self)
