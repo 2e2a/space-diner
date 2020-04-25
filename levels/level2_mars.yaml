@@ -150,28 +150,54 @@ merchants:
       - name: blizzard-bird egg
         cost: 3
 
-recipes:
-  - name: Veggie Omelette
-    available: True
-    ingredients:
-      - [ fried, egg ]
-      - [ fried, egg ]
-      - [ fried, vegetable ]
-    properties: [ omelette ]
-  - name: Tomato Soup
-    available: True
-    ingredients:
-      - [ boiled, tomato ]
-      - [ boiled, tomato ]
-      - [ basil ]
-    properties: [ soup ]
-  - name: Martian Milkshake
-    available: True
-    ingredients:
-      - [ blended, Martian moss ]
-      - [ blended, Martian lichen ]
-      - [ milk ]
-    properties: [ shake ]
+food:
+  recipes:
+    - name: Veggie Omelette
+      available: True
+      ingredients:
+        - [ fried, egg ]
+        - [ fried, egg ]
+        - [ fried, vegetable ]
+      properties: [ omelette ]
+
+    - name: Tomato Soup
+      available: True
+      ingredients:
+        - [ boiled, tomato ]
+        - [ boiled, tomato ]
+        - [ basil ]
+      properties: [ soup ]
+
+    - name: Martian Milkshake
+      available: True
+      ingredients:
+        - [ blended, Martian moss ]
+        - [ blended, Martian lichen ]
+        - [ milk ]
+      properties: [ shake ]
+
+    - name: Fresh Salad
+      available: True
+      ingredients:
+        - [fresh, raw]
+        - [fresh, raw]
+        - [fresh, raw]
+      properties: []
+
+    - name: Shakshuka
+      available: True
+      ingredients:
+        - [tomato, pan-fried]
+        - [tomato, pan-fried]
+        - [egg, pan-fried]
+      properties: []
+
+  menu:
+    - Tomato Soup
+    - Martian Milkshake
+    - Veggie Omelette
+    - Fresh Salad
+    - Shakshuka
 
 guests:
   groups:
@@ -191,8 +217,8 @@ guests:
           taste: -2
           output: Reptiloids cannot digest spicy food.
       orders:
-        - egg
-        - blizard-bird egg
+        - wish: egg
+        - wish: blizard-bird egg
 
     - name: Bovid
       name_factory: Martian-Bovid
@@ -202,11 +228,11 @@ guests:
           taste: -2
           output: Bovids cannot digest animal products.
       orders:
-        - raw
-        - Martian moss
-        - Martian lichen
-        - fresh
-        - lichen
+        - wish: raw
+        - wish: Martian moss
+        - wish: Martian lichen
+        - wish: fresh
+        - wish: lichen
 
     - name: colonist
       available: True
@@ -216,7 +242,7 @@ guests:
           taste: +1
           output: I love fried food!
       orders:
-        - omelette
+        - wish: omelette
       positive_phrases:
         - Great!
         - Wonderful!
@@ -244,9 +270,9 @@ guests:
           taste: +1
           output: I love shakes!
       orders:
-        - deep-fried
-        - sweet
-        - shake
+        - wish: deep-fried
+        - wish: sweet
+        - wish: shake
       positive_phrases:
         - ":D"
         - ":))"
@@ -285,12 +311,14 @@ guests:
     - name: Martian-Bovid
       factory:
         - [ One-horned, Two-horned, Three-horned, Four-horned, Multi-horned ]
+        - [ " " ]
         - [ A, Aa, E, Ee, Ou]
         - [ d, b, g, l, rg, rk, tch, rb, z, dge, mb, sk, w]
 
     - name: Martian-Bovid-Teenager
       factory:
         - [ Hornless ]
+        - [ " " ]
         - [ A, Aa, E, Ee, Ou]
         - [ dd, bb, gg, ll, rg, rk, tch, rb, zz, dge, mb, sk, w]
         - [ i]
@@ -309,7 +337,7 @@ guests:
           taste: +1
           output: I like tomatoes.
       orders:
-        - tomato
+        - wish: tomato
       positive_phrases:
         - Good!
       neutral_phrases:
@@ -317,53 +345,53 @@ guests:
       negative_phrases:
         - Bad!
 
-  skills:
-    - type: cooking
-      name: seasoning skills
-      subskills:
-        - proper salting
-        - using spices
-        - balancing the level of acidity
-        - combining flavors
-        - creating unique flavors
-    - type: service
-      name: wittiness
-      subskills:
-        - old jokes
-        - modern jokes
-        - puns
-        - impersonations
-        - stand-up comedy
-    - type: ambience
-      name: napkin-folding techniques
-      subskills:
-        - The Palm Leaf
-        - The Lily
-        - The Classic Fan
-        - The Bishop's Hat
-        - The Rose
+skills:
+  - type: cooking
+    name: seasoning skills
+    subskills:
+      - proper salting
+      - using spices
+      - balancing the level of acidity
+      - combining flavors
+      - creating unique flavors
+  - type: service
+    name: wittiness
+    subskills:
+      - old jokes
+      - modern jokes
+      - puns
+      - impersonations
+      - stand-up comedy
+  - type: ambience
+    name: napkin-folding techniques
+    subskills:
+      - The Palm Leaf
+      - The Lily
+      - The Classic Fan
+      - The Bishop's Hat
+      - The Rose
 
-  activities:
-    - name: watch cooking show on TV
-      available: True
-      message: >
-        You watched an episode of Intergalactic Chef. You learned something about seasoning. This should improve the
-        quality of your food.
-      rewards:
-        - type: skill
-          skill: seasoning skills
-          diff: +1
-    - name: watch comedy channel on TV
-      available: True
-      message: You watched some comedy. This should improve the quality of your service.
-      rewards:
-        - type: skill
-          skill: wittiness
-          diff: +1
-    - name: learn napkin-folding techniques
-      available: True
-      message: You followed a napkin-folding tutorial. This should improve the ambience of your restaurant.
-      rewards:
-        - type: skill
-          skill: napkin-folding techniques
-          diff: +1
+activities:
+  - name: watch cooking show on TV
+    available: True
+    message: >
+      You watched an episode of Intergalactic Chef. You learned something about seasoning. This should improve the
+      quality of your food.
+    rewards:
+      - type: skill
+        skill: seasoning skills
+        diff: +1
+  - name: watch comedy channel on TV
+    available: True
+    message: You watched some comedy. This should improve the quality of your service.
+    rewards:
+      - type: skill
+        skill: wittiness
+        diff: +1
+  - name: learn napkin-folding techniques
+    available: True
+    message: You followed a napkin-folding tutorial. This should improve the ambience of your restaurant.
+    rewards:
+      - type: skill
+        skill: napkin-folding techniques
+        diff: +1
