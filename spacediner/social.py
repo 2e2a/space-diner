@@ -26,6 +26,20 @@ class Chats:
             return self.chat()
 
 
+class Greetings:
+    greetings = None
+
+    def init(self, data):
+        if data:
+            self.greetings = []
+            for greeting in data:
+                self.greetings.append(greeting)
+
+    def get(self):
+        random.seed()
+        return random.choice(self.greetings)
+
+
 class Meeting:
     text = None
     question = None
@@ -105,6 +119,7 @@ class Friendship:
 class Social:
     name = None
     chats = None
+    greetings = None
     friendship = None
 
     def init(self, data):
@@ -112,6 +127,9 @@ class Social:
         if 'chats' in data:
             self.chats = Chats()
             self.chats.init(data.get('chats'))
+        if 'greetings' in data:
+            self.greetings = Greetings()
+            self.greetings.init(data.get('greetings'))
         if 'friendship' in data:
             self.friendship = Friendship()
             self.friendship.init(data.get('friendship'))
@@ -121,6 +139,9 @@ class Social:
 
     def next_chat(self):
         return self.chats.next() if self.chats else None
+
+    def greeting(self):
+        return self.greetings.get() if self.greetings else None
 
     def has_meeting(self):
         return self.friendship and self.friendship.unlocked and self.friendship.has_meeting()
@@ -178,6 +199,10 @@ def has_chats(name):
 
 def chat(name):
     return get(name).chat()
+
+
+def greeting(name):
+    return get(name).greeting()
 
 
 def next_chat(name):

@@ -239,7 +239,6 @@ def init(data):
     menu = data.get('menu', [])
     assert len(set(menu)) == 5
     for menu_item in menu:
-        print(menu_item)
         assert get_recipe(menu_item) is not None
 
 

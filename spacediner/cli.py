@@ -302,9 +302,9 @@ class NewGameMode(ChoiceMode):
         diner_name = input('Diner name (default: {}): '.format(diner.diner.name))
         if diner_name:
             diner.diner.name = diner_name
-        chef_name = input('Your name:')
+        chef_name = input('Your name: ')
         if chef_name:
-            diner.diner.chef = chef_name
+            diner.diner.chef = 'Chef {}'.format(chef_name)
         return FirstHelpMode()
 
     def back(self):
@@ -353,7 +353,8 @@ class FirstHelpMode(InfoMode):
 
     def print_info(self):
         print_text('')
-        print_title('Welcome to your new diner!')
+        title = 'Welcome to your new diner, {}!'.format(diner.diner.chef)
+        print_title(title)
         print_text(
             'How to play? Use auto-complete: type the first letters of a command and press TAB. Type \'help\' to '
             'display a list of available commands. During your first day, you will receive general gameplay hints.\n'

@@ -202,7 +202,7 @@ class NameFactory:
 
     def create(self):
         random.seed()
-        return ' '.join(random.choice(part) for part in self.names)
+        return ''.join(random.choice(part) for part in self.names)
 
 
 class GuestFactory:
@@ -304,7 +304,11 @@ def get_group_name(name):
 def chat(name):
     guest = get(name)
     guest.chatted_today = True
-    return social.next_chat(guest.group_name)
+    text = social.next_chat(guest.group_name)
+    greeting = social.greeting(guest.group_name)
+    if greeting:
+        text = '{}, {}! {}'.format(greeting, diner.diner.chef, text)
+    return text
 
 
 def take_order(name):

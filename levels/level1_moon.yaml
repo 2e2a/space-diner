@@ -285,6 +285,7 @@ guests:
            Noel, Marc, Davit, Lukas, Yusif, Adam, Stefan, Georgi, Rasmus, Benjamin, Onni, Adrian, Gabriel, Malik,
            Georgios, Francesco, Mihail, Daan, William, Antoni, Dragan, Hugo, Amelia, Nareh, Laia, Zahra, Viktoria,
            Tereza, Mia, Margret, Daisy, Ivaana, Zuzanna, Anastasia, Darina, Nikau, Teiki, Maeva, Hina]
+        - [ " " ]
         - [Mammadov, Aktar, Wong, Chu, Beridze, Lomidze, Cohen, Levi, Tanaka, Sasaki, Kim, Seo, Santos, Aquino, Perera,
            Gamage, Can, Lau, Kaya, Aslan, Phan, Lý, Gruber, Auer, Peeters, Delić, Savić, Iliev, Nielsen, Kask, Koppel,
            Rebane, Sepp, Andrejev, Ivanov, Hansen, Poulsen, Laine, Virtanen, Salonen, Johansson, Bernard, Dubois, Roux,
@@ -299,6 +300,7 @@ guests:
            Omaya, Oel, Oarc, Ovit, Oukas, Osif, Odam, Ofan, Orgi, Osmus, Ojamin, Odrian, Obriel, Olik, Orgios, Oncesco,
            Ohail, Oon, Olliam, Ontoni, Ogan, Ogo, Omelia, Oreh, Olaia, Ohra, Oktoria, Oreza, Orgret, Oisy, Ovaana, Ozanna,
            Onastastia, Orina, Okau, Oiki, Oeva, Ona]
+        - [ " " ]
         - [Mammadovy, Aktary, Wongy, Chuy, Beridzey, Lomidzey, Coheny, Levy, Tanaky, Sasaky, Kimy, Seoy, Santosy, Aquiny,
            Pereray, Gamagey, Cany, Lauy, Kayay, Aslany, Phany, Ly, Grubery, Auery, Peetersy, Delicy, Savicy, Ilievy,
            Nielsy, Kasky, Kopply, Rebany, Seppy, Andrejevy, Ivanovy, Hansy, Poulsy, Lainy, Virtany, Salony, Johansy,
@@ -336,6 +338,9 @@ guests:
 
 social:
   - name: Dr. Ozabela Ruizy
+    greetings:
+      - Nice to see you
+      - I'm glad to see you
     chats:
       - I can't stop thinking about my work in the lab. Sigh.
       - Your food is always so comforting.
@@ -458,6 +463,9 @@ social:
           
 
   - name: Human colonist
+    greetings:
+      - Hi
+      - Hello
     chats:
       - There are more and more tourists from Earth. I hate them.
       - The stars are beautiful today.
@@ -471,6 +479,9 @@ social:
       - I have never been to the Dark Side, I hope to see it some day.
 
   - name: Human tourist
+    greetings:
+      - Good day
+      - Pleased to meet you
     chats:
       - It is wonderful to visit all these little local business here.
       - I am so excited. Can I take a picture of this diner? I already did. Thank you!
