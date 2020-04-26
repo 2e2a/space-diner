@@ -43,9 +43,9 @@ ingredients:
     storage: pantry
     properties: [ local specialty, fresh, spicy ]
 
-  - name: Moss milk
+  - name: moss milk
     description: A milky fluid extracted from Martian moss.
-    storage: pantry
+    storage: fridge
     properties: [ local specialty, milk, spicy ]
 
   - name: tomato
@@ -76,13 +76,28 @@ ingredients:
 storage:
   - name: fridge
     available: True
-    ingredients: []
+    ingredients:
+      - name: moss milk
+        available: 1
+      - name: cow milk
+        available: 1
 
   - name: pantry
     available: True
     ingredients:
+      - name: Martian lichen
+        available: 3
+      - name: Martian moss
+        available: 3
       - name: tomato
         available: 5
+      - name: basil
+        available: 1
+      - name: chicken egg
+        available: 6
+      - name: blizzard bird egg
+        available: 6
+
 
 kitchen:
   - name: plate
@@ -174,7 +189,7 @@ food:
         - [ blended, Martian moss ]
         - [ blended, Martian lichen ]
         - [ milk ]
-      properties: [ shake ]
+      properties: [ shake, healthy ]
 
     - name: Fresh Salad
       available: True
@@ -182,7 +197,7 @@ food:
         - [fresh, raw]
         - [fresh, raw]
         - [fresh, raw]
-      properties: []
+      properties: [ salad, healthy]
 
     - name: Shakshuka
       available: True
@@ -207,18 +222,24 @@ guests:
       reactions:
         - properties: [ blizzard-bird egg ]
           taste: -2
-          output: Humans cannot digest blizzard-bird eggs.
+          output: Argh, Humans cannot digest blizzard-bird eggs.
 
     - name: Reptiloid
       name_factory: Martian-Reptiloid
       available: True
       reactions:
-        - properties: [ deep-fried ]
+        - properties: [ spicy ]
           taste: -2
-          output: Reptiloids cannot digest spicy food.
+          output: Argh, Reptiloids cannot digest spicy food.
       orders:
         - wish: egg
-        - wish: blizard-bird egg
+          text: Something with eggs, please.
+        - wish: blizzard-bird egg
+          text: I really want a blizzard-bird egg now.
+        - wish: fried
+          text: Something fried, please.
+        - wish: milk
+          text: I'll have something with milk.
 
     - name: Bovid
       name_factory: Martian-Bovid
@@ -226,23 +247,27 @@ guests:
       reactions:
         - properties: [ animal product ]
           taste: -2
-          output: Bovids cannot digest animal products.
+          output: Argh, Bovids cannot digest animal products.
       orders:
         - wish: raw
+          text: I like raw food, can you bring me something raw, please?
         - wish: Martian moss
+          text: I want to eat some Martian moss.
         - wish: Martian lichen
+          text: Give me some Martian lichen.
         - wish: fresh
-        - wish: lichen
+          text: Something fresh would be nice.
 
-    - name: colonist
+    - name: adult
       available: True
-      budget: 10
+      budget: 15
       reactions:
-        - properties: [ fried ]
+        - properties: [ healthy ]
           taste: +1
-          output: I love fried food!
-      orders:
-        - wish: omelette
+          output: As a responsible adult, I know that healthy food is good for me.
+        - properties: [ shake ]
+          taste: -1
+          output: Aren't shakes for children?
       positive_phrases:
         - Great!
         - Wonderful!
@@ -255,6 +280,30 @@ guests:
         - Pretty bad.
         - I did not enjoy this.
         - I didn't like it.
+
+    - name: senior
+      available: True
+      budget: 12
+      reactions:
+        - properties: [ blended ]
+          taste: +1
+          output: Blended food is good for me.
+        - properties: [ deep-fried ]
+          taste: -1
+          output: Deep-fried food gives me heartburn.
+      orders:
+        - wish: soup
+          text: I'll have a soup, please.
+        - wish: boiled
+          text: I think that something boiled would be good for me now.
+        - wish: sweet
+          text: Can I have something sweet?
+      positive_phrases:
+        - "Jolly good."
+      neutral_phrases:
+        - "Acceptable."
+      negative_phrases:
+        - "Very bad."
 
     - name: teenager
       available: False
@@ -282,7 +331,7 @@ guests:
         - ":|"
       negative_phrases:
         - ":(("
-        - "D:"
+        - "(thumb down)"
         - "-_-"
   names:
     - name: Martian-Human
@@ -324,9 +373,10 @@ guests:
         - [ i]
 
   factory:
-    - [ Human, colonist ]
-    - [ Reptiloid, colonist ]
-    - [ Bovid, colonist ]
+    - [ Human, adult ]
+    - [ Reptiloid, adult ]
+    - [ Bovid, adult ]
+    - [ Human, senior]
 
   regulars:
     - name: Hornless Abbi

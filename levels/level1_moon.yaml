@@ -229,8 +229,11 @@ guests:
           output: I don't like this kind of fancy, pretentious food.
       orders:
         - wish: beef
+          text: I'll have some beef.
         - wish: pan-fried
+          text: Can you make me something pan-fried?
         - wish: meat
+          text: I'll have something with meat, please.
       positive_phrases:
         - Awesome!
         - Amazing!
