@@ -129,7 +129,7 @@ kitchen:
     properties: [ ]
 
   - name: blender
-    available: False
+    available: True
     preparation: blending
     command: blend
     result: blended
@@ -143,9 +143,6 @@ merchants:
         cost: 2
       - name: cow milk
         cost: 2
-    devices:
-      - name: blender
-        cost: 70
 
   - name: Fresh greens
     available: True
@@ -156,7 +153,7 @@ merchants:
         cost: 1
       - name: Martian moss
         cost: 1
-      - name: Martian moss milk
+      - name: moss milk
         cost: 1
 
   - name: Tau-Cetian Imports
@@ -352,10 +349,15 @@ guests:
 
     - name: Martian-Reptiloid
       factory:
-        - [S, Z, Sh, Zh, H, F, V, R]
-        - [a,e,i,o,u,aa,ee,oo,ou,ea]
-        - [ss, ff, sh, r]
-        - [y, o]
+        - [B,P,D,T,J,Ch,R,L, G, K]
+        - [u,a]
+        - [b,rb, lb, mb, p, rp, lp, mp, d, ld, rd, nd, ch, nch, rch, r, l, g, rg, lg, ng, k, rk, lk, nk]
+        - [ini]
+        - [aceous, adelic, adenia, agog, androus, arch, aroo, aroonie, astic, athlon, blastic, biont, cratic,
+           cyte, dactyl, ennial, eroo, esque, ette, fest, fugal, geddon, hood, ick, iferous, imundol, illion,
+           illiard, izzle, lepsy, ling, lock, mancer, naut, oecious, oholic, omics, orama, pants, pathy, pedia,
+           phage, phil, phonic, pod, poeia, pteran, riffic, saur, sicle, ster, topia, tude, tuple, urgy, verse,
+           vore, ware, ylene, zoon]
 
     - name: Martian-Bovid
       factory:
@@ -366,7 +368,7 @@ guests:
 
     - name: Martian-Bovid-Teenager
       factory:
-        - [ Hornless ]
+        - [ Little Hornless ]
         - [ " " ]
         - [ A, Aa, E, Ee, Ou]
         - [ dd, bb, gg, ll, rg, rk, tch, rb, zz, dge, mb, sk, w]
@@ -379,7 +381,7 @@ guests:
     - [ Human, senior]
 
   regulars:
-    - name: Hornless Abbi
+    - name: Little Hornless Abbi
       available: True
       budget: 10
       reactions:
@@ -433,7 +435,7 @@ activities:
         diff: +1
   - name: watch comedy channel on TV
     available: True
-    message: You watched some comedy. This should improve the quality of your service.
+    message: You watched some comedy. This should make your wittier and improve the quality of your service.
     rewards:
       - type: skill
         skill: wittiness

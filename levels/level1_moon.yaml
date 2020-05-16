@@ -1,8 +1,8 @@
 name: Moon
 intro: >
-  The moon has been colonized. There are a couple of settlements, mainly on the bright side of the moon.
-  You run a diner in one of them. It is not very lucrative, but you have a solid customer base, because
-  there are not many alternatives within the colony. The colony is too insignificant to have visitors from other
+  The moon has been colonized. There are a couple of settlements, mainly on the side of the moon that is visible
+  from Earth. You run a diner in one of the colonies. It is not very lucrative, but you have a solid customer base,
+  because there are not many alternatives within the colony. The colony is too insignificant to have visitors from other
   planets or even solar system, but it is a quite popular spot for human tourists from Earth.
   Try to earn 500 space dollars - that's the amount you need to buy an interplanetary ticket and open a diner
   in a more interesting place.
@@ -361,12 +361,12 @@ social:
         - meeting: >
             Ozabela invites you to the research facility where she works. Access to the area is restricted, but when
             the security guards see Ozabela, they let you enter. Ozabela shows you what she is currently working on
-            in her lab: silkworms. A couple of them were brought to the Dark Side of the moon a long time ago in a
+            in her lab: silkworms. A couple of them were brought to the far side of the moon a long time ago in a
             box as part of a research project. The project was abandoned, but the silkworms infested some of the
             research facilities and somehow managed to survive there until today.
             Ozabela's team collects them and studies how they have adapted to life on the moon. As you look
             at them through the terrarium glass, you remember another time when you encountered this species: as an
-            appetizer in an expensive restaurant on the Dark Side.
+            appetizer in an expensive restaurant on the dark side.
           question: Just look at them... how they wriggle...
           good replies:
             - reply: They're fascinating.
@@ -479,7 +479,7 @@ social:
       - I lifted 1000 kg in the gym today.
       - I hope I can move to one of those fancy new apartments soon.
       - My brother moved to Mars. I hope I can visit him soon.
-      - I have never been to the Dark Side, I hope to see it some day.
+      - I have never been to the dark side of the moon, I hope to see it some day.
 
   - name: Human tourist
     greetings:
