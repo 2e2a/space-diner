@@ -196,7 +196,7 @@ food:
         - [fresh, raw]
       properties: [ salad, healthy]
 
-    - name: Shakshuka
+    - name: Space Shakshuka
       available: True
       ingredients:
         - [tomato, pan-fried]
@@ -209,7 +209,7 @@ food:
     - Martian Milkshake
     - Veggie Omelette
     - Fresh Salad
-    - Shakshuka
+    - Space Shakshuka
 
 guests:
   groups:
@@ -296,11 +296,14 @@ guests:
         - wish: sweet
           text: Can I have something sweet?
       positive_phrases:
-        - "Jolly good."
+        - Jolly good.
+        -
       neutral_phrases:
-        - "Acceptable."
+        - Acceptable.
       negative_phrases:
-        - "Very bad."
+        - Maybe popular with the kids, but not for me.
+        - Off-putting.
+        - This place is abhorrent.
 
     - name: teenager
       available: False
@@ -396,6 +399,15 @@ guests:
         - Fine!
       negative_phrases:
         - Bad!
+
+social:
+  - name: Human senior
+    greetings:
+      - Good morning
+    chats:
+      - Your diner looks so charming, my dear.
+      - I'm just going to rest my eyes for a minute.
+      - What kind of music are these kids outside listening to? Sounds like a lot of noise to me.
 
 skills:
   - type: cooking
