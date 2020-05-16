@@ -393,8 +393,8 @@ class DinerMode(Mode):
     ]
     prompt = 'diner >>'
     hint = (
-        'In the dining room, you can chat with your guests, take their orders, and serve them food '
-        '(for preparing it, go to the kitchen). When all the guests are gone, close up the diner - '
+        'In the dining room, you can chat with your guests, take their orders, and serve them food. '
+        'For preparing food, go to the kitchen. When all the guests are gone, close up the diner - '
         'new guests will come tomorrow.'
     )
 
@@ -506,8 +506,7 @@ class KitchenMode(Mode):
     prepared_components = None
     hint = (
         'You can follow the available recipes or create your own dishes. Every dish consists of three ingredients. '
-        'Once you have prepared them, they will be automatically plated as a completed dish. Try to include what your '
-        'guests ordered and to satisfy their general preferences.'
+        'Once you have prepared them, they will be automatically plated as a completed dish.'
     )
 
     def __init__(self, **kwargs):
@@ -836,8 +835,8 @@ class ActivityMode(ChoiceMode):
     activities = None
     meetings = None
     hint = (
-        'Evening activities can advance your social relationships (when you make your regulars happy, they might '
-        'invite you to social events) or have an effect on your skills. Do not forget to clean your diner '
+        'Evening activities can advance your social relationships: when you make your regulars happy, they might '
+        'invite you to social events. Other activities can affect your skills. Do not forget to clean your diner '
         'once in a while.'
     )
 
