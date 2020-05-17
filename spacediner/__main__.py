@@ -16,7 +16,6 @@ from . import settings
 # TODO: make skills available on specific days
 # TODO: special weekend day (last day of the week) with two activities instead of work and one activity
 # TODO: think about menu: are all/some initial menu items fixed?
-# TODO: add (regular) to names of regular customers
 
 parser = argparse.ArgumentParser(description='Space diner')
 parser.add_argument(

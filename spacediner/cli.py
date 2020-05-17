@@ -425,12 +425,7 @@ class DinerMode(Mode):
         names_with_groups = []
         for guest_name in available_guests:
             guest = guests.get(guest_name)
-            if guest.groups:
-                names_with_groups.append(
-                    '{} ({})'.format(guest.name, guest.group_name)
-                )
-            else:
-                names_with_groups.append(guest.name)
+            names_with_groups.append('{} ({})'.format(guest.name, guest.group_name if guest.groups else 'regular'))
         print_list(names_with_groups)
 
     def exec(self, cmd, cmd_input):
