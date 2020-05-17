@@ -2,13 +2,12 @@ import argparse
 from . import cli
 from . import settings
 
+# TODO: skills should have an effect and influence reviews
 # TODO: make discovered preferences available in compendium
 # TODO: property matches in substring, e.g. fried = deep-fried
 # TODO: toggle tutorial mode on/off (after first day)
 # TODO: Fix output that plural is not needed
 # TODO: log all commands into file on exception
-# TODO: introduce menu: select recipes for menu, guests will sometimes order something from the menu
-# TODO: weekly menu, can be edited on first day of the week
 # TODO: after increasing/decreasing a skill: show bar again (#----); add "Now your knife skills include: ..."
 # TODO: player can enter a name and will be addressed as "Chef [name]"
 # TODO: sometimes broken: NameFactory create (some names cause a problem?)

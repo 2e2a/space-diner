@@ -783,11 +783,11 @@ class ReviewsInfoMode(InfoMode):
         if count == 0:
             return '{}:\tno reviews yet'.format(name)
         n_stars = round(rating)
-        return '{}:\t[{}{}] ({:0.1f}) based on {} review(s)'.format(
-            name,
+        return '[{}{}] ({:0.1f}) - {} - based on {} review(s)'.format(
             '*' * n_stars,
             '-' * (5 - n_stars),
             float(rating),
+            name,
             count,
             )
 
@@ -867,10 +867,10 @@ class ActivityMode(ChoiceMode):
         super().print_info()
 
     def exec_choice(self, choice):
-        if choice <= len(self.meetings):
+        if choice < len(self.meetings):
             guest = self.meetings[choice]
             return MeetingMode(guest)
-        elif choice <= len(self.meetings) + len(self.activities):
+        elif choice < len(self.meetings) + len(self.activities):
             choice -= len(self.meetings)
             activity = self.activities[choice]
             action = actions.DoActivity(activity)
