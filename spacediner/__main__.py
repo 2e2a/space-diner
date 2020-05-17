@@ -11,7 +11,6 @@ from . import settings
 # TODO: weekly menu, can be edited on first day of the week
 # TODO: after increasing/decreasing a skill: show bar again (#----); add "Now your knife skills include: ..."
 # TODO: player can enter a name and will be addressed as "Chef [name]"
-# TODO: make defining regulars optional
 # TODO: sometimes broken: NameFactory create (some names cause a problem?)
 # TODO: make skills available on specific days
 # TODO: special weekend day (last day of the week) with two activities instead of work and one activity

@@ -427,7 +427,7 @@ def daytime():
 def init(data):
     global regulars
     regulars = OrderedDict()
-    for guest_data in data.get('regulars'):
+    for guest_data in data.get('regulars', []):
         guest = Guest()
         guest.init(guest_data)
         guest.reset()
