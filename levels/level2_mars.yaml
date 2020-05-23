@@ -289,6 +289,9 @@ guests:
         - I didn't like it.
 
     - name: senior
+      description: >
+        Elderly people. Currently, most seniors on Mars are Human, whereas most Reptiloids and Bovids are
+        younger first-generation colonists.
       available: True
       budget: 12
       reactions:

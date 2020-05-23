@@ -6,7 +6,8 @@ from . import settings
 # TODO: saving recipes: properties not correct
 # TODO: shopping: if only one merchant offers ingredient, do not require typing in merchant name
 # TODO: shopping: consider removing "in stock" property
-# TODO: skills should have an effect and influence reviews
+# TODO: skills should have an effect and influence reviews: "I was impressed by the chef's skills regarding X"
+# TODO:   (X = one of the acquired subskills)
 # TODO: make discovered preferences available in compendium
 # TODO: toggle tutorial mode on/off (after first day)
 # TODO: log all commands into file on exception
