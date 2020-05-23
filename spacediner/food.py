@@ -31,9 +31,19 @@ class Food:
 
     @property
     def default_name(self):
-        ingredient_names = set(
+        ingredient_names = [
             '{} {}'.format(preparation, ingredient.name) for preparation, ingredient in self.ingredients
-        )
+        ]
+        unique_ingredients = list(set(ingredient_names))
+        if len(unique_ingredients) == 1:
+            return 'plain {}'.format(unique_ingredients[0])
+        elif len(unique_ingredients) == 2:
+            main_ingredient = unique_ingredients[0]
+            second_ingredient = unique_ingredients[1]
+            if ingredient_names.count(main_ingredient) == 1:
+                main_ingredient = unique_ingredients[1]
+                second_ingredient = unique_ingredients[2]
+            return '{} with some {}'.format(main_ingredient, second_ingredient)
         return' with '.join(ingredient_names)
 
     def set_default_name(self):

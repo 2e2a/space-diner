@@ -26,7 +26,7 @@ class Cook(Action):
 
     def add_ingredients(self, ingredients):
         for _, ingredient in ingredients:
-           if not storage.is_ingredient_available(ingredient):
+            if not storage.is_ingredient_available(ingredient):
                 raise RuntimeError('Ingredient not available')
         self.food.prepare_ingredients(ingredients)
 
