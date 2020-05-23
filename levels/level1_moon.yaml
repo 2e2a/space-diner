@@ -207,7 +207,7 @@ food:
 guests:
   groups:
     - name: Human
-      description: Originating from Earth.
+      description: Bipedal mammals originating from Earth. Almost omnivorous.
       available: True
       reactions:
         - properties: [ raw, potato ]
@@ -215,7 +215,9 @@ guests:
           output: Argh, Humans cannot digest raw potatoes.
 
     - name: colonist
-      description: Simple settlers.
+      description: >
+        People living and working in the Moon colonies.
+        Some of them are second or even third generation colonists.
       name_factory: Moon-English
       available: True
       budget: 10
@@ -250,7 +252,7 @@ guests:
         - Awful.
 
     - name: tourist
-      description: Rich people from Earth.
+      description: Visitors from Earth. Most of them are pretty rich.
       name_factory: Earth-English
       available: True
       budget: 25
@@ -330,11 +332,9 @@ guests:
           output: Pickles are my favourite.
       orders:
         - wish: burger
-          text: I'll have a burger!
-        - wish: pickle salad
-          text: I'll have a pickle salad!
-        - wish: deep-fried
-          text: I feel like eating something deep-fried today.
+          text: I really feel like eating a burger right now!
+        - wish: pickles
+          text: Can you make me something with pickles, please?
       positive_phrases:
         - Wonderful!
       neutral_phrases:
@@ -459,7 +459,7 @@ social:
                 Please stay in touch with me, will you?
       rewards:
         - type: merchant
-          level: 4
+          level: 3
           merchant: Oddie's Laboratory Waste
           text: >
             There's someone I would like to introduce you to. I saw how you looked at the silkworms in my lab... I know
@@ -489,7 +489,7 @@ social:
       - Good day
       - Pleased to meet you
     chats:
-      - It is wonderful to visit all these little local business here.
+      - It is wonderful to visit all these little local businesses here.
       - I am so excited. Can I take a picture of this diner? I already did. Thank you!
       - Did you hear? There is a Moon amusement park. Amazing!
       - I love the low gravity here. I could jump around all day.

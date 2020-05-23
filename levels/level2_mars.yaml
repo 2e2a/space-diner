@@ -214,36 +214,46 @@ food:
 guests:
   groups:
     - name: Human
+      description: Bipedal mammals originating from Earth. Almost omnivorous.
       name_factory: Martian-Human
       available: True
       reactions:
         - properties: [ blizzard-bird egg ]
-          taste: -2
+          taste: -3
           output: Argh, Humans cannot digest blizzard-bird eggs.
 
     - name: Reptiloid
+      description: >
+        Semiaquatic four-limbed vertebrates with long snouts and powerful jaw muscles.
+        With their highly acidic stomach, they can easily digest bones, hooves and horns.
+        Many Reptiloids swallow stones to crush the food in their stomachs.
       name_factory: Martian-Reptiloid
       available: True
       reactions:
         - properties: [ spicy ]
-          taste: -2
+          taste: -3
           output: Argh, Reptiloids cannot digest spicy food.
       orders:
         - wish: egg
           text: Something with eggs, please.
         - wish: blizzard-bird egg
-          text: I really want a blizzard-bird egg now.
+          text: I would really appreciate a blizzard-bird egg right now.
         - wish: fried
           text: Something fried, please.
         - wish: milk
           text: I'll have something with milk.
 
     - name: Bovid
+      description: >
+        Cloven-hoofed mammals originating from the Barnard's Star system, with a certain resemblance to Earth cows.
+        The number of horns on a Bovid's head reflects their age and plays an important social role
+        in many Bovid cultures.
+        Bovids ferment plant-based food in a specialized stomach prior to digestion.
       name_factory: Martian-Bovid
       available: True
       reactions:
         - properties: [ animal product ]
-          taste: -2
+          taste: -3
           output: Argh, Bovids cannot digest animal products.
       orders:
         - wish: raw
@@ -297,7 +307,6 @@ guests:
           text: Can I have something sweet?
       positive_phrases:
         - Jolly good.
-        -
       neutral_phrases:
         - Acceptable.
       negative_phrases:

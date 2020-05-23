@@ -2,6 +2,7 @@ import argparse
 from . import cli
 from . import settings
 
+# TODO: chat: first chat never seems to happen
 # TODO: saving recipes: properties not correct
 # TODO: shopping: if only one merchant offers ingredient, do not require typing in merchant name
 # TODO: shopping: consider removing "in stock" property
