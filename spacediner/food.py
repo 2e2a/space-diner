@@ -42,7 +42,7 @@ class Food:
             second_ingredient = unique_ingredients[1]
             if ingredient_names.count(main_ingredient) == 1:
                 main_ingredient = unique_ingredients[1]
-                second_ingredient = unique_ingredients[2]
+                second_ingredient = unique_ingredients[0]
             return '{} with some {}'.format(main_ingredient, second_ingredient)
         return' with '.join(ingredient_names)
 

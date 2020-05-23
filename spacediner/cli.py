@@ -617,7 +617,7 @@ class SaveRecipeMode(ChoiceMode):
 
     @property
     def title(self):
-        return 'Add ingredient {} properties'.format(self.ingredient + 1)
+        return 'Choose which properties of ingredient {} will be part of the recipe'.format(self.ingredient + 1)
 
     def __init__(self, dish, **kwargs):
         self.dish = food.get(dish)
@@ -724,9 +724,9 @@ class CompendiumMode(ChoiceMode):
     title = 'Compendium'
 
     def exec_choice(self, choice):
-        if choice == 1:
+        if choice == 0:
             return GuestCompendiumMode(back=self)
-        if choice == 2:
+        if choice == 1:
             return IngredientCompendiumMode(back=self)
         return self
 
@@ -746,6 +746,7 @@ class GuestCompendiumMode(ChoiceMode):
             print_text(group.description)
         else:
             print_text('Unknown.')
+        print_newline()
         return self
 
 
@@ -766,6 +767,7 @@ class IngredientCompendiumMode(ChoiceMode):
             print_text(ingredient.description)
         else:
             print_text('Unknown.')
+        print_newline()
         return self
 
 
@@ -1002,7 +1004,7 @@ class ShoppingMode(Mode):
             ('Time', [time.now()]),
             ('Money', [levels.level.money, 'space dollars']),
         ])
-        print_title('Available ingredients:')
+        print_title('Ingredients in stock:')
         print_list(['{} x {}'.format(a, i) for i, a in self.available_ingredients.items()])
         print_title('Ingredients for sale:')
         for merchant, ingredients in self.ingredients_for_sale.items():

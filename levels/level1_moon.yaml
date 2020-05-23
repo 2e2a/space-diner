@@ -1,9 +1,9 @@
 name: Moon
 intro: >
-  The moon has been colonized. There are a couple of settlements, mainly on the side of the moon that is visible
-  from Earth. You run a diner in one of the colonies. It is not very lucrative, but you have a solid customer base,
+  The moon has been colonized. You run a diner in one of the settlements.
+  It is not very lucrative, but you have a solid customer base,
   because there are not many alternatives within the colony. The colony is too insignificant to have visitors from other
-  planets or even solar system, but it is a quite popular spot for human tourists from Earth.
+  planets or even solar systems, but it is a quite popular spot for human tourists from Earth.
   Try to earn 500 space dollars - that's the amount you need to buy an interplanetary ticket and open a diner
   in a more interesting place.
 money: 50
@@ -207,6 +207,7 @@ food:
 guests:
   groups:
     - name: Human
+      description: Originating from Earth.
       available: True
       reactions:
         - properties: [ raw, potato ]
@@ -214,6 +215,7 @@ guests:
           output: Argh, Humans cannot digest raw potatoes.
 
     - name: colonist
+      description: Simple settlers.
       name_factory: Moon-English
       available: True
       budget: 10
@@ -248,6 +250,7 @@ guests:
         - Awful.
 
     - name: tourist
+      description: Rich people from Earth.
       name_factory: Earth-English
       available: True
       budget: 25
