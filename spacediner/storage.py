@@ -1,3 +1,4 @@
+import copy
 import pickle
 
 from collections import OrderedDict
@@ -25,7 +26,8 @@ class Storage:
         if name in self.ingredients:
             availability = max(0, self.ingredients.get(name) - amount)
             self.ingredients.update({name: availability})
-            return ingredients.get(name)
+            ingredient = ingredients.get(name)
+            return copy.deepcopy(ingredient)
         return None
 
     def store_ingredient(self, name, amount):

@@ -625,12 +625,12 @@ class SaveRecipeMode(ChoiceMode):
         self.choices = self.dish.ingredient_properties(self.ingredient)
         super().__init__(**kwargs)
 
-    def _print_recipce(self):
+    def _print_recipe(self):
         print_title('Recipe:')
         print_list(', '.join(ingredient_properties) for ingredient_properties in self.ingredient_property_choices)
 
     def print_info(self):
-        self._print_recipce()
+        self._print_recipe()
         super().print_info()
 
     def exec_choice(self, choice):
@@ -648,7 +648,7 @@ class SaveRecipeMode(ChoiceMode):
             self.choices = self.dish.ingredient_properties(self.ingredient)
             return self
         else:
-            self._print_recipce()
+            self._print_recipe()
             name = None
             while not name:
                 name = input('Recipe name: '.format(self.prompt))
