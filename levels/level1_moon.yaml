@@ -345,8 +345,8 @@ guests:
 social:
   - name: Dr. Ozabela Ruizy
     greetings:
-      - Nice to see you
-      - I'm glad to see you
+      - Nice to see you,
+      - I'm glad to see you,
     chats:
       - I can't stop thinking about my work in the lab. Sigh.
       - Your food is always so comforting.
@@ -470,8 +470,8 @@ social:
 
   - name: Human colonist
     greetings:
-      - Hi
-      - Hello
+      - Hi,
+      - Hello,
     chats:
       - There are more and more tourists from Earth. I hate them.
       - The stars are beautiful today.
@@ -486,8 +486,8 @@ social:
 
   - name: Human tourist
     greetings:
-      - Good day
-      - Pleased to meet you
+      - Good day,
+      - Pleased to meet you,
     chats:
       - It is wonderful to visit all these little local businesses here.
       - I am so excited. Can I take a picture of this diner? I already did. Thank you!

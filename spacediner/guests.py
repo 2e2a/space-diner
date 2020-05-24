@@ -307,7 +307,7 @@ def chat(name):
     text = social.chat(guest.group_name)
     greeting = social.greeting(guest.group_name)
     if greeting:
-        text = '{}, {}! {}'.format(greeting, diner.diner.chef, text)
+        text = '{} {}! {}'.format(greeting, diner.diner.chef, text)
     return text
 
 

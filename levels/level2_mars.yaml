@@ -95,7 +95,7 @@ storage:
         available: 1
       - name: chicken egg
         available: 6
-      - name: blizzard bird egg
+      - name: blizzard-bird egg
         available: 6
 
 
@@ -266,6 +266,7 @@ guests:
           text: Something fresh would be nice.
 
     - name: adult
+      description: Most of Mars's adult population works in engineering, research, or food supply.
       available: True
       budget: 15
       reactions:
@@ -289,11 +290,9 @@ guests:
         - I didn't like it.
 
     - name: senior
-      description: >
-        Elderly people. Currently, most seniors on Mars are Human, whereas most Reptiloids and Bovids are
-        younger first-generation colonists.
+      description: Currently, most seniors on Mars are Humans who were among the first colonists.
       available: True
-      budget: 12
+      budget: 30
       reactions:
         - properties: [ blended ]
           taste: +1
@@ -310,6 +309,7 @@ guests:
           text: Can I have something sweet?
       positive_phrases:
         - Jolly good.
+        - This young chef impressed me.
       neutral_phrases:
         - Acceptable.
       negative_phrases:
@@ -318,6 +318,7 @@ guests:
         - This place is abhorrent.
 
     - name: teenager
+      description: Young second-generation colonists, more or less rebellious.
       available: False
       budget: 10
       reactions:
@@ -376,7 +377,8 @@ guests:
 
     - name: Martian-Bovid
       factory:
-        - [ One-horned, Two-horned, Three-horned, Four-horned, Multi-horned ]
+        - [ One-, Two-, Three-, Four-, Five-, Six-, Seven-, Eight-, Nine-, Ten-, Eleven-, Twelve- ]
+        - [ horned ]
         - [ " " ]
         - [ A, Aa, E, Ee, Ou]
         - [ d, b, g, l, rg, rk, tch, rb, z, dge, mb, sk, w]
@@ -394,25 +396,50 @@ guests:
     - [ Reptiloid, adult ]
     - [ Bovid, adult ]
     - [ Human, senior]
+    - [ Reptiloid, senior]
+    - [ Bovid, senior]
+    - [ Human, teenager ]
+    - [ Reptiloid, teenager ]
+    - [ Bovid, teenager ]
 
   regulars:
-    - name: Little Hornless Abbi
+    - name: Old Twenty-Horned Abbi
       available: True
-      budget: 10
+      budget: 30
       reactions:
-        - properties: [ tomato ]
+        - properties: [ spicy ]
           taste: +1
-          output: I like tomatoes.
+          output: Oh my goodness, I love spicy food.
       orders:
-        - wish: tomato
+        - wish: fresh
+          text: Oh my goodness, I have this craving for something fresh.
       positive_phrases:
-        - Good!
+        - Oh my goodness, it was fantastic.
       neutral_phrases:
-        - Fine!
+        - I was not impressed today.
       negative_phrases:
-        - Bad!
+        - Oh my goodness, it was horrible.
 
 social:
+  - name: Human adult
+    greetings:
+      - Hello,
+      - Hi,
+      - Good morning,
+    chats:
+      - There must have been a really strong sandstorm last night. I heard that our dome was slightly damaged.
+  - name: Reptiloid adult
+    greetings:
+      - Hello,
+    chats:
+      - It's so cold today, I can barely move my limbs.
+      - How do I look? This is a brand-new scale polish that I'm trying.
+  - name: Bovid adult
+    greetings:
+      - Greetings, Hornless
+    chats:
+      - I heard that they want to allow keeping pets inside the domes soon. I'd really like one of these Earth dogs.
+      - Have you ever been outside of the domes? I did a tour yesterday, but I found it really scary.
   - name: Human senior
     greetings:
       - Good morning
@@ -420,6 +447,35 @@ social:
       - Your diner looks so charming, my dear.
       - I'm just going to rest my eyes for a minute.
       - What kind of music are these kids outside listening to? Sounds like a lot of noise to me.
+  - name: Reptiloid senior
+    greetings:
+      - Good morning
+    chats:
+      -
+  - name: Bovid senior
+    greetings:
+      - Good morning, Hornless
+    chats:
+      - Sigh. One of my horns fell off yesterday. I guess I'm getting old.
+      - All my little hornless grandchildren came to visit me yesterday. Exhausting!
+  - name: Human teenager
+    greetings:
+      - Good morning
+    chats:
+      - Your diner looks so charming, my dear.
+      - I'm just going to rest my eyes for a minute.
+      - What kind of music are these kids outside listening to? Sounds like a lot of noise to me.
+  - name: Reptiloid teenager
+    greetings:
+      - Good morning
+    chats:
+      -
+  - name: Bovid teenager
+    greetings:
+      - Good morning, Hornless
+    chats:
+      - Sigh. One of my horns fell off yesterday. I guess I'm getting old.
+      - All my little hornless grandchildren came to visit me yesterday. Exhausting!
 
 skills:
   - type: cooking
@@ -459,7 +515,7 @@ activities:
         diff: +1
   - name: watch comedy channel on TV
     available: True
-    message: You watched some comedy. This should make your wittier and improve the quality of your service.
+    message: You watched some comedy. This should make you wittier and improve the quality of your service.
     rewards:
       - type: skill
         skill: wittiness

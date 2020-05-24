@@ -2,7 +2,6 @@ import argparse
 from . import cli
 from . import settings
 
-# TODO: saving recipes: properties not correct
 # TODO: guests: not necessarily one per group every day
 # TODO: shopping: if only one merchant offers ingredient, do not require typing in merchant name
 # TODO: shopping: consider removing "in stock" property
