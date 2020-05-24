@@ -16,14 +16,15 @@ class Chats:
             for chat in data:
                 self.chats.append(chat)
 
-    def chat(self):
+    def next_chat(self):
         if self.chats:
             return self.chats[self.done]
 
-    def next(self):
+    def chat(self):
         if self.chats:
+            chat = self.next_chat()
             self.done += 1
-            return self.chat()
+            return chat
 
 
 class Greetings:
@@ -115,7 +116,6 @@ class Friendship:
                 reward.apply()
 
 
-
 class Social:
     name = None
     chats = None
@@ -134,11 +134,11 @@ class Social:
             self.friendship = Friendship()
             self.friendship.init(data.get('friendship'))
 
+    def next_chat(self):
+        return self.chats.next_chat() if self.chats else None
+
     def chat(self):
         return self.chats.chat() if self.chats else None
-
-    def next_chat(self):
-        return self.chats.next() if self.chats else None
 
     def greeting(self):
         return self.greetings.get() if self.greetings else None
@@ -185,7 +185,7 @@ def get(name):
 
 def chats_available():
     global social
-    chats = [guest for guest, social in social.items() if social.chat()]
+    chats = [guest for guest, social in social.items() if social.next_chat()]
     return chats
 
 
@@ -197,16 +197,16 @@ def has_chats(name):
     return False
 
 
+def next_chat(name):
+    return get(name).next_chat()
+
+
 def chat(name):
     return get(name).chat()
 
 
 def greeting(name):
     return get(name).greeting()
-
-
-def next_chat(name):
-    return get(name).next_chat()
 
 
 def available_meetings():

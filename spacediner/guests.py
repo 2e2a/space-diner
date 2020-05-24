@@ -160,7 +160,7 @@ class Guest:
         self.chatted_today = True
 
     def has_chat_available(self):
-        return not self.chatted_today and social.has_chats(self.group_name) and social.chat(self.group_name)
+        return not self.chatted_today and social.has_chats(self.group_name) and social.next_chat(self.group_name)
 
     def send_home(self):
         self.taste = 0
@@ -304,7 +304,7 @@ def get_group_name(name):
 def chat(name):
     guest = get(name)
     guest.chatted_today = True
-    text = social.next_chat(guest.group_name)
+    text = social.chat(guest.group_name)
     greeting = social.greeting(guest.group_name)
     if greeting:
         text = '{}, {}! {}'.format(greeting, diner.diner.chef, text)
