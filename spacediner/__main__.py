@@ -4,6 +4,7 @@ from . import settings
 
 # TODO: chat: first chat never seems to happen
 # TODO: saving recipes: properties not correct
+# TODO: guests: not necessarily one per group every day
 # TODO: shopping: if only one merchant offers ingredient, do not require typing in merchant name
 # TODO: shopping: consider removing "in stock" property
 # TODO: skills should have an effect and influence reviews: "I was impressed by the chef's skills regarding X"
@@ -17,7 +18,7 @@ from . import settings
 # TODO: make activities available on specific days
 # TODO: special weekend day (last day of the week) with two activities instead of work and one activity
 # TODO: think about menu: are all/some initial menu items fixed?
-
+# TODO: rewards/trophies for achievements, e.g., served 100 dishes, received 100 reviews
 
 parser = argparse.ArgumentParser(description='Space diner')
 parser.add_argument(
