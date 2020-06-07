@@ -54,7 +54,6 @@ class Guest:
     negative_phrases = None
 
     order = None
-    chatted_today = False
     served = False
 
     taste = 2
@@ -85,7 +84,6 @@ class Guest:
     def reset(self):
         self.available = True
         self.order = None
-        self.chatted_today = False
         self.review = reviews.Review(self.name, self.group_name)
         self.init_service()
         self.init_ambience()
@@ -151,16 +149,13 @@ class Guest:
             social.unlock_friendship(self.group_name)
         return self.taste
 
-    def has_chatted_today(self):
-        return self.chatted_today
+    def has_chat_available(self):
+        return social.has_chats(self.group_name) and social.next_chat(self.group_name)
 
-    def set_chatted_today(self):
+    def chat(self):
         self.service += 1
         self.review.add(2, 'chatted')
-        self.chatted_today = True
-
-    def has_chat_available(self):
-        return not self.chatted_today and social.has_chats(self.group_name) and social.next_chat(self.group_name)
+        return social.greet_and_chat(self.group_name)
 
     def send_home(self):
         self.taste = 0
@@ -303,12 +298,7 @@ def get_group_name(name):
 
 def chat(name):
     guest = get(name)
-    guest.chatted_today = True
-    text = social.chat(guest.group_name)
-    greeting = social.greeting(guest.group_name)
-    if greeting:
-        text = '{} {}! {}'.format(greeting, diner.diner.chef, text)
-    return text
+    return guest.chat()
 
 
 def take_order(name):

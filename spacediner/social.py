@@ -3,7 +3,9 @@ import random
 from collections import OrderedDict
 
 from . import cli
+from . import diner
 from . import rewards
+from . import time
 
 
 class Chats:
@@ -176,6 +178,7 @@ class Social:
 
 
 social = None
+chatted_today = None
 
 
 def get(name):
@@ -185,15 +188,18 @@ def get(name):
 
 def chats_available():
     global social
-    chats = [guest for guest, social in social.items() if social.next_chat()]
+    global chatted_today
+    chats = [friend for friend, social in social.items() if friend not in chatted_today and social.next_chat()]
     return chats
 
 
 def has_chats(name):
-    global social
-    guest_social = social.get(name)
-    if guest_social:
-        return guest_social.chats is not None
+    global chatted_today
+    if name in chatted_today:
+        return False
+    friend_social = get(name)
+    if friend_social:
+        return friend_social.chats is not None
     return False
 
 
@@ -202,6 +208,8 @@ def next_chat(name):
 
 
 def chat(name):
+    global chatted_today
+    chatted_today.append(name)
     return get(name).chat()
 
 
@@ -209,9 +217,17 @@ def greeting(name):
     return get(name).greeting()
 
 
+def greet_and_chat(name):
+    text = chat(name)
+    greeting_text = greeting(name)
+    if greeting:
+        text = '{} {}! {}'.format(greeting_text, diner.diner.chef, text)
+    return text
+
+
 def available_meetings():
     global social
-    meetings = [guest for guest, social in social.items() if social.has_meeting()]
+    meetings = [friend for friend, social in social.items() if social.has_meeting()]
     return meetings
 
 
@@ -245,13 +261,19 @@ def lock_friendship(name):
     social.get(name).lock_friendship()
 
 
+def daytime():
+    global chatted_today
+    chatted_today = []
+
+
 def init(data):
     global social
     social = OrderedDict()
     for social_data in data:
-        guest_social = Social()
-        guest_social.init(social_data)
-        social.update({guest_social.name: guest_social})
+        friend_social = Social()
+        friend_social.init(social_data)
+        social.update({friend_social.name: friend_social})
+    time.register_callback(time.Calendar.TIME_DAYTIME, daytime)
 
 
 def save(file):
