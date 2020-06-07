@@ -2,8 +2,8 @@ import argparse
 from . import cli
 from . import settings
 
-# TODO: guests: not necessarily one per group every day
-# TODO: shopping: if only one merchant offers ingredient, do not require typing in merchant name
+# TODO: guests: not necessarily one per group every day, two random guests instead
+# TODO: merchants have greetings, chats
 # TODO: shopping: consider removing "in stock" property
 # TODO: skills should have an effect and influence reviews: "I was impressed by the chef's skills regarding X"
 # TODO:   (X = one of the acquired subskills)
