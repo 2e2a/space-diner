@@ -3,10 +3,12 @@ import pickle
 from collections import OrderedDict
 
 from . import ingredients
+from . import social
 
 
 class Merchant:
     name = None
+    owner = None
     available = False
     ingredients = None
 
@@ -33,10 +35,17 @@ class Merchant:
                 return ingredients.get(name)
         return None
 
+    def has_chat_available(self):
+        return social.has_chats(self.owner) and social.next_chat(self.owner)
+
+    def chat(self):
+        return social.greet_and_chat(self.owner)
+
     STOCK_AVAILABILITY_UNLIMITED = 99
 
     def init(self, data):
         self.name = data.get('name')
+        self.owner = data.get('owner', self.name)
         self.available = data.get('available', True)
         self.ingredients = OrderedDict()
         for merchant_ingredient in  data.get('ingredients'):
@@ -58,12 +67,27 @@ def get(name):
     return merchants.get(name)
 
 
+def owner(name):
+    return get(name).owner
+
+
 def get_available():
     global merchants
     return [merchant.name for merchant in merchants.values() if merchant.available]
 
 
-def ingredients_for_sale(name):
+def for_sale():
+    global merchants
+    ingredients_for_sale = {}
+    for merchant in merchants.values():
+        if merchant.available:
+            ingredients_for_sale.update({
+                merchant.name: merchant.for_sale().keys()
+            })
+    return ingredients_for_sale
+
+
+def merchant_for_sale(name):
     merchant = get(name)
     return merchant.for_sale() if merchant.available else {}
 
@@ -75,6 +99,21 @@ def available_ingredients():
         if merchant.available:
             available_ingredients.extend(merchant.ingredients.keys())
     return available_ingredients
+
+
+def buy(name, ingregient, amount):
+    merchant = get(name)
+    merchant.buy(ingregient, amount)
+
+
+def has_chat_available(name):
+    merchant = get(name)
+    return merchant.has_chat_available()
+
+
+def chat(name):
+    merchant = get(name)
+    return merchant.chat()
 
 
 def unlock(name):

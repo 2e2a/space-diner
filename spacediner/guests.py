@@ -157,6 +157,7 @@ class Guest:
         self.review.add(2, 'chatted')
         return social.greet_and_chat(self.group_name)
 
+
     def send_home(self):
         self.taste = 0
         self.service = 0

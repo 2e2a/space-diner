@@ -105,45 +105,56 @@ class BuyIngredients(Action):
         self.amount = amount
 
     def perform(self):
-        if not storage.get(ingredients.get(self.ingredient).storage).available:
-            raise RuntimeError('Required storage not available')
+        error = None
         merchant = merchants.get(self.merchant)
-        if not merchant.is_ingredient_available(self.ingredient, 1):
-            raise RuntimeError('Not in stock')
         if not merchant.is_ingredient_available(self.ingredient, self.amount):
-            raise RuntimeError('Not enough ingredients')
+            error = 'Not enough ingredients'
         cost = merchant.cost(self.ingredient) * self.amount
         if cost > levels.level.money:
-            raise RuntimeError('Not enough money')
-        levels.level.money = levels.level.money - cost
-        merchant.buy(self.ingredient, self.amount)
-        storage.store_ingredient(self.ingredient, self.amount)
+            error = 'Not enough money'
+        if not error:
+            levels.level.money = levels.level.money - cost
+            merchant.buy(self.ingredient, self.amount)
+            storage.store_ingredient(self.ingredient, self.amount)
+        else:
+            cli.print_message('Could not buy ingredients: {}'.format(error))
 
 
 class Chat(Action):
 
-    def __init__(self, guest):
-        self.guest = guest
+    def __init__(self, friend):
+        self.friend = friend
+
+
+class GuestChat(Chat):
 
     def perform(self):
-        chat = guests.chat(self.guest)
-        cli.print_dialog(self.guest, chat)
+        chat = guests.chat(self.friend)
+        cli.print_dialog(self.friend, chat)
+
+
+class MerchantChat(Chat):
+
+    def perform(self):
+        owner = merchants.owner(self.friend)
+        chat = merchants.chat(self.friend)
+        cli.print_dialog(owner, chat)
 
 
 class Meet(Action):
 
-    def __init__(self, guest, reply):
-        self.guest = guest
+    def __init__(self, friend, reply):
+        self.friend = friend
         self.reply = reply
 
     def perform(self):
-        reply, liked = social.meet(self.guest, self.reply)
-        cli.print_dialog(self.guest, reply)
+        reply, liked = social.meet(self.friend, self.reply)
+        cli.print_dialog(self.friend, reply)
         if liked:
-            social.level_up(self.guest)
-        if social.was_last_meeting(self.guest):
-            social.unlock_all_rewards(self.guest)
-        social.lock_friendship(self.guest)
+            social.level_up(self.friend)
+        if social.was_last_meeting(self.friend):
+            social.unlock_all_rewards(self.friend)
+        social.lock_friendship(self.friend)
 
 
 class DoActivity(Action):

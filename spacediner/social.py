@@ -261,19 +261,21 @@ def lock_friendship(name):
     social.get(name).lock_friendship()
 
 
-def daytime():
+def morning():
     global chatted_today
     chatted_today = []
 
 
 def init(data):
     global social
+    global chatted_today
     social = OrderedDict()
     for social_data in data:
         friend_social = Social()
         friend_social.init(social_data)
         social.update({friend_social.name: friend_social})
-    time.register_callback(time.Calendar.TIME_DAYTIME, daytime)
+    chatted_today = []
+    time.register_callback(time.Calendar.TIME_MORNING, morning)
 
 
 def save(file):

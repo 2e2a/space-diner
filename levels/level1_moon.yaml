@@ -116,6 +116,7 @@ kitchen:
 
 merchants:
   - name: Earth Wholesale
+    owner: Cashier Bot
     available: True
     ingredients:
       - name: beef
@@ -499,6 +500,19 @@ social:
       - I love it here on the Moon! ...maybe it could just be a little bit warmer.
       - Oh, look at all those wondrous local people!
       - I am returning to Earth tomorrow. What a shame! I would love to stay longer.
+
+  - name: Cashier Bot
+    greetings:
+      - What's it gonna be,
+    chats:
+      - You should buy more potatos.
+      -
+  - name: Moon Delicacies
+    greetings:
+      - Welcome,
+    chats:
+      - The worms are fresh today.
+      - The worms are getting an bit old, but are still OK.
 
 skills:
   - type: cooking

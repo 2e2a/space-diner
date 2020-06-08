@@ -438,7 +438,7 @@ class DinerMode(Mode):
             return WaitForInputMode(back=self)
         if cmd == self.CMD_CHAT:
             guest = self.original_name(cmd_input[1])
-            action = actions.Chat(guest)
+            action = actions.GuestChat(guest)
             action.perform()
             return WaitForInputMode(back=self)
         if cmd == self.CMD_SERVE:
@@ -922,7 +922,7 @@ class SleepMode(InfoMode):
         time.tick()
         if time.calendar.is_week_start:
             return DinerMenuEditMode()
-        return MerchantMode()
+        return ShoppingMode()
 
 
 class DinerMenuEditMode(ChoiceMode):
@@ -967,10 +967,15 @@ class ShoppingMode(ChoiceMode):
         'Every morning you have the opportunity to stock up on supplies. Try to plan ahead and to be prepared even '
         'for unexpectedly crowded days at the diner. New merchants might become available during the game.'
     )
+    ingredients_for_sale = None
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.choices = merchants.get_available()
+
+    def update_commands(self):
+        self.ingredients_for_sale = merchants.for_sale()
+        super().update_commands()
 
     def print_info(self):
         print_header([
@@ -978,14 +983,26 @@ class ShoppingMode(ChoiceMode):
             ('Time', [time.now()]),
             ('Money', [levels.level.money, 'space dollars']),
         ])
+        print_title('Merchants available today')
+        print_list([
+            '{} [{}]'.format(merchant, ', '.join(merchant_ingredients))
+            for merchant, merchant_ingredients in self.ingredients_for_sale.items()
+        ])
         super().print_info()
 
     def exec_choice(self, choice):
-        return MerchantMode(self.choices[choice])
+        merchant = self.choices[choice]
+        merchant_mode = MerchantMode(merchant)
+        if merchants.has_chat_available(merchant):
+            action = actions.MerchantChat(merchant)
+            action.perform()
+            return WaitForInputMode(back=merchant_mode)
+        return merchant_mode
 
     def back(self):
         time.tick()
         return DinerMode()
+
 
 class MerchantMode(Mode):
     CMD_BUY_INGREDIENT = 0
@@ -1005,10 +1022,9 @@ class MerchantMode(Mode):
 
     def update_commands(self):
         self.available_ingredients = storage.available_ingredients()
-        self.ingredients_for_sale = merchants.ingredients_for_sale(self.merchant)
+        self.ingredients_for_sale = merchants.merchant_for_sale(self.merchant)
         ingredient_names = [self.name_for_command(ingredient) for ingredient in self.ingredients_for_sale.keys()]
         self.commands[self.CMD_BUY_INGREDIENT] = (['buy'], int, ingredient_names)
-
         super().update_commands()
 
     def print_info(self):
@@ -1017,7 +1033,7 @@ class MerchantMode(Mode):
             ('Time', [time.now()]),
             ('Money', [levels.level.money, 'space dollars']),
         ])
-        print_title('Ingredients in stock:')
+        print_title('Owned ingredients:')
         print_list(['{} x {}'.format(a, i) for i, a in self.available_ingredients.items()])
         print_title('Ingredients for sale:')
         print_list([
