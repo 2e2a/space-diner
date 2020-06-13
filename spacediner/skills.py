@@ -5,7 +5,6 @@ from collections import OrderedDict
 from . import cli
 
 # TODO: cooking skills influence rating (like ambience and service) and reviews ("It was seasoned perfectly.")
-# TODO: define skills independently from activities
 # TODO: optionally define texts for each skill level which is shown when the skill level changes ("Your seasoning skill is now medium.")
 
 MAX_SKILL_LEVEL = 5
@@ -32,7 +31,7 @@ class Skill:
         msg = 'Your {} {}: {}'.format(
             self.name,
             'increased' if diff > 0 else 'decreased',
-            ', '.join(self.learned_subskills)
+            '. They now include: '.join(self.learned_subskills)
         )
         cli.print_message(msg)
 

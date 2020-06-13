@@ -1,8 +1,8 @@
 name: Moon
 intro: >
   The moon has been colonized. You run a diner in one of the settlements.
-  It is not very lucrative, but you have a solid customer base,
-  because there are not many alternatives within the colony. The colony is too insignificant to have visitors from other
+  It is not very lucrative, but you have a solid customer base.
+  The colony is too insignificant to have visitors from other
   planets or even solar systems, but it is a quite popular spot for human tourists from Earth.
   Try to earn 500 space dollars - that's the amount you need to buy an interplanetary ticket and open a diner
   in a more interesting place.
@@ -166,7 +166,7 @@ food:
         - [ pan-fried, meat ]
       properties: [ ]
 
-    - name: Pickle salad
+    - name: Pickle Salad
       available: True
       ingredients:
         - [ pickles ]
@@ -182,7 +182,7 @@ food:
         - [ deep-fried, potato ]
       properties: [ ]
 
-    - name: Bread basket
+    - name: Bread Basket
       available: True
       ingredients:
         - [ bun ]
@@ -190,7 +190,7 @@ food:
         - [ bun ]
       properties: [ ]
 
-    - name: Silkworm nuggets
+    - name: Silkworm Nuggets
       available: True
       ingredients:
         - [ deep-fried, silkworm ]
@@ -201,9 +201,9 @@ food:
   menu:
     - Beef Burger
     - Fries
-    - Bread basket
+    - Bread Basket
     - Meat Plate
-    - Pickle salad
+    - Pickle Salad
 
 guests:
   groups:
@@ -414,7 +414,7 @@ social:
               reaction: Me neither. It is a hard decision... I wish I was more decisive.
         - meeting: >
             Ozabela wants to see a movie. There is a brand-new cinema in the amusement park that they finished building
-            this year. However, you decide to go to the one in the mall. There are only 12 seats there. Most of them
+            this year. However, you decide to go to the cinema in the mall. There are only 12 seats there. Most of them
             are already taken when you enter, and you have to sit in the first row right in front of the screen. You 
             watch a documentary about creatures living in the ocean on Earth. After the movie, Ozabela looks depressed.
           question: So full of life. Earth, I mean. And we only have our little worms. There's nothing else.

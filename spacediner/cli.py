@@ -877,6 +877,7 @@ class ActivityMode(ChoiceMode):
             activity = self.activities[choice]
             action = actions.DoActivity(activity)
             action.perform()
+            self.print_skills()
         else:
             choice -= (len(self.meetings) + len(self.activities))
             if self.fixed_activities[choice] == 'clean diner':
