@@ -2,6 +2,7 @@ import argparse
 from . import cli
 from . import settings
 
+# TODO: finish market description
 # TODO: Catch Ctr+c, ask if exit
 # TODO: guests: not necessarily one per group every day, two random guests instead
 # TODO: shopping: consider removing "in stock" property

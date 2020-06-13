@@ -13,7 +13,7 @@ from . import goals
 from . import guests
 from . import kitchen
 from . import ingredients
-from . import merchants
+from . import shopping
 from . import social
 from . import skills
 from . import storage
@@ -38,7 +38,7 @@ class Level:
             ingredients.init(data.get('ingredients', []))
             storage.init(data.get('storage', []))
             kitchen.init(data.get('kitchen', []))
-            merchants.init(data.get('merchants', []))
+            shopping.init(data.get('shopping', []))
             food.init(data.get('food'))
             guests.init(data.get('guests', []))
             social.init(data.get('social', []))
@@ -107,7 +107,7 @@ def save(file):
     ingredients.save(file)
     storage.save(file)
     kitchen.save(file)
-    merchants.save(file)
+    shopping.save(file)
     food.save(file)
     guests.save(file)
     social.save(file)
@@ -122,7 +122,7 @@ def load(file):
     ingredients.load(file)
     storage.load(file)
     kitchen.load(file)
-    merchants.load(file)
+    shopping.load(file)
     food.load(file)
     guests.load(file)
     social.load(file)

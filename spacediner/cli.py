@@ -7,7 +7,7 @@ from . import diner
 from . import food
 from . import guests
 from . import kitchen
-from . import merchants
+from . import shopping
 from . import levels
 from . import ingredients
 from . import reviews
@@ -757,7 +757,7 @@ class IngredientCompendiumMode(ChoiceMode):
 
     def __init__(self, **kwargs):
         ingredients = set(storage.available_ingredients().keys())
-        ingredients.update(merchants.available_ingredients())
+        ingredients.update(shopping.available_ingredients())
         self.choices = sorted(ingredients)
         super().__init__(**kwargs)
 
@@ -972,10 +972,10 @@ class ShoppingMode(ChoiceMode):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.choices = merchants.get_available()
+        self.choices = shopping.get_available()
 
     def update_commands(self):
-        self.ingredients_for_sale = merchants.for_sale()
+        self.ingredients_for_sale = shopping.for_sale()
         super().update_commands()
 
     def print_info(self):
@@ -994,10 +994,10 @@ class ShoppingMode(ChoiceMode):
     def exec_choice(self, choice):
         merchant_name = self.choices[choice]
         merchant_mode = MerchantMode(merchant_name)
-        merchant_description = merchants.get(merchant_name).description
+        merchant_description = shopping.get(merchant_name).description
         if merchant_description:
             print_text(merchant_description)
-        if merchants.has_chat_available(merchant_name):
+        if shopping.has_chat_available(merchant_name):
             action = actions.MerchantChat(merchant_name)
             action.perform()
             return WaitForInputMode(back=merchant_mode)
@@ -1026,7 +1026,7 @@ class MerchantMode(Mode):
 
     def update_commands(self):
         self.available_ingredients = storage.available_ingredients()
-        self.ingredients_for_sale = merchants.merchant_for_sale(self.merchant)
+        self.ingredients_for_sale = shopping.merchant_for_sale(self.merchant)
         ingredient_names = [self.name_for_command(ingredient) for ingredient in self.ingredients_for_sale.keys()]
         self.commands[self.CMD_BUY_INGREDIENT] = (['buy'], int, ingredient_names)
         super().update_commands()

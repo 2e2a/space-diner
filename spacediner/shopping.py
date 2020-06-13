@@ -6,6 +6,15 @@ from . import ingredients
 from . import social
 
 
+class Market:
+    name = None
+    description = None
+
+    def init(self, data):
+        self.name = data.get('name')
+        self.description = data.get('description')
+
+
 class Merchant:
     name = None
     description = None
@@ -61,6 +70,7 @@ class Merchant:
         return '{}: {}'.format(self.name, ingredients)
 
 
+market = None
 merchants = None
 
 
@@ -124,9 +134,12 @@ def unlock(name):
 
 
 def init(data):
+    global market
     global merchants
+    market = Market()
+    market.init(data.get('market'))
     merchants = OrderedDict()
-    for merchant_data in data:
+    for merchant_data in data.get('merchants'):
         merchant = Merchant()
         merchant.init(merchant_data)
         merchants.update({merchant.name: merchant})

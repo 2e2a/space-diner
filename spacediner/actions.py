@@ -5,7 +5,7 @@ from . import food
 from . import guests
 from . import ingredients
 from . import levels
-from . import merchants
+from . import shopping
 from . import social
 from . import storage
 
@@ -106,7 +106,7 @@ class BuyIngredients(Action):
 
     def perform(self):
         error = None
-        merchant = merchants.get(self.merchant)
+        merchant = shopping.get(self.merchant)
         if not merchant.is_ingredient_available(self.ingredient, self.amount):
             error = 'Not enough ingredients'
         cost = merchant.cost(self.ingredient) * self.amount
@@ -136,8 +136,8 @@ class GuestChat(Chat):
 class MerchantChat(Chat):
 
     def perform(self):
-        owner = merchants.owner(self.friend)
-        chat = merchants.chat(self.friend)
+        owner = shopping.owner(self.friend)
+        chat = shopping.chat(self.friend)
         cli.print_dialog(owner, chat)
 
 

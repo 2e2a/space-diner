@@ -1,4 +1,5 @@
 name: Moon
+
 intro: >
   The moon has been colonized. You run a diner in one of the settlements.
   It is not very lucrative, but you have a solid customer base.
@@ -6,10 +7,13 @@ intro: >
   planets or even solar systems, but it is a quite popular spot for human tourists from Earth.
   Try to earn 500 space dollars - that's the amount you need to buy an interplanetary ticket and open a diner
   in a more interesting place.
+
 money: 50
+
 diner:
   name: Space Diner
   seats: 7
+
 calendar:
   week: [Moonday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday]
   cycle: 365
@@ -42,6 +46,7 @@ calendar:
       info: Some lucky Earthlings have won free tickets to the Moon. The colony is crowded!
       day: 20
       groups: [ Human tourist ]
+
 goals:
   - type: money
     amount: 500
@@ -114,41 +119,46 @@ kitchen:
     result: deep-fried
     properties: [ ]
 
-merchants:
-  - name: Earth Wholesale
+shopping:
+  market:
+    name: Moon Market Hall
     description: >
-      You approach the largest market stall. It belongs to Earth Wholesale, a big corporation that imports long-life
-      products from Earth. They have similar stores with automated cashier units in all colonies on Mars.
-    owner: Cashier Bot
-    available: True
-    ingredients:
-      - name: beef
-        cost: 2
-      - name: pickles
-        cost: 1
-      - name: bun
-        cost: 1
-      - name: potato
-        cost: 1
+      On your way from your apartment to the diner, you always pass the Moon Market Hall.
+      Do you need to stock up on supplies?
+  merchants:
+    - name: Earth Wholesale
+      description: >
+        You approach the largest market stall. It belongs to Earth Wholesale, a big corporation that imports long-life
+        products from Earth.
+      owner: Cashier Bot
+      available: True
+      ingredients:
+        - name: beef
+          cost: 2
+        - name: pickles
+          cost: 1
+        - name: bun
+          cost: 1
+        - name: potato
+          cost: 1
 
-  - name: Moon Delicacies
-    description: >
-      You approach the small booth at which Pete sells his 'Moon delicacies'.
-      The stall looks a bit scruffy and gives off an odd smell.
-    owner: Pete
-    available: True
-    ingredients:
-      - name: silkworm
-        cost: 19
+    - name: Moon Delicacies
+      description: >
+        Pete sells his 'Moon delicacies' at this scruffy booth.
+      owner: Pete
+      available: True
+      ingredients:
+        - name: silkworm
+          cost: 19
 
-  - name: Oddie's Laboratory Waste
-    description: >
-      You go down the stairs leading to Oddie's basement where he attends to his shady business.
-    owner: Oddie
-    available: False
-    ingredients:
-      - name: silkworm
-        cost: 3
+    - name: Oddie's Laboratory Waste
+      description: >
+        You climb down the steep stairs leading to Oddie's hidden basement store.
+      owner: Oddie
+      available: False
+      ingredients:
+        - name: silkworm
+          cost: 3
 
 food:
   recipes:
@@ -519,14 +529,14 @@ social:
       - How about some beef? Rich in protein and good for your human body.
       - How about some some pickles? A refreshing bite.
       - How about some buns? Everybody likes buns.
-  - name: Moon Delicacies
+  - name: Pete
     greetings:
       - Welcome to my humble shop,
     chats:
       - The worms are really fresh today, they have just been delivered!
       - Today's worms are a bit more matured, but I assure you they are still perfectly safe to eat.
       - I know, I know. The worms don't look so good today. But I think some people might still be willing to eat them!
-  - name: Oddie's Laboratory Waste
+  - name: Oddie
     greetings:
       - Well, well, if it isn't my favorite customer
     chats:

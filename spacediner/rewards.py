@@ -1,6 +1,6 @@
 from . import cli
 from . import guests
-from . import merchants
+from . import shopping
 from . import skills
 
 
@@ -42,7 +42,7 @@ class MerchantReward(SocialReward):
 
     def apply(self):
         cli.print_message('New merchant unlocked')
-        merchants.unlock(self.merchant)
+        shopping.unlock(self.merchant)
 
 
 class GuestReward(Reward):
