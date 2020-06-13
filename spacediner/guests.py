@@ -350,6 +350,7 @@ def unlock(name):
 
 
 FULL_AFTER_RATINGS = 10
+RANDOM_GUESTS = 2
 
 
 def _new_guests(seats):
@@ -360,6 +361,7 @@ def _new_guests(seats):
     seats_per_group = int(seats/len(groups))
     extra_seats = seats - (seats_per_group * len(groups))
     ratings = reviews.get_ratings()
+    empty_groups = []
     random.seed()
     random.shuffle(groups)
     for name in groups:
@@ -370,27 +372,32 @@ def _new_guests(seats):
         birthday = time.get_birthdays_for(name)
         if not birthday:
             rating = ratings.get(name)
+            seats_taken = 0
             if rating:
-                taken_seats = min(
-                    available_seats,
-                    max(1, round((available_seats * rating.positive_count) / FULL_AFTER_RATINGS))
-                )
-            else:
-                taken_seats = 1
+                seats_by_rating = round((available_seats * rating.positive_count) / FULL_AFTER_RATINGS)
+                seats_taken = min(available_seats, seats_by_rating)
+            if seats_taken == 0:
+                empty_groups.append(name)
         else:
             cli.print_message('It\'s somebody\'s birthday: {}'.format(name))
-            taken_seats = available_seats
-        new_guests.extend(taken_seats * [name])
-        seats_remaining -= taken_seats
+            seats_taken = available_seats
+        new_guests.extend(seats_taken * [name])
+        seats_remaining -= seats_taken
     holidays = time.get_holidays_for(groups)
     seats_per_holiday = round(seats_remaining / len(holidays)) if holidays else 0
     for holiday in holidays:
         holiday_groups = set(holiday.groups).intersection(groups)
         cli.print_message('Today is a holiday for: {}.'.format(', '.join(holiday_groups)))
-        taken_seats = round(seats_per_holiday / len(holiday_groups))
+        seats_taken = round(seats_per_holiday / len(holiday_groups))
         for group in holiday_groups:
-            new_guests.extend(taken_seats * [group])
-        seats_remaining -= taken_seats
+            new_guests.extend(seats_taken * [group])
+        seats_remaining -= seats_taken
+    for _ in range(RANDOM_GUESTS):
+        if empty_groups and seats_remaining > 0:
+            random_group = random.choice(empty_groups)
+            new_guests.append(random_group)
+            empty_groups.remove(random_group)
+            seats_remaining -= 1
     random.shuffle(new_guests)
     return new_guests
 
