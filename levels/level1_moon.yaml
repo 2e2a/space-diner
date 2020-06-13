@@ -503,16 +503,28 @@ social:
 
   - name: Cashier Bot
     greetings:
-      - What's it gonna be,
+      - Welcome to Earth Wholesale,
     chats:
-      - You should buy more potatos.
-      -
+      - How about some potatoes? Starchy and delicious.
+      - How about some beef? Rich in protein and good for your human body.
+      - How about some some pickles? A refreshing bite.
+      - How about some buns? Everybody likes buns.
   - name: Moon Delicacies
     greetings:
-      - Welcome,
+      - Welcome to my humble shop,
     chats:
-      - The worms are fresh today.
-      - The worms are getting an bit old, but are still OK.
+      - The worms are really fresh today, they have just been delivered!
+      - Today's worms are a bit more matured, but I assure you they are still perfectly safe to eat.
+      - I know, I know. The worms don't look so good today. But I think some people might still be willing to eat them!
+  - name: Oddie's Laboratory Waste
+    greetings:
+      - Well, well, if it isn't my favorite customer
+    chats:
+      - How many do you want? They're straight from the waste disposer.
+      - These are from a really interesting experiment that went a bit wrong.
+      - Today, I have some weird-looking worms for you. A truly fascinating mutation.
+      - What can I do for you? You're in for some nice silkworms?
+      - I wonder if we will ever find out what molecules make them so delicious.
 
 skills:
   - type: cooking

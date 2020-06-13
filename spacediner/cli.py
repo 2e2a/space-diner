@@ -597,7 +597,7 @@ class RecipeMode(ChoiceMode):
         print_list(ingredient_list)
         if recipe.properties:
             properties = filter(lambda p: p != recipe.name.lower(), recipe.properties)
-            print_value('Properties of the dish: ', ', '.join(properties))
+            print_value('Properties of the dish', ', '.join(properties))
             print_newline()
 
     def exec_choice(self, choice):
