@@ -30,6 +30,10 @@ class Order:
     wish = None
     text = None
 
+    @property
+    def wish_property(self):
+        return self.wish.lower()
+
     def init(self, data):
         self.wish = data.get('wish')
         self.text = data.get('text', 'I\'ll have something {}-ish.'.format(self.wish))
@@ -133,7 +137,7 @@ class Guest:
                     reviews.add_dislikes(self.group_name, reaction.properties)
                     self.review.add(1, 'dislike', ' '.join(reaction.properties))
         if self.orders:
-            if self.order.wish in dish.properties:
+            if self.order.wish_property in dish.properties:
                 cli.print_message('{} received what they ordered ({}).'.format(self.name, self.order.wish))
             else:
                 self.service -= 1
