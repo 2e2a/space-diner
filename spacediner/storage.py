@@ -75,11 +75,11 @@ def is_ingredient_available(name):
     return False
 
 
-def take_ingredient(name):
+def take_ingredient(name, amount=1):
     global storages
     for storage in storages.values():
         if storage.available:
-            ingredient = storage.take_ingredient(name)
+            ingredient = storage.take_ingredient(name, amount)
             if ingredient:
                 return ingredient
     return None
@@ -103,8 +103,10 @@ def buy(name):
 def store_ingredient(name, amount):
     ingredient = ingredients.get(name)
     storage = storages.get(ingredient.storage, None)
-    if storage:
+    if storage and storage.available:
         storage.store_ingredient(name, amount)
+        return True
+    return False
 
 
 def get(name):
