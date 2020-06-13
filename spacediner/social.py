@@ -26,6 +26,8 @@ class Chats:
         if self.chats:
             chat = self.next_chat()
             self.done += 1
+            if self.done >= len(self.chats):
+                self.done = 0
             return chat
 
 
