@@ -8,6 +8,7 @@ from . import social
 
 class Merchant:
     name = None
+    description = None
     owner = None
     available = False
     ingredients = None
@@ -45,6 +46,7 @@ class Merchant:
 
     def init(self, data):
         self.name = data.get('name')
+        self.description = data.get('description')
         self.owner = data.get('owner', self.name)
         self.available = data.get('available', True)
         self.ingredients = OrderedDict()

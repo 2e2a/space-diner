@@ -992,10 +992,13 @@ class ShoppingMode(ChoiceMode):
         super().print_info()
 
     def exec_choice(self, choice):
-        merchant = self.choices[choice]
-        merchant_mode = MerchantMode(merchant)
-        if merchants.has_chat_available(merchant):
-            action = actions.MerchantChat(merchant)
+        merchant_name = self.choices[choice]
+        merchant_mode = MerchantMode(merchant_name)
+        merchant_description = merchants.get(merchant_name).description
+        if merchant_description:
+            print_text(merchant_description)
+        if merchants.has_chat_available(merchant_name):
+            action = actions.MerchantChat(merchant_name)
             action.perform()
             return WaitForInputMode(back=merchant_mode)
         return merchant_mode

@@ -116,6 +116,9 @@ kitchen:
 
 merchants:
   - name: Earth Wholesale
+    description: >
+      You approach the largest market stall. It belongs to Earth Wholesale, a big corporation that imports long-life
+      products from Earth. They have similar stores with automated cashier units in all colonies on Mars.
     owner: Cashier Bot
     available: True
     ingredients:
@@ -129,12 +132,19 @@ merchants:
         cost: 1
 
   - name: Moon Delicacies
+    description: >
+      You approach the small booth at which Pete sells his 'Moon delicacies'.
+      The stall looks a bit scruffy and gives off an odd smell.
+    owner: Pete
     available: True
     ingredients:
       - name: silkworm
         cost: 19
 
   - name: Oddie's Laboratory Waste
+    description: >
+      You go down the stairs leading to Oddie's basement where he attends to his shady business.
+    owner: Oddie
     available: False
     ingredients:
       - name: silkworm
