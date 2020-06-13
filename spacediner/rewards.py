@@ -1,13 +1,17 @@
 from . import cli
 from . import guests
+from . import levels
 from . import shopping
 from . import skills
+from . import storage
 
 
 class Reward:
     TYPE_MERCHANT = 'merchant'
     TYPE_GUEST = 'guest'
     TYPE_SKILL = 'skill'
+    TYPE_INGREDIENT = 'ingredient'
+    TYPE_MONEY = 'money'
 
     typ = None
     text = None
@@ -76,6 +80,45 @@ class SkillReward(Reward):
 
     def apply(self):
         skills.add(self.skill, self.diff)
+
+
+class IngredientReward(Reward):
+    ingredient = None
+    diff = None
+
+    def __init__(self):
+        self.typ = self.TYPE_INGREDIENT
+
+    def init(self, data):
+        super().init(data)
+        self.ingredient = data.get('ingredient')
+        self.diff = data.get('diff')
+
+    def apply(self):
+        if self.diff > 0 and storage.store_ingredient(self.ingredient, self.diff):
+            cli.print_message('Gained {}x{}.'.format(self.diff, self.ingredient))
+        else:
+            cli.print_message('Lost {}x{}.'.format(abs(self.diff), self.ingredient))
+
+
+class MoneyReward(Reward):
+    money = None
+    diff = None
+
+    def __init__(self):
+        self.typ = self.TYPE_MONEY
+
+    def init(self, data):
+        super().init(data)
+        self.money = data.get('money')
+        self.diff = data.get('diff')
+
+    def apply(self):
+        levels.level.money += self.diff
+        if self.diff > 0:
+            cli.print_message('Gained {} space dollars.'.format(self.money))
+        else:
+            cli.print_message('Lost {} space dollars.'.format(abs(self.diff)))
 
 
 def init_list(data):
