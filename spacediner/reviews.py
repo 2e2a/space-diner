@@ -3,8 +3,9 @@ import random
 from collections import OrderedDict
 
 from . import cli
-from . import time
 from . import diner
+from . import skills
+from . import time
 
 class Rating:
     name = None
@@ -51,6 +52,7 @@ class Review:
     chatted = 'I had a nice chat with {}.'
     diner_clean = 'Very clean diner.'
     diner_dirty = 'Very dirty diner.'
+    skill = 'I was impressed by the chef\'s {}, especially {}.'
 
     def __init__(self, name, group_name):
         self.name = name
@@ -77,10 +79,18 @@ class Review:
         choices = self.first_choices if prio == 1 else self.second_choices
         choices.append(message)
 
+    def _add_skill_review(self):
+        learned_skills = skills.learned()
+        if learned_skills:
+            random_skill = random.choice(learned_skills)
+            random_subskill = random.choice(skills.get_subskills(random_skill))
+            self.add(2, 'skill', random_skill, random_subskill)
+
     def generate(self, taste, service, ambience, positive_phrases, neutral_phrases, negative_phrases):
         global reviews
         self.add(2, 'ambience', ambience)
         self.add(2, 'service', service)
+        self._add_skill_review()
         aggregate_rating = add_rating(self.group_name, taste, service, ambience)
         message = ''
         random.seed()

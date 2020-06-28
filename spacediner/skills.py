@@ -46,6 +46,26 @@ class Skill:
 skills = None
 
 
+def get(name):
+    global skills
+    return skills.get(name)
+
+
+def get_levels():
+    global skills
+    return [(skill.name, skill.level) for skill in skills.values()]
+
+
+def get_subskills(name):
+    skill = get(name)
+    return skill.learned_subskills
+
+
+def learned():
+    global skills
+    return [skill.name for skill in skills.values() if skill.level > 0]
+
+
 def add(skill, diff):
     global skills
     skills.get(skill).add(diff)

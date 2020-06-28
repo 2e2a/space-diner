@@ -855,7 +855,7 @@ class ActivityMode(ChoiceMode):
 
     def print_skills(self):
         print_title('Skills')
-        skill_values = [self.print_skill(name, skill.level) for name, skill in skills.skills.items()]
+        skill_values = [self.print_skill(name, level) for name, level in skills.get_levels()]
         print_list(skill_values)
 
     def print_info(self):

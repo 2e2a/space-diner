@@ -2,8 +2,11 @@ import argparse
 from . import cli
 from . import settings
 
-# TODO: skills should have an effect and influence reviews: "I was impressed by the chef's skills regarding X"
-# TODO:   (X = one of the acquired subskills)
+
+# TODO: problem: preference [raw, potatoes] matched if something else in the dish is raw
+#       --> maybe check propoerties ingredient 1-3 + dish properties
+# TODO: cooking skills in reviews should only be mentioned if food was served
+# TODO: bug: sometimes prepared ingredients appear in the kitchen although they were already served
 # TODO: make discovered preferences available in compendium
 # TODO: toggle tutorial mode on/off (after first day)
 # TODO: log all commands into file on exception
