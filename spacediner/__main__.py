@@ -3,7 +3,6 @@ from . import cli
 from . import settings
 
 # TODO: finish market description
-# TODO: Catch Ctr+c, ask if exit
 # TODO: shopping: consider removing "in stock" property
 # TODO: skills should have an effect and influence reviews: "I was impressed by the chef's skills regarding X"
 # TODO:   (X = one of the acquired subskills)

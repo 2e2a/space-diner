@@ -1069,19 +1069,30 @@ def run():
     print_info = True
     print('################################  SPACE  DINER  ################################')
     while True:
-        if print_info:
-            mode.print_info()
-            if time.calendar.is_first_day:
-                mode.print_hint()
-        prompt = '{} '.format(mode.prompt) if mode.prompt else ''
-        cmd = input('{} '.format(prompt))
-        print_newline()
-        next_mode = mode.parse(cmd)
-        if next_mode:
-            mode = next_mode
-            print_info = True
-        else:
-            print_info = False
+        try:
+            if print_info:
+                mode.print_info()
+                if time.calendar.is_first_day:
+                    mode.print_hint()
+            prompt = '{} '.format(mode.prompt) if mode.prompt else ''
+            cmd = input('{} '.format(prompt))
+            print_newline()
+            next_mode = mode.parse(cmd)
+            if next_mode:
+                mode = next_mode
+                print_info = True
+            else:
+                print_info = False
+        except (KeyboardInterrupt, EOFError):
+            try:
+                print_newline()
+                yes = input('Save and exit game? (y/N)')
+                if yes in ['y', 'Y']:
+                    levels.autosave_save()
+                    exit()
+            except (KeyboardInterrupt, EOFError):
+                print_newline()
+                exit()
 
 
 def init():
