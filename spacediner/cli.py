@@ -980,10 +980,12 @@ class ShoppingMode(ChoiceMode):
 
     def print_info(self):
         print_header([
-            ('Location', ['space market']),
+            ('Location', [shopping.market.name]),
             ('Time', [time.now()]),
             ('Money', [levels.level.money, 'space dollars']),
         ])
+        if shopping.market.description:
+            print_text(shopping.market.description)
         print_title('Merchants available today')
         print_list([
             '{} [{}]'.format(merchant, ', '.join(merchant_ingredients))
@@ -1033,7 +1035,7 @@ class MerchantMode(Mode):
 
     def print_info(self):
         print_header([
-            ('Location', ['space market - ', self.merchant]),
+            ('Location', [shopping.market.name, ' - ', self.merchant]),
             ('Time', [time.now()]),
             ('Money', [levels.level.money, 'space dollars']),
         ])

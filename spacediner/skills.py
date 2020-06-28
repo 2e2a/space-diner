@@ -28,10 +28,10 @@ class Skill:
 
     def add(self, diff):
         self.level += diff
-        msg = 'Your {} {}: {}'.format(
+        msg = 'Your {} {}. They now include: {}'.format(
             self.name,
             'increased' if diff > 0 else 'decreased',
-            '. They now include: '.join(self.learned_subskills)
+            ', '.join(self.learned_subskills)
         )
         cli.print_message(msg)
 
