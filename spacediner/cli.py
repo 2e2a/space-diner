@@ -820,7 +820,7 @@ class ReviewsInfoMode(InfoMode):
             if likes:
                 guest_like += ','.join(map(lambda x: '+' + x, likes))
             if dislikes:
-                guest_like += ','.join(map(lambda x: '+' + x, dislikes))
+                guest_like += ','.join(map(lambda x: '-' + x, dislikes))
             guest_likes.append(guest_like)
         print_list(guest_likes)
 

@@ -16,11 +16,13 @@ class Reaction:
     properties = None
     taste = 0
     output = None
+    review_phrase = None
 
     def init(self, data):
         self.properties = data.get('properties')
         self.taste = data.get('taste')
         self.output = data.get('output')
+        self.review_phrase = data.get('review_phrase')
 
     def __str__(self):
         return '{} -> {}'.format(str(self.properties), str(self.taste))
@@ -127,7 +129,7 @@ class Guest:
                         reaction.output
                     )
                     reviews.add_likes(self.group_name, reaction.properties)
-                    self.review.add(1, 'like', ' '.join(reaction.properties))
+                    self.review.add(1, 'like', reaction.review_phrase)
                 else:
                     cli.print_dialog_with_info(
                         self.name,
@@ -135,7 +137,7 @@ class Guest:
                         reaction.output
                     )
                     reviews.add_dislikes(self.group_name, reaction.properties)
-                    self.review.add(1, 'dislike', ' '.join(reaction.properties))
+                    self.review.add(1, 'dislike', reaction.review_phrase)
         if self.orders:
             if self.order.wish_property in dish.properties:
                 cli.print_message('{} received what they ordered ({}).'.format(self.name, self.order.wish))

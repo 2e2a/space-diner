@@ -41,8 +41,8 @@ class Review:
     second_choices = None
 
     scale = ['very bad', 'bad', 'ok', 'good', 'very good']
-    like = 'I liked something about the food ({}).'
-    dislike = 'There was something about the food that I did not like ({}).'
+    like = 'I liked {}.'
+    dislike = 'I did not like {}.'
     taste = 'The taste was {}.'
     service = 'The service was {}.'
     ambience = 'The ambience was {}.'

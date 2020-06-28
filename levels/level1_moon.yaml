@@ -234,6 +234,7 @@ guests:
         - properties: [ raw, potato ]
           taste: -3
           output: Argh, Humans cannot digest raw potatoes.
+          review_phrase: that the dish contained raw potatoes, which are hard to digest for me as a human
 
     - name: colonist
       description: >
@@ -246,12 +247,15 @@ guests:
         - properties: [ pan-fried ]
           taste: +1
           output: I love pan-fried food!
+          review_phrase: the delicious pan-fried components of the dish
         - properties: [ deep-fried ]
           taste: +1
           output: I love deep-fried food!
+          review_phrase: that the food was deep-fried
         - properties: [ fancy ]
           taste: -1
           output: I don't like this kind of fancy, pretentious food.
+          review_phrase: that the dish was too fancy for my taste
       orders:
         - wish: beef
           text: I'll have some beef.
@@ -278,12 +282,14 @@ guests:
       available: True
       budget: 25
       reactions:
-        - properties: [ local  specialty]
+        - properties: [ local  specialty ]
           taste: +1
           output: Great, a local specialty!
+          review_phase: that I got to eat a local specialty from the Moon
         - properties: [ fancy ]
           taste: +1
           output: Wow, that's fancy!
+          review_phrase: that the food was fancy and elevated
       orders:
         - wish: burger
           text: Can I have a burger, please?
@@ -351,6 +357,7 @@ guests:
         - properties: [ pickles ]
           taste: +2
           output: Pickles are my favourite.
+          review_phrase: the pickles, which are my favorite
       orders:
         - wish: burger
           text: I really feel like eating a burger right now!
