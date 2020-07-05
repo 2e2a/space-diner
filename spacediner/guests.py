@@ -8,6 +8,7 @@ from . import diner
 from . import food
 from . import levels
 from . import reviews
+from . import skills
 from . import social
 from . import time
 
@@ -116,6 +117,23 @@ class Guest:
             self.negative_phrases,
         )
 
+    def add_skill_review(self):
+        all_skills = skills.get_skills()
+        all_subskills_with_skills = []
+        for skill in all_skills:
+            all_subskills_with_skills.extend(
+                (skill, subskill) for subskill in skill.subskills
+            )
+        random_skill, random_subskill = random.choice(all_subskills_with_skills)
+        if random_skill.is_learned(random_subskill):
+            if random_skill.typ == random_skill.TYPE_COOKING:
+                self.taste += 1
+            elif random_skill.typ == random_skill.TYPE_SERVICE:
+                self.service += 1
+            elif random_skill.typ == random_skill.TYPE_AMBIENCE:
+                self.ambience += 1
+            self.review.add(2, 'skill', random_skill.name, random_subskill)
+
     def serve(self, food_name):
         self.served = True
         dish = food.take(food_name)
@@ -147,6 +165,7 @@ class Guest:
                 cli.print_message('{} did not receive what they ordered ({}).'.format(self.name, self.order.wish))
         self.taste = min(4, max(0, self.taste))
         self.review.add(1, 'taste', self.taste, print=True)
+        self.add_skill_review()
         aggregate_rating = self.add_review()
         payment = int(self.budget/5 * aggregate_rating)
         levels.level.money += payment

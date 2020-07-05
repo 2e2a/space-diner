@@ -4,7 +4,7 @@ from . import settings
 
 
 # TODO: problem: preference [raw, potatoes] matched if something else in the dish is raw
-#       --> maybe check propoerties ingredient 1-3 + dish properties
+#       --> maybe check properties ingredient 1-3 + dish properties
 # TODO: cooking skills in reviews should only be mentioned if food was served
 # TODO: bug: sometimes prepared ingredients appear in the kitchen although they were already served
 # TODO: make discovered preferences available in compendium

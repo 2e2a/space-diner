@@ -4,7 +4,6 @@ from collections import OrderedDict
 
 from . import cli
 from . import diner
-from . import skills
 from . import time
 
 class Rating:
@@ -79,18 +78,10 @@ class Review:
         choices = self.first_choices if prio == 1 else self.second_choices
         choices.append(message)
 
-    def _add_skill_review(self):
-        learned_skills = skills.learned()
-        if learned_skills:
-            random_skill = random.choice(learned_skills)
-            random_subskill = random.choice(skills.get_subskills(random_skill))
-            self.add(2, 'skill', random_skill, random_subskill)
-
     def generate(self, taste, service, ambience, positive_phrases, neutral_phrases, negative_phrases):
         global reviews
         self.add(2, 'ambience', ambience)
         self.add(2, 'service', service)
-        self._add_skill_review()
         aggregate_rating = add_rating(self.group_name, taste, service, ambience)
         message = ''
         random.seed()
@@ -104,8 +95,10 @@ class Review:
             message += ' ' + random.choice(positive_phrases)
         elif neutral_phrases:
             message += ' ' + random.choice(neutral_phrases)
-        message += ' ' + random.choice(self.first_choices)
-        message += ' ' + random.choice(self.second_choices)
+        if self.first_choices:
+            message += ' ' + random.choice(self.first_choices)
+        if self.second_choices:
+            message += ' ' + random.choice(self.second_choices)
         message += ' (Rating: {})'.format(round(aggregate_rating))
         self.message = message
         reviews.append(self)

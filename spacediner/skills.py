@@ -26,6 +26,9 @@ class Skill:
     def learned_subskills(self):
         return self.subskills[:self.level]
 
+    def is_learned(self, subskill):
+        return self.level > self.subskills.index(subskill)
+
     def add(self, diff):
         self.level += diff
         msg = 'Your {} {}. They now include: {}'.format(
@@ -54,6 +57,11 @@ def get(name):
 def get_levels():
     global skills
     return [(skill.name, skill.level) for skill in skills.values()]
+
+
+def get_skills():
+    global skills
+    return skills.values()
 
 
 def get_subskills(name):
