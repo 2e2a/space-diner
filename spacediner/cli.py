@@ -595,8 +595,8 @@ class RecipeMode(ChoiceMode):
         print_title(recipe.name)
         ingredient_list = [' '.join(properties) for properties in recipe.ingredient_properties]
         print_list(ingredient_list)
-        if recipe.properties:
-            properties = filter(lambda p: p != recipe.name.lower(), recipe.properties)
+        if recipe.ingredient_properties:
+            properties = filter(lambda p: p != recipe.name.lower(), recipe.ingredient_properties)
             print_value('Properties of the dish', ', '.join(properties))
             print_newline()
 
@@ -1086,7 +1086,7 @@ def run():
         except (KeyboardInterrupt, EOFError):
             try:
                 print_newline()
-                yes = input('Save and exit game? (y/N)')
+                yes = input('Save and exit game? (y/N) ')
                 if yes in ['y', 'Y']:
                     levels.autosave_save()
                     exit()

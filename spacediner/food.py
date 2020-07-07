@@ -9,42 +9,48 @@ from . import storage
 class Food:
     name = None
     ingredients = None
-    properties = None
+    preparations = None
+    recipe_properties = None
 
-    def __init__(self, ingredients=None):
+    def __init__(self, prepared_ingredients=None):
         self.ingredients = []
-        if ingredients:
-            self.prepare_ingredients(ingredients)
+        self.preparations = []
+        if prepared_ingredients:
+            self.prepare_ingredients(prepared_ingredients)
 
-    def prepare_ingredients(self, ingredients):
-        for preparation, ingredient_name in ingredients:
+    def prepare_ingredients(self, prepared_ingredients):
+        for preparation, ingredient_name in prepared_ingredients:
             ingredient = storage.take_ingredient(ingredient_name)
             device = kitchen.preparation_device(preparation)
             ingredient.properties.add(device.result)
             ingredient.properties.update(device.properties)
-            self.ingredients.append((preparation, ingredient))
+            self.ingredients.append(ingredient)
+            self.preparations.append(preparation)
 
     def ingredient_properties(self, num):
         if num < len(self.ingredients):
-            _, ingredient = self.ingredients[num]
-            return list(ingredient.properties)
+            return list(self.ingredients[num].properties)
+
+    def get_prepared_ingredients(self):
+        return [
+            '{} {}'.format(preparation, ingredient)
+            for preparation, ingredient in zip(self.preparations, self.ingredients)
+        ]
 
     @property
     def default_name(self):
-        ingredient_names = [
-            '{} {}'.format(preparation, ingredient.name) for preparation, ingredient in self.ingredients
-        ]
-        unique_ingredients = list(set(ingredient_names))
+        prepared_ingredients = self.get_prepared_ingredients()
+        unique_ingredients = list(set(prepared_ingredients))
         if len(unique_ingredients) == 1:
             return 'plain {}'.format(unique_ingredients[0])
         elif len(unique_ingredients) == 2:
             main_ingredient = unique_ingredients[0]
             second_ingredient = unique_ingredients[1]
-            if ingredient_names.count(main_ingredient) == 1:
+            if prepared_ingredients.count(main_ingredient) == 1:
                 main_ingredient = unique_ingredients[1]
                 second_ingredient = unique_ingredients[0]
             return '{} with some {}'.format(main_ingredient, second_ingredient)
-        return' with '.join(ingredient_names)
+        return' with '.join(prepared_ingredients)
 
     def set_default_name(self):
         self.name = self.default_name
@@ -54,21 +60,21 @@ class Food:
 
     def plate(self):
         global cooked
-        self.properties = set()
-        recipe_ingredients = []
-        for preparation, ingredient in self.ingredients:
-            self.properties.update(ingredient.properties)
-            recipe_ingredients.append((preparation, ingredient))
-        recipe = match_recipe(recipe_ingredients)
+        recipe = match_recipe(self)
         if recipe:
-            self.properties.update(recipe.properties)
+            self.recipe_properties = recipe.properties
             self.set_custom_name(recipe.name)
         else:
             self.set_default_name()
         cooked.append(self)
 
-    def get_prepared_ingredients(self):
-        return ['{} {}'.format(preparation, ingredient) for preparation, ingredient in self.ingredients]
+    def has_properties(self, properties):
+        if self.recipe_properties and set(properties).issubset(self.recipe_properties):
+            return True
+        for ingredient in self.ingredients:
+            if set(properties).issubset(ingredient.properties):
+                return True
+        return False
 
 
 class Recipe:
@@ -81,7 +87,7 @@ class Recipe:
         if not recipe_ingredient_properties:
             return True
         for recipe_properties in recipe_ingredient_properties:
-            for i, (preparation, ingredient) in enumerate(ingredients):
+            for i, ingredient in enumerate(ingredients):
                 if set(recipe_properties).issubset(ingredient.properties):
                     remaining_recipe_ingredient_properties = recipe_ingredient_properties.copy()
                     remaining_recipe_ingredient_properties.remove(recipe_properties)
@@ -91,8 +97,8 @@ class Recipe:
                         return True
         return False
 
-    def consists_of(self, ingredients):
-        return self._properties_match(self.ingredient_properties, ingredients)
+    def consists_of(self, prepared_ingredients):
+        return self._properties_match(self.ingredient_properties, prepared_ingredients)
 
     def new(self, name, ingredient_properties):
         self.name = name
@@ -146,9 +152,9 @@ dishes = []
 
 def get(name):
     global cooked
-    for dish in cooked:
-        if dish.name == name:
-            return dish
+    for food in cooked:
+        if food.name == name:
+            return food
     return None
 
 
@@ -184,10 +190,10 @@ def get_recipe(name):
     return recipes.get(name)
 
 
-def match_recipe(ingredients):
+def match_recipe(food):
     global recipes
     for recipe in recipes.values():
-        if recipe.consists_of(ingredients):
+        if recipe.consists_of(food.ingredients):
             return recipe
     return None
 
@@ -210,7 +216,7 @@ def update_plated():
     global cooked
     global recipes
     for food in cooked:
-        recipe = match_recipe(food.ingredients)
+        recipe = match_recipe(food)
         if recipe:
             food.set_custom_name(recipe.name)
 

@@ -136,9 +136,9 @@ class Guest:
 
     def serve(self, food_name):
         self.served = True
-        dish = food.take(food_name)
+        served_food = food.take(food_name)
         for reaction in self.reactions:
-            if set(reaction.properties).issubset(dish.properties):
+            if served_food.has_properties(reaction.properties):
                 self.taste += reaction.taste
                 if reaction.taste > 0:
                     cli.print_dialog_with_info(
@@ -157,7 +157,7 @@ class Guest:
                     reviews.add_dislikes(self.group_name, reaction.properties)
                     self.review.add(1, 'dislike', reaction.review_phrase)
         if self.orders:
-            if self.order.wish_property in dish.properties:
+            if served_food.has_properties([self.order.wish_property]):
                 cli.print_message('{} received what they ordered ({}).'.format(self.name, self.order.wish))
             else:
                 self.service -= 1
@@ -223,7 +223,7 @@ class NameFactory:
 
     def create(self):
         random.seed()
-        return ''.join(random.choice(part) for part in self.names)
+        return ''.join(str(random.choice(part)) for part in self.names)
 
 
 class GuestFactory:
