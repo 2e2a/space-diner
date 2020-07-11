@@ -77,6 +77,14 @@ class Guest:
     def group_name(self):
         return ' '.join(group.name for group in self.groups) if self.groups else self.name
 
+    def add_decoration_review(self):
+        all_decoration = diner.diner.decoration
+        available_decoration = diner.diner.available_decoration
+        random_decoration = random.choice(all_decoration)
+        if random_decoration in available_decoration:
+            self.ambience += 1
+            self.review.add(2, 'decoration', random_decoration)
+
     def init_service(self):
         pass
 
@@ -87,6 +95,7 @@ class Guest:
         elif diner.diner.is_very_dirty:
             self.ambience -= 1
             self.review.add(2, 'diner_dirty')
+        self.add_decoration_review()
 
     def reset(self):
         self.available = True
@@ -181,7 +190,6 @@ class Guest:
         self.service += 1
         self.review.add(2, 'chatted')
         return social.greet_and_chat(self.group_name)
-
 
     def send_home(self):
         self.taste = 0

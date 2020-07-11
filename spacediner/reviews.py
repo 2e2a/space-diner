@@ -46,6 +46,7 @@ class Review:
     taste = 'The taste was {}.'
     service = 'The service was {}.'
     ambience = 'The ambience was {}.'
+    decoration = 'The interior design was nice, especially the {}.'
     order_not_met = 'I did not get what I ordered ({}).'
     no_food = 'I did not get any food.'
     chatted = 'I had a nice chat with {}.'
