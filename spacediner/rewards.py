@@ -1,4 +1,5 @@
 from . import cli
+from . import diner
 from . import guests
 from . import levels
 from . import shopping
@@ -12,29 +13,21 @@ class Reward:
     TYPE_SKILL = 'skill'
     TYPE_INGREDIENT = 'ingredient'
     TYPE_MONEY = 'money'
+    TYPE_DECORATION = 'decoration'
 
     typ = None
     text = None
+    level = None
 
     def apply(self):
         raise NotImplemented
 
     def init(self, data):
         self.text = data.get('text')
+        self.level = data.get('level', None)
 
 
-class SocialReward(Reward):
-    level = None
-
-    def init(self, data):
-        super().init(data)
-        self.level = data.get('level')
-
-    def apply(self):
-        raise NotImplemented
-
-
-class MerchantReward(SocialReward):
+class MerchantReward(Reward):
     merchant = None
 
     def __init__(self):
@@ -50,7 +43,6 @@ class MerchantReward(SocialReward):
 
 
 class GuestReward(Reward):
-    level = None
     guest = None
 
     def __init__(self):
@@ -96,9 +88,9 @@ class IngredientReward(Reward):
 
     def apply(self):
         if self.diff > 0 and storage.store_ingredient(self.ingredient, self.diff):
-            cli.print_message('Gained {}x{}.'.format(self.diff, self.ingredient))
+            cli.print_message('Gained {} x {}.'.format(self.diff, self.ingredient))
         else:
-            cli.print_message('Lost {}x{}.'.format(abs(self.diff), self.ingredient))
+            cli.print_message('Lost {} x {}.'.format(abs(self.diff), self.ingredient))
 
 
 class MoneyReward(Reward):
@@ -121,6 +113,21 @@ class MoneyReward(Reward):
             cli.print_message('Lost {} space dollars.'.format(abs(self.diff)))
 
 
+class DecorationReward(Reward):
+    decoration = None
+
+    def __init__(self):
+        self.typ = self.TYPE_DECORATION
+
+    def init(self, data):
+        super().init(data)
+        self.decoration = data.get('decoration')
+
+    def apply(self):
+        diner.add_decoration(self.decoration)
+        cli.print_message('You received a gift: {}.'.format(self.decoration))
+
+
 def init_list(data):
     rewards = []
     for reward_data in data:
@@ -132,6 +139,12 @@ def init_list(data):
             reward = GuestReward()
         elif typ == Reward.TYPE_SKILL:
             reward = SkillReward()
+        elif typ == Reward.TYPE_MONEY:
+            reward = MoneyReward()
+        elif typ == Reward.TYPE_INGREDIENT:
+            reward = IngredientReward()
+        elif typ == Reward.TYPE_DECORATION:
+            reward = DecorationReward()
         reward.init(reward_data)
         rewards.append(reward)
     return rewards

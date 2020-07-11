@@ -8,12 +8,16 @@ class Diner:
     name = None
     chef = 'Chef'
     seats = 0
+    decoration = None
+    available_decoration = None
 
     sanitation = 5
 
     def init(self, data):
         self.name = data.get('name')
         self.seats = data.get('seats')
+        self.decoration = data.get('decoration', [])
+        self.available_decoration = []
 
     @property
     def is_dirty(self):
@@ -28,6 +32,11 @@ class Diner:
 
 
 diner = None
+
+
+def add_decoration(name):
+    global diner
+    diner.available_decoration.append(name)
 
 
 def new_evening():

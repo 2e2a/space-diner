@@ -418,6 +418,7 @@ class DinerMode(Mode):
             ('Money', [levels.level.money, 'space dollars']),
             ('Seats taken', ['{}/{}'.format(len(available_guests), diner.diner.seats)]),
             ('Sanitation', ['{}/5'.format(diner.diner.sanitation)]),
+            ('Interior decoration', [', '.join(diner.diner.available_decoration)]),
         ])
         print_title('Food:')
         print_list(food.plated())
@@ -818,9 +819,11 @@ class ReviewsInfoMode(InfoMode):
                 continue
             guest_like = '{}: '.format(guest)
             if likes:
-                guest_like += ','.join(map(lambda x: '+' + x, likes))
+                guest_like += ', '.join(map(lambda x: '+' + x, likes))
             if dislikes:
-                guest_like += ','.join(map(lambda x: '-' + x, dislikes))
+                if likes:
+                    guest_like += ', '
+                guest_like += ', '.join(map(lambda x: '-' + x, dislikes))
             guest_likes.append(guest_like)
         print_list(guest_likes)
 

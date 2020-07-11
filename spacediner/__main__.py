@@ -3,9 +3,9 @@ from . import cli
 from . import settings
 
 
-# TODO: problem: preference [raw, potatoes] matched if something else in the dish is raw
-#       --> maybe check properties ingredient 1-3 + dish properties
-# TODO: cooking skills in reviews should only be mentioned if food was served
+# TODO: reconsider social mechanics: link rewards to story steps rather than friendship level?
+# TODO: check if rewards by normal guests are possible
+# TODO: check new line after indented texts?
 # TODO: bug: sometimes prepared ingredients appear in the kitchen although they were already served
 # TODO: make discovered preferences available in compendium
 # TODO: toggle tutorial mode on/off (after first day)

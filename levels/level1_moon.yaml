@@ -13,6 +13,7 @@ money: 50
 diner:
   name: Space Diner
   seats: 7
+  decoration: [ painting, antique clock ]
 
 calendar:
   week: [Moonday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday]
@@ -486,6 +487,22 @@ social:
                 I am, but I think it's time for me to move on. I am going to miss your food and your company...
                 Please stay in touch with me, will you?
       rewards:
+        - type: decoration
+          level: 1
+          decoration: antique clock
+          text: >
+            Take this clock.
+        - type: decoration
+          level: 1
+          decoration: painting
+          text: >
+            Take this painting.
+        - type: ingredient
+          diff: 1
+          level: 1
+          ingredient: silkworm
+          text: >
+            Take this silkworm.
         - type: merchant
           level: 3
           merchant: Oddie's Laboratory Waste
