@@ -148,12 +148,8 @@ class Meet(Action):
         self.reply = reply
 
     def perform(self):
-        reply, liked = social.meet(self.friend, self.reply)
+        reply= social.meet(self.friend, self.reply)
         cli.print_dialog(self.friend, reply)
-        if liked:
-            social.level_up(self.friend)
-        if social.was_last_meeting(self.friend):
-            social.unlock_all_rewards(self.friend)
         social.lock_friendship(self.friend)
 
 

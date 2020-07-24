@@ -400,27 +400,42 @@ social:
             at them through the terrarium glass, you remember another time when you encountered this species: as an
             appetizer in an expensive restaurant on the dark side.
           question: Just look at them... how they wriggle...
-          good replies:
+          replies:
             - reply: They're fascinating.
               reaction: >
                 Yes, they are. It is incredible that they are able to survive out there. We are still not sure how
                 they do it.
-          bad replies:
             - reply: They're disgusting.
               reaction: >
                 Well, not everyone is able to appreciate their beauty.
+          rewards:
+            - type: decoration
+              level: 1
+              decoration: antique clock
+              text: >
+                Take this clock.
+            - type: decoration
+              level: 1
+              decoration: painting
+              text: >
+                Take this painting.
+            - type: ingredient
+              diff: 1
+              level: 1
+              ingredient: silkworm
+              text: >
+                Take this silkworm.
         - meeting: >
             Ozabela wants to walk around the underground mall. There are about 20 businesses in the mall, including
             your diner. Only some of them are open at night: the bar, the cinema, and a fancy new restaurant. Plenty of
             people are just walking around like you - there is only so much you can do in the evening in the colony.
             When you walk past your diner, Ozabela stops.
           question: So, what brought you here - to the moon?
-          good replies:
+          replies:
             - reply: My goal is to see as much as I can of our galaxy. My first step was to leave Earth and come here.
               reaction: I admire that. Send me postcards from all the other place you'll get to see!
             - reply: I just rolled with the flow.
               reaction: Fair enough. I wonder where you'll roll next.
-          bad replies:
             - reply: Nothing in particular. I don't really care where I work.
               reaction: That's a pity. I like to hear about people's dreams and motivations.
         - meeting: >
@@ -432,12 +447,11 @@ social:
             She stops and looks around at the other people in the bar. You know every single person who is there, and
             you are sure that Ozabela does, too. The colony is small.
           question: Do you ever think about leaving the moon?
-          good replies:
+          replies:
             - reply: I'm saving money to leave as soon as possible.
               reaction: That's brave. I'm thinking about it, too, but I'm not sure I have it in me to quit and leave.
             - reply: No, I like the colony.
               reaction: I like it, too, but do you not feel trapped sometimes? I'm not so sure myself...
-          bad replies:
             - reply: I'm not sure.
               reaction: Me neither. It is a hard decision... I wish I was more decisive.
         - meeting: >
@@ -446,11 +460,10 @@ social:
             are already taken when you enter, and you have to sit in the first row right in front of the screen. You 
             watch a documentary about creatures living in the ocean on Earth. After the movie, Ozabela looks depressed.
           question: So full of life. Earth, I mean. And we only have our little worms. There's nothing else.
-          good replies:
+          replies:
             - reply: Yes, but they're really interesting worms.
               reaction: >
                 Ha, you're right. There's easily a lifetime's worth of research in just this one species that we have here.
-          bad replies:
             - reply: Cheer up. Less species means less work for you biologists.
             - reaction: Not really. The work is just more repetitive.
         - meeting: >
@@ -465,19 +478,18 @@ social:
             When you are done with the scanning and counting, Ozabela puts two of the 24 cocoons in a small cylinder.
             Outside, she looks up to Earth, hanging in the sky above you.
           question: Do you miss it? The Earth? Its gravity? Its people?
-          good replies:
+          replies:
             - reply: I think about it all the time.
               reaction: Yes, it is not easy to forget. Look at it... I miss it sometimes.
             - reply: No, I don't like to look back.
               reaction: You're right. We should be looking forward. But what if moving forward means returning to Earth?
-          bad replies:
             - reply: I don't like questions like that.
               reaction: Why? It's important to think about the past... and the future.
         - meeting: >
            Ozabela comes to the empty diner in the evening. You cook beef burgers with pickles just for the two of you.
            "I have to tell you something", she says after finishing the burger. "I was offered a professorship at the
            University of Tokyo. On Earth."
-          good replies:
+          replies:
             - reply: Congratulations. Sounds like a great opportunity.
               reaction: >
                 Thank you. I will accept it. I am going to miss your food and your company... Please stay in touch with
@@ -486,31 +498,15 @@ social:
               reaction: >
                 I am, but I think it's time for me to move on. I am going to miss your food and your company...
                 Please stay in touch with me, will you?
-      rewards:
-        - type: decoration
-          level: 1
-          decoration: antique clock
-          text: >
-            Take this clock.
-        - type: decoration
-          level: 1
-          decoration: painting
-          text: >
-            Take this painting.
-        - type: ingredient
-          diff: 1
-          level: 1
-          ingredient: silkworm
-          text: >
-            Take this silkworm.
-        - type: merchant
-          level: 3
-          merchant: Oddie's Laboratory Waste
-          text: >
-            There's someone I would like to introduce you to. I saw how you looked at the silkworms in my lab... I know
-            what they are worth in the culinary world. My colleague Oddie has a secret business - he sells the dead
-            worms that we are supposed to dispose of after our experiments. Here's his address. I trust you to keep it
-            confidential.
+          rewards:
+            - type: merchant
+              level: 3
+              merchant: Oddie's Laboratory Waste
+              text: >
+                There's someone I would like to introduce you to. I saw how you looked at the silkworms in my lab... I know
+                what they are worth in the culinary world. My colleague Oddie has a secret business - he sells the dead
+                worms that we are supposed to dispose of after our experiments. Here's his address. I trust you to keep it
+                confidential.
           
 
   - name: Human colonist
