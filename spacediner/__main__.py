@@ -2,6 +2,10 @@ import argparse
 from . import cli
 from . import settings
 
+# TODO: completer: remove underscore, use separate command parts instead
+# TODO: completer: support simple string command parts
+# TODO: completer: ignore capitalization and special characters before matching (see name_for_command)
+# TODO: get rid of actions :(
 # TODO: enter should do nothing instead of printing help
 # TODO: check if rewards by normal guests are possible
 # TODO: bug: sometimes prepared ingredients appear in the kitchen although they were already served
