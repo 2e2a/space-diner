@@ -1,7 +1,6 @@
 name: Moon
 
-intro: >
-  The moon has been colonized. You run a diner in one of the settlements.
+intro: The moon has been colonized. You run a diner in one of the settlements.
   It is not very lucrative, but you have a solid customer base.
   The colony is too insignificant to have visitors from other
   planets or even solar systems, but it is a quite popular spot for human tourists from Earth.
@@ -123,13 +122,11 @@ kitchen:
 shopping:
   market:
     name: Moon Market Hall
-    description: >
-      On your way from your apartment to the diner, you always pass the Moon Market Hall.
+    description: On your way from your apartment to the diner, you always pass the Moon Market Hall.
       Do you need to stock up on supplies?
   merchants:
     - name: Earth Wholesale
-      description: >
-        You approach the largest market stall. It belongs to Earth Wholesale, a big corporation that imports long-life
+      description: You approach the largest market stall. It belongs to Earth Wholesale, a big corporation that imports long-life
         products from Earth.
       owner: Cashier Bot
       available: True
@@ -144,8 +141,7 @@ shopping:
           cost: 1
 
     - name: Moon Delicacies
-      description: >
-        Pete sells his 'Moon delicacies' at this scruffy booth.
+      description: Pete sells his 'Moon delicacies' at this scruffy booth.
       owner: Pete
       available: True
       ingredients:
@@ -153,8 +149,7 @@ shopping:
           cost: 19
 
     - name: Oddie's Laboratory Waste
-      description: >
-        You climb down the steep stairs leading to Oddie's hidden basement store.
+      description: You climb down the steep stairs leading to Oddie's hidden basement store.
       owner: Oddie
       available: False
       ingredients:
@@ -238,8 +233,7 @@ guests:
           review_phrase: that the dish contained raw potatoes, which are hard to digest for me as a human
 
     - name: colonist
-      description: >
-        People living and working in the Moon colonies.
+      description: People living and working in the Moon colonies.
         Some of them are second or even third generation colonists.
       name_factory: Moon-English
       available: True
@@ -390,46 +384,34 @@ social:
     friendship:
       disappears: True
       meetings:
-        - meeting: >
-            Ozabela invites you to the research facility where she works. Access to the area is restricted, but when
+        - meeting: 'Ozabela invites you to the research facility where she works. Access to the area is restricted, but when
             the security guards see Ozabela, they let you enter. Ozabela shows you what she is currently working on
             in her lab: silkworms. A couple of them were brought to the far side of the moon a long time ago in a
             box as part of a research project. The project was abandoned, but the silkworms infested some of the
             research facilities and somehow managed to survive there until today.
-            Ozabela's team collects them and studies how they have adapted to life on the moon. As you look
+            Ozabela''s team collects them and studies how they have adapted to life on the moon. As you look
             at them through the terrarium glass, you remember another time when you encountered this species: as an
-            appetizer in an expensive restaurant on the dark side.
+            appetizer in an expensive restaurant on the dark side.'
           question: Just look at them... how they wriggle...
           replies:
             - reply: They're fascinating.
-              reaction: >
-                Yes, they are. It is incredible that they are able to survive out there. We are still not sure how
+              reaction: Yes, they are. It is incredible that they are able to survive out there. We are still not sure how
                 they do it.
             - reply: They're disgusting.
-              reaction: >
-                Well, not everyone is able to appreciate their beauty.
+              reaction: Well, not everyone is able to appreciate their beauty.
           rewards:
             - type: decoration
               level: 1
               decoration: antique clock
-              text: >
-                Take this clock.
+              text: Take this clock.
             - type: decoration
               level: 1
               decoration: painting
-              text: >
-                Take this painting.
-            - type: ingredient
-              diff: 1
-              level: 1
-              ingredient: silkworm
-              text: >
-                Take this silkworm.
-        - meeting: >
-            Ozabela wants to walk around the underground mall. There are about 20 businesses in the mall, including
+              text: Take this painting.
+        - meeting: 'Ozabela wants to walk around the underground mall. There are about 20 businesses in the mall, including
             your diner. Only some of them are open at night: the bar, the cinema, and a fancy new restaurant. Plenty of
             people are just walking around like you - there is only so much you can do in the evening in the colony.
-            When you walk past your diner, Ozabela stops.
+            When you walk past your diner, Ozabela stops.'
           question: So, what brought you here - to the moon?
           replies:
             - reply: My goal is to see as much as I can of our galaxy. My first step was to leave Earth and come here.
@@ -438,14 +420,19 @@ social:
               reaction: Fair enough. I wonder where you'll roll next.
             - reply: Nothing in particular. I don't really care where I work.
               reaction: That's a pity. I like to hear about people's dreams and motivations.
-        - meeting: >
-            You meet Ozabela at The Lunatic, the first bar that ever opened on the moon. It is not located in the underground
-            mall, but in an older structure on the surface. It is officially recommended not to spend more than five hours
+          rewards:
+            - type: ingredient
+              diff: 1
+              level: 1
+              ingredient: silkworm
+              text: Take this silkworm.
+        - meeting: 'You meet Ozabela at The Lunatic, the first bar that ever opened on the moon.
+            It is not located in the underground mall, but in an older structure on the surface. It is officially recommended not to spend more than five hours
             there, because radiation protection is less perfect there than in the underground parts of the colony. Nevertheless,
             it is crowded, like every evening. You find a free table in the back. Ozabela orders two beers. She tells you a bit about
             her day: a new experiment that they conducted failed in some way, but you only understand every other word.
             She stops and looks around at the other people in the bar. You know every single person who is there, and
-            you are sure that Ozabela does, too. The colony is small.
+            you are sure that Ozabela does, too. The colony is small.'
           question: Do you ever think about leaving the moon?
           replies:
             - reply: I'm saving money to leave as soon as possible.
@@ -454,20 +441,17 @@ social:
               reaction: I like it, too, but do you not feel trapped sometimes? I'm not so sure myself...
             - reply: I'm not sure.
               reaction: Me neither. It is a hard decision... I wish I was more decisive.
-        - meeting: >
-            Ozabela wants to see a movie. There is a brand-new cinema in the amusement park that they finished building
+        - meeting: Ozabela wants to see a movie. There is a brand-new cinema in the amusement park that they finished building
             this year. However, you decide to go to the cinema in the mall. There are only 12 seats there. Most of them
             are already taken when you enter, and you have to sit in the first row right in front of the screen. You 
             watch a documentary about creatures living in the ocean on Earth. After the movie, Ozabela looks depressed.
           question: So full of life. Earth, I mean. And we only have our little worms. There's nothing else.
           replies:
             - reply: Yes, but they're really interesting worms.
-              reaction: >
-                Ha, you're right. There's easily a lifetime's worth of research in just this one species that we have here.
+              reaction: Ha, you're right. There's easily a lifetime's worth of research in just this one species that we have here.
             - reply: Cheer up. Less species means less work for you biologists.
             - reaction: Not really. The work is just more repetitive.
-        - meeting: >
-            Silkworms have been spotted in an abandoned lab in the vicinity of the colony by a tourist guide.
+        - meeting: Silkworms have been spotted in an abandoned lab in the vicinity of the colony by a tourist guide.
             Ozabela invites you to join her in counting, examining, and documenting them. It is so close that you don't
             have to take one of the rovers - you can walk. You are not used to wearing a spacesuit and you stumble along
             slowly and clumsily. Ozabela does not seem to mind. You finally arrive at the lab, where you find a cluster
@@ -485,25 +469,21 @@ social:
               reaction: You're right. We should be looking forward. But what if moving forward means returning to Earth?
             - reply: I don't like questions like that.
               reaction: Why? It's important to think about the past... and the future.
-        - meeting: >
-           Ozabela comes to the empty diner in the evening. You cook beef burgers with pickles just for the two of you.
+        - meeting: Ozabela comes to the empty diner in the evening. You cook beef burgers with pickles just for the two of you.
            "I have to tell you something", she says after finishing the burger. "I was offered a professorship at the
            University of Tokyo. On Earth."
           replies:
             - reply: Congratulations. Sounds like a great opportunity.
-              reaction: >
-                Thank you. I will accept it. I am going to miss your food and your company... Please stay in touch with
+              reaction: Thank you. I will accept it. I am going to miss your food and your company... Please stay in touch with
                 me, will you?
             - reply: I think you should stay here. You are so enthusiastic about your research on the moon.
-              reaction: >
-                I am, but I think it's time for me to move on. I am going to miss your food and your company...
+              reaction: I am, but I think it's time for me to move on. I am going to miss your food and your company...
                 Please stay in touch with me, will you?
           rewards:
             - type: merchant
               level: 3
               merchant: Oddie's Laboratory Waste
-              text: >
-                There's someone I would like to introduce you to. I saw how you looked at the silkworms in my lab... I know
+              text: There's someone I would like to introduce you to. I saw how you looked at the silkworms in my lab... I know
                 what they are worth in the culinary world. My colleague Oddie has a secret business - he sells the dead
                 worms that we are supposed to dispose of after our experiments. Here's his address. I trust you to keep it
                 confidential.
