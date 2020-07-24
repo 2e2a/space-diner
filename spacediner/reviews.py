@@ -6,6 +6,7 @@ from . import cli
 from . import diner
 from . import time
 
+
 class Rating:
     name = None
     count = 0

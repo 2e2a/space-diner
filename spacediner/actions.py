@@ -148,8 +148,7 @@ class Meet(Action):
         self.reply = reply
 
     def perform(self):
-        reply= social.meet(self.friend, self.reply)
-        cli.print_dialog(self.friend, reply)
+        social.meet(self.friend, self.reply)
         social.lock_friendship(self.friend)
 
 

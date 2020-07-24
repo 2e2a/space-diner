@@ -101,6 +101,10 @@ class Guest:
         self.available = True
         self.order = None
         self.review = reviews.Review(self.name, self.group_name)
+        self.served = False
+        self.taste = 2
+        self.service = 2
+        self.ambience = 2
         self.init_service()
         self.init_ambience()
 

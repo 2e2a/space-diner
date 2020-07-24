@@ -56,7 +56,7 @@ class Meeting:
         self.question = data.get('question')
         self.replies = []
         for reply_data in data.get('replies', []):
-            self.replies.append((reply_data.get('reply'), reply_data.get('reaction'), True))
+            self.replies.append((reply_data.get('reply'), reply_data.get('reaction')))
         random.seed()
         random.shuffle(self.replies)
         if 'rewards' in data:
@@ -68,7 +68,7 @@ class Meeting:
         return [reply for reply, _, _ in self.replies]
 
     def reaction(self, reply):
-        return self.replies[reply]
+        return self.replies[reply][1]
 
 
 class Friendship:
@@ -99,6 +99,7 @@ class Friendship:
     def meet(self, reply):
         meeting = self.get_meeting()
         reaction = meeting.reaction(reply)
+        cli.print_dialog(self.name, reaction)
         for reward in meeting.rewards:
             cli.print_dialog(self.name, reward.text)
             reward.apply()
