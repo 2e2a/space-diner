@@ -65,7 +65,7 @@ class Meeting:
                 self.rewards.append(reward)
 
     def get_replies(self):
-        return [reply for reply, _, _ in self.replies]
+        return [reply for reply, _ in self.replies]
 
     def reaction(self, reply):
         return self.replies[reply][1]
