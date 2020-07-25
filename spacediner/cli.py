@@ -78,6 +78,8 @@ class CommandCompleter:
     def match_arg(self, arg_type, arg):
         if isinstance(arg_type, list):
             return arg in arg_type
+        if isinstance(arg_type, str):
+            return arg == arg_type
         if arg_type == int:
             try:
                 int(arg)
@@ -123,6 +125,8 @@ class CommandCompleter:
             next_arg = cmd[pos]
             if isinstance(next_arg, list):
                 suggestions.extend(next_arg)
+            elif isinstance(next_arg, str):
+                    suggestions.append(next_arg)
             elif next_arg == int:
                 suggestions.extend(['<num>'])
         return suggestions
@@ -380,16 +384,16 @@ class DinerMode(Mode):
     CMD_SAVE = 8
     CMD_EXIT = 9
     commands = [
-        (['kitchen'],),
-        (['take_order_from'], []),
-        (['chat_with'], []),
-        (['serve'], [], ['to'], []),
-        (['send_home'], []),
-        (['menu'],),
-        (['compendium'],),
-        (['close_up'],),
-        (['save'],),
-        (['exit'],),
+        ('kitchen',),
+        ('take_order_from', []),
+        ('chat_with', []),
+        ('serve', [], 'to', []),
+        ('send_home', []),
+        ('menu',),
+        ('compendium',),
+        ('close_up',),
+        ('save',),
+        ('exit',),
     ]
     prompt = 'diner >>'
     hint = (
@@ -404,10 +408,10 @@ class DinerMode(Mode):
         guests_with_chats = [self.name_for_command(g) for g in guests.guests_with_chats()]
         guests_with_orders = [self.name_for_command(g) for g in guests.guests_with_orders()]
         guests_without_orders = [self.name_for_command(g) for g in guests.guests_without_orders()]
-        self.commands[self.CMD_TAKE_ORDER] = (['take_order_from'], guests_without_orders)
-        self.commands[self.CMD_CHAT] = (['chat_with'], guests_with_chats)
-        self.commands[self.CMD_SERVE] = (['serve'], cooked_food, ['to'], guests_with_orders)
-        self.commands[self.CMD_SEND_HOME] = (['send_home'], available_guests)
+        self.commands[self.CMD_TAKE_ORDER] = ('take_order_from', guests_without_orders)
+        self.commands[self.CMD_CHAT] = ('chat_with', guests_with_chats)
+        self.commands[self.CMD_SERVE] = ('serve', cooked_food, 'to', guests_with_orders)
+        self.commands[self.CMD_SEND_HOME] = ('send_home', available_guests)
         super().update_commands()
 
     def print_info(self):
@@ -487,12 +491,12 @@ class KitchenMode(Mode):
     CMD_RECIPES = 4
     CMD_SAVE_RECIPE = 5
     commands = [
-        (['diner'],),
-        (['cook'], [],),
-        (['compendium'],),
-        (['trash'],),
-        (['recipes'],),
-        (['save_recipe'],),
+        ('diner',),
+        ([], [],),
+        ('compendium',),
+        ('trash',),
+        ('recipes',),
+        ('save_recipe', []),
     ]
     prompt = 'kitchen >>'
     action = None
@@ -527,7 +531,7 @@ class KitchenMode(Mode):
         preparations = [d.command for d in self.available_devices.values()]
         self.commands[self.CMD_COOK] = (preparations, ingredients)
         recipe_choices = [self.name_for_command(dish) for dish in food.plated()]
-        self.commands[self.CMD_SAVE_RECIPE] = (['save_recipe'], recipe_choices)
+        self.commands[self.CMD_SAVE_RECIPE] = ('save_recipe', recipe_choices)
         super().update_commands()
 
     def print_info(self):
@@ -1017,8 +1021,8 @@ class MerchantMode(Mode):
     CMD_BUY_INGREDIENT = 0
     CMD_DONE = 1
     commands = [
-        (['buy'], int, []),
-        (['done'],),
+        ('buy', int, []),
+        ('done',),
     ]
     prompt = 'shopping >>'
     merchant = None
@@ -1033,7 +1037,7 @@ class MerchantMode(Mode):
         self.available_ingredients = storage.available_ingredients()
         self.ingredients_for_sale = shopping.merchant_for_sale(self.merchant)
         ingredient_names = [self.name_for_command(ingredient) for ingredient in self.ingredients_for_sale.keys()]
-        self.commands[self.CMD_BUY_INGREDIENT] = (['buy'], int, ingredient_names)
+        self.commands[self.CMD_BUY_INGREDIENT] = ('buy', int, ingredient_names)
         super().update_commands()
 
     def print_info(self):
