@@ -1,5 +1,6 @@
 import re
 import readline
+from itertools import combinations
 
 from . import actions
 from . import activities
@@ -66,6 +67,13 @@ def print_newline():
     print('')
 
 
+def ascii_name(name):
+    ascii_name = re.sub(r'[^a-zA-Z0-9 ]+', '', name.lower(), count=16)
+    ascii_name = ascii_name.strip('_')
+    print(f'{name} -> {ascii_name}')
+    return ascii_name
+
+
 class CommandCompleter:
     commands = None
     matches = []
@@ -77,9 +85,10 @@ class CommandCompleter:
 
     def match_arg(self, arg_type, arg):
         if isinstance(arg_type, list):
-            return arg in arg_type
+            matches = any(choice.startswith(arg) for choice in arg_type)
+            return matches
         if isinstance(arg_type, str):
-            return arg == arg_type
+            return arg_type.startswith(arg)
         if arg_type == int:
             try:
                 int(arg)
@@ -87,18 +96,33 @@ class CommandCompleter:
             except ValueError:
                 return False
 
+    def _arg_splits(self, cmd_input, pos=0):
+        if pos >= len(cmd_input):
+            return [[]]
+        arg_splits = []
+        for i in range(pos + 1, len(cmd_input) + 1):
+            arg = ' '.join(cmd_input[pos:i])
+            next_arg_splits = self._arg_splits(cmd_input, i)
+            for next_arg_split in next_arg_splits:
+                next_arg_split.insert(0, arg)
+            arg_splits.extend(next_arg_splits)
+        return arg_splits
+
     def matching_commands(self, cmd_input):
         matching_commands = []
+        arg_splits = self._arg_splits(cmd_input)
         for cmd in self.commands:
             if not cmd:
                 continue
-            arg_type_match = True
-            for arg_type, arg in zip(cmd, cmd_input):
-                if not self.match_arg(arg_type, arg):
-                    arg_type_match = False
+            for arg_split in arg_splits:
+                arg_type_match = True
+                for arg_type, arg in zip(cmd, arg_split):
+                    if not self.match_arg(arg_type, arg):
+                        arg_type_match = False
+                        break
+                if arg_type_match:
+                    matching_commands.append(cmd)
                     break
-            if arg_type_match:
-                matching_commands.append(cmd)
         return matching_commands
 
     def match_command(self, cmd_input):
@@ -119,16 +143,30 @@ class CommandCompleter:
             return args
         return args[:-1]
 
+    def _max_cmd_suggestion(self, cmd, pos):
+        # FIXME: pos depends on match
+        suggestions = []
+        next_arg = cmd[pos]
+        if isinstance(next_arg, str):
+            suggestion = [next_arg]
+            i = 1
+            while pos + i < len(cmd):
+                next_arg = cmd[pos + i]
+                if not isinstance(next_arg, str):
+                    break
+                suggestion.append(next_arg)
+                i += 1
+            suggestions.append(' '.join(suggestion))
+        elif isinstance(next_arg, list):
+            suggestions.extend(next_arg)
+        elif next_arg == int:
+            suggestions.extend(['<num>'])
+        return suggestions
+
     def _suggestions(self, matching_commands, pos):
         suggestions = []
         for cmd in matching_commands:
-            next_arg = cmd[pos]
-            if isinstance(next_arg, list):
-                suggestions.extend(next_arg)
-            elif isinstance(next_arg, str):
-                    suggestions.append(next_arg)
-            elif next_arg == int:
-                suggestions.extend(['<num>'])
+            suggestions.extend(self._max_cmd_suggestion(cmd, pos))
         return suggestions
 
     def complete(self, text, state):
@@ -137,7 +175,8 @@ class CommandCompleter:
             matching_cmds = self.matching_commands(args)
             suggestions = self._suggestions(matching_cmds, len(args))
             if text:
-                self.matches = [cmd for cmd in suggestions if cmd.startswith(text)]
+                ascii_text = ascii_name(text)
+                self.matches = [cmd for cmd in suggestions if ascii_name(cmd).startswith(ascii_text)]
             else:
                 self.matches = suggestions
         try:
@@ -174,7 +213,9 @@ class Mode:
                 text = ''
                 is_available = True
                 for words in command:
-                    if isinstance(words, list):
+                    if isinstance(words, str):
+                        text += '{} '.format(words)
+                    elif isinstance(words, list):
                         if len(words) == 1:
                             text += '{} '.format(words[0])
                         elif len(words) > 1:
@@ -213,8 +254,7 @@ class Mode:
         return None
 
     def name_for_command(self, name):
-        cmd_name = re.sub(r'[^a-zA-Z0-9]+', '_', name.lower(), count=16)
-        cmd_name = cmd_name.strip('_')
+        cmd_name = ascii_name(name)
         self.names.update({cmd_name: name})
         return cmd_name
 
@@ -385,13 +425,13 @@ class DinerMode(Mode):
     CMD_EXIT = 9
     commands = [
         ('kitchen',),
-        ('take_order_from', []),
-        ('chat_with', []),
+        ('take order from', []),
+        ('chat' 'with', []),
         ('serve', [], 'to', []),
-        ('send_home', []),
+        ('send', 'home', []),
         ('menu',),
         ('compendium',),
-        ('close_up',),
+        ('close', 'up',),
         ('save',),
         ('exit',),
     ]
@@ -407,11 +447,11 @@ class DinerMode(Mode):
         available_guests = [self.name_for_command(g) for g in guests.available_guests()]
         guests_with_chats = [self.name_for_command(g) for g in guests.guests_with_chats()]
         guests_with_orders = [self.name_for_command(g) for g in guests.guests_with_orders()]
-        guests_without_orders = [self.name_for_command(g) for g in guests.guests_without_orders()]
-        self.commands[self.CMD_TAKE_ORDER] = ('take_order_from', guests_without_orders)
-        self.commands[self.CMD_CHAT] = ('chat_with', guests_with_chats)
+        guests_without_orders = [g for g in guests.guests_without_orders()]
+        self.commands[self.CMD_TAKE_ORDER] = ('take order from', guests_without_orders)
+        self.commands[self.CMD_CHAT] = ('chat', 'with', guests_with_chats)
         self.commands[self.CMD_SERVE] = ('serve', cooked_food, 'to', guests_with_orders)
-        self.commands[self.CMD_SEND_HOME] = ('send_home', available_guests)
+        self.commands[self.CMD_SEND_HOME] = ('send', 'home', available_guests)
         super().update_commands()
 
     def print_info(self):
@@ -496,7 +536,7 @@ class KitchenMode(Mode):
         ('compendium',),
         ('trash',),
         ('recipes',),
-        ('save_recipe', []),
+        ('save', 'recipe', []),
     ]
     prompt = 'kitchen >>'
     action = None
@@ -531,7 +571,7 @@ class KitchenMode(Mode):
         preparations = [d.command for d in self.available_devices.values()]
         self.commands[self.CMD_COOK] = (preparations, ingredients)
         recipe_choices = [self.name_for_command(dish) for dish in food.plated()]
-        self.commands[self.CMD_SAVE_RECIPE] = ('save_recipe', recipe_choices)
+        self.commands[self.CMD_SAVE_RECIPE] = ('save', 'recipe', recipe_choices)
         super().update_commands()
 
     def print_info(self):
