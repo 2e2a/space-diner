@@ -70,7 +70,6 @@ def print_newline():
 def ascii_name(name):
     ascii_name = re.sub(r'[^a-zA-Z0-9 ]+', '', name.lower(), count=16)
     ascii_name = ascii_name.strip('_')
-    print(f'{name} -> {ascii_name}')
     return ascii_name
 
 
@@ -83,18 +82,24 @@ class CommandCompleter:
         readline.set_completer(self.complete)
         readline.parse_and_bind('tab: complete')
 
-    def match_arg(self, arg_type, arg):
+    def match_arg(self, arg_type, arg, allow_partial=False):
+        arg = ascii_name(arg)
+        match = None
         if isinstance(arg_type, list):
-            matches = any(choice.startswith(arg) for choice in arg_type)
-            return matches
+            for choice in arg_type:
+                if choice == arg or (allow_partial and ascii_name(choice).startswith(arg)):
+                        match = choice
+                        break
         if isinstance(arg_type, str):
-            return arg_type.startswith(arg)
+            if arg == ascii_name(arg_type) or (allow_partialches and ascii_name(arg_type).startswith(arg)):
+                match = arg_type
         if arg_type == int:
             try:
                 int(arg)
-                return True
+                match = '<num>'
             except ValueError:
-                return False
+                pass
+        return match
 
     def _arg_splits(self, cmd_input, pos=0):
         if pos >= len(cmd_input):
@@ -115,36 +120,39 @@ class CommandCompleter:
             if not cmd:
                 continue
             for arg_split in arg_splits:
+                matched_cmd = []
                 arg_type_match = True
                 for arg_type, arg in zip(cmd, arg_split):
-                    if not self.match_arg(arg_type, arg):
+                    match = self.match_arg(arg_type, arg)
+                    if not match:
                         arg_type_match = False
                         break
+                    else:
+                        matched_cmd.append(match)
                 if arg_type_match:
-                    matching_commands.append(cmd)
+                    suggestion = None
+                    matching_commands.append(matched_cmd, suggestion)
                     break
         return matching_commands
 
     def match_command(self, cmd_input):
+        # TODO: filter incomplete
         matching_commands = self.matching_commands(cmd_input)
         if len(matching_commands) != 1:
             return None
-        command = matching_commands[0]
+        command, _ = matching_commands[0]
         if len(command) != len(cmd_input):
             return None
         return self.commands.index(command)
 
-    def _get_completed_args(self):
+    def split_args(self):
         buffer = readline.get_line_buffer()
         if not buffer:
             return []
         args = buffer.split()
-        if buffer.endswith(' '):
-            return args
-        return args[:-1]
+        return args
 
     def _max_cmd_suggestion(self, cmd, pos):
-        # FIXME: pos depends on match
         suggestions = []
         next_arg = cmd[pos]
         if isinstance(next_arg, str):
@@ -163,22 +171,12 @@ class CommandCompleter:
             suggestions.extend(['<num>'])
         return suggestions
 
-    def _suggestions(self, matching_commands, pos):
-        suggestions = []
-        for cmd in matching_commands:
-            suggestions.extend(self._max_cmd_suggestion(cmd, pos))
-        return suggestions
-
     def complete(self, text, state):
         if state == 0:
-            args = self._get_completed_args()
-            matching_cmds = self.matching_commands(args)
-            suggestions = self._suggestions(matching_cmds, len(args))
-            if text:
-                ascii_text = ascii_name(text)
-                self.matches = [cmd for cmd in suggestions if ascii_name(cmd).startswith(ascii_text)]
-            else:
-                self.matches = suggestions
+            args = self.split_args()
+            matching_commands = self.matching_commands(args)
+            suggestions = [suggestion for command, suggestion in matching_commands if suggestion]
+            self.matches = suggestions
         try:
             return self.matches[state] + ' '
         except IndexError:
