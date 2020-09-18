@@ -82,24 +82,51 @@ class CommandCompleter:
         readline.set_completer(self.complete)
         readline.parse_and_bind('tab: complete')
 
+    def _get_arg_completion(self, arg, cmd):
+        completed = 0
+        arg_split = arg.split()
+        cmd_split = cmd.split()
+        part_incomplete = False
+        for arg_part, cmd_part in zip(arg_split, cmd_split):
+            if arg_part != cmd_part:
+                part_incomplete = True
+                break
+            else:
+                completed += 1
+        ends_with_space = arg.endswith(' ')
+        if not part_incomplete and not ends_with_space:
+            completed -= 1
+        completed = max(0, completed)
+        return ' '.join(cmd_split[completed:])
+
     def match_arg(self, arg_type, arg, allow_partial=False):
         arg = ascii_name(arg)
         match = None
+        completion = None
         if isinstance(arg_type, list):
             for choice in arg_type:
                 if choice == arg or (allow_partial and ascii_name(choice).startswith(arg)):
-                        match = choice
-                        break
+                    match = choice
+                    completion = choice
+                    break
+                elif allow_partial and ascii_name(choice).startswith(arg):
+                    match = choice
+                    completion = self._get_arg_completion(arg, choice)
+                    break
         if isinstance(arg_type, str):
-            if arg == ascii_name(arg_type) or (allow_partialches and ascii_name(arg_type).startswith(arg)):
+            if arg == ascii_name(arg_type):
                 match = arg_type
+                completion = arg_type
+            elif allow_partial and ascii_name(arg_type).startswith(arg):
+                match = arg_type
+                completion = self._get_arg_completion(arg, arg_type)
         if arg_type == int:
             try:
                 int(arg)
                 match = '<num>'
             except ValueError:
                 pass
-        return match
+        return match, completion
 
     def _arg_splits(self, cmd_input, pos=0):
         if pos >= len(cmd_input):
@@ -116,24 +143,26 @@ class CommandCompleter:
     def matching_commands(self, cmd_input):
         matching_commands = []
         arg_splits = self._arg_splits(cmd_input)
+        completion = None
         for cmd in self.commands:
             if not cmd:
                 continue
             for arg_split in arg_splits:
-                matched_cmd = []
                 arg_type_match = True
-                for arg_type, arg in zip(cmd, arg_split):
-                    match = self.match_arg(arg_type, arg)
+                input_len = len(arg_split)
+                for i, (arg_type, arg) in enumerate(zip(cmd, arg_split)):
+                    is_last_arg = (i == input_len - 1)
+                    match, completion = self.match_arg(arg_type, arg, allow_partial=is_last_arg)
                     if not match:
                         arg_type_match = False
                         break
-                    else:
-                        matched_cmd.append(match)
                 if arg_type_match:
-                    suggestion = None
-                    matching_commands.append(matched_cmd, suggestion)
+                    matching_commands.append((cmd, completion))
                     break
         return matching_commands
+
+    def completions(self, cmd_input):
+        return [completion for _, completion in self.matching_commands(cmd_input) if completion]
 
     def match_command(self, cmd_input):
         # TODO: filter incomplete
@@ -145,38 +174,19 @@ class CommandCompleter:
             return None
         return self.commands.index(command)
 
-    def split_args(self):
+    def split_input(self):
         buffer = readline.get_line_buffer()
         if not buffer:
             return []
         args = buffer.split()
+        if buffer.endswith(' '):
+            args.append('')
         return args
-
-    def _max_cmd_suggestion(self, cmd, pos):
-        suggestions = []
-        next_arg = cmd[pos]
-        if isinstance(next_arg, str):
-            suggestion = [next_arg]
-            i = 1
-            while pos + i < len(cmd):
-                next_arg = cmd[pos + i]
-                if not isinstance(next_arg, str):
-                    break
-                suggestion.append(next_arg)
-                i += 1
-            suggestions.append(' '.join(suggestion))
-        elif isinstance(next_arg, list):
-            suggestions.extend(next_arg)
-        elif next_arg == int:
-            suggestions.extend(['<num>'])
-        return suggestions
 
     def complete(self, text, state):
         if state == 0:
-            args = self.split_args()
-            matching_commands = self.matching_commands(args)
-            suggestions = [suggestion for command, suggestion in matching_commands if suggestion]
-            self.matches = suggestions
+            cmd_input = self.split_input()
+            self.matches = self.completions(cmd_input)
         try:
             return self.matches[state] + ' '
         except IndexError:
