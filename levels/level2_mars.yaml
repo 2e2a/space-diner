@@ -2,6 +2,7 @@ name: Mars
 diner:
   name: Space Diner
   seats: 7
+  decoration: [ flowers ]
 money: 100
 intro: >
   You are starting a new life on Mars. Humans are terra-forming it, but the cities on Mars still need
@@ -135,32 +136,38 @@ kitchen:
     result: blended
     properties: [ ]
 
-merchants:
-  - name: Earth Imports
-    available: True
-    ingredients:
-      - name: chicken egg
-        cost: 2
-      - name: cow milk
-        cost: 2
+shopping:
+  market:
+    name: Martian Mall
+    description: You pass the Martian Mall. Do you need to stock up on supplies?
+  merchants:
+    - name: Earth Imports
+      available: True
+      ingredients:
+        - name: chicken egg
+          cost: 2
+        - name: cow milk
+          cost: 2
 
-  - name: Fresh greens
-    available: True
-    ingredients:
-      - name: tomato
-        cost: 1
-      - name: Martian lichen
-        cost: 1
-      - name: Martian moss
-        cost: 1
-      - name: moss milk
-        cost: 1
+    - name: Fresh greens
+      available: True
+      ingredients:
+        - name: tomato
+          cost: 1
+        - name: Martian lichen
+          cost: 1
+        - name: Martian moss
+          cost: 1
+        - name: moss milk
+          cost: 1
+        - name: basil
+          cost: 1
 
-  - name: Tau-Cetian Imports
-    available: True
-    ingredients:
-      - name: blizzard-bird egg
-        cost: 3
+    - name: Tau-Cetian Imports
+      available: True
+      ingredients:
+        - name: blizzard-bird egg
+          cost: 3
 
 food:
   recipes:
@@ -440,6 +447,7 @@ social:
     chats:
       - I heard that they want to allow keeping pets inside the domes soon. I'd really like one of these Earth dogs.
       - Have you ever been outside of the domes? I did a tour yesterday, but I found it really scary.
+      - Sigh. My hornless children are so exhausting.
   - name: Human senior
     greetings:
       - Good morning
@@ -452,30 +460,26 @@ social:
       - Good morning
     chats:
       -
-  - name: Bovid senior
-    greetings:
-      - Good morning, Hornless
-    chats:
-      - Sigh. One of my horns fell off yesterday. I guess I'm getting old.
-      - All my little hornless grandchildren came to visit me yesterday. Exhausting!
-  - name: Human teenager
-    greetings:
-      - Good morning
-    chats:
-      - Your diner looks so charming, my dear.
-      - I'm just going to rest my eyes for a minute.
-      - What kind of music are these kids outside listening to? Sounds like a lot of noise to me.
   - name: Reptiloid teenager
     greetings:
       - Good morning
+      - What's up,
     chats:
       -
   - name: Bovid teenager
     greetings:
-      - Good morning, Hornless
+      - Good morning
+      - What's up,
     chats:
-      - Sigh. One of my horns fell off yesterday. I guess I'm getting old.
-      - All my little hornless grandchildren came to visit me yesterday. Exhausting!
+      - I've got a headache. Maybe my horns are starting to grow?
+      - I hate school.
+  - name: Human teenager
+    greetings:
+      - Good morning
+      - What's up,
+    chats:
+      - I wanna go dancing tonight.
+      - Ugh, I don't feel great today. Maybe I shouldn't have gone to that party yesterday.
 
 skills:
   - type: cooking

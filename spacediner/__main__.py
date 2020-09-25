@@ -2,6 +2,8 @@ import argparse
 from . import cli
 from . import settings
 
+# TODO: bug: in reviews: "I liked None" / "I disliked None" (sth wrong with properties)
+# TODO: bug: showing recipe crashes (sth wrong with properties)
 # TODO: completer: remove underscore, use separate command parts instead
 # TODO: completer: support simple string command parts
 # TODO: completer: ignore capitalization and special characters before matching (see name_for_command)
