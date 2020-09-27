@@ -2,7 +2,7 @@ name: Mars
 diner:
   name: Space Diner
   seats: 7
-  decoration: [ flowers ]
+  decoration: [ horn ]
 money: 100
 intro: >
   You are starting a new life on Mars. Humans are terra-forming it, but the cities on Mars still need
@@ -138,8 +138,8 @@ kitchen:
 
 shopping:
   market:
-    name: Martian Mall
-    description: You pass the Martian Mall. Do you need to stock up on supplies?
+    name: Pavonis market
+    description: You pass the local market. Do you need to stock up on supplies?
   merchants:
     - name: Earth Imports
       available: True
@@ -154,20 +154,25 @@ shopping:
       ingredients:
         - name: tomato
           cost: 1
-        - name: Martian lichen
-          cost: 1
-        - name: Martian moss
-          cost: 1
-        - name: moss milk
-          cost: 1
         - name: basil
-          cost: 1
+          cost: 2
 
     - name: Tau-Cetian Imports
       available: True
       ingredients:
         - name: blizzard-bird egg
           cost: 3
+
+    - name: Lush Meadows
+      available: False
+      owner: Seven-horned Eetch
+      ingredients:
+        - name: Martian lichen
+          cost: 1
+        - name: Martian moss
+          cost: 1
+        - name: moss milk
+          cost: 1
 
 food:
   recipes:
@@ -203,20 +208,29 @@ food:
         - [fresh, raw]
       properties: [ salad, healthy]
 
-    - name: Space Shakshuka
+    - name: Tau-Cetian Kulkick
       available: True
       ingredients:
-        - [tomato, pan-fried]
-        - [tomato, pan-fried]
-        - [egg, pan-fried]
+        - [blizzard-bird egg, boiled]
+        - [blizzard-bird egg, raw]
+        - [blizzard-bird egg, pan-fried]
       properties: []
+
+    - name: Abbi's Bowl
+      available: False
+      ingredients:
+        - [Martian moss, raw]
+        - [Martian lichen, raw]
+        - [blizzard-bird egg, pan-fried]
+      properties: []
+
 
   menu:
     - Tomato Soup
     - Martian Milkshake
     - Veggie Omelette
     - Fresh Salad
-    - Space Shakshuka
+    - Tau-Cetian Kulkick
 
 guests:
   groups:
@@ -254,8 +268,7 @@ guests:
       description: >
         Cloven-hoofed mammals originating from the Barnard's Star system, with a certain resemblance to Earth cows.
         The number of horns on a Bovid's head reflects their age and plays an important social role
-        in many Bovid cultures.
-        Bovids ferment plant-based food in a specialized stomach prior to digestion.
+        in most Bovid cultures. Bovids ferment plant-based food in a specialized stomach prior to digestion.
       name_factory: Martian-Bovid
       available: True
       reactions:
@@ -266,11 +279,11 @@ guests:
         - wish: raw
           text: I like raw food, can you bring me something raw, please?
         - wish: Martian moss
-          text: I want to eat some Martian moss.
+          text: Moss is good, I want to eat some Martian moss, please.
         - wish: Martian lichen
-          text: Give me some Martian lichen.
+          text: Give me some Martian lichen. Lichen tastes good.
         - wish: fresh
-          text: Something fresh would be nice.
+          text: Something fresh would be nice. Can I get something fresh, please?
 
     - name: adult
       description: Most of Mars's adult population works in engineering, research, or food supply.
@@ -317,8 +330,11 @@ guests:
       positive_phrases:
         - Jolly good.
         - This young chef impressed me.
+        - Marvelous.
       neutral_phrases:
         - Acceptable.
+        - Decent.
+        - Not as bad as I thought.
       negative_phrases:
         - Maybe popular with the kids, but not for me.
         - Off-putting.
@@ -399,35 +415,67 @@ guests:
         - [ i]
 
   factory:
+    - [ Human, senior]
     - [ Human, adult ]
     - [ Reptiloid, adult ]
     - [ Bovid, adult ]
-    - [ Human, senior]
-    - [ Reptiloid, senior]
-    - [ Bovid, senior]
     - [ Human, teenager ]
     - [ Reptiloid, teenager ]
     - [ Bovid, teenager ]
 
   regulars:
-    - name: Old Twenty-Horned Abbi
+    - name: Old Twenty-Horned Aab
       available: True
       budget: 30
       reactions:
         - properties: [ spicy ]
           taste: +1
-          output: Oh my goodness, I love spicy food.
+          output: Ah, I love spicy food, and this was spicy.
       orders:
         - wish: fresh
-          text: Oh my goodness, I have this craving for something fresh.
+          text: Ah... I have this craving for something fresh, can you bring me something fresh?
+      orders:
+        - wish: fresh
+          text: Mh... some moss would be nice now, I'd like some Martian moss, please.
       positive_phrases:
-        - Oh my goodness, it was fantastic.
+        - Ah, it was fantastic.
+        - Ah, very enjoyable diner, I enjoyed it.
+        - Ah, I like good food, and the food was good.
       neutral_phrases:
-        - I was not impressed today.
+        - Mh, I was not impressed, nothing impressed me today.
+        - Mh, it was not so good, it could have been better.
+        - Mh, I wonder what went wrong, something was not quite right today.
       negative_phrases:
-        - Oh my goodness, it was horrible.
+        - Oh, it was horrible. The food and everything else was horrible.
+        - Oh, I really did not like it. There was nothing to like.
+        - Oh, no, not great. I was really not great.
 
 social:
+
+  - name: Old Twenty-Horned Aab
+    greetings:
+      - Ah... hello, Hornless
+    chats:
+      - Mh... the weather is usually strange on Mars, but today, it is particularly strange, is it not?
+      - Ah, what a day. So sandy and stormy.
+    friendship:
+      disappears: False
+      meetings:
+        - meeting: 'Aab invites you to drink tea in the evening. You meet in her little appartment. '
+          question: ...?
+          replies:
+            - reply: ...
+              reaction: ...
+            - reply: ...
+              reaction: ...
+          rewards:
+            - type: decoration
+              level: 1
+              decoration: horn
+              text: Ah, you know, I have many horns, but I use to have even more. I keep the ones that fell out,
+                they can be quite decorative, do you not think? Here, you can have one for your empty wall.
+
+
   - name: Human adult
     greetings:
       - Hello,
@@ -446,8 +494,9 @@ social:
       - Greetings, Hornless
     chats:
       - I heard that they want to allow keeping pets inside the domes soon. I'd really like one of these Earth dogs.
-      - Have you ever been outside of the domes? I did a tour yesterday, but I found it really scary.
-      - Sigh. My hornless children are so exhausting.
+      - Have you ever been outside of the domes? I did a tour yesterday, but I found it scary.
+      - Sigh. My hornless children are really exhausting.
+      - Ah, my stomachs hurt. Or at least one of them hurts, sometimes it's hard to tell.
   - name: Human senior
     greetings:
       - Good morning
@@ -455,11 +504,7 @@ social:
       - Your diner looks so charming, my dear.
       - I'm just going to rest my eyes for a minute.
       - What kind of music are these kids outside listening to? Sounds like a lot of noise to me.
-  - name: Reptiloid senior
-    greetings:
-      - Good morning
-    chats:
-      -
+      - I wish I still had all my teeth. You should take good care of your teeth while you are young!
   - name: Reptiloid teenager
     greetings:
       - Good morning
@@ -480,6 +525,7 @@ social:
     chats:
       - I wanna go dancing tonight.
       - Ugh, I don't feel great today. Maybe I shouldn't have gone to that party yesterday.
+      - When I finish school, I also want to become a chef!
 
 skills:
   - type: cooking
