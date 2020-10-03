@@ -302,11 +302,12 @@ class Mode:
         if cmd_input and self.commands:
             cmd_input_list = cmd_input.split()
             matched_cmd_num, matched_cmd = self.completer.match_command(cmd_input_list)
-            if matched_cmd and matched_cmd_num >= 0 and matched_cmd:
+            if matched_cmd_num is not None and matched_cmd_num >= 0 and matched_cmd:
                 return self.exec(matched_cmd_num, matched_cmd)
+            else:
+                self.print_help()
         elif self.empty_input:
             return self.exec(None, None)
-        self.print_help()
         return None
 
 
