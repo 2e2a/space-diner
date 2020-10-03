@@ -12,7 +12,7 @@ money: 50
 diner:
   name: Space Diner
   seats: 7
-  decoration: [ painting, antique clock ]
+  decoration: [ movie poster, satellite photo, silkmoth model ]
 
 calendar:
   week: [Moonday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday]
@@ -122,7 +122,7 @@ kitchen:
 shopping:
   market:
     name: Moon Market Hall
-    description: On your way from your apartment to the diner, you always pass the Moon Market Hall.
+    description: On your way from your apartment to the diner, you pass the Moon Market Hall.
       Do you need to stock up on supplies?
   merchants:
     - name: Earth Wholesale
@@ -212,6 +212,14 @@ food:
         - [ deep-fried, silkworm ]
         - [ deep-fried, silkworm ]
         - [ deep-fried, silkworm ]
+      properties: [ fancy ]
+
+    - name: Silkworm Tatar
+      available: False
+      ingredients:
+        - [ raw, silkworm ]
+        - [ raw, silkworm ]
+        - [ raw, pickles ]
       properties: [ fancy ]
 
   menu:
@@ -347,7 +355,7 @@ guests:
     - name: Dr. Ozabela Ruizy
       available: True
       budget: 10
-      days: ['Moonday', 'Thursday', 'Saturday']
+      days: ['Moonday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
       reactions:
         - properties: [ pickles ]
           taste: +2
@@ -385,11 +393,12 @@ social:
       disappears: True
       meetings:
         - meeting: 'Ozabela invites you to the research facility where she works. Access to the area is restricted, but when
-            the security guards see Ozabela, they let you enter. Ozabela shows you what she is currently working on
+            the security guards see Ozabela, they let you enter. Ozabela shows you what she is working on
             in her lab: silkworms. A couple of them were brought to the far side of the moon a long time ago in a
             box as part of a research project. The project was abandoned, but the silkworms infested some of the
             research facilities and somehow managed to survive there until today.
-            Ozabela''s team collects them and studies how they have adapted to life on the moon. As you look
+            Ozabela''s team collects them and studies how they have adapted to life on the moon.
+            There''s a large plastic model of one and a terrarium with live specimen. As you look
             at them through the terrarium glass, you remember another time when you encountered this species: as an
             appetizer in an expensive restaurant on the dark side.'
           question: Just look at them... how they wriggle...
@@ -400,14 +409,11 @@ social:
             - reply: They're disgusting.
               reaction: Well, not everyone is able to appreciate their beauty.
           rewards:
-            - type: decoration
+            - type: ingredient
+              diff: 3
               level: 1
-              decoration: antique clock
-              text: Take this clock.
-            - type: decoration
-              level: 1
-              decoration: painting
-              text: Take this painting.
+              ingredient: silkworm
+              text: I know what silkworms are worth in the culinary world... here, take these.
         - meeting: 'Ozabela wants to walk around the underground mall. There are about 20 businesses in the mall, including
             your diner. Only some of them are open at night: the bar, the cinema, and a fancy new restaurant. Plenty of
             people are just walking around like you - there is only so much you can do in the evening in the colony.
@@ -422,10 +428,14 @@ social:
               reaction: That's a pity. I like to hear about people's dreams and motivations.
           rewards:
             - type: ingredient
-              diff: 1
+              diff: 6
               level: 1
               ingredient: silkworm
-              text: Take this silkworm.
+              text: I brought some more silkworms for you.
+            - type: recipe
+              level: 2
+              recipe: Silkworm Tatar
+              text: I had this idea for a recipe... let me know what you think about it.
         - meeting: 'You meet Ozabela at The Lunatic, the first bar that ever opened on the moon.
             It is not located in the underground mall, but in an older structure on the surface. It is officially recommended not to spend more than five hours
             there, because radiation protection is less perfect there than in the underground parts of the colony. Nevertheless,
@@ -441,6 +451,13 @@ social:
               reaction: I like it, too, but do you not feel trapped sometimes? I'm not so sure myself...
             - reply: I'm not sure.
               reaction: Me neither. It is a hard decision... I wish I was more decisive.
+          rewards:
+            - type: merchant
+              level: 3
+              merchant: Oddie's Laboratory Waste
+              text: 'There''s someone I would like to introduce you to. My colleague Oddie has a secret business - he sells the
+              worms that we are supposed to dispose of after our experiments. Here''s his address. I trust you to keep it
+              confidential.'
         - meeting: Ozabela wants to see a movie. There is a brand-new cinema in the amusement park that they finished building
             this year. However, you decide to go to the cinema in the mall. There are only 12 seats there. Most of them
             are already taken when you enter, and you have to sit in the first row right in front of the screen. You 
@@ -451,6 +468,11 @@ social:
               reaction: Ha, you're right. There's easily a lifetime's worth of research in just this one species that we have here.
             - reply: Cheer up. Less species means less work for you biologists.
             - reaction: Not really. The work is just more repetitive.
+          rewards:
+            - type: decoration
+              level: 4
+              decoration: movie poster
+              text: Let me buy that movie poster for you. You should put it up in your diner.
         - meeting: Silkworms have been spotted in an abandoned lab in the vicinity of the colony by a tourist guide.
             Ozabela invites you to join her in counting, examining, and documenting them. It is so close that you don't
             have to take one of the rovers - you can walk. You are not used to wearing a spacesuit and you stumble along
@@ -469,6 +491,12 @@ social:
               reaction: You're right. We should be looking forward. But what if moving forward means returning to Earth?
             - reply: I don't like questions like that.
               reaction: Why? It's important to think about the past... and the future.
+          rewards:
+            - type: decoration
+              level: 5
+              decoration: satellite photo
+              text: I have a set of satellite photos of Earth that I look at when I miss it... I'll give you one
+                of them once we're out of these spacesuits.
         - meeting: Ozabela comes to the empty diner in the evening. You cook beef burgers with pickles just for the two of you.
            "I have to tell you something", she says after finishing the burger. "I was offered a professorship at the
            University of Tokyo. On Earth."
@@ -480,14 +508,12 @@ social:
               reaction: I am, but I think it's time for me to move on. I am going to miss your food and your company...
                 Please stay in touch with me, will you?
           rewards:
-            - type: merchant
-              level: 3
-              merchant: Oddie's Laboratory Waste
-              text: There's someone I would like to introduce you to. I saw how you looked at the silkworms in my lab... I know
-                what they are worth in the culinary world. My colleague Oddie has a secret business - he sells the dead
-                worms that we are supposed to dispose of after our experiments. Here's his address. I trust you to keep it
-                confidential.
-          
+            - type: decoration
+              level: 6
+              decoration: silkmoth model
+              text: I want you to have my silkmoth model. Something to remember me by.
+
+
 
   - name: Human colonist
     greetings:

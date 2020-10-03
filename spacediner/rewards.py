@@ -14,6 +14,7 @@ class Reward:
     TYPE_INGREDIENT = 'ingredient'
     TYPE_MONEY = 'money'
     TYPE_DECORATION = 'decoration'
+    TYPE_RECIPE = 'recipe'
 
     typ = None
     text = None
@@ -128,6 +129,21 @@ class DecorationReward(Reward):
         cli.print_message('You received a gift: {}.'.format(self.decoration))
 
 
+class RecipeReward(Reward):
+    recipe = None
+
+    def __init__(self):
+        self.typ = self.TYPE_RECIPE
+
+    def init(self, data):
+        super().init(data)
+        self.recipe = data.get('recipe')
+
+    def apply(self):
+        cli.print_message('New recipe unlocked')
+        shopping.unlock(self.recipe)
+
+
 def init_list(data):
     rewards = []
     for reward_data in data:
@@ -144,6 +160,8 @@ def init_list(data):
         elif typ == Reward.TYPE_INGREDIENT:
             reward = IngredientReward()
         elif typ == Reward.TYPE_DECORATION:
+            reward = DecorationReward()
+        elif typ == Reward.TYPE_RECIPE:
             reward = DecorationReward()
         reward.init(reward_data)
         rewards.append(reward)

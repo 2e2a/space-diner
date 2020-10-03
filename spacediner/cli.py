@@ -1081,6 +1081,7 @@ class ShoppingMode(ChoiceMode):
         ])
         if shopping.market.description:
             print_text(shopping.market.description)
+            print_newline()
         print_title('Merchants available today')
         print_list([
             '{} [{}]'.format(merchant, ', '.join(merchant_ingredients))
