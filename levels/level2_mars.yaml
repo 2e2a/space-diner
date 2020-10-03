@@ -37,32 +37,32 @@ ingredients:
   - name: Martian lichen
     description: A composite algae/fungus organism. Grows on the surface of Mars.
     storage: pantry
-    properties: [ local specialty, fresh, sweet ]
+    properties: [ sweet ]
 
   - name: Martian moss
     description: Small green plants forming a soft, dense mat. Grows on the surface of Mars.
     storage: pantry
-    properties: [ local specialty, fresh, spicy ]
+    properties: [ spicy ]
 
   - name: moss milk
     description: A milky fluid extracted from Martian moss.
     storage: fridge
-    properties: [ local specialty, milk, spicy ]
+    properties: [ milk, spicy ]
 
   - name: tomato
     description: Red and juicy.
     storage: pantry
-    properties: [ fresh ]
+    properties: [ ]
 
   - name: peach
     description: Sweet and juicy.
     storage: pantry
-    properties: [ fresh, sweet ]
+    properties: [ sweet ]
 
   - name: basil
     description: An aromatic green herb.
     storage: pantry
-    properties: [ fresh ]
+    properties: [ ]
 
   - name: cow milk
     description: A milky fluid produced by cows (an Earth mammal).
@@ -75,7 +75,7 @@ ingredients:
     properties: [ egg, animal product ]
 
   - name: blizzard-bird egg
-    description: Egg laid by a blizzard bird (a Tau-Cetian bird). Consists of a shell and purple, sweet goo.
+    description: Egg laid by a blizzard bird (a Tau-Cetian bird). Consists of a shell and sweet purple goo.
     storage: pantry
     properties: [ egg, animal product, sweet ]
 
@@ -83,21 +83,17 @@ storage:
   - name: fridge
     available: True
     ingredients:
-      - name: moss milk
-        available: 1
       - name: cow milk
-        available: 1
+        available: 2
 
   - name: pantry
     available: True
     ingredients:
-      - name: Martian lichen
-        available: 3
-      - name: Martian moss
-        available: 3
       - name: tomato
         available: 5
       - name: basil
+        available: 1
+      - name: peach
         available: 1
       - name: chicken egg
         available: 6
@@ -191,12 +187,12 @@ shopping:
 
 food:
   recipes:
-    - name: Veggie Omelette
+    - name: Plain Omelette
       available: True
       ingredients:
         - [ fried, egg ]
         - [ fried, egg ]
-        - [ fried, vegetable ]
+        - [ fried, egg ]
       properties: [ omelette ]
 
     - name: Tomato Soup
@@ -215,13 +211,13 @@ food:
         - [ milk ]
       properties: [ shake ]
 
-    - name: Fresh Salad
+    - name: Tomato Salad
       available: True
       ingredients:
-        - [fresh, raw]
-        - [fresh, raw]
-        - [fresh, raw]
-      properties: [ salad, healthy]
+        - [tomato, raw]
+        - [tomato, raw]
+        - [basil, raw]
+      properties: [ salad ]
 
     - name: Tau-Cetian Kulkick
       available: True
@@ -237,13 +233,13 @@ food:
         - [basil, deep-fried]
         - [Martian moss, boiled]
         - [moss milk, boiled]
-      properties: []
+      properties: [ soup]
 
 
   menu:
     - Tomato Soup
-    - Martian Milkshake
-    - Veggie Omelette
+    - Peach Milkshake
+    - Plain Omelette
     - Fresh Salad
     - Tau-Cetian Kulkick
 
@@ -262,7 +258,7 @@ guests:
       description: >
         Semiaquatic four-limbed vertebrates with long snouts and powerful jaw muscles.
         With their highly acidic stomach, they can easily digest bones, hooves and horns.
-        Many Reptiloids swallow stones to crush the food in their stomachs.
+        Many reptiloids swallow stones to crush the food in their stomachs.
       name_factory: Martian-Reptiloid
       available: True
       reactions:
@@ -500,7 +496,6 @@ social:
       - Hello,
     chats:
       - It's so cold today, I can barely move my limbs.
-      - How do I look? This is a brand-new scale polish that I'm trying.
   - name: Bovid adult
     greetings:
       - Greetings, Hornless
@@ -522,14 +517,14 @@ social:
       - Good morning
       - What's up,
     chats:
-      -
+      - How do I look? This is a brand-new scale polish that I'm trying.
   - name: Bovid teenager
     greetings:
       - Good morning
       - What's up,
     chats:
       - I've got a headache. Maybe my horns are starting to grow?
-      - I hate school.
+      - I hate school. Why do I need to go to school?!
   - name: Human teenager
     greetings:
       - Good morning

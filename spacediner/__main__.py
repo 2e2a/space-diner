@@ -3,9 +3,7 @@ from . import cli
 from . import settings
 
 # TODO: guests should not order menu items that they cannot digest
-# TODO: bug: in reviews: "I liked None" / "I disliked None" (sth wrong with properties)
 # TODO: get rid of actions :(
-# TODO: enter should do nothing instead of printing help
 # TODO: check if rewards by normal guests are possible
 # TODO: bug: sometimes prepared ingredients appear in the kitchen although they were already served
 # TODO: make discovered preferences available in compendium
