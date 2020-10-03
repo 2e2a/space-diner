@@ -2,7 +2,7 @@ name: Mars
 diner:
   name: Space Diner
   seats: 7
-  decoration: [ horn ]
+  decoration: [ twisted horn ]
 money: 100
 intro: >
   You are starting a new life on Mars. Humans are terra-forming it, but the cities on Mars still need
@@ -70,9 +70,9 @@ ingredients:
     properties: [ egg, animal product ]
 
   - name: blizzard-bird egg
-    description: Egg laid by a blizzard bird (a Tau-Cetian bird). Consists of a shell and purple, spicy goo.
+    description: Egg laid by a blizzard bird (a Tau-Cetian bird). Consists of a shell and purple, sweet goo.
     storage: pantry
-    properties: [ egg, animal product ]
+    properties: [ egg, animal product, sweet ]
 
 storage:
   - name: fridge
@@ -141,7 +141,9 @@ shopping:
     name: Pavonis market
     description: You pass the local market. Do you need to stock up on supplies?
   merchants:
-    - name: Earth Imports
+    - name: Earth Wholesale
+      description: You approach the market stall that belongs to Earth Wholesale, a big corporation that imports products from Earth.
+      owner: Cashier Bot
       available: True
       ingredients:
         - name: chicken egg
@@ -149,7 +151,9 @@ shopping:
         - name: cow milk
           cost: 2
 
-    - name: Fresh greens
+    - name: Fresh Greens
+      description: A human sells greenhouse-grown fresh plants at this market stall.
+      owner: Samira
       available: True
       ingredients:
         - name: tomato
@@ -158,12 +162,16 @@ shopping:
           cost: 2
 
     - name: Tau-Cetian Imports
+      description: A very tall reptiloid sells Tau-Cetian at this booth.
       available: True
+      owner: Charbinivore
       ingredients:
         - name: blizzard-bird egg
           cost: 3
 
     - name: Lush Meadows
+      description: In a hidden corner of the market place, you find this stall selling fresh plants that have recently started to grow on
+        the surface of Mars.
       available: False
       owner: Seven-horned Eetch
       ingredients:
@@ -278,10 +286,6 @@ guests:
       orders:
         - wish: raw
           text: I like raw food, can you bring me something raw, please?
-        - wish: Martian moss
-          text: Moss is good, I want to eat some Martian moss, please.
-        - wish: Martian lichen
-          text: Give me some Martian lichen. Lichen tastes good.
         - wish: fresh
           text: Something fresh would be nice. Can I get something fresh, please?
 
@@ -439,16 +443,16 @@ guests:
           text: Mh... some moss would be nice now, I'd like some Martian moss, please.
       positive_phrases:
         - Ah, it was fantastic.
-        - Ah, very enjoyable diner, I enjoyed it.
+        - Ah, very enjoyable diner, I liked it.
         - Ah, I like good food, and the food was good.
       neutral_phrases:
         - Mh, I was not impressed, nothing impressed me today.
         - Mh, it was not so good, it could have been better.
         - Mh, I wonder what went wrong, something was not quite right today.
       negative_phrases:
-        - Oh, it was horrible. The food and everything else was horrible.
-        - Oh, I really did not like it. There was nothing to like.
-        - Oh, no, not great. I was really not great.
+        - Oh, it was horrible. The food and everything else was bad.
+        - Oh, I really did not love it. There was nothing to like.
+        - Oh, no, not great. I was really not good.
 
 social:
 
@@ -461,19 +465,23 @@ social:
     friendship:
       disappears: False
       meetings:
-        - meeting: 'Aab invites you to drink tea in the evening. You meet in her little appartment. '
-          question: ...?
+        - meeting: Aab invites you to drink tea in the evening. You meet in her little appartment. Even though the furniture is 
+            optimized for bovid anatomy, the interior design uncannily reminds you of your own grandparents' style. Sipping 
+            the sweet herbal tea, you let your eyes wander over the shelves filled with tableware and souvenirs. There is
+            also a cabinet filled with what looks like bovid horns, in various colors and lengths. Some of them are longer than
+            you are tall.
+          question: Ah, you see, I have many horns, but I used to have even more. It is a custom to keep the ones that fell out.
+            Impressive collection, do you not think?
           replies:
-            - reply: ...
-              reaction: ...
-            - reply: ...
-              reaction: ...
+            - reply: Wow, these are all yours?
+              reaction: Oh, most of them yes, but sometimes my relatives also send me one as a personal gift.
+            - reply: Eh, I have seen better.
+              reaction: Oh, yes, some bovids have downright museums of impressive horns that humble me and my modest collection.
           rewards:
             - type: decoration
               level: 1
-              decoration: horn
-              text: Ah, you know, I have many horns, but I use to have even more. I keep the ones that fell out,
-                they can be quite decorative, do you not think? Here, you can have one for your empty wall.
+              decoration: twisted horn
+              text: The horns can be quite decorative, do you not think? Here, you can have one for your empty wall in your pretty diner.
 
 
   - name: Human adult
@@ -526,7 +534,38 @@ social:
       - I wanna go dancing tonight.
       - Ugh, I don't feel great today. Maybe I shouldn't have gone to that party yesterday.
       - When I finish school, I also want to become a chef!
-
+  - name: Cashier Bot
+    greetings:
+      - Welcome to Earth Wholesale,
+    chats:
+      - How about some chicken eggs? A versatile product.
+      - How about some cow milk? Calcium is good for your bones.
+  - name: Samira
+    greetings:
+      - Welcome to my shop,
+    chats:
+      - Try our sun-ripened tomatoes!
+      - The weather conditions have been perfect this week. Try our fresh products!
+      - We treat all our plants with love.
+      - You should come and visit our greenhouses some day. They are open to the public!
+      - I'm waiting for some new seeds from Earth. I'm excited to try growing some new varieties!
+  - name: Charbinivore
+    greetings:
+      - Welcome, welcome,
+    chats:
+      - I have tried eggs from many types of birds, but nothing comes close to a blizzard-bird egg, in my opinion!
+      - I wish I could bring you more delicacies from the Tau-Ceti system, but for now, try the blizzard-bird eggs!
+      - Do you like sweet food? Try to add a blizzard-bird egg to your dishes!
+      - A lot of customers ask whether blizzard-bird eggs are so delicious because of the blizzards. The answer is yes!
+      - Blizzard-bird eggs! Blizzard-bird eggs! Only 3 space-dollars for a blizzard-bird egg!
+  - name: Seven-horned Eetch
+    greetings:
+      - Welcome, Hornless
+    chats:
+      - Can I interest you in some Martian lichen? Half plant, half fungus! Nice and sweet!
+      - Can I interest you in some Martian moss? Fresh, green, spicy!
+      - Can I interest you in some moss milk? A wonderful plant-based product, smooth and silky!
+            
 skills:
   - type: cooking
     name: seasoning skills
