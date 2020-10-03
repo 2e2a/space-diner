@@ -115,7 +115,7 @@ kitchen:
   - name: fryer
     available: True
     preparation: deep-frying
-    command: deep_fry
+    command: deep-fry
     result: deep-fried
     properties: [ ]
 

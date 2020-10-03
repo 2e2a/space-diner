@@ -66,6 +66,12 @@ def print_newline():
     print('')
 
 
+def ascii_name(name):
+    ascii_name = re.sub(r'[^a-zA-Z0-9 ]+', '', name.lower(), count=16)
+    ascii_name = ascii_name.strip('_')
+    return ascii_name
+
+
 class CommandCompleter:
     commands = None
     matches = []
@@ -75,71 +81,160 @@ class CommandCompleter:
         readline.set_completer(self.complete)
         readline.parse_and_bind('tab: complete')
 
-    def match_arg(self, arg_type, arg):
-        if isinstance(arg_type, list):
-            return arg in arg_type
-        if isinstance(arg_type, str):
-            return arg == arg_type
-        if arg_type == int:
-            try:
-                int(arg)
-                return True
-            except ValueError:
-                return False
+    def _get_completion(self, cmd, pos):
+        if pos >= len(cmd):
+            return None
+        next_cmd_arg = cmd[pos + 1]
+        if isinstance(next_cmd_arg, str):
+            return [next_cmd_arg]
+        elif isinstance(next_cmd_arg, list):
+            return next_cmd_arg
+
+    def _get_cmd_completions(self, cmd, pos):
+        if pos >= len(cmd):
+            return []
+        next_cmd_arg = cmd[pos]
+        if isinstance(next_cmd_arg, list):
+            return next_cmd_arg
+        elif isinstance(next_cmd_arg, str):
+            return [next_cmd_arg]
+        elif next_cmd_arg == int:
+            return "1"
+
+    def _get_arg_completions(self, arg, cmd_arg):
+        completed = 0
+        arg_split = arg.split()
+        cmd_split = cmd_arg.split()
+        part_incomplete = False
+        for arg_part, cmd_part in zip(arg_split, cmd_split):
+            if arg_part != ascii_name(cmd_part):
+                part_incomplete = True
+                break
+            else:
+                completed += 1
+        ends_with_space = arg.endswith(' ')
+        if not part_incomplete and not ends_with_space:
+            completed -= 1
+        completed = max(0, completed)
+        completion = ' '.join(cmd_split[completed:])
+        return [completion]
+
+    def _match_list(self, cmd, pos, arg, allow_partial):
+        match = None
+        completions = []
+        cmd_arg = cmd[pos]
+        for choice in cmd_arg:
+            if arg == ascii_name(choice):
+                match = choice
+                completions.extend(self._get_cmd_completions(cmd, pos + 1))
+            elif allow_partial and ascii_name(choice).startswith(arg):
+                match = choice
+                completions.extend(self._get_arg_completions(arg, choice))
+        return match, completions
+
+    def _match_string(self, cmd, pos, arg, allow_partial):
+        match = None
+        completion = None
+        cmd_arg = cmd[pos]
+        if arg == ascii_name(cmd_arg):
+            match = cmd_arg
+            completion = self._get_arg_completions(arg, cmd_arg)
+        elif allow_partial and ascii_name(cmd_arg).startswith(arg):
+            match = cmd_arg
+            completion = self._get_arg_completions(arg, cmd_arg)
+        return match, completion
+
+    def _match_num(self, cmd, pos, arg, allow_partial):
+        match = None
+        completion = "1"
+        if arg.isnumeric():
+            match = arg
+        return match, completion
+
+    def match_arg(self, cmd, pos, arg, allow_partial=False):
+        arg = ascii_name(arg)
+        cmd_arg = cmd[pos]
+        match = None
+        completion = None
+        if not arg:
+            match = ''
+            completion = self._get_cmd_completions(cmd, pos)
+        elif isinstance(cmd_arg, list):
+            match, completion = self._match_list(cmd, pos, arg, allow_partial)
+        elif isinstance(cmd_arg, str):
+            match, completion = self._match_string(cmd, pos, arg, allow_partial)
+        elif cmd_arg == int:
+            match, completion = self._match_num(cmd, pos, arg, allow_partial)
+        return match, completion
+
+    def _arg_splits(self, cmd_input, pos=0):
+        if pos >= len(cmd_input):
+            return [[]]
+        arg_splits = []
+        for i in range(pos + 1, len(cmd_input) + 1):
+            arg = ' '.join(cmd_input[pos:i])
+            next_arg_splits = self._arg_splits(cmd_input, i)
+            for next_arg_split in next_arg_splits:
+                next_arg_split.insert(0, arg)
+            arg_splits.extend(next_arg_splits)
+        return arg_splits
 
     def matching_commands(self, cmd_input):
         matching_commands = []
-        for cmd in self.commands:
+        arg_splits = self._arg_splits(cmd_input)
+        completions = None
+        for cmd_num, cmd in enumerate(self.commands):
             if not cmd:
                 continue
-            arg_type_match = True
-            for arg_type, arg in zip(cmd, cmd_input):
-                if not self.match_arg(arg_type, arg):
-                    arg_type_match = False
-                    break
-            if arg_type_match:
-                matching_commands.append(cmd)
+            for arg_split in arg_splits:
+                cmd_arg_match = True
+                matched_cmd = []
+                if arg_split:
+                    input_len = len(arg_split)
+                    for i, arg in enumerate(arg_split):
+                        is_last_arg = (i == input_len - 1)
+                        match, completions = self.match_arg(cmd, i, arg, allow_partial=is_last_arg)
+                        if match is None:
+                            cmd_arg_match = False
+                            break
+                        else:
+                            matched_cmd.append(match)
+                else:
+                    match, completions = self.match_arg(cmd, 0, '')
+                if cmd_arg_match:
+                    cmd_complete = len(matched_cmd) == len(cmd)
+                    if not cmd_complete:
+                        matched_cmd = None
+                    matching_commands.append((cmd_num, matched_cmd, completions))
         return matching_commands
+
+    def completions(self, cmd_input):
+        completions = []
+        for _, _, cmd_completions in self.matching_commands(cmd_input):
+            if cmd_completions:
+                completions.extend(cmd_completions)
+        return completions
 
     def match_command(self, cmd_input):
         matching_commands = self.matching_commands(cmd_input)
         if len(matching_commands) != 1:
             return None
-        command = matching_commands[0]
-        if len(command) != len(cmd_input):
-            return None
-        return self.commands.index(command)
+        cmd_num, matched_command, _ = matching_commands[0]
+        return cmd_num, matched_command
 
-    def _get_completed_args(self):
+    def split_input(self):
         buffer = readline.get_line_buffer()
         if not buffer:
             return []
         args = buffer.split()
         if buffer.endswith(' '):
-            return args
-        return args[:-1]
-
-    def _suggestions(self, matching_commands, pos):
-        suggestions = []
-        for cmd in matching_commands:
-            next_arg = cmd[pos]
-            if isinstance(next_arg, list):
-                suggestions.extend(next_arg)
-            elif isinstance(next_arg, str):
-                    suggestions.append(next_arg)
-            elif next_arg == int:
-                suggestions.extend(['<num>'])
-        return suggestions
+            args.append('')
+        return args
 
     def complete(self, text, state):
         if state == 0:
-            args = self._get_completed_args()
-            matching_cmds = self.matching_commands(args)
-            suggestions = self._suggestions(matching_cmds, len(args))
-            if text:
-                self.matches = [cmd for cmd in suggestions if cmd.startswith(text)]
-            else:
-                self.matches = suggestions
+            cmd_input = self.split_input()
+            self.matches = self.completions(cmd_input)
         try:
             return self.matches[state] + ' '
         except IndexError:
@@ -174,7 +269,9 @@ class Mode:
                 text = ''
                 is_available = True
                 for words in command:
-                    if isinstance(words, list):
+                    if isinstance(words, str):
+                        text += '{} '.format(words)
+                    elif isinstance(words, list):
                         if len(words) == 1:
                             text += '{} '.format(words[0])
                         elif len(words) > 1:
@@ -204,22 +301,13 @@ class Mode:
     def parse(self, cmd_input):
         if cmd_input and self.commands:
             cmd_input_list = cmd_input.split()
-            matching_command = self.completer.match_command(cmd_input_list)
-            if matching_command is not None:
-                return self.exec(matching_command, cmd_input_list)
+            matched_cmd_num, matched_cmd = self.completer.match_command(cmd_input_list)
+            if matched_cmd_num >= 0 and matched_cmd:
+                return self.exec(matched_cmd_num, matched_cmd)
         elif self.empty_input:
             return self.exec(None, None)
         self.print_help()
         return None
-
-    def name_for_command(self, name):
-        cmd_name = re.sub(r'[^a-zA-Z0-9]+', '_', name.lower(), count=16)
-        cmd_name = cmd_name.strip('_')
-        self.names.update({cmd_name: name})
-        return cmd_name
-
-    def original_name(self, cmd_name):
-        return self.names.get(cmd_name)
 
 
 class ChoiceMode(Mode):
@@ -385,13 +473,13 @@ class DinerMode(Mode):
     CMD_EXIT = 9
     commands = [
         ('kitchen',),
-        ('take_order_from', []),
-        ('chat_with', []),
+        ('take order from', []),
+        ('chat with', []),
         ('serve', [], 'to', []),
-        ('send_home', []),
+        ('send home', []),
         ('menu',),
         ('compendium',),
-        ('close_up',),
+        ('close up',),
         ('save',),
         ('exit',),
     ]
@@ -403,15 +491,15 @@ class DinerMode(Mode):
     )
 
     def update_commands(self):
-        cooked_food = [self.name_for_command(f) for f in food.plated()]
-        available_guests = [self.name_for_command(g) for g in guests.available_guests()]
-        guests_with_chats = [self.name_for_command(g) for g in guests.guests_with_chats()]
-        guests_with_orders = [self.name_for_command(g) for g in guests.guests_with_orders()]
-        guests_without_orders = [self.name_for_command(g) for g in guests.guests_without_orders()]
-        self.commands[self.CMD_TAKE_ORDER] = ('take_order_from', guests_without_orders)
-        self.commands[self.CMD_CHAT] = ('chat_with', guests_with_chats)
+        cooked_food = food.plated()
+        available_guests = guests.available_guests()
+        guests_with_chats = guests.guests_with_chats()
+        guests_with_orders = guests.guests_with_orders()
+        guests_without_orders = guests.guests_without_orders()
+        self.commands[self.CMD_TAKE_ORDER] = ('take order from', guests_without_orders) # FIXME: dont reinit, just set arg EVERYWHERE
+        self.commands[self.CMD_CHAT] = ('chat with', guests_with_chats)
         self.commands[self.CMD_SERVE] = ('serve', cooked_food, 'to', guests_with_orders)
-        self.commands[self.CMD_SEND_HOME] = ('send_home', available_guests)
+        self.commands[self.CMD_SEND_HOME] = ('send home', available_guests)
         super().update_commands()
 
     def print_info(self):
@@ -437,23 +525,23 @@ class DinerMode(Mode):
         if cmd == self.CMD_KITCHEN:
             return KitchenMode(back=self)
         if cmd == self.CMD_TAKE_ORDER:
-            guest = self.original_name(cmd_input[1])
+            guest = cmd_input[1]
             action = actions.TakeOrder(guest)
             action.perform()
             return WaitForInputMode(back=self)
         if cmd == self.CMD_CHAT:
-            guest = self.original_name(cmd_input[1])
+            guest = cmd_input[1]
             action = actions.GuestChat(guest)
             action.perform()
             return WaitForInputMode(back=self)
         if cmd == self.CMD_SERVE:
-            food = self.original_name(cmd_input[1])
-            guest = self.original_name(cmd_input[3])
+            food = cmd_input[1]
+            guest = cmd_input[3]
             action = actions.Serve(food, guest)
             action.perform()
             return WaitForInputMode(back=self)
         if cmd == self.CMD_SEND_HOME:
-            guest = self.original_name(cmd_input[1])
+            guest = cmd_input[1]
             action = actions.SendHome(guest)
             action.perform()
             return WaitForInputMode(back=self)
@@ -496,7 +584,7 @@ class KitchenMode(Mode):
         ('compendium',),
         ('trash',),
         ('recipes',),
-        ('save_recipe', []),
+        ('save recipe', []),
     ]
     prompt = 'kitchen >>'
     action = None
@@ -527,11 +615,11 @@ class KitchenMode(Mode):
     def update_commands(self):
         ingredients = []
         for ingredient, available in self.available_ingredients.items():
-            if available: ingredients.append(self.name_for_command(ingredient))
+            if available: ingredients.append(ingredient)
         preparations = [d.command for d in self.available_devices.values()]
         self.commands[self.CMD_COOK] = (preparations, ingredients)
-        recipe_choices = [self.name_for_command(dish) for dish in food.plated()]
-        self.commands[self.CMD_SAVE_RECIPE] = ('save_recipe', recipe_choices)
+        recipe_choices = food.plated()
+        self.commands[self.CMD_SAVE_RECIPE] = ('save', 'recipe', recipe_choices)
         super().update_commands()
 
     def print_info(self):
@@ -560,7 +648,7 @@ class KitchenMode(Mode):
         if cmd == self.CMD_COOK:
             preparation_command = cmd_input[0]
             device = self._get_device(preparation_command)
-            ingredient = self.original_name(cmd_input[1])
+            ingredient = cmd_input[1]
             self.available_ingredients.update({ingredient: self.available_ingredients.get(ingredient) - 1})
             self.action.add_ingredients([(device.result, ingredient)])
             self.prepared_components.append('{} {}'.format(device.result, ingredient))
@@ -583,7 +671,7 @@ class KitchenMode(Mode):
             return RecipeMode(back=self)
         if cmd == self.CMD_SAVE_RECIPE:
             actions_saved.append(self.action)
-            dish = self.original_name(cmd_input[1])
+            dish = cmd_input[1]
             return SaveRecipeMode(dish, back=self)
 
 
@@ -1037,7 +1125,7 @@ class MerchantMode(Mode):
     def update_commands(self):
         self.available_ingredients = storage.available_ingredients()
         self.ingredients_for_sale = shopping.merchant_for_sale(self.merchant)
-        ingredient_names = [self.name_for_command(ingredient) for ingredient in self.ingredients_for_sale.keys()]
+        ingredient_names = list(self.ingredients_for_sale.keys())
         self.commands[self.CMD_BUY_INGREDIENT] = ('buy', int, ingredient_names)
         super().update_commands()
 
@@ -1058,7 +1146,7 @@ class MerchantMode(Mode):
     def exec(self, cmd, cmd_input):
         if cmd == self.CMD_BUY_INGREDIENT:
             amount = int(cmd_input[1])
-            ingredient = self.original_name(cmd_input[2])
+            ingredient = cmd_input[2]
             action = actions.BuyIngredients(self.merchant, ingredient, amount)
             action.perform()
             self.update_commands()
