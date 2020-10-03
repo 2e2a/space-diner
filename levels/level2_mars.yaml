@@ -54,6 +54,11 @@ ingredients:
     storage: pantry
     properties: [ fresh ]
 
+  - name: peach
+    description: Sweet and juicy.
+    storage: pantry
+    properties: [ fresh, sweet ]
+
   - name: basil
     description: An aromatic green herb.
     storage: pantry
@@ -125,7 +130,7 @@ kitchen:
   - name: fryer
     available: True
     preparation: deep-frying
-    command: deep_fry
+    command: deep-fry
     result: deep-fried
     properties: [ ]
 
@@ -151,8 +156,8 @@ shopping:
         - name: cow milk
           cost: 2
 
-    - name: Fresh Greens
-      description: A human sells greenhouse-grown fresh plants at this market stall.
+    - name: Fresh From the Greenhouse
+      description: A human sells greenhouse-grown fruit and vegetables at this market stall.
       owner: Samira
       available: True
       ingredients:
@@ -160,9 +165,11 @@ shopping:
           cost: 1
         - name: basil
           cost: 2
+        - name: peach
+          cost: 2
 
     - name: Tau-Cetian Imports
-      description: A very tall reptiloid sells Tau-Cetian at this booth.
+      description: A very tall reptiloid sells Tau-Cetian products at this booth.
       available: True
       owner: Charbinivore
       ingredients:
@@ -200,13 +207,13 @@ food:
         - [ basil ]
       properties: [ soup ]
 
-    - name: Martian Milkshake
+    - name: Peach Milkshake
       available: True
       ingredients:
-        - [ blended, Martian moss ]
-        - [ blended, Martian lichen ]
+        - [ blended, peach ]
         - [ milk ]
-      properties: [ shake, healthy ]
+        - [ milk ]
+      properties: [ shake ]
 
     - name: Fresh Salad
       available: True
@@ -224,12 +231,12 @@ food:
         - [blizzard-bird egg, pan-fried]
       properties: []
 
-    - name: Abbi's Bowl
+    - name: Aab's Soup
       available: False
       ingredients:
-        - [Martian moss, raw]
-        - [Martian lichen, raw]
-        - [blizzard-bird egg, pan-fried]
+        - [basil, deep-fried]
+        - [Martian moss, boiled]
+        - [moss milk, boiled]
       properties: []
 
 
@@ -438,9 +445,6 @@ guests:
       orders:
         - wish: fresh
           text: Ah... I have this craving for something fresh, can you bring me something fresh?
-      orders:
-        - wish: fresh
-          text: Mh... some moss would be nice now, I'd like some Martian moss, please.
       positive_phrases:
         - Ah, it was fantastic.
         - Ah, very enjoyable diner, I liked it.
