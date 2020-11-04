@@ -496,7 +496,7 @@ class DinerMode(Mode):
 
     def update_commands(self):
         cooked_food = food.plated()
-        available_guests = guests.available_guests()
+        available_guests = guests.get_guests()
         guests_with_chats = guests.guests_with_chats()
         guests_with_orders = guests.guests_with_orders()
         guests_without_orders = guests.guests_without_orders()
@@ -507,7 +507,7 @@ class DinerMode(Mode):
         super().update_commands()
 
     def print_info(self):
-        available_guests = guests.available_guests()
+        available_guests = guests.get_guests()
         print_header([
             ('Location', [diner.diner.name, '(dining room)']),
             ('Time', [time.now()]),
@@ -563,7 +563,7 @@ class DinerMode(Mode):
             for plated_food in food.plated():
                 print_message('throw away {}'.format(plated_food))
             print_newline()
-            for guest in guests.available_guests():
+            for guest in guests.get_guests():
                 guests.send_home(guest)
                 print_text('{} left.'.format(guest))
             print_newline()

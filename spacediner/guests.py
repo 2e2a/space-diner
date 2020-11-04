@@ -326,11 +326,11 @@ def get_names():
     global regulars
     global guest_factory
     names = [name for name in regulars]
-    names.extend(guest_factory.names)
+    names.extend(guest_factory.get_names())
     return names
 
 
-def available_guests():
+def get_guests():
     global guests
     return [guest.name for guest in guests]
 
