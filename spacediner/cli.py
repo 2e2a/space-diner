@@ -471,10 +471,11 @@ class DinerMode(Mode):
     CMD_SERVE = 3
     CMD_SEND_HOME = 4
     CMD_MENU = 5
-    CMD_COMPENDIUM = 6
-    CMD_CLOSE_UP = 7
-    CMD_SAVE = 8
-    CMD_EXIT = 9
+    CMD_REVIEWS = 6
+    CMD_COMPENDIUM = 7
+    CMD_CLOSE_UP = 8
+    CMD_SAVE = 9
+    CMD_EXIT = 10
     commands = [
         ('kitchen',),
         ('take order from', []),
@@ -482,6 +483,7 @@ class DinerMode(Mode):
         ('serve', [], 'to', []),
         ('send home', []),
         ('menu',),
+        ('reviews',),
         ('compendium',),
         ('close up',),
         ('save',),
@@ -557,6 +559,8 @@ class DinerMode(Mode):
             return WaitForInputMode(back=self)
         if cmd == self.CMD_MENU:
             return DinerMenuMode(back=self)
+        if cmd == self.CMD_REVIEWS:
+            return ReviewsInfoMode(back=self)
         if cmd == self.CMD_COMPENDIUM:
             return CompendiumMode(back=self)
         if cmd == self.CMD_CLOSE_UP:
@@ -568,7 +572,7 @@ class DinerMode(Mode):
                 print_text('{} left.'.format(guest))
             print_newline()
             time.tick()
-            return ReviewsInfoMode()
+            return ReviewsInfoMode(back=ActivityMode())
         if cmd == self.CMD_SAVE:
             return SaveGameMode(back=self)
         if cmd == self.CMD_EXIT:
@@ -803,9 +807,6 @@ class ReviewsInfoMode(InfoMode):
         'general preferences (+) and aversions (-) of your target groups and the individual taste of your regulars - '
         'you might be able to elevate their orders with something they like.'
     )
-
-    def back(self):
-        return ActivityMode()
 
     def _rating_info(self, name, count, rating):
         if count == 0:
