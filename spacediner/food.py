@@ -98,11 +98,10 @@ class Recipe:
 
     @property
     def all_properties(self):
-        properties = []
-        properties.extend(self.properties)
-        for ingredient, ingredient_property in self.ingredient_properties:
-            properties.append(ingredient)
-            properties.append(ingredient_property)
+        properties = set()
+        properties.update(self.properties)
+        for ingredient_property in self.ingredient_properties:
+            properties.update(ingredient_property)
         return properties
 
     def consists_of(self, prepared_ingredients):
