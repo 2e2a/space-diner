@@ -531,7 +531,12 @@ class DinerMode(Mode):
         if cmd == self.CMD_TAKE_ORDER:
             guest = cmd_input[1]
             order = guests.take_order(guest)
-            print_dialog(guest, order)
+            if order:
+                print_dialog(guest, order)
+            else:
+                print_dialog(guest, 'There is nothing for me on the menu.')
+                guests.leave(guest)
+                print_text('{} left.'.format(guest))
             return WaitForInputMode(back=self)
         if cmd == self.CMD_CHAT:
             guest = cmd_input[1]

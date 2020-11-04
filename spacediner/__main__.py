@@ -2,7 +2,6 @@ import argparse
 from . import cli
 from . import settings
 
-# TODO: guests should not order menu items that they cannot digest
 # TODO: check if rewards by normal guests are possible
 # TODO: bug: sometimes prepared ingredients appear in the kitchen although they were already served
 # TODO: make discovered preferences available in compendium

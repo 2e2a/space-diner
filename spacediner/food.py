@@ -96,6 +96,15 @@ class Recipe:
                         return True
         return False
 
+    @property
+    def all_properties(self):
+        properties = []
+        properties.extend(self.properties)
+        for ingredient, ingredient_property in self.ingredient_properties:
+            properties.append(ingredient)
+            properties.append(ingredient_property)
+        return properties
+
     def consists_of(self, prepared_ingredients):
         return self._properties_match(self.ingredient_properties, prepared_ingredients)
 

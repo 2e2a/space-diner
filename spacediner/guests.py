@@ -41,8 +41,8 @@ class Order:
         self.wish = data.get('wish')
         self.text = data.get('text', 'I\'ll have something {}-ish.'.format(self.wish))
 
-    def from_menu(self):
-        self.wish = random.choice(food.get_menu())
+    def from_menu(self, wish):
+        self.wish = wish
         self.text = 'I\'ll have the {} from the menu.'.format(self.wish)
 
 
@@ -108,17 +108,45 @@ class Guest:
         self.init_service()
         self.init_ambience()
 
+    def _reaction_properties(self, filter_func):
+        properties = set()
+        positive_reactions = filter(filter_func, self.reactions)
+        for reaction in positive_reactions:
+            properties.update(reaction.properties)
+        return properties
+
+    @property
+    def positive_reaction_properties(self):
+        return self._reaction_properties(lambda reaction: reaction.taste > 0)
+
+    @property
+    def negative_reaction_properties(self):
+        return self._reaction_properties(lambda reaction: reaction.taste < 0)
+
+    def select_from_menu(self):
+        wish = None
+        menu = food.get_menu()
+        acceptable_food = []
+        for menu_item in menu:
+            recipe = food.get_recipe(menu_item)
+            if not self.negative_reaction_properties.intersection(recipe.all_properties):
+                acceptable_food.append(menu_item)
+        if acceptable_food:
+            wish = random.choice(acceptable_food)
+        return wish
+
     def take_order(self):
         if self.order:
             return self.order.text
         random.seed()
-        custom_order = random.choice([True, False])
-        if custom_order and self.orders:
-            self.order = random.choice(self.orders)
-        else:
+        order_from_menu = random.choice([True, False])
+        menu_wish = self.select_from_menu()
+        if order_from_menu and menu_wish:
             self.order = Order()
-            self.order.from_menu()
-        return self.order.text
+            self.order.from_menu(menu_wish)
+        elif self.orders:
+            self.order = random.choice(self.orders)
+        return self.order.text if self.order else None
 
     def add_review(self):
         return self.review.generate(
