@@ -59,14 +59,13 @@ class Food:
         self.name = '{} ({})'.format(name, self.default_name)
 
     def plate(self):
-        global cooked
         recipe = match_recipe(self)
         if recipe:
             self.recipe_properties = recipe.properties
             self.set_custom_name(recipe.name)
         else:
             self.set_default_name()
-        cooked.append(self)
+        return self.name
 
     def has_properties(self, properties):
         if self.recipe_properties and set(properties).issubset(self.recipe_properties):
@@ -145,6 +144,7 @@ class SavedDish(Recipe):
 
 
 recipes = None
+cooking = None
 cooked = []
 menu = []
 dishes = []
@@ -167,9 +167,42 @@ def take(name):
     return None
 
 
+def cook_ingredients(ingredients):
+    global cooking
+    if not cooking:
+        cooking = Food()
+    cooking.prepare_ingredients(ingredients)
+
+
+def cooked_ingredients():
+    global cooking
+    if cooking:
+        return cooking.get_prepared_ingredients()
+    return []
+
+
+def ready_to_plate():
+    global cooking
+    return len(cooking.ingredients) == 3
+
+
+def plate():
+    global cooking
+    global cooked
+    name = cooking.plate()
+    cooked.append(cooking)
+    cooking = None
+    return name
+
+
 def plated():
     global cooked
     return [dish.name for dish in cooked]
+
+
+def trash():
+    global cooking
+    cooking = None
 
 
 def save_as_recipe(name, ingredient_properties):

@@ -1,7 +1,6 @@
 import re
 import readline
 
-from . import actions
 from . import activities
 from . import diner
 from . import food
@@ -337,12 +336,16 @@ class ChoiceMode(Mode):
 
     def exec(self, cmd, cmd_input):
         if cmd == self.CMD_CHOICE:
-            choice = int(cmd_input[0])
-            if choice < 0 or choice > len(self.choices):
-                print_message('Invalid choice.')
+            try:
+                choice = int(cmd_input[0])
+                if choice < 0 or choice > len(self.choices):
+                    print_message('Invalid choice.')
+                    return self
+                if self.back_enabled and choice == 0:
+                    return self.back()
+            except ValueError:
+                print_message('Select a number.')
                 return self
-            if self.back_enabled and choice == 0:
-                return self.back()
             return self.exec_choice(choice - 1)
 
 
@@ -527,35 +530,38 @@ class DinerMode(Mode):
             return KitchenMode(back=self)
         if cmd == self.CMD_TAKE_ORDER:
             guest = cmd_input[1]
-            action = actions.TakeOrder(guest)
-            action.perform()
+            order = guests.take_order(guest)
+            print_dialog(guest, order)
             return WaitForInputMode(back=self)
         if cmd == self.CMD_CHAT:
             guest = cmd_input[1]
-            action = actions.GuestChat(guest)
-            action.perform()
+            chat = guests.chat(guest)
+            print_dialog(guest, chat)
             return WaitForInputMode(back=self)
         if cmd == self.CMD_SERVE:
-            food = cmd_input[1]
+            dish = cmd_input[1]
             guest = cmd_input[3]
-            action = actions.Serve(food, guest)
-            action.perform()
+            guests.serve(guest, dish)
+            guests.leave(guest)
+            print_text('{} left.'.format(guest))
             return WaitForInputMode(back=self)
         if cmd == self.CMD_SEND_HOME:
             guest = cmd_input[1]
-            action = actions.SendHome(guest)
-            action.perform()
+            guests.send_home(guest)
+            print_text('{} left.'.format(guest))
             return WaitForInputMode(back=self)
         if cmd == self.CMD_MENU:
             return DinerMenuMode(back=self)
         if cmd == self.CMD_COMPENDIUM:
             return CompendiumMode(back=self)
         if cmd == self.CMD_CLOSE_UP:
-            global actions_saved
-            for action in actions_saved:
-                action.abort()
-            actions_saved.clear()
-            actions.CloseUp().perform()
+            for plated_food in food.plated():
+                print_message('throw away {}'.format(plated_food))
+            print_newline()
+            for guest in guests.available_guests():
+                guests.send_home(guest)
+                print_text('{} left.'.format(guest))
+            print_newline()
             time.tick()
             return ReviewsInfoMode()
         if cmd == self.CMD_SAVE:
@@ -588,29 +594,18 @@ class KitchenMode(Mode):
         ('save recipe', []),
     ]
     prompt = 'kitchen >>'
-    action = None
     orders = None
     available_ingredients = None
     available_devices = None
-    prepared_components = None
     hint = (
         'You can follow the available recipes or create your own dishes. Every dish consists of three ingredients. '
         'Once you have prepared them, they will be automatically plated as a completed dish.'
     )
 
     def __init__(self, **kwargs):
-        global actions_saved
         self.orders = guests.ordered()
         self.available_ingredients = storage.available_ingredients()
         self.available_devices = kitchen.available_devices()
-        self.prepared_components = []
-        if len(actions_saved) == 0:
-            self.action = actions.Cook()
-        else:
-            self.action = actions_saved[0]
-            del actions_saved[0]
-            for preparation, ingredient in self.action.food.ingredients:
-                self.prepared_components.append('{} {}'.format(preparation, ingredient))
         super().__init__(**kwargs)
 
     def update_commands(self):
@@ -620,7 +615,7 @@ class KitchenMode(Mode):
         preparations = [d.command for d in self.available_devices.values()]
         self.commands[self.CMD_COOK] = (preparations, ingredients)
         recipe_choices = food.plated()
-        self.commands[self.CMD_SAVE_RECIPE] = ('save', 'recipe', recipe_choices)
+        self.commands[self.CMD_SAVE_RECIPE] = ('save recipe', recipe_choices)
         super().update_commands()
 
     def print_info(self):
@@ -631,7 +626,7 @@ class KitchenMode(Mode):
         print_title('Kitchen:')
         print_list(['{} for {}'.format(d.name, d.preparation) for d in self.available_devices.values()])
         print_title('Prepared:')
-        print_list(self.prepared_components)
+        print_list(food.cooked_ingredients())
         print_title('Plated:')
         print_list(list(food.plated()))
 
@@ -642,36 +637,30 @@ class KitchenMode(Mode):
         return None
 
     def exec(self, cmd, cmd_input):
-        global actions_saved
         if cmd == self.CMD_DINER:
-            actions_saved.append(self.action)
             return self.back()
         if cmd == self.CMD_COOK:
             preparation_command = cmd_input[0]
             device = self._get_device(preparation_command)
             ingredient = cmd_input[1]
             self.available_ingredients.update({ingredient: self.available_ingredients.get(ingredient) - 1})
-            self.action.add_ingredients([(device.result, ingredient)])
-            self.prepared_components.append('{} {}'.format(device.result, ingredient))
-            if len(self.prepared_components) == 3:
-                self.action.perform()
-                print_message('Plated {}'.format(self.action.food.name))
-                self.action = actions.Cook()
-                self.prepared_components = []
+            food.cook_ingredients([(device.result, ingredient)])
+            if food.ready_to_plate():
+                name = food.plate()
+                print_message('Plated {}'.format(name))
             self.update_commands()
             return self
         if cmd == self.CMD_COMPENDIUM:
             return CompendiumMode(back=self)
         if cmd == self.CMD_TRASH:
-            self.action.abort()
-            self.prepared_components = []
-            # TODO: trash action
+            cooked_ingredients = food.cooked_ingredients()
+            if cooked_ingredients:
+                print_message('throw away {}'.format(', '.join(cooked_ingredients)))
+            food.trash()
             return self
         if cmd == self.CMD_RECIPES:
-            actions_saved.append(self.action)
             return RecipeMode(back=self)
         if cmd == self.CMD_SAVE_RECIPE:
-            actions_saved.append(self.action)
             dish = cmd_input[1]
             return SaveRecipeMode(dish, back=self)
 
@@ -745,70 +734,9 @@ class SaveRecipeMode(ChoiceMode):
             name = None
             while not name:
                 name = input('Recipe name: '.format(self.prompt))
-            self.action = actions.SaveRecipe(name, self.ingredient_property_choices)
-            self.action.perform()
+            food.save_as_recipe(name, self.ingredient_property_choices)
             print_message('saved {}.'.format(name))
             return super().back()
-
-
-class CookingBotMode(ChoiceMode):
-    prompt = 'cooking bot #'
-    choices = ['Cook saved dish', 'Save plated dish', 'View saved dishes']
-    title = 'Input'
-
-    def __init__(self):
-        super().__init__()
-        print_dialog('KiBo3000', 'bleep ... blup ...')
-
-    def exec_choice(self, choice):
-        if choice == 1:
-            return CookingBotCookMode()
-        elif choice == 3:
-            return CookingBotListMode()
-        return self
-
-
-class CookingBotCookMode(ChoiceMode):
-    prompt = 'cooking bot #'
-    choices = None
-    title = 'Select dish'
-
-    def __init__(self):
-        print_dialog('KiBo3000', 'bleep ... blup ...')
-        self.choices = food.get_dishes()
-        super().__init__()
-
-    def exec_choice(self, choice):
-        dish = self.choices[choice]
-        dish_recipe = food.get_dish(dish)
-        if dish_recipe.can_be_cooked():
-            self.action = actions.Cook(dish_recipe.ingredient_properties)
-            self.action.perform()
-            print_dialog('KiBo3000', 'Cooking {}...'.format(dish))
-        else:
-            print_dialog('KiBo3000', 'Not enough ingredients or equipment not available anymore.')
-        return CookingBotMode()
-
-    def back(self):
-        return CookingBotMode()
-
-
-class CookingBotListMode(RecipeMode):
-    prompt = 'cooking bot #'
-    title = 'Dish'
-
-    def __init__(self):
-        self.recipes = food.get_dishes()
-        self.choices = self.recipes
-        super().__init__()
-
-    def exec_choice(self, choice):
-        recipe = food.get_dish(self.recipes[choice])
-        self._print_recipe(recipe)
-        return self
-
-    def back(self):
-        return CookingBotMode()
 
 
 class CompendiumMode(ChoiceMode):
@@ -970,14 +898,13 @@ class ActivityMode(ChoiceMode):
         elif choice < len(self.meetings) + len(self.activities):
             choice -= len(self.meetings)
             activity = self.activities[choice]
-            action = actions.DoActivity(activity)
-            action.perform()
+            activities.do(activity)
             self.print_skills()
         else:
             choice -= (len(self.meetings) + len(self.activities))
             if self.fixed_activities[choice] == 'clean diner':
-                action = actions.CleanDiner()
-                action.perform()
+                diner.diner.clean()
+                print_message('Diner cleaned.')
         return WaitForInputMode(back=SleepMode())
 
 
@@ -1003,8 +930,8 @@ class MeetingMode(ChoiceMode):
 
     def exec_choice(self, choice):
         reply = choice
-        action = actions.Meet(self.guest, reply)
-        action.perform()
+        social.meet(self.guest, reply)
+        social.lock_friendship(self.guest)
         return WaitForInputMode(back=SleepMode())
 
 
@@ -1050,8 +977,7 @@ class DinerMenuItemMode(ChoiceMode):
         self.choices = food.not_on_menu()
 
     def exec_choice(self, choice):
-        action = actions.UpdateMenu(self.item, self.choices[choice])
-        action.perform()
+        food.update_menu(self.item, self.choices[choice])
         return self.back()
 
 
@@ -1090,14 +1016,15 @@ class ShoppingMode(ChoiceMode):
         super().print_info()
 
     def exec_choice(self, choice):
-        merchant_name = self.choices[choice]
-        merchant_mode = MerchantMode(merchant_name)
-        merchant_description = shopping.get(merchant_name).description
+        merchant = self.choices[choice]
+        merchant_mode = MerchantMode(merchant)
+        merchant_description = shopping.get(merchant).description
         if merchant_description:
             print_text(merchant_description)
-        if shopping.has_chat_available(merchant_name):
-            action = actions.MerchantChat(merchant_name)
-            action.perform()
+        if shopping.has_chat_available(merchant):
+            owner = shopping.owner(merchant)
+            chat = shopping.chat(merchant)
+            print_dialog(owner, chat)
             return WaitForInputMode(back=merchant_mode)
         return merchant_mode
 
@@ -1147,8 +1074,19 @@ class MerchantMode(Mode):
         if cmd == self.CMD_BUY_INGREDIENT:
             amount = int(cmd_input[1])
             ingredient = cmd_input[2]
-            action = actions.BuyIngredients(self.merchant, ingredient, amount)
-            action.perform()
+            error = None
+            merchant = shopping.get(self.merchant)
+            if not merchant.is_ingredient_available(ingredient, amount):
+                error = 'Not enough ingredients'
+            cost = merchant.cost(ingredient) * amount
+            if cost > levels.level.money:
+                error = 'Not enough money'
+            if not error:
+                levels.level.money = levels.level.money - cost
+                merchant.buy(ingredient, amount)
+                storage.store_ingredient(ingredient, amount)
+            else:
+                print_message('Could not buy ingredients: {}'.format(error))
             self.update_commands()
             return self
         if cmd == self.CMD_DONE:
@@ -1156,7 +1094,6 @@ class MerchantMode(Mode):
 
 
 mode = None
-actions_saved = []
 
 
 def run():
