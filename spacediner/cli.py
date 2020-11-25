@@ -1115,7 +1115,7 @@ class MerchantMode(Mode):
 
 
 mode = None
-logfile = False
+logfile = None
 
 
 def run(args):
@@ -1148,11 +1148,13 @@ def run(args):
                 yes = input('Save and exit game? (y/N) ')
                 if yes in ['y', 'Y']:
                     levels.autosave_save()
-                    logfile.close()
+                    if logfile:
+                        logfile.close()
                     exit()
             except (KeyboardInterrupt, EOFError):
                 print_newline()
-                logfile.close()
+                if logfile:
+                    logfile.close()
                 exit()
 
 
