@@ -4,7 +4,6 @@ from . import settings
 
 # TODO: check if rewards by normal guests are possible
 # TODO: bug: sometimes prepared ingredients appear in the kitchen although they were already served
-# TODO: make discovered preferences available in compendium
 # TODO: toggle tutorial mode on/off (after first day)
 # TODO: log all commands into file on exception
 # TODO: check non-ascii characters in name factories

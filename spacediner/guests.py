@@ -121,7 +121,7 @@ class Guest:
 
     @property
     def negative_reaction_properties(self):
-        return self._reaction_properties(lambda reaction: reaction.taste < 0)
+        return self._reaction_properties(lambda reaction: reaction.taste < -1)
 
     def select_from_menu(self):
         wish = None
@@ -139,9 +139,15 @@ class Guest:
         if self.order:
             return self.order.text
         random.seed()
-        order_from_menu = random.choice([True, False])
         menu_wish = self.select_from_menu()
-        if order_from_menu and menu_wish:
+        if menu_wish and self.orders:
+            order_from_menu = random.choice([True, False])
+            if order_from_menu:
+                self.order = Order()
+                self.order.from_menu(menu_wish)
+            else:
+                self.order = random.choice(self.orders)
+        elif menu_wish:
             self.order = Order()
             self.order.from_menu(menu_wish)
         elif self.orders:
