@@ -66,7 +66,7 @@ def print_newline():
 
 
 def ascii_name(name):
-    ascii_name = re.sub(r'[^a-zA-Z0-9 ]+', '', name.lower(), count=16)
+    ascii_name = re.sub(r'[^a-zA-Z0-9- ]+', '', name.lower(), count=16)
     ascii_name = ascii_name.strip('_')
     return ascii_name
 
@@ -116,6 +116,13 @@ class CommandCompleter:
             completed -= 1
         completed = max(0, completed)
         completion = ' '.join(cmd_split[completed:])
+        if '-' in arg:
+            sub_args_completed = arg.count('-')
+            remaining_completion_parts = completion.split('-')[sub_args_completed:]
+            if len(remaining_completion_parts) > 1:
+                completion = '-'.join(remaining_completion_parts)
+            else:
+                completion = remaining_completion_parts[0]
         return [completion]
 
     def _match_list(self, cmd, pos, arg, allow_partial):
