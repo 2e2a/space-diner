@@ -75,7 +75,6 @@ class Friendship:
     name = None
     meetings = None
     meetings_done = 0
-    level = 0
     unlocked = False
 
     def __init__(self, name):
@@ -105,9 +104,6 @@ class Friendship:
             reward.apply()
         self.meetings_done += 1
         return reaction
-
-    def level_up(self, name):
-        self.level += 1
 
 
 class Social:
@@ -146,9 +142,6 @@ class Social:
 
     def meet(self, reply):
         return self.friendship.meet(reply)
-
-    def level_up(self):
-        return self.friendship.level_up(self.name)
 
     def unlock_friendship(self):
         if self.friendship:
@@ -220,11 +213,6 @@ def available_meetings():
 def meet(name, reply):
     global social
     return social.get(name).meet(reply)
-
-
-def level_up(name):
-    global social
-    return social.get(name).level_up()
 
 
 def unlock_friendship(name):

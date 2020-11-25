@@ -18,14 +18,12 @@ class Reward:
 
     typ = None
     text = None
-    level = None
 
     def apply(self):
         raise NotImplemented
 
     def init(self, data):
         self.text = data.get('text')
-        self.level = data.get('level', None)
 
 
 class MerchantReward(Reward):
@@ -51,7 +49,6 @@ class GuestReward(Reward):
 
     def init(self, data):
         super().init(data)
-        self.level = data.get('level')
         self.guest = data.get('guest')
 
     def apply(self):
