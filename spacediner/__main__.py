@@ -5,7 +5,6 @@ from . import settings
 # TODO: check if rewards by normal guests are possible
 # TODO: bug: sometimes prepared ingredients appear in the kitchen although they were already served
 # TODO: toggle tutorial mode on/off (after first day)
-# TODO: log all commands into file on exception
 # TODO: check non-ascii characters in name factories
 # TODO: sometimes broken: NameFactory create (some names cause a problem?)
 # TODO: make activities available on specific days
@@ -22,4 +21,4 @@ parser.add_argument(
 args = vars(parser.parse_args())
 settings.read_args(args)
 cli.init()
-cli.run()
+cli.run(args)

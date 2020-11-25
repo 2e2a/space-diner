@@ -1,5 +1,6 @@
 import re
 import readline
+from datetime import datetime
 
 from . import activities
 from . import diner
@@ -304,11 +305,18 @@ class Mode:
             self.back_mode.update_commands()
             return self.back_mode
 
+    def log(self, cmd_num, cmd):
+        global logfile
+        if not logfile:
+            return
+        logfile.write('{}; #{}; {};\n'.format(self.__class__.__name__, cmd_num, ' '.join(cmd)))
+
     def parse(self, cmd_input):
         if cmd_input and self.commands:
             cmd_input_list = cmd_input.split()
             matched_cmd_num, matched_cmd = self.completer.match_command(cmd_input_list)
             if matched_cmd_num is not None and matched_cmd_num >= 0 and matched_cmd:
+                self.log(matched_cmd_num, matched_cmd)
                 return self.exec(matched_cmd_num, matched_cmd)
             else:
                 self.print_help()
@@ -1107,10 +1115,15 @@ class MerchantMode(Mode):
 
 
 mode = None
+logfile = False
 
 
-def run():
+def run(args):
     global mode
+    global logfile
+    if args.get('log', False):
+        logfile_name = 'space-diner_{}.log'.format(datetime.now().strftime('%Y-%m-%d-%H%M%S'))
+        logfile = open(logfile_name, 'w')
     mode = StartMode()
     print_info = True
     print('################################  SPACE  DINER  ################################')
@@ -1135,9 +1148,11 @@ def run():
                 yes = input('Save and exit game? (y/N) ')
                 if yes in ['y', 'Y']:
                     levels.autosave_save()
+                    logfile.close()
                     exit()
             except (KeyboardInterrupt, EOFError):
                 print_newline()
+                logfile.close()
                 exit()
 
 
