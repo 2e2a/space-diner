@@ -411,7 +411,6 @@ social:
           rewards:
             - type: ingredient
               diff: 3
-              level: 1
               ingredient: silkworm
               text: I know what silkworms are worth in the culinary world... here, take these.
         - meeting: 'Ozabela wants to walk around the underground mall. There are about 20 businesses in the mall, including
@@ -429,11 +428,9 @@ social:
           rewards:
             - type: ingredient
               diff: 6
-              level: 1
               ingredient: silkworm
               text: I brought some more silkworms for you.
             - type: recipe
-              level: 2
               recipe: Silkworm Tatar
               text: I had this idea for a recipe... let me know what you think about it.
         - meeting: 'You meet Ozabela at The Lunatic, the first bar that ever opened on the moon.
@@ -453,7 +450,6 @@ social:
               reaction: Me neither. It is a hard decision... I wish I was more decisive.
           rewards:
             - type: merchant
-              level: 3
               merchant: Oddie's Laboratory Waste
               text: 'There''s someone I would like to introduce you to. My colleague Oddie has a secret business - he sells the
               worms that we are supposed to dispose of after our experiments. Here''s his address. I trust you to keep it
@@ -470,7 +466,6 @@ social:
             - reaction: Not really. The work is just more repetitive.
           rewards:
             - type: decoration
-              level: 4
               decoration: movie poster
               text: Let me buy that movie poster for you. You should put it up in your diner.
         - meeting: Silkworms have been spotted in an abandoned lab in the vicinity of the colony by a tourist guide.
@@ -493,7 +488,6 @@ social:
               reaction: Why? It's important to think about the past... and the future.
           rewards:
             - type: decoration
-              level: 5
               decoration: satellite photo
               text: I have a set of satellite photos of Earth that I look at when I miss it... I'll give you one
                 of them once we're out of these spacesuits.
@@ -509,11 +503,8 @@ social:
                 Please stay in touch with me, will you?
           rewards:
             - type: decoration
-              level: 6
               decoration: silkmoth model
               text: I want you to have my silkmoth model. Something to remember me by.
-
-
 
   - name: Human colonist
     greetings:
