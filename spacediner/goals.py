@@ -54,7 +54,6 @@ class ReviewsGoal(Goal):
         input('{} '.format('<press ENTER to continue>'))
 
     def check(self):
-        import pdb;pdb.set_trace()
         group_rating_positive_count = reviews.group_rating_positive_count(self.group)
         if group_rating_positive_count >= self.amount:
             self.reached()
