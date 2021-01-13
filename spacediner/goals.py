@@ -17,7 +17,6 @@ class Goal:
     def reached(self):
         cli.print_text(self.message)
         cli.print_newline()
-        cli.print_message('Congratulations! You have won!')
 
     def check(self):
         raise NotImplemented()
@@ -37,6 +36,8 @@ class MoneyGoal(Goal):
     def check(self):
         if levels.level.money >= self.amount:
             self.reached()
+            return True
+        return False
 
 
 class ReviewsGoal(Goal):
@@ -57,15 +58,22 @@ class ReviewsGoal(Goal):
         group_rating_positive_count = reviews.group_rating_positive_count(self.group)
         if group_rating_positive_count >= self.amount:
             self.reached()
+            return True
+        return False
 
 
 goals = None
 
 
 def check_goals():
-   global goals
-   for goal in goals:
-       goal.check()
+    global goals
+    goals_reached = True
+    for goal in goals:
+        goal_reached = goal.check()
+        if goals_reached and not goal_reached:
+            goals_reached = False
+    if goals_reached:
+        cli.print_message('Congratulations! You have won!')
 
 
 def init(data):

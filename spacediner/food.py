@@ -117,7 +117,7 @@ class Recipe:
         if len(data.get('ingredients')) != 3:
             raise RuntimeError('Recipes must consist of 3 ingredients')
         for ingredient_property_data in data.get('ingredients'):
-            self.ingredient_properties.append(set(ingredient_property_data))
+            self.ingredient_properties.append(ingredient_property_data)
         self.properties = data.get('properties')
         self.properties.append(self.name.lower())
 
