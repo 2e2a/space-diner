@@ -34,12 +34,12 @@ calendar:
   cycle: 668
 
 ingredients:
-  - name: Martian lichen
+  - name: lichen
     description: A composite algae/fungus organism. Grows on the surface of Mars.
     storage: pantry
     properties: [ sweet ]
 
-  - name: Martian moss
+  - name: moss
     description: Small green plants forming a soft, dense mat. Grows on the surface of Mars.
     storage: pantry
     properties: [ spicy ]
@@ -163,6 +163,8 @@ shopping:
           cost: 2
         - name: peach
           cost: 2
+        - name: banana
+          cost: 2
 
     - name: Tau-Cetian Imports
       description: A very tall reptiloid sells Tau-Cetian products at this booth.
@@ -173,14 +175,14 @@ shopping:
           cost: 3
 
     - name: Lush Meadows
-      description: In a hidden corner of the market place, you find this stall selling fresh plants that have recently started to grow on
-        the surface of Mars.
+      description: In a hidden corner of the market place, you find this stall selling fresh plants that have recently
+        started to grow on the surface of Mars.
       available: False
       owner: Seven-horned Eetch
       ingredients:
-        - name: Martian lichen
+        - name: lichen
           cost: 1
-        - name: Martian moss
+        - name: moss
           cost: 1
         - name: moss milk
           cost: 1
@@ -195,18 +197,34 @@ food:
         - [ fried, egg ]
       properties: [ omelette ]
 
+    - name: Tomato Omelette
+      available: True
+      ingredients:
+        - [ fried, tomato ]
+        - [ fried, egg ]
+        - [ fried, egg ]
+      properties: [ omelette ]
+
     - name: Tomato Soup
       available: True
       ingredients:
         - [ boiled, tomato ]
         - [ boiled, tomato ]
         - [ basil ]
-      properties: [ soup ]
+      properties: [ soup, healthy ]
 
     - name: Peach Milkshake
       available: True
       ingredients:
         - [ blended, peach ]
+        - [ milk ]
+        - [ milk ]
+      properties: [ shake ]
+
+    - name: Banana Milkshake
+      available: True
+      ingredients:
+        - [ blended, banana ]
         - [ milk ]
         - [ milk ]
       properties: [ shake ]
@@ -217,7 +235,7 @@ food:
         - [tomato, raw]
         - [tomato, raw]
         - [basil, raw]
-      properties: [ salad ]
+      properties: [ salad, healthy ]
 
     - name: Tau-Cetian Kulkick
       available: True
@@ -227,11 +245,11 @@ food:
         - [blizzard-bird egg, pan-fried]
       properties: []
 
-    - name: Aab's Soup
+    - name: Aab's Moss Soup
       available: False
       ingredients:
         - [basil, deep-fried]
-        - [Martian moss, boiled]
+        - [moss, boiled]
         - [moss milk, boiled]
       properties: [ soup]
 
@@ -268,6 +286,8 @@ guests:
       orders:
         - wish: egg
           text: Something with eggs, please.
+        - wish: omelette
+          text: I would like one of these... what do you call them... omelettes!
         - wish: blizzard-bird egg
           text: I would really appreciate a blizzard-bird egg right now.
         - wish: fried
@@ -289,8 +309,12 @@ guests:
       orders:
         - wish: raw
           text: I like raw food, can you bring me something raw, please?
-        - wish: fresh
-          text: Something fresh would be nice. Can I get something fresh, please?
+        - wish: tomato
+          text: I would like somethin with tomatoes, please.
+        - wish: soup
+          text: Hm, how about a soup? Can you make one for me?
+        - wish: basil
+          text: I really like basil. Can you make me something with basil?
 
     - name: adult
       description: Most of Mars's adult population works in engineering, research, or food supply.
@@ -363,8 +387,11 @@ guests:
           output: I love shakes!
       orders:
         - wish: deep-fried
+          text: Hey, something deep-fried would be awesome! Thanks!
         - wish: sweet
+          text: Bring me anything, as long as it is sweet!
         - wish: shake
+          text: A shake, please!
       positive_phrases:
         - ":D"
         - ":))"
@@ -440,19 +467,19 @@ guests:
           output: Ah, I love spicy food, and this was spicy.
       orders:
         - wish: fresh
-          text: Ah... I have this craving for something fresh, can you bring me something fresh?
+          text: Ah... I have this craving for something fresh. Can you bring me something like that?
       positive_phrases:
         - Ah, it was fantastic.
         - Ah, very enjoyable diner, I liked it.
-        - Ah, I like good food, and the food was good.
+        - Ah, I like good food.
       neutral_phrases:
-        - Mh, I was not impressed, nothing impressed me today.
-        - Mh, it was not so good, it could have been better.
-        - Mh, I wonder what went wrong, something was not quite right today.
+        - Mh, I was not impressed.
+        - Mh, it could have been better.
+        - Mh, something was not quite right today.
       negative_phrases:
-        - Oh, it was horrible. The food and everything else was bad.
-        - Oh, I really did not love it. There was nothing to like.
-        - Oh, no, not great. I was really not good.
+        - Oh, almost everything was bad today.
+        - Oh, I really did not love it.
+        - Oh, no, not great.
 
 social:
 
@@ -466,8 +493,9 @@ social:
       disappears: False
       meetings:
         - meeting: Aab invites you to drink tea in the evening. You meet in her little appartment. Even though the furniture is 
-            optimized for bovid anatomy, the interior design uncannily reminds you of your own grandparents' style. Sipping 
-            the sweet herbal tea, you let your eyes wander over the shelves filled with tableware and souvenirs. There is
+            optimized for bovid anatomy and the floor is covered with soil and grass instead of a carpet,
+            the interior design uncannily reminds you of your own grandparents' style. Sipping
+            the bitter herbal tea, you let your eyes wander over the shelves filled with tableware and souvenirs. There is
             also a cabinet filled with what looks like bovid horns, in various colors and lengths. Some of them are longer than
             you are tall.
           question: Ah, you see, I have many horns, but I used to have even more. It is a custom to keep the ones that fell out.
@@ -479,9 +507,69 @@ social:
               reaction: Oh, yes, some bovids have downright museums of impressive horns that humble me and my modest collection.
           rewards:
             - type: decoration
-              level: 1
               decoration: twisted horn
               text: The horns can be quite decorative, do you not think? Here, you can have one for your empty wall in your pretty diner.
+        - meeting: You visit Aab again in her apartment. This time, Aab serves some snacks with the tea. You chew on
+            the small blocks of pressed plants while Aab tells you about her family. 'Ah, it has been ten years now
+            that we left our home system that you call Barnard's Star. My children with fewer horns visit our home
+            planet sometimes, but I am too tired for interstellar traveling, I think. Mh, but I miss the meadows...
+            When I lived there, I could just leave my house and have some fresh grass and herbs any time.'
+          question: Ah, they are now starting to grow some plants on the surface of Mars. What do you think about this?
+          replies:
+            - reply: It's wonderful. The planet is coming to life.
+              reaction: Mh, you are right. It will take a long time until I can go out and graze in a Martian meadow,
+                but it is a promising start.
+            - reply: I am against it. The red rocks make this planet unique.
+              reaction: Ah, I see, you want to preserve what makes Mars special. Mh, but think about the advantages,
+                hornless friend. More fresh products for us to eat and to cook with.
+          rewards:
+            - type: merchant
+              merchant: Lush Meadows
+              text: Mh, it would be wonderful if I could order some of the new Martian plants in your diner.
+                Here you go, I will give you the address of a nice little market stand where you can buy them.
+                Ah, you are most welcome.
+        - meeting: Aab invites you for a walk on the Bright Boulevard with her and two of her grandchildren.
+            The Bright Boulevard is a promenade that leads around the city, right next to the inner side of the dome.
+            The boulevard is swarming with citizens, most of them families and joggers. Once a year, a city marathon
+            takes place on this trail. It takes a human jogger around 4 hours to complete the whole round.
+            With Aab and the kids, you walk only a small fraction of it, and you stop from time to time to rest on
+            one of the many benches facing the outer wall. The children press their nose against the transparent panes
+            that form the walls of the dome. Aab points out some colorful patches of lichen and moss on the rocks
+            to them and explains what kinds they are.
+          question: I wonder if the kids will walk around out there without spacesuits some day. What do you think?
+          replies:
+            - reply: I don't think so. Terraforming takes a long time.
+              reaction: Mh, you are right, we must be patient. But still, I have a glimmer of hope that
+                they might experience that...
+            - reply: I hope so. Technological progress is speeding up, perhaps it will go faster than expected.
+              reaction: Ah, that would be wonderful. Imagine how the fresh Martian grass would feel under their
+                bare hooves...
+          rewards:
+            - type: guest
+              guest: Bovid teenager
+              text: I am going to tell all my grandchildren and their friends about your diner. This should liven
+              things up quite a bit! It will be lovely.
+        - meeting: You visit Aab again in her apartment. You notice that the living lawn-carpet looks different
+            than last time, some of the grasses and herbs are flowering. Aab tells you that you are welcome to pick
+            some of them and snack them if you want. You try a small yellow flower. It tastes very bitter, but
+            somehow enjoyable. Aab is standing in the kitchenette and stirring a bit pot. As far as you know,
+            it is rare for bovids to cook a hot meal, but whatever is in the pot is clearly simmering and steaming.
+            It smells good. You recognize the spiciness of Martian plants, but when Aab starts frying something in a
+            pan, a familiar Earth scent starts to fill the room.
+          question: Ah, here you go. I hope you like it. What do you think about bovid cuisine?
+          replies:
+            - reply: I love fresh greens.
+              reaction: Ah, how nice. This recipe here is not so typical, there is nothing raw in it.
+              But I like to make things warm and soft sometimes.
+            - reply: I'm more the meat-and-potato kind of person.
+              reaction: Ah, this sounds interesting as well. I cannot digest meat, but perhaps you can cook
+                these 'potatoes' for me some time.
+          rewards:
+            - type: recipe
+              recipe: Aab's Moss Soup
+              text: Here, I will write down the recipe for you. It is an old family. Mh, it is best
+                with the moss that grows in my home region, but it works with Martian products as well. Please put
+                it on the menu in your diner. Ah, I am sure it is going to be a big hit.
 
 
   - name: Human adult
