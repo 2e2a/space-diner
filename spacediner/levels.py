@@ -1,5 +1,4 @@
 import os
-import pickle
 import yaml
 
 from datetime import datetime
@@ -76,6 +75,7 @@ def load_game(slot):
     with open('saves/{}'.format(file), 'rb') as f:
         load(f)
 
+
 def autosave_save():
     cli.print_message('Auto-saving...')
     with open('saves/auto.yaml', 'wb') as f:
@@ -95,35 +95,12 @@ def init(name):
     cli.print_text('')
     cli.print_title(level.name)
     cli.print_text(level.intro)
-    time.register_callback(time.Calendar.TIME_MORNING, autosave_save)
+    #time.register_callback(time.Calendar.TIME_MORNING, autosave_save)
 
 
 def save(file):
-    # TODO: missing rewards? goals?
-    global level
-    pickle.dump(level, file)
-    time.save(file)
-    skills.save(file)
-    ingredients.save(file)
-    storage.save(file)
-    kitchen.save(file)
-    shopping.save(file)
-    food.save(file)
-    guests.save(file)
-    social.save(file)
-    activities.save(file)
+    pass
 
 
 def load(file):
-    global level
-    level = pickle.load(file)
-    time.load(file)
-    skills.load(file)
-    ingredients.load(file)
-    storage.load(file)
-    kitchen.load(file)
-    shopping.load(file)
-    food.load(file)
-    guests.load(file)
-    social.load(file)
-    activities.load(file)
+    pass

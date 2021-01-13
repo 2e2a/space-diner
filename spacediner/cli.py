@@ -402,6 +402,7 @@ class NewGameMode(ChoiceMode):
     levels = None
     choices = None
     title = 'Select level'
+    back_label = 'Exit'
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -419,7 +420,8 @@ class NewGameMode(ChoiceMode):
         return FirstHelpMode()
 
     def back(self):
-        return StartMode()
+        #return StartMode()
+        exit()
 
 
 class SaveGameMode(ChoiceMode):
@@ -489,8 +491,8 @@ class DinerMode(Mode):
     CMD_REVIEWS = 6
     CMD_COMPENDIUM = 7
     CMD_CLOSE_UP = 8
-    CMD_SAVE = 9
-    CMD_EXIT = 10
+    CMD_EXIT = 9
+    #CMD_SAVE = 9
     commands = [
         ('kitchen',),
         ('take order from', []),
@@ -501,7 +503,7 @@ class DinerMode(Mode):
         ('reviews',),
         ('compendium',),
         ('close up',),
-        ('save',),
+        #('save',),
         ('exit',),
     ]
     prompt = 'diner >>'
@@ -588,11 +590,12 @@ class DinerMode(Mode):
             print_newline()
             time.tick()
             return ReviewsInfoMode(back=ActivityMode())
-        if cmd == self.CMD_SAVE:
-            return SaveGameMode(back=self)
+        #if cmd == self.CMD_SAVE:
+        #    return SaveGameMode(back=self)
         if cmd == self.CMD_EXIT:
-            levels.autosave_save()
-            return StartMode()
+            #levels.autosave_save()
+            #return StartMode()
+            return NewGameMode()
 
 
 class DinerMenuMode(InfoMode):
@@ -1124,7 +1127,8 @@ def run(args):
     if args.get('log', False):
         logfile_name = 'space-diner_{}.log'.format(datetime.now().strftime('%Y-%m-%d-%H%M%S'))
         logfile = open(logfile_name, 'w')
-    mode = StartMode()
+    #mode = StartMode()  # TODO: restore when save & load works
+    mode = NewGameMode()
     print_info = True
     print('################################  SPACE  DINER  ################################')
     while True:
@@ -1147,7 +1151,7 @@ def run(args):
                 print_newline()
                 yes = input('Save and exit game? (y/N) ')
                 if yes in ['y', 'Y']:
-                    levels.autosave_save()
+                    #levels.autosave_save()
                     if logfile:
                         logfile.close()
                     exit()

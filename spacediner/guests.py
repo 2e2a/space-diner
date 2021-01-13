@@ -1,5 +1,4 @@
 import itertools
-import pickle
 import random
 from collections import OrderedDict
 
@@ -527,22 +526,8 @@ def init(data):
 
 
 def save(file):
-    global guests
-    global regulars
-    global guest_groups
-    global guest_factory
-    pickle.dump(guests, file)
-    pickle.dump(regulars, file)
-    pickle.dump(guest_groups, file)
-    pickle.dump(guest_factory, file)
+    pass
 
 
 def load(file):
-    global guests
-    global regulars
-    global guest_groups
-    global guest_factory
-    guests = pickle.load(file)
-    regulars = pickle.load(file)
-    guest_groups = pickle.load(file)
-    guest_factory = pickle.load(file)
+    pass

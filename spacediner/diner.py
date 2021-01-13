@@ -1,5 +1,3 @@
-import pickle
-
 from . import cli
 from . import time
 
@@ -54,10 +52,8 @@ def init(data):
 
 
 def save(file):
-    global diner
-    pickle.dump(diner, file)
+    pass
 
 
 def load(file):
-    global diner
-    diner = pickle.load(file)
+    pass
