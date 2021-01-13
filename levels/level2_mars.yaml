@@ -548,7 +548,7 @@ social:
             - type: guest
               guest: Bovid teenager
               text: I am going to tell all my grandchildren and their friends about your diner. This should liven
-              things up quite a bit! It will be lovely.
+                things up quite a bit! It will be lovely.
         - meeting: You visit Aab again in her apartment. You notice that the living lawn-carpet looks different
             than last time, some of the grasses and herbs are flowering. Aab tells you that you are welcome to pick
             some of them and snack them if you want. You try a small yellow flower. It tastes very bitter, but
@@ -560,7 +560,7 @@ social:
           replies:
             - reply: I love fresh greens.
               reaction: Ah, how nice. This recipe here is not so typical, there is nothing raw in it.
-              But I like to make things warm and soft sometimes.
+                But I like to make things warm and soft sometimes.
             - reply: I'm more the meat-and-potato kind of person.
               reaction: Ah, this sounds interesting as well. I cannot digest meat, but perhaps you can cook
                 these 'potatoes' for me some time.
