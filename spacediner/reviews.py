@@ -8,6 +8,7 @@ from . import time
 
 class Rating:
     name = None
+    groups = None
     count = 0
     positive_count = 0
     aggregate = 0
@@ -17,8 +18,9 @@ class Rating:
 
     TASTE_MULTIPLIER = 3
 
-    def __init__(self, name):
+    def __init__(self, name, groups):
         self.name = name
+        self.groups = groups
 
     def add(self, taste, service, ambience):
         self.taste = (self.count * self.taste + taste) / (self.count + 1)
@@ -120,6 +122,15 @@ def get_rating(name):
     return get_ratings().get(name)
 
 
+def group_rating_positive_count(group):
+    positive_count = 0
+    ratings = get_ratings()
+    for rating in ratings.values():
+        if group in rating.groups:
+            positive_count += rating.positive_count
+    return positive_count
+
+
 def get_reviews():
     global reviews
     return [review.message for review in reviews]
@@ -154,18 +165,17 @@ def daytime():
     reviews = []
 
 
-def add(guests):
+def add(guest, groups):
     global ratings
     global reviews
     global likes
-    for guest in guests:
-        if guest not in ratings:
-            ratings.update({guest: Rating(guest)})
-        if guest not in likes:
-            likes.update({guest: (set(), set())})
+    if guest not in ratings:
+        ratings.update({guest: Rating(guest, groups)})
+    if guest not in likes:
+        likes.update({guest: (set(), set())})
 
 
-def init(guests):
+def init():
     # TODO: consider group/guest availability
     global ratings
     global reviews
@@ -173,12 +183,12 @@ def init(guests):
     ratings = OrderedDict()
     likes = OrderedDict()
     reviews = []
-    add(guests)
     time.register_callback(time.Calendar.TIME_DAYTIME, daytime)
 
 
 def save(file):
     pass
+
 
 def load(file):
     pass

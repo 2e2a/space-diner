@@ -16,18 +16,18 @@ goals:
   - type: money
     amount: 1000
     message: You win.
-#  - type: positive reviews
-#    group: reptiloid
-#    amount: 25
-#    message: Congratulations, you have received 25 positive reviews from reptiloids!
-#  - type: positive reviews
-#    group: bovid
-#    amount: 25
-#    message: Congratulations, you have received 25 positive reviews from bovids!
-#  - type: positive reviews
-#    group: human
-#    amount: 25
-#    message: Congratulations, you have received 25 positive reviews from humans!
+  - type: reviews
+    group: Reptiloid
+    amount: 25
+    message: Congratulations, you have received 25 positive reviews from reptiloids!
+  - type: reviews
+    group: Bovid
+    amount: 25
+    message: Congratulations, you have received 25 positive reviews from bovids!
+  - type: reviews
+    group: Human
+    amount: 25
+    message: Congratulations, you have received 25 positive reviews from humans!
 
 calendar:
   week: ['Monsol', 'Tuessol', 'Wednessol', 'Thurssol', 'Frisol', 'Satursol', 'Sunsol']

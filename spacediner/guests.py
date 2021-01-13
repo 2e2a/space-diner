@@ -68,6 +68,7 @@ class Guest:
     review = None
 
     def __init__(self):
+        self.groups = []
         self.positive_phrases = []
         self.neutral_phrases = []
         self.negative_phrases = []
@@ -75,6 +76,10 @@ class Guest:
     @property
     def group_name(self):
         return ' '.join(group.name for group in self.groups) if self.groups else self.name
+
+    @property
+    def group_names(self):
+        return [group.name for group in self.groups] if self.groups else []
 
     def add_decoration_review(self):
         all_decoration = diner.diner.decoration
@@ -484,9 +489,9 @@ def daytime():
     guests.extend(regulars_today)
     seats = diner.diner.seats - len(guests)
     new_guests = _new_guests(seats)
-    reviews.add(set(new_guests))
     for name in new_guests:
         guest = guest_factory.create(name, existing=guests)
+        reviews.add(guest.group_name, guest.group_names)
         guests.append(guest)
     for regular in regulars_today:
         regular.reset()
@@ -520,7 +525,10 @@ def init(data):
     guest_factory = GuestFactory()
     guest_factory.init(data.get('factory'))
 
-    reviews.init([regular.name for regular in regulars.values() if regular.available])
+    reviews.init()
+    for regular in regulars.values():
+        if regular.available:
+            reviews.add(regular.name, regular.groups)
 
     time.register_callback(time.Calendar.TIME_DAYTIME, daytime)
 
