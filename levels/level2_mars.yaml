@@ -59,6 +59,11 @@ ingredients:
     storage: pantry
     properties: [ sweet ]
 
+  - name: banana
+    description: Longish yellow fruit.
+    storage: pantry
+    properties: [ sweet ]
+
   - name: basil
     description: An aromatic green herb.
     storage: pantry
@@ -466,8 +471,8 @@ guests:
           taste: +1
           output: Ah, I love spicy food, and this was spicy.
       orders:
-        - wish: fresh
-          text: Ah... I have this craving for something fresh. Can you bring me something like that?
+        - wish: tomato
+          text: Ah... I have this craving for a tomato.
       positive_phrases:
         - Ah, it was fantastic.
         - Ah, very enjoyable diner, I liked it.
