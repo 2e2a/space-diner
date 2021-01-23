@@ -172,7 +172,7 @@ shopping:
           cost: 2
 
     - name: Tau-Cetian Imports
-      description: A very tall reptiloid sells Tau-Cetian products at this booth.
+      description: A very tall and skinny reptiloid sells Tau-Cetian products at this booth.
       available: True
       owner: Charbinivore
       ingredients:
@@ -313,13 +313,13 @@ guests:
           output: Argh, Bovids cannot digest animal products.
       orders:
         - wish: raw
-          text: I like raw food, can you bring me something raw, please?
+          text: Can you bring me something raw, please?
         - wish: tomato
-          text: I would like somethin with tomatoes, please.
+          text: I would like something with tomatoes, please.
         - wish: soup
           text: Hm, how about a soup? Can you make one for me?
         - wish: basil
-          text: I really like basil. Can you make me something with basil?
+          text: Can you make me something with basil?
 
     - name: adult
       description: Most of Mars's adult population works in engineering, research, or food supply.
@@ -497,7 +497,26 @@ social:
     friendship:
       disappears: False
       meetings:
-        - meeting: Aab invites you to drink tea in the evening. You meet in her little appartment. Even though the furniture is 
+        - meeting: Your regular customer Aab invites you to the park. When you arrive, she is watching a game of
+            Rubarch that two elderly humans are playing. Aab is one of the few non-human older citizens of Mars.
+            Most of the new colonists that are arriving are young, and the first colonist that have grown old were
+            from Earth. Aab greets you and invites you to take a seat with her at one
+            of the small tables with game boards on them. You have a vague idea how Rubarch is played, and you start
+            moving the spiky spheres around on the board. You quickly notice that Aab is not very good at it, either.
+          question: Ah, I like my friends here, but sometimes our activities bore me. I do not enjoy games that much.
+            Mh, sometimes I wish I had a more challenging occupation... I used to be the director of a museum once.
+          replies:
+            - reply: I wish I had as much free time as you do. It's great to just hang out and relax all day.
+              reaction: Mh, I hear you. But still, Rubarch every day... I worry that I will never get the hang of it.
+            - reply: You could join an organization or something.
+              reaction: Mh, do you think? I am not sure I can do it. I have lived for a long time and I have many horns.
+                I am a bit tired...
+          rewards:
+            - type: guest
+              guest: senior
+              text: Ah, I have told all my friends about your diner. Perhaps they will try it out! Your diner will
+                be crowded with old people.
+        - meeting: Aab invites you to drink tea in the evening. You meet in her little appartment. Even though the furniture is
             optimized for bovid anatomy and the floor is covered with soil and grass instead of a carpet,
             the interior design uncannily reminds you of your own grandparents' style. Sipping
             the bitter herbal tea, you let your eyes wander over the shelves filled with tableware and souvenirs. There is
@@ -568,13 +587,24 @@ social:
                 But I like to make things warm and soft sometimes.
             - reply: I'm more the meat-and-potato kind of person.
               reaction: Ah, this sounds interesting as well. I cannot digest meat, but perhaps you can cook
-                these 'potatoes' for me some time.
+                this 'potato' for me some time.
           rewards:
             - type: recipe
               recipe: Aab's Moss Soup
               text: Here, I will write down the recipe for you. It is an old family. Mh, it is best
                 with the moss that grows in my home region, but it works with Martian products as well. Please put
                 it on the menu in your diner. Ah, I am sure it is going to be a big hit.
+        - meeting: ...
+          question: ...
+          replies:
+            - reply: ...
+              reaction: ...
+            - reply: ...
+              reaction: ...
+          rewards:
+            - type: decoration
+              decoration: ...
+              text: ...
 
 
   - name: Human adult
