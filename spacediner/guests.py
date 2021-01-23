@@ -295,10 +295,14 @@ class GuestFactory:
             if not existing or not any(guest.name == name for guest in existing):
                 return name
 
-    def get_names(self):
-        return [' '.join(group) for group in self.groups]
+    def get_available_subgroups(self):
+        available_groups = get_available_groups()
+        return [group for group in self.groups if all(subgroup in available_groups for subgroup in group)]
 
-    def create(self, name, existing=None):
+    def get_groups(self):
+        return [' '.join(group) for group in self.get_available_subgroups()]
+
+    def create_guest(self, name, existing=None):
         global guest_groups
         guest = Guest()
         groups = [guest_groups.get(group_name) for group_name in name.split(' ')]
@@ -330,14 +334,6 @@ def get_available_groups():
 def get_group(name):
     global guest_groups
     return guest_groups.get(name)
-
-
-def get_names():
-    global regulars
-    global guest_factory
-    names = [name for name in regulars]
-    names.extend(guest_factory.get_names())
-    return names
 
 
 def get_guests():
@@ -429,10 +425,11 @@ RANDOM_GUESTS = 2
 
 
 def _new_guests(seats):
+    global guest_factory
     # TODO: numbers are not completely right: e.g., 4 colonists and 2 tourists when 6 seats are available?
     seats_remaining = seats
     new_guests = []
-    groups = guest_factory.get_names()
+    groups = guest_factory.get_groups()
     seats_per_group = int(seats/len(groups))
     extra_seats = seats - (seats_per_group * len(groups))
     ratings = reviews.get_ratings()
@@ -490,7 +487,7 @@ def daytime():
     seats = diner.diner.seats - len(guests)
     new_guests = _new_guests(seats)
     for name in new_guests:
-        guest = guest_factory.create(name, existing=guests)
+        guest = guest_factory.create_guest(name, existing=guests)
         reviews.add(guest.group_name, guest.group_names)
         guests.append(guest)
     for regular in regulars_today:
