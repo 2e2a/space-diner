@@ -414,10 +414,9 @@ def unlock(name):
     global guest_factory
     guest = regulars.get(name)
     if not guest:
-        guest = guest_factory.get(name)
+        guest = get_group(name)
     if guest:
         guest.available = True
-    reviews.add([name])
 
 
 FULL_AFTER_RATINGS = 10
