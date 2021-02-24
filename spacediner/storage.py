@@ -18,6 +18,12 @@ class Storage:
             return True
         return False
 
+    def available_ingredients(self):
+        return {
+            ingredient: amount
+            for ingredient, amount in self.ingredients.items() if self.ingredients.get(ingredient) > 0
+        }
+
     def ingredient_amount_available(self, name):
         return self.ingredients.get(name) if name in self.ingredients else 0
 
@@ -48,7 +54,6 @@ class Storage:
         return '{}: {}'.format(self.name, ingredients)
 
 
-
 storages = None
 
 
@@ -62,7 +67,7 @@ def available_ingredients():
     ingredients = {}
     for storage in storages.values():
         if storage.available:
-            ingredients.update(storage.ingredients)
+            ingredients.update(storage.available_ingredients())
     return ingredients
 
 

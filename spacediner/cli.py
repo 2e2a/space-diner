@@ -633,16 +633,13 @@ class KitchenMode(Mode):
 
     def __init__(self, **kwargs):
         self.orders = guests.ordered()
-        self.available_ingredients = storage.available_ingredients()
         self.available_devices = kitchen.available_devices()
         super().__init__(**kwargs)
 
     def update_commands(self):
-        ingredients = []
-        for ingredient, available in self.available_ingredients.items():
-            if available: ingredients.append(ingredient)
+        self.available_ingredients = storage.available_ingredients()
         preparations = [d.command for d in self.available_devices.values()]
-        self.commands[self.CMD_COOK] = (preparations, ingredients)
+        self.commands[self.CMD_COOK] = (preparations, list(self.available_ingredients.keys()))
         recipe_choices = food.plated()
         self.commands[self.CMD_SAVE_RECIPE] = ('save recipe', recipe_choices)
         super().update_commands()
@@ -679,7 +676,6 @@ class KitchenMode(Mode):
             preparation_command = cmd_input[0]
             device = self._get_device(preparation_command)
             ingredient = cmd_input[1]
-            self.available_ingredients.update({ingredient: self.available_ingredients.get(ingredient) - 1})
             food.cook_ingredients([(device.result, ingredient)])
             if food.ready_to_plate():
                 name = food.plate()
