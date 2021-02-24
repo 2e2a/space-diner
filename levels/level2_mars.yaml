@@ -495,7 +495,7 @@ social:
       - Mh... the weather is usually strange on Mars, but today, it is particularly strange, is it not?
       - Ah, what a day. So sandy and stormy.
     friendship:
-      disappears: False
+      disappears: True
       meetings:
         - meeting: Your regular customer Aab invites you to the park. When you arrive, she is watching a game of
             Rubarch that two elderly humans are playing. Aab is one of the few non-human older citizens of Mars.
@@ -508,36 +508,38 @@ social:
           replies:
             - reply: I wish I had as much free time as you do. It's great to just hang out and relax all day.
               reaction: Mh, I hear you. But still, Rubarch every day... I worry that I will never get the hang of it.
-            - reply: You could join an organization or something.
-              reaction: Mh, do you think? I am not sure I can do it. I have lived for a long time and I have many horns.
-                I am a bit tired...
+            - reply: Well, couldn't you look for a job, or join an organization or something?
+              reaction: Mh, I am not sure I can do it. I have lived for a long time and I have many horns...
           rewards:
             - type: guest
               guest: senior
               text: Ah, I have told all my friends about your diner. Perhaps they will try it out! Your diner will
                 be crowded with old people.
-        - meeting: Aab invites you to drink tea in the evening. You meet in her little appartment. Even though the furniture is
-            optimized for bovid anatomy and the floor is covered with soil and grass instead of a carpet,
+        - meeting: Aab invites you to drink tea in the evening. You meet in her little appartment. Even though the
+            furniture is optimized for bovid anatomy and the floor is covered with soil and grass instead of a carpet,
             the interior design uncannily reminds you of your own grandparents' style. Sipping
-            the bitter herbal tea, you let your eyes wander over the shelves filled with tableware and souvenirs. There is
-            also a cabinet filled with what looks like bovid horns, in various colors and lengths. Some of them are longer than
-            you are tall.
-          question: Ah, you see, I have many horns, but I used to have even more. It is a custom to keep the ones that fell out.
-            Impressive collection, do you not think?
+            the bitter herbal tea, you let your eyes wander over the shelves filled with tableware and souvenirs. There
+            is also a cabinet filled with what looks like bovid horns, in various colors and lengths. Some of them are
+            longer than you are tall.
+          question: Ah, impressive collection, do you not think? These are from friends and relatives. Sometimes old
+              bovids decide to cut off their many horns as a symbol of starting anew, even if it is late in life.
+              Mh, my uncle Esk traveled to another star for the first time when he was my age. My friend Oudge went back
+              to the university. It is a custom to give away the horns as special gifts.
           replies:
-            - reply: Wow, these are all yours?
-              reaction: Oh, most of them yes, but sometimes my relatives also send me one as a personal gift.
-            - reply: Eh, I have seen better.
-              reaction: Oh, yes, some bovids have downright museums of impressive horns that humble me and my modest collection.
+            - reply: What a beautiful custom.
+              reaction: Ah, yes. I often chew on the idea of doing this as well. But I do not know if I have the courage.
+            - reply: Uh... seems a little weird to me.
+              reaction: Ah, perhaps from the ouside it looks a little distressing. To me, it is a beautiful thing.
+                Mh, but I do not know if I would have the courage to do this...
           rewards:
-            - type: decoration
-              decoration: twisted horn
-              text: The horns can be quite decorative, do you not think? Here, you can have one for your empty wall in your pretty diner.
+            - type: ingredient
+              ingredient: twisted horn
+              text: Here, a little gift for you. It is Martian moss that grows outside on the surface.
+                Mh, it is spicy, and it reminds me of the herbs on my planet.
         - meeting: You visit Aab again in her apartment. This time, Aab serves some snacks with the tea. You chew on
             the small blocks of pressed plants while Aab tells you about her family. 'Ah, it has been ten years now
-            that we left our home system that you call Barnard's Star. My children with fewer horns visit our home
-            planet sometimes, but I am too tired for interstellar traveling, I think. Mh, but I miss the meadows...
-            When I lived there, I could just leave my house and have some fresh grass and herbs any time.'
+            that we left our home system that you call Barnard's Star. Mh, I miss the meadows... When I lived there,
+            I could just leave my house and have some fresh grass and herbs any time.'
           question: Ah, they are now starting to grow some plants on the surface of Mars. What do you think about this?
           replies:
             - reply: It's wonderful. The planet is coming to life.
@@ -560,14 +562,14 @@ social:
             one of the many benches facing the outer wall. The children press their nose against the transparent panes
             that form the walls of the dome. Aab points out some colorful patches of lichen and moss on the rocks
             to them and explains what kinds they are.
-          question: I wonder if the kids will walk around out there without spacesuits some day. What do you think?
+          question: Ah, I have even more little hornless grandchildren, you know. Mh, but some of them are growing up in
+            in other solar systems, and I have never been there in person.
           replies:
-            - reply: I don't think so. Terraforming takes a long time.
-              reaction: Mh, you are right, we must be patient. But still, I have a glimmer of hope that
-                they might experience that...
-            - reply: I hope so. Technological progress is speeding up, perhaps it will go faster than expected.
-              reaction: Ah, that would be wonderful. Imagine how the fresh Martian grass would feel under their
-                bare hooves...
+            - reply: You can visit them if you want.
+              reaction: Mh, you are right, but interstellar traveling is exhausting, and I am not young anymore.
+                But it would be delightful to see more worlds...
+            - reply: I am sure your grandchildren here on Mars are happy to have you around.
+              reaction: Ah, yes, you are right. Still, the thought of seeing new worlds tingles me in my stomachs...
           rewards:
             - type: guest
               guest: Bovid teenager
@@ -594,17 +596,23 @@ social:
               text: Here, I will write down the recipe for you. It is an old family. Mh, it is best
                 with the moss that grows in my home region, but it works with Martian products as well. Please put
                 it on the menu in your diner. Ah, I am sure it is going to be a big hit.
-        - meeting: ...
-          question: ...
+        - meeting: You agreed to meet Aab in your diner in the evening. You are polishing the silverware when an
+           unfamiliar bovid appears at the door. It takes you a few seconds to recognize that it is Aab – but without
+           her horns.
+          question: Ah, my young friend, you look surprised. I have decided to go for it. I am old, but I want to see
+            new world. Tomorrow, I am leaving for the Tau-Ceti system. Some of my grandshildren live there, and I also
+            have some reptiloid friends that I want to visit. Ah, I came to say good-bye.
           replies:
-            - reply: ...
-              reaction: ...
-            - reply: ...
-              reaction: ...
+            - reply: Wow! I wish you the best of luck on your adventure.
+              reaction: Ah, thank you, my friend. I hope I will eat in your diner again some day.
+            - reply: I am worried. Interstellar journeys are dangerous and exhausting.
+              reaction: Mh, do not worry, my young friend. I know that I can do it. The hardest part was
+                 summoning my courage, and I have succeeded.
           rewards:
             - type: decoration
-              decoration: ...
-              text: ...
+              decoration: twisted horn
+              text: I want you to have one of my horns. It is very decorative, do you not think? You can hang
+                it on one of the empty walls of your diner.
 
 
   - name: Human adult
