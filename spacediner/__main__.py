@@ -3,7 +3,6 @@ from . import cli
 from . import settings
 
 # TODO: rewards/trophies for achievements, e.g., served 10/50/100 dishes, received 10/50/100 positive reviews...
-# TODO: show ingredient properties in the kitchen, e.g., cow milk [milk, animal product]
 #
 # TODO: check if rewards by normal guests are possible
 # TODO: bug: sometimes prepared ingredients appear in the kitchen although they were already served

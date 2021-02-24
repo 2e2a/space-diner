@@ -6,12 +6,14 @@ class Ingredient:
     description = None
     storage = None
     properties = None
+    extra_properties = None
 
     def init(self, data):
         self.name = data.get('name')
         self.description = data.get('description', None)
         self.storage = data.get('storage')
-        self.properties = set(data.get('properties'))
+        self.extra_properties = set(data.get('properties'))
+        self.properties = self.extra_properties.copy()
         self.properties.add(self.name)
 
     def __str__(self):
@@ -24,6 +26,10 @@ ingredients = None
 def get(name):
     global ingredients
     return ingredients.get(name)
+
+
+def get_extra_properties(name):
+    return list(get(name).extra_properties)
 
 
 def init(data):

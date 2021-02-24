@@ -649,7 +649,14 @@ class KitchenMode(Mode):
         print_title('Orders:')
         print_list(['{}: {}'.format(g, o) for g, o in self.orders.items()])
         print_title('Available ingredients:')
-        print_list(['{} x {}'.format(a, i) for i, a in self.available_ingredients.items()])
+        ingredient_info = []
+        for ingredient, available in self.available_ingredients.items():
+            info = '{} x {}'.format(available, ingredient)
+            custom_properties = ingredients.get_extra_properties(ingredient)
+            if custom_properties:
+                info += ' ({})'.format(', '.join(custom_properties))
+            ingredient_info.append(info)
+        print_list(ingredient_info)
         print_title('Kitchen:')
         print_list(['{} for {}'.format(d.name, d.preparation) for d in self.available_devices.values()])
         print_title('Prepared:')
@@ -813,6 +820,9 @@ class IngredientCompendiumMode(ChoiceMode):
         ingredient = ingredients.get(self.choices[choice])
         if ingredient.description:
             print_text(ingredient.description)
+            if ingredient.extra_properties:
+                print_newline()
+                print_text('Properties: {}'.format(', '.join(ingredient.extra_properties)))
         else:
             print_text('Unknown.')
         print_newline()
