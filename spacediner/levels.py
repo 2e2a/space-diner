@@ -26,7 +26,7 @@ class Level:
 
     def init(self, filename):
         with open(filename, 'r') as stream:
-            data = yaml.load(stream)
+            data = yaml.load(stream, Loader=yaml.FullLoader)
             self.name = data.get('name')
             self.intro = data.get('intro')
             self.money = data.get('money')

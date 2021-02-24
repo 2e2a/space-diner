@@ -4,4 +4,4 @@
 #
 #    pip-compile
 #
-pyyaml==5.3.1             # via -r requirements.in
+pyyaml==5.4.1             # via -r requirements.in
