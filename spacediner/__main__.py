@@ -3,7 +3,8 @@ from . import cli
 from . import settings
 
 # TODO: rewards/trophies for achievements, e.g., served 10/50/100 dishes, received 10/50/100 positive reviews...
-#
+# TODO: bug: "I liked None" in reviews
+# TODO: bug - merchant mode: when typing e.g. "buy 5" + tab --> changed to "buy 1"
 # TODO: check if rewards by normal guests are possible
 # TODO: bug: sometimes prepared ingredients appear in the kitchen although they were already served
 # TODO: toggle tutorial mode on/off (after first day)
