@@ -37,18 +37,23 @@ class Food:
 
     @property
     def default_name(self):
+        name = ''
         prepared_ingredients = self.get_prepared_ingredients()
+        prepared_ingredients = [ingredient.replace(' ', '-') for ingredient in prepared_ingredients]
         unique_ingredients = list(set(prepared_ingredients))
         if len(unique_ingredients) == 1:
-            return 'plain {}'.format(unique_ingredients[0])
+            name = 'plain-{}'.format(unique_ingredients[0])
         elif len(unique_ingredients) == 2:
             main_ingredient = unique_ingredients[0]
             second_ingredient = unique_ingredients[1]
             if prepared_ingredients.count(main_ingredient) == 1:
                 main_ingredient = unique_ingredients[1]
                 second_ingredient = unique_ingredients[0]
-            return '{} with some {}'.format(main_ingredient, second_ingredient)
-        return' with '.join(prepared_ingredients)
+            name = '{}-with-some-{}'.format(main_ingredient, second_ingredient)
+        else:
+            name = '-with-'.join(prepared_ingredients)
+        name = name.capitalize()
+        return name
 
     def set_default_name(self):
         self.name = self.default_name
