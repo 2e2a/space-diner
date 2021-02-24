@@ -37,17 +37,17 @@ ingredients:
   - name: lichen
     description: A composite algae/fungus organism. Grows on the surface of Mars.
     storage: pantry
-    properties: [ sweet ]
+    properties: [ sweet, Martian ]
 
   - name: moss
     description: Small green plants forming a soft, dense mat. Grows on the surface of Mars.
     storage: pantry
-    properties: [ spicy ]
+    properties: [ spicy, Martian ]
 
   - name: moss milk
     description: A milky fluid extracted from Martian moss.
     storage: fridge
-    properties: [ milk, spicy ]
+    properties: [ milk, spicy, Martian ]
 
   - name: tomato
     description: Red and juicy.
@@ -311,6 +311,12 @@ guests:
         - properties: [ animal product ]
           taste: -3
           output: Argh, Bovids cannot digest animal products.
+        - properties: [ Martian ]
+          taste: +1
+          output: I love fresh Martian plant products.
+        - properties: [ raw ]
+          taste: +1
+          output: Raw food is delicious.
       orders:
         - wish: raw
           text: Can you bring me something raw, please?
@@ -352,7 +358,10 @@ guests:
       reactions:
         - properties: [ blended ]
           taste: +1
-          output: Blended food is good for me.
+          output: Blended food is good for my stomach.
+        - properties: [ boiled ]
+          taste: +1
+          output: Boiled food is good for my stomach.
         - properties: [ deep-fried ]
           taste: -1
           output: Deep-fried food gives me heartburn.
@@ -469,7 +478,10 @@ guests:
       reactions:
         - properties: [ spicy ]
           taste: +1
-          output: Ah, I love spicy food, and this was spicy.
+          output: Ah, I love spicy food.
+        - properties: [ tomato ]
+          taste: +1
+          output: Ah, I love tomatos.
       orders:
         - wish: tomato
           text: Ah... I have this craving for a tomato.
@@ -478,7 +490,7 @@ guests:
         - Ah, very enjoyable diner, I liked it.
         - Ah, I like good food.
       neutral_phrases:
-        - Mh, I was not impressed.
+        - Mh, I was not impressed today.
         - Mh, it could have been better.
         - Mh, something was not quite right today.
       negative_phrases:
