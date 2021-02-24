@@ -19,11 +19,14 @@ class Reward:
     typ = None
     text = None
 
-    def apply(self):
-        raise NotImplemented
-
     def init(self, data):
         self.text = data.get('text')
+
+    def can_apply(self):
+        return True
+
+    def apply(self):
+        raise NotImplemented
 
 
 class MerchantReward(Reward):
@@ -67,6 +70,9 @@ class SkillReward(Reward):
         super().init(data)
         self.skill = data.get('skill')
         self.diff = data.get('diff')
+
+    def can_apply(self):
+        return skills.can_add(self.skill, self.diff)
 
     def apply(self):
         skills.add(self.skill, self.diff)

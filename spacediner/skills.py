@@ -29,6 +29,7 @@ class Skill:
 
     def add(self, diff):
         self.level += diff
+        self.level = max(min(self.level, MAX_SKILL_LEVEL), 0)
         msg = 'Your {} {}. They now include: {}'.format(
             self.name,
             'increased' if diff > 0 else 'decreased',
@@ -72,9 +73,16 @@ def learned():
     return [skill.name for skill in skills.values() if skill.level > 0]
 
 
+def can_add(skill, diff):
+    skill = get(skill)
+    if diff > 0 and skill.level < MAX_SKILL_LEVEL:
+        return True
+    if diff < 0 and skill.level > 0:
+        return True
+    return False
+
 def add(skill, diff):
-    global skills
-    skills.get(skill).add(diff)
+    get(skill).add(diff)
 
 
 def init(data):

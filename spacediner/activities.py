@@ -16,6 +16,9 @@ class Activity:
         self.message = data.get('message')
         self.rewards = rewards.init_list(data.get('rewards'))
 
+    def can_do(self):
+        return any(reward.can_apply() for reward in self.rewards)
+
     def do(self):
         cli.print_text(self.message)
         for reward in self.rewards:
@@ -27,7 +30,7 @@ activities = None
 
 def available_activities():
     global activities
-    return [activity.name for activity in activities.values() if activity.available]
+    return [activity.name for activity in activities.values() if activity.available and activity.can_do()]
 
 
 def do(name):
