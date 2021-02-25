@@ -961,6 +961,7 @@ class MeetingMode(ChoiceMode):
     def print_info(self):
         print_text(self.meeting.text)
         print_dialog(self.guest, self.meeting.question)
+        print_newline()
         super().print_info()
 
     def exec_choice(self, choice):

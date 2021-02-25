@@ -276,6 +276,7 @@ guests:
         - properties: [ blizzard-bird egg ]
           taste: -3
           output: Argh, Humans cannot digest blizzard-bird eggs.
+          review_phrase: that the dish contained blizzard-bird eggs, which are poisonous to humans
 
     - name: Reptiloid
       description: >
@@ -288,6 +289,7 @@ guests:
         - properties: [ spicy ]
           taste: -3
           output: Argh, Reptiloids cannot digest spicy food.
+          review_phrase: the spiciness, as a Reptiloid I cannot handle it
       orders:
         - wish: egg
           text: Something with eggs, please.
@@ -355,13 +357,13 @@ guests:
 
     - name: senior
       description: Currently, most seniors on Mars are Humans who were among the first colonists.
-      available: True
+      available: False
       budget: 30
       reactions:
         - properties: [ blended ]
           taste: +1
           output: Blended food is good for my stomach.
-          review_phrase: that the food was blended, this made it easy to east
+          review_phrase: that the food was blended, this made it easy to eat
         - properties: [ boiled ]
           taste: +1
           output: Boiled food is good for my stomach.
@@ -492,6 +494,15 @@ guests:
           taste: +2
           output: Ah, I love tomatos.
           review_phrase: the tomatos in the dish
+        - properties: [ animal product ]
+          taste: -3
+          output: Argh, Bovids cannot digest animal products.
+        - properties: [ Martian ]
+          taste: +1
+          output: I love fresh Martian plant products.
+        - properties: [ raw ]
+          taste: +1
+          output: Raw food is delicious.
       orders:
         - wish: tomato
           text: Ah... I have this craving for a tomato.
@@ -521,7 +532,7 @@ social:
       meetings:
         - meeting: Your regular customer Aab invites you to the park. When you arrive, she is watching a game of
             Rubarch that two elderly humans are playing. Aab is one of the few non-human older citizens of Mars.
-            Most of the new colonists that are arriving are young, and the first colonist that have grown old were
+            Most of the new colonists that are arriving are young, and the first colonists that have grown old were
             from Earth. Aab greets you and invites you to take a seat with her at one
             of the small tables with game boards on them. You have a vague idea how Rubarch is played, and you start
             moving the spiky spheres around on the board. You quickly notice that Aab is not very good at it, either.
@@ -555,7 +566,8 @@ social:
                 Mh, but I do not know if I would have the courage to do this...
           rewards:
             - type: ingredient
-              ingredient: twisted horn
+              ingredient: moss
+              diff: 7
               text: Here, a little gift for you. It is Martian moss that grows outside on the surface.
                 Mh, it is spicy, and it reminds me of the herbs on my planet.
         - meeting: You visit Aab again in her apartment. This time, Aab serves some snacks with the tea. You chew on
@@ -594,7 +606,7 @@ social:
               reaction: Ah, yes, you are right. Still, the thought of seeing new worlds tingles me in my stomachs...
           rewards:
             - type: guest
-              guest: Bovid teenager
+              guest: teenager
               text: I am going to tell all my grandchildren and their friends about your diner. This should liven
                 things up quite a bit! It will be lovely.
         - meeting: You visit Aab again in her apartment. You notice that the living lawn-carpet looks different
