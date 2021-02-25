@@ -79,7 +79,7 @@ ingredients:
     storage: pantry
     properties: [ egg, animal product ]
 
-  - name: blizzard-bird egg
+  - name: blizzard egg
     description: Egg laid by a blizzard bird (a Tau-Cetian bird). Consists of a shell and sweet purple goo.
     storage: pantry
     properties: [ egg, animal product, sweet ]
@@ -102,7 +102,7 @@ storage:
         available: 1
       - name: chicken egg
         available: 6
-      - name: blizzard-bird egg
+      - name: blizzard egg
         available: 6
 
 
@@ -176,7 +176,7 @@ shopping:
       available: True
       owner: Charbinivore
       ingredients:
-        - name: blizzard-bird egg
+        - name: blizzard egg
           cost: 3
 
     - name: Lush Meadows
@@ -245,9 +245,9 @@ food:
     - name: Tau-Cetian Kulkick
       available: True
       ingredients:
-        - [blizzard-bird egg, boiled]
-        - [blizzard-bird egg, raw]
-        - [blizzard-bird egg, pan-fried]
+        - [blizzard egg, boiled]
+        - [blizzard egg, raw]
+        - [blizzard egg, pan-fried]
       properties: []
 
     - name: Aab's Moss Soup
@@ -273,10 +273,10 @@ guests:
       name_factory: Martian-Human
       available: True
       reactions:
-        - properties: [ blizzard-bird egg ]
+        - properties: [ blizzard egg ]
           taste: -3
-          output: Argh, Humans cannot digest blizzard-bird eggs.
-          review_phrase: that the dish contained blizzard-bird eggs, which are poisonous to humans
+          output: Argh, Humans cannot digest blizzard eggs.
+          review_phrase: that the dish contained blizzard eggs, which are poisonous to humans
 
     - name: Reptiloid
       description: >
@@ -295,8 +295,8 @@ guests:
           text: Something with eggs, please.
         - wish: omelette
           text: I would like one of these... what do you call them... omelettes!
-        - wish: blizzard-bird egg
-          text: I would really appreciate a blizzard-bird egg right now.
+        - wish: blizzard egg
+          text: I would really appreciate a blizzard egg right now.
         - wish: pan-fried
           text: Something pan-fried, please.
         - wish: milk
@@ -717,11 +717,11 @@ social:
     greetings:
       - Welcome, welcome,
     chats:
-      - I have tried eggs from many types of birds, but nothing comes close to a blizzard-bird egg, in my opinion!
-      - I wish I could bring you more delicacies from the Tau-Ceti system, but for now, try the blizzard-bird eggs!
-      - Do you like sweet food? Try to add a blizzard-bird egg to your dishes!
-      - A lot of customers ask whether blizzard-bird eggs are so delicious because of the blizzards. The answer is yes!
-      - Blizzard-bird eggs! Blizzard-bird eggs! Only 3 space-dollars for a blizzard-bird egg!
+      - I have tried eggs from many types of birds, but nothing comes close to a blizzard egg, in my opinion!
+      - I wish I could bring you more delicacies from the Tau-Ceti system, but for now, try the blizzard eggs!
+      - Do you like sweet food? Try to add a blizzard egg to your dishes!
+      - A lot of customers ask whether blizzard eggs are so delicious because of the blizzards. The answer is yes!
+      - blizzard eggs! blizzard eggs! Only 3 space-dollars for a blizzard egg!
   - name: Seven-horned Eetch
     greetings:
       - Welcome, Hornless

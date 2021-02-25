@@ -1,6 +1,7 @@
 import re
 import readline
 import textwrap
+import math
 from datetime import datetime
 
 from . import activities
@@ -18,9 +19,11 @@ from . import storage
 from . import time
 
 
+LINE_WIDTH = 100
+
 def print_text(str):
     # TODO: capitalize just the first letter.
-    for line in textwrap.wrap(str, width=80):
+    for line in textwrap.wrap(str, width=LINE_WIDTH):
         print(line)
 
 
@@ -31,19 +34,32 @@ def print_title(str):
 
 def print_list(list):
     if list:
-        for e in list:
-            print('- {}'.format(e))
+        length = None
+        if not any(len(e) >= (math.floor(LINE_WIDTH/2)-2) for e in list):
+            for e in list:
+                if length:
+                    print('{}- {}'.format(' '*int((LINE_WIDTH/2)-length-2), e))
+                    length = None
+                else:
+                    if list.index(e) == len(list) - 1:
+                        print('- {}'.format(e))
+                    else:
+                        print('- {}'.format(e), end='')
+                    length = len(e)
+        else:
+            for e in list:
+                print('- {}'.format(e))
     else:
         print('-')
-    print('')
+    print_newline()
 
 
 def print_header(header_values):
-    print_text('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+    print_text('~'*LINE_WIDTH)
     for name, values in header_values:
         print_value(name, *values)
-    print_text('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-    print_newline()
+    print_text('~'*LINE_WIDTH)
+    print('')
 
 
 def print_value(key, *values):
@@ -1150,7 +1166,8 @@ def run(args):
     #mode = StartMode()  # TODO: restore when save & load works
     mode = NewGameMode()
     print_info = True
-    print('################################  SPACE  DINER  ################################')
+    number_of_tildes = int(math.floor((LINE_WIDTH-13)/2))
+    print('{} SPACE DINER {}'.format('~'*number_of_tildes, '~'*number_of_tildes))
     while True:
         try:
             if print_info:
