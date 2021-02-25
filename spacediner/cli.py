@@ -920,6 +920,8 @@ class ActivityMode(ChoiceMode):
         ])
         print_text('Now you have time for one evening activity.')
         print_newline()
+        print_value('Sanitation status of the diner', '{}/5'.format(diner.diner.sanitation))
+        print_newline()
         self.print_skills()
         super().print_info()
 
