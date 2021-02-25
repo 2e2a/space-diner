@@ -99,7 +99,7 @@ class CommandCompleter:
         elif isinstance(next_cmd_arg, str):
             return [next_cmd_arg]
         elif next_cmd_arg == int:
-            return "1"
+            return '1'
 
     def _get_arg_completions(self, arg, cmd_arg):
         completed = 0
@@ -153,9 +153,10 @@ class CommandCompleter:
 
     def _match_num(self, cmd, pos, arg, allow_partial):
         match = None
-        completion = "1"
+        completion = ['1']
         if arg.isnumeric():
             match = arg
+            completion = [arg]
         return match, completion
 
     def match_arg(self, cmd, pos, arg, allow_partial=False):
