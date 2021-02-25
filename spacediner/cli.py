@@ -635,6 +635,10 @@ class KitchenMode(Mode):
     def __init__(self, **kwargs):
         self.orders = guests.ordered()
         self.available_devices = kitchen.available_devices()
+        print_header([
+            ('Location', [diner.diner.name, '(kitchen)']),
+            ('Time', [time.now()]),
+        ])
         super().__init__(**kwargs)
 
     def update_commands(self):
