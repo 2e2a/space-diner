@@ -335,9 +335,11 @@ guests:
         - properties: [ healthy ]
           taste: +1
           output: As a responsible adult, I know that healthy food is good for me.
+          review_phrase: that the food was on the healthy side
         - properties: [ shake ]
           taste: -1
           output: Aren't shakes for children?
+          review_phrase: the shake that I got
       positive_phrases:
         - Great!
         - Wonderful!
@@ -359,12 +361,15 @@ guests:
         - properties: [ blended ]
           taste: +1
           output: Blended food is good for my stomach.
+          review_phrase: that the food was blended, this made it easy to east
         - properties: [ boiled ]
           taste: +1
           output: Boiled food is good for my stomach.
+          review_phrase: that there was something boild in the dish, it was easy to digest
         - properties: [ deep-fried ]
-          taste: -1
+          taste: -2
           output: Deep-fried food gives me heartburn.
+          review_phrase: the deep-fried elements of the dish, they gave me heartburn
       orders:
         - wish: soup
           text: I'll have a soup, please.
@@ -391,14 +396,17 @@ guests:
       budget: 10
       reactions:
         - properties: [ deep-fried ]
-          taste: +1
+          taste: +2
           output: I love deep-fried food!
+          review_phrase: that there was deep-fried stuff
         - properties: [ sweet ]
-          taste: +1
+          taste: +2
           output: I love sweet food!
+          review_phrase: that there was something sweet in the food
         - properties: [ shake ]
-          taste: +1
+          taste: +2
           output: I love shakes!
+          review_phrase: that I got a shake
       orders:
         - wish: deep-fried
           text: Hey, something deep-fried would be awesome! Thanks!
@@ -420,7 +428,7 @@ guests:
   names:
     - name: Martian-Human
       factory:
-        - [Mohomot, Youssef, Ahmet, Junior, Mehti, Fatima, Aya, Salma, Precious, Mariam, Santiako, Noah, Mikuel, Chayten,
+        - [ Mohomot, Youssef, Ahmet, Junior, Mehti, Fatima, Aya, Salma, Precious, Mariam, Santiako, Noah, Mikuel, Chayten,
            Ramón, Luis, Akustín, Sofía, Alysha, Alice, Oliphia, Emma, Mariana, Phidelene, Kaprielle, Ximena, Mary, Camila,
            An, Phei, Aaraph, Amir, Ori, Amit, Keorch, Minato, Yerasyl, Kiran, Min-chun, Chia-hao, Somchai, Ai, Cai, Ching,
            Aatya, Tamar, Eten, Sekura, Rimas, Aysere, Nor, Otphal, Shristi, Anchel, Seo-yeon, Sara, Shu-fen, Sumayah,
@@ -432,35 +440,35 @@ guests:
            Repane, Sepp, Antrejev, Iphanoph, Hansen, Poulsen, Laine, Phirtanen, Salonen, Chohansson, Pernart, Tubois, Roux,
            Phagner, Pecker, Papp, Kiss, Priem, Plöntal, Murphy, Quinn, Russo, Esposito, Krasniqi, Shala, Osols,
            Kaslauskas, Schiltz, Fella, Crech, Popa, Te Chong, Te Poer, Perg, Krafczyk, Costa, Silpha, Sokoloph, Palok,
-           Karcía, Pérez, Fontana, Pontarenko, Melnyk, Wright, Wilson, Moore, Tremplay, Flores, Morais, Asepheto, Mohan]
+           Karcía, Pérez, Fontana, Pontarenko, Melnyk, Wright, Wilson, Moore, Tremplay, Flores, Morais, Asepheto, Mohan ]
 
     - name: Martian-Reptiloid
       factory:
-        - [B,P,D,T,J,Ch,R,L, G, K]
-        - [u,a]
-        - [b,rb, lb, mb, p, rp, lp, mp, d, ld, rd, nd, ch, nch, rch, r, l, g, rg, lg, ng, k, rk, lk, nk]
-        - [ini]
-        - [aceous, adelic, adenia, agog, androus, arch, aroo, aroonie, astic, athlon, blastic, biont, cratic,
+        - [ B,P,D,T,J,Ch,R,L, G, K ]
+        - [ u,a ]
+        - [ b,rb, lb, mb, p, rp, lp, mp, d, ld, rd, nd, ch, nch, rch, r, l, g, rg, lg, ng, k, rk, lk, nk ]
+        - [ ini ]
+        - [ aceous, adelic, adenia, agog, androus, arch, aroo, aroonie, astic, athlon, blastic, biont, cratic,
            cyte, dactyl, ennial, eroo, esque, ette, fest, fugal, geddon, hood, ick, iferous, imundol, illion,
            illiard, izzle, lepsy, ling, lock, mancer, naut, oecious, oholic, omics, orama, pants, pathy, pedia,
            phage, phil, phonic, pod, poeia, pteran, riffic, saur, sicle, ster, topia, tude, tuple, urgy, verse,
-           vore, ware, ylene, zoon]
+           vore, ware, ylene, zoon ]
 
     - name: Martian-Bovid
       factory:
         - [ One-, Two-, Three-, Four-, Five-, Six-, Seven-, Eight-, Nine-, Ten-, Eleven-, Twelve- ]
         - [ horned ]
         - [ " " ]
-        - [ A, Aa, E, Ee, Ou]
-        - [ d, b, g, l, rg, rk, tch, rb, z, dge, mb, sk, w]
+        - [ A, Aa, E, Ee, Ou ]
+        - [ d, b, g, l, rg, rk, tch, rb, z, dge, mb, sk, w ]
 
     - name: Martian-Bovid-Teenager
       factory:
         - [ Little Hornless ]
         - [ " " ]
         - [ A, Aa, E, Ee, Ou]
-        - [ dd, bb, gg, ll, rg, rk, tch, rb, zz, dge, mb, sk, w]
-        - [ i]
+        - [ dd, bb, gg, ll, rg, rk, tch, rb, zz, dge, mb, sk, w ]
+        - [ i ]
 
   factory:
     - [ Human, senior]
@@ -477,11 +485,13 @@ guests:
       budget: 30
       reactions:
         - properties: [ spicy ]
-          taste: +1
+          taste: +2
           output: Ah, I love spicy food.
+          review_phrase: the delicious spiciness
         - properties: [ tomato ]
-          taste: +1
+          taste: +2
           output: Ah, I love tomatos.
+          review_phrase: the tomatos in the dish
       orders:
         - wish: tomato
           text: Ah... I have this craving for a tomato.

@@ -286,11 +286,11 @@ guests:
       budget: 25
       reactions:
         - properties: [ local  specialty ]
-          taste: +1
+          taste: +2
           output: Great, a local specialty!
           review_phase: that I got to eat a local specialty from the Moon
         - properties: [ fancy ]
-          taste: +1
+          taste: +2
           output: Wow, that's fancy!
           review_phrase: that the food was fancy and elevated
       orders:
