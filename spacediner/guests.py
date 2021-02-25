@@ -22,7 +22,7 @@ class Reaction:
         self.properties = data.get('properties')
         self.taste = data.get('taste')
         self.output = data.get('output')
-        self.review_phrase = data.get('review_phrase')
+        self.review_phrase = data.get('review_phrase', 'something')
 
     def __str__(self):
         return '{} -> {}'.format(str(self.properties), str(self.taste))
