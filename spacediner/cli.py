@@ -1,5 +1,6 @@
 import re
 import readline
+import textwrap
 from datetime import datetime
 
 from . import activities
@@ -19,7 +20,8 @@ from . import time
 
 def print_text(str):
     # TODO: capitalize just the first letter.
-    print(str)
+    for line in textwrap.wrap(str, width=80):
+        print(line)
 
 
 def print_title(str):
@@ -414,12 +416,14 @@ class NewGameMode(ChoiceMode):
 
     def exec_choice(self, choice):
         levels.init(self.levels[choice])
+        print_newline()
         diner_name = input('Diner name (default: {}): '.format(diner.diner.name))
         if diner_name:
             diner.diner.name = diner_name
         chef_name = input('Your name: ')
         if chef_name:
             diner.diner.chef = 'Chef {}'.format(chef_name)
+        print_newline()
         return FirstHelpMode()
 
     def back(self):
@@ -468,7 +472,6 @@ class LoadGameMode(ChoiceMode):
 class FirstHelpMode(InfoMode):
 
     def print_info(self):
-        print_text('')
         title = 'Welcome to your new diner, {}!'.format(diner.diner.chef)
         print_title(title)
         print_text(
@@ -476,8 +479,9 @@ class FirstHelpMode(InfoMode):
             'display a list of available commands. During your first day, you will receive general gameplay hints.\n'
             'What to do first? Take your guests\' orders in the diner, prepare food in the kitchen, and serve it.\n'
             'Heads up: your guests have specific dietary restrictions and preferences. '
-            'Make them happy, and they will repay you in space dollars and positive reviews!\n'
+            'Make them happy, and they will repay you in space dollars and positive reviews!'
         )
+        print_newline()
 
     def back(self):
         time.tick()
