@@ -197,17 +197,17 @@ food:
     - name: Plain Omelette
       available: True
       ingredients:
-        - [ fried, egg ]
-        - [ fried, egg ]
-        - [ fried, egg ]
+        - [ pan-fried, egg ]
+        - [ pan-fried, egg ]
+        - [ pan-fried, egg ]
       properties: [ omelette ]
 
     - name: Tomato Omelette
       available: True
       ingredients:
-        - [ fried, tomato ]
-        - [ fried, egg ]
-        - [ fried, egg ]
+        - [ pan-fried, tomato ]
+        - [ pan-fried, egg ]
+        - [ pan-fried, egg ]
       properties: [ omelette ]
 
     - name: Tomato Soup
@@ -295,8 +295,8 @@ guests:
           text: I would like one of these... what do you call them... omelettes!
         - wish: blizzard-bird egg
           text: I would really appreciate a blizzard-bird egg right now.
-        - wish: fried
-          text: Something fried, please.
+        - wish: pan-fried
+          text: Something pan-fried, please.
         - wish: milk
           text: I'll have something with milk.
 
