@@ -1,3 +1,4 @@
+import os
 import re
 import readline
 import textwrap
@@ -20,6 +21,11 @@ from . import time
 
 
 LINE_WIDTH = 100
+
+
+def cls():
+    os.system('cls' if os.name=='nt' else 'clear')
+
 
 def print_text(str):
     # TODO: capitalize just the first letter.
@@ -54,12 +60,17 @@ def print_list(list):
     print_newline()
 
 
-def print_header(header_values):
-    print_text('~'*LINE_WIDTH)
-    for name, values in header_values:
-        print_value(name, *values)
-    print_text('~'*LINE_WIDTH)
-    print('')
+def print_header(header_values=None):
+    cls()
+    number_of_tildes = int(math.floor((LINE_WIDTH - 13) / 2))
+    print_text('~' * LINE_WIDTH)
+    print('{} SPACE DINER'.format(' ' * number_of_tildes))
+    print_text('~' * LINE_WIDTH)
+    if header_values:
+        for name, values in header_values:
+            print_value(name, *values)
+        print_text('~' * LINE_WIDTH)
+        print_newline()
 
 
 def print_value(key, *values):
@@ -285,6 +296,13 @@ class Mode:
     def update_commands(self):
         self.completer = CommandCompleter(self.commands)
 
+    def wait_for_input(self):
+        print_newline()
+        input('<press ENTER to continue>')
+
+    def print_header(self):
+        print_header()
+
     def print_info(self):
         print('')
 
@@ -311,6 +329,7 @@ class Mode:
                 if is_available:
                     command_list.append(text)
             print_list(command_list)
+        self.wait_for_input()
 
     def print_hint(self):
         if self.hint:
@@ -368,7 +387,9 @@ class ChoiceMode(Mode):
         print_list(choice_info)
 
     def print_help(self):
+        print_newline()
         print_text('Select a number.')
+        self.wait_for_input()
 
     def exec(self, cmd, cmd_input):
         if cmd == self.CMD_CHOICE:
@@ -392,10 +413,6 @@ class InfoMode(Mode):
     def exec(self, cmd, cmd_input):
         print_newline()
         return self.back()
-
-
-class WaitForInputMode(InfoMode):
-    pass
 
 
 class StartMode(ChoiceMode):
@@ -432,6 +449,10 @@ class NewGameMode(ChoiceMode):
 
     def exec_choice(self, choice):
         levels.init(self.levels[choice])
+        self.print_header()
+        print_text(levels.level.name)
+        print_newline()
+        print_text(levels.level.intro)
         print_newline()
         diner_name = input('Diner name (default: {}): '.format(diner.diner.name))
         if diner_name:
@@ -439,7 +460,6 @@ class NewGameMode(ChoiceMode):
         chef_name = input('Your name: ')
         if chef_name:
             diner.diner.chef = 'Chef {}'.format(chef_name)
-        print_newline()
         return FirstHelpMode()
 
     def back(self):
@@ -548,7 +568,7 @@ class DinerMode(Mode):
         self.commands[self.CMD_SEND_HOME] = ('send home', available_guests)
         super().update_commands()
 
-    def print_info(self):
+    def print_header(self):
         available_guests = guests.get_guests()
         print_header([
             ('Location', [diner.diner.name, '(dining room)']),
@@ -558,6 +578,9 @@ class DinerMode(Mode):
             ('Sanitation', ['{}/5'.format(diner.diner.sanitation)]),
             ('Interior decoration', [', '.join(diner.diner.available_decoration)]),
         ])
+
+    def print_info(self):
+        available_guests = guests.get_guests()
         print_title('Food:')
         print_list(food.plated())
         print_title('Guests:')
@@ -579,24 +602,29 @@ class DinerMode(Mode):
                 print_dialog(guest, 'There is nothing for me on the menu.')
                 guests.leave(guest)
                 print_text('{} left.'.format(guest))
-            return WaitForInputMode(back=self)
+            self.wait_for_input()
+            return self
         if cmd == self.CMD_CHAT:
             guest = cmd_input[1]
             chat = guests.chat(guest)
             print_dialog(guest, chat)
-            return WaitForInputMode(back=self)
+            self.wait_for_input()
+            return self
+
         if cmd == self.CMD_SERVE:
             dish = cmd_input[1]
             guest = cmd_input[3]
             guests.serve(guest, dish)
             guests.leave(guest)
             print_text('{} left.'.format(guest))
-            return WaitForInputMode(back=self)
+            self.wait_for_input()
+            return self
         if cmd == self.CMD_SEND_HOME:
             guest = cmd_input[1]
             guests.send_home(guest)
             print_text('{} left.'.format(guest))
-            return WaitForInputMode(back=self)
+            self.wait_for_input()
+            return self
         if cmd == self.CMD_MENU:
             return DinerMenuMode(back=self)
         if cmd == self.CMD_REVIEWS:
@@ -655,10 +683,6 @@ class KitchenMode(Mode):
     def __init__(self, **kwargs):
         self.orders = guests.ordered()
         self.available_devices = kitchen.available_devices()
-        print_header([
-            ('Location', [diner.diner.name, '(kitchen)']),
-            ('Time', [time.now()]),
-        ])
         super().__init__(**kwargs)
 
     def update_commands(self):
@@ -668,6 +692,12 @@ class KitchenMode(Mode):
         recipe_choices = food.plated()
         self.commands[self.CMD_SAVE_RECIPE] = ('save recipe', recipe_choices)
         super().update_commands()
+
+    def print_header(self):
+        print_header([
+            ('Location', [diner.diner.name, '(kitchen)']),
+            ('Time', [time.now()]),
+        ])
 
     def print_info(self):
         print_title('Orders:')
@@ -871,11 +901,13 @@ class ReviewsInfoMode(InfoMode):
             count,
             )
 
-    def print_info(self):
+    def print_header(self):
         print_header([
             ('Location', [diner.diner.name, '(office)']),
             ('Time', [time.now()]),
         ])
+
+    def print_info(self):
         print_text('You read today\'s reviews.')
         print_text('')
         print_title('Ratings')
@@ -938,11 +970,13 @@ class ActivityMode(ChoiceMode):
         skill_values = [self.print_skill(name, level) for name, level in skills.get_levels()]
         print_list(skill_values)
 
-    def print_info(self):
+    def print_header(self):
         print_header([
             ('Location', [diner.diner.name, '(outside)']),
             ('Time', [time.now()]),
         ])
+
+    def print_info(self):
         print_text('Now you have time for one evening activity.')
         print_newline()
         print_value('Sanitation status of the diner', '{}/5'.format(diner.diner.sanitation))
@@ -964,7 +998,8 @@ class ActivityMode(ChoiceMode):
             if self.fixed_activities[choice] == 'clean diner':
                 diner.diner.clean()
                 print_message('Diner cleaned.')
-        return WaitForInputMode(back=SleepMode())
+        self.wait_for_input()
+        return SleepMode()
 
 
 class MeetingMode(ChoiceMode):
@@ -992,7 +1027,8 @@ class MeetingMode(ChoiceMode):
         reply = choice
         social.meet(self.guest, reply)
         social.lock_friendship(self.guest)
-        return WaitForInputMode(back=SleepMode())
+        self.wait_for_input()
+        return SleepMode()
 
 
 class SleepMode(InfoMode):
@@ -1059,12 +1095,14 @@ class ShoppingMode(ChoiceMode):
         self.ingredients_for_sale = shopping.for_sale()
         super().update_commands()
 
-    def print_info(self):
+    def print_header(self):
         print_header([
             ('Location', [shopping.market.name]),
             ('Time', [time.now()]),
             ('Money', [levels.level.money, 'space dollars']),
         ])
+
+    def print_info(self):
         if shopping.market.description:
             print_text(shopping.market.description)
             print_newline()
@@ -1085,7 +1123,7 @@ class ShoppingMode(ChoiceMode):
             owner = shopping.owner(merchant)
             chat = shopping.chat(merchant)
             print_dialog(owner, chat)
-            return WaitForInputMode(back=merchant_mode)
+            self.wait_for_input()
         return merchant_mode
 
     def back(self):
@@ -1116,12 +1154,14 @@ class MerchantMode(Mode):
         self.commands[self.CMD_BUY_INGREDIENT] = ('buy', int, ingredient_names)
         super().update_commands()
 
-    def print_info(self):
+    def print_header(self):
         print_header([
             ('Location', [shopping.market.name, ' - ', self.merchant]),
             ('Time', [time.now()]),
             ('Money', [levels.level.money, 'space dollars']),
         ])
+
+    def print_info(self):
         print_title('Owned ingredients:')
         print_list(['{} x {}'.format(a, i) for i, a in self.available_ingredients.items()])
         print_title('Ingredients for sale:')
@@ -1165,24 +1205,18 @@ def run(args):
         logfile = open(logfile_name, 'w')
     #mode = StartMode()  # TODO: restore when save & load works
     mode = NewGameMode()
-    print_info = True
-    number_of_tildes = int(math.floor((LINE_WIDTH-13)/2))
-    print('{} SPACE DINER {}'.format('~'*number_of_tildes, '~'*number_of_tildes))
     while True:
         try:
-            if print_info:
-                mode.print_info()
-                if time.calendar.is_first_day:
-                    mode.print_hint()
+            mode.print_header()
+            mode.print_info()
+            if time.calendar.is_first_day:
+                mode.print_hint()
             prompt = '{} '.format(mode.prompt) if mode.prompt else ''
             cmd = input('{} '.format(prompt))
             print_newline()
             next_mode = mode.parse(cmd)
             if next_mode:
                 mode = next_mode
-                print_info = True
-            else:
-                print_info = False
         except (KeyboardInterrupt, EOFError):
             try:
                 print_newline()
