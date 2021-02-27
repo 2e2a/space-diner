@@ -37,7 +37,9 @@ class Storage:
 
     def store_ingredient(self, name, amount):
         availability = self.ingredients.get(name, 0)
-        self.ingredients.update({name: availability + amount})
+        availability += amount
+        availability = min(availability, 100)
+        self.ingredients.update({name: availability})
 
     def init(self, data):
         self.name = data.get('name')

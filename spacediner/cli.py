@@ -6,6 +6,7 @@ import math
 from datetime import datetime
 
 from . import activities
+from . import cheats
 from . import diner
 from . import food
 from . import guests
@@ -352,6 +353,10 @@ class Mode:
         logfile.write('{}; #{}; {};\n'.format(self.__class__.__name__, cmd_num, ' '.join(cmd)))
 
     def parse(self, cmd_input):
+        if cmd_input.startswith('!'):
+            cheats.cheat(cmd_input)
+            self.update_commands()
+            return self
         if cmd_input and self.commands:
             cmd_input_list = cmd_input.split()
             matched_cmd_num, matched_cmd = self.completer.match_command(cmd_input_list)
