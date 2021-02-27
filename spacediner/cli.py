@@ -609,6 +609,7 @@ class DinerMode(Mode):
             chat = guests.chat(guest)
             print_dialog(guest, chat)
             self.wait_for_input()
+            self.update_commands()
             return self
 
         if cmd == self.CMD_SERVE:
@@ -744,6 +745,7 @@ class KitchenMode(Mode):
             if cooked_ingredients:
                 print_message('throw away {}'.format(', '.join(cooked_ingredients)))
             food.trash()
+            self.update_commands()
             return self
         if cmd == self.CMD_RECIPES:
             return RecipeMode(back=self)

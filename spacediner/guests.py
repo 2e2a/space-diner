@@ -61,6 +61,7 @@ class Guest:
 
     order = None
     served = False
+    chatted = False
 
     taste = 2
     service = 2
@@ -104,6 +105,7 @@ class Guest:
     def reset(self):
         self.available = True
         self.order = None
+        self.chatted = False
         self.review = reviews.Review(self.name, self.group_name)
         self.served = False
         self.taste = 2
@@ -226,9 +228,10 @@ class Guest:
         return self.taste
 
     def has_chat_available(self):
-        return social.has_chats(self.group_name) and social.next_chat(self.group_name)
+        return not self.chatted and social.has_chats(self.group_name) and social.next_chat(self.group_name)
 
     def chat(self):
+        self.chatted = True
         self.service += 1
         self.review.add(2, 'chatted')
         return social.greet_and_chat(self.group_name)
