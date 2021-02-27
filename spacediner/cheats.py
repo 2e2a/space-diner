@@ -1,9 +1,9 @@
+from . import ingredients
 from . import storage
 
 
 def plenty():
-    ingredients = storage.available_ingredients()
-    for ingredient in ingredients:
+    for ingredient in ingredients.ingredients:
         storage.store_ingredient(ingredient, 100)
 
 
