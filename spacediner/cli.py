@@ -38,10 +38,10 @@ def print_title(str):
     print('-' * (len(str)))
 
 
-def print_list(list):
+def print_list(list, double_columns=True):
     if list:
         length = None
-        if not any(len(e) >= (math.floor(LINE_WIDTH/2)-2) for e in list):
+        if double_columns and not any(len(e) >= (math.floor(LINE_WIDTH/2)-2) for e in list):
             for e in list:
                 if length:
                     print('{}- {}'.format(' '*int((LINE_WIDTH/2)-length-2), e))
@@ -384,7 +384,7 @@ class ChoiceMode(Mode):
         choice_info = ['{}: {}'.format(i, choice) for i, choice in enumerate(self.choices, 1)]
         if self.back_enabled:
             choice_info += ['0: {}'.format(self.back_label)]
-        print_list(choice_info)
+        print_list(choice_info, double_columns=False)
 
     def print_help(self):
         print_newline()
