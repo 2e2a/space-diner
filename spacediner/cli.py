@@ -1141,9 +1141,11 @@ class ShoppingMode(ChoiceMode):
 
 class MerchantMode(Mode):
     CMD_BUY_INGREDIENT = 0
-    CMD_DONE = 1
+    CMD_BUY_EACH = 1
+    CMD_DONE = 2
     commands = [
         ('buy', int, []),
+        ('buy', int, 'each'),
         ('done',),
     ]
     prompt = 'shopping >>'
@@ -1178,24 +1180,43 @@ class MerchantMode(Mode):
         print_title('Ingredients in stock in the diner:')
         print_list(['{} x {}'.format(a, i) for i, a in self.available_ingredients.items()])
 
+    def _can_buy(self, merchant, amount, ingredient):
+        cost = 0
+        error = None
+        ingredients = [ingredient] if ingredient else list(self.ingredients_for_sale.keys())
+        for ingredient in ingredients:
+            if not merchant.is_ingredient_available(ingredient, amount):
+                error = 'Not enough ingredients'
+            cost += merchant.cost(ingredient) * amount
+        if cost > levels.level.money:
+            error = 'Not enough money'
+        if error:
+            cost = 0
+            print_message('Could not buy ingredients: {}'.format(error))
+            self.wait_for_input()
+        return cost
+
     def exec(self, cmd, cmd_input):
+        merchant = shopping.get(self.merchant)
         if cmd == self.CMD_BUY_INGREDIENT:
             amount = int(cmd_input[1])
             ingredient = cmd_input[2]
-            error = None
-            merchant = shopping.get(self.merchant)
-            if not merchant.is_ingredient_available(ingredient, amount):
-                error = 'Not enough ingredients'
-            cost = merchant.cost(ingredient) * amount
-            if cost > levels.level.money:
-                error = 'Not enough money'
-            if not error:
+            cost = self._can_buy(merchant, amount, ingredient)
+            if cost:
                 levels.level.money = levels.level.money - cost
                 merchant.buy(ingredient, amount)
                 storage.store_ingredient(ingredient, amount)
-            else:
-                print_message('Could not buy ingredients: {}'.format(error))
-            self.update_commands()
+                self.update_commands()
+            return self
+        if cmd == self.CMD_BUY_EACH:
+            amount = int(cmd_input[1])
+            cost = self._can_buy(merchant, amount, None)
+            if cost:
+                levels.level.money = levels.level.money - cost
+                for ingredient in self.ingredients_for_sale.keys():
+                    merchant.buy(ingredient, amount)
+                    storage.store_ingredient(ingredient, amount)
+                self.update_commands()
             return self
         if cmd == self.CMD_DONE:
             return ShoppingMode()
