@@ -237,7 +237,7 @@ guests:
       reactions:
         - properties: [ raw, potato ]
           taste: -3
-          output: Argh, Humans cannot digest raw potatoes.
+          output: Argh, humans cannot digest raw potatoes.
           review_phrase: that the dish contained raw potatoes, which are hard to digest for me as a human
 
     - name: colonist

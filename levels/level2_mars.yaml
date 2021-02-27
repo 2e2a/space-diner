@@ -10,24 +10,22 @@ intro: >
   other planets. Some (edible?) life forms are even beginning to cover the rocky surface outside of the domes.
   Your diner is located in a small city close to Pavonis Mons. Most of the settlers
   seeking their fortunes on Mars are humans, but there are also reptiloids and bovids. Make sure that they all
-  feel at home in your diner! Your goal is to get 25 positive reviews from each group. This will help you to establish
+  feel at home in your diner! Your goal is to get 25 positive reviews from each group (i.e., reviews with a rating
+  of 3 or better; review by regular customers do not count towards the goals). This will help you to establish
   a reputation as a versatile chef.
 goals:
-#  - type: money
-#    amount: 1000
-#    message: You win.
   - type: reviews
     group: Reptiloid
-    amount: 1
-    message: Congratulations, you have received 25 positive reviews from reptiloids!
+    amount: 20
+    message: Congratulations, reptiloids love your food!
   - type: reviews
     group: Bovid
-    amount: 1
-    message: Congratulations, you have received 25 positive reviews from bovids!
+    amount: 20
+    message: Congratulations, bovids love your food!
   - type: reviews
     group: Human
-    amount: 1
-    message: Congratulations, you have received 25 positive reviews from humans!
+    amount: 20
+    message: Congratulations, humans love your food!
 
 calendar:
   week: ['Monsol', 'Tuessol', 'Wednessol', 'Thurssol', 'Frisol', 'Satursol', 'Sunsol']
@@ -288,8 +286,16 @@ guests:
       reactions:
         - properties: [ spicy ]
           taste: -3
-          output: Argh, Reptiloids cannot digest spicy food.
-          review_phrase: the spiciness, as a Reptiloid I cannot handle it
+          output: Argh, reptiloids cannot digest spicy food.
+          review_phrase: the spiciness, as a reptiloid I cannot handle it
+        - properties: [ egg ]
+          taste: +1
+          output: I like eggs.
+          review_phrase: the eggs
+        - properties: [ blizzard egg ]
+          taste: +1
+          output: I especially like blizzard eggs.
+          review_phrase: the blizzard eggs from the reptiloid home world
       orders:
         - wish: egg
           text: Something with eggs, please.
@@ -313,12 +319,15 @@ guests:
         - properties: [ animal product ]
           taste: -3
           output: Argh, Bovids cannot digest animal products.
+          review_phrase: that the dish contained animal products, which I cannot digest
         - properties: [ Martian ]
           taste: +1
           output: I love fresh Martian plant products.
+          review_phrase: the fresh Martian plants
         - properties: [ raw ]
           taste: +1
           output: Raw food is delicious.
+          review_phrase: the raw components
       orders:
         - wish: raw
           text: Can you bring me something raw, please?
@@ -717,11 +726,11 @@ social:
     greetings:
       - Welcome, welcome,
     chats:
-      - I have tried eggs from many types of birds, but nothing comes close to a blizzard egg, in my opinion!
+      - I have tried eggs from many types of birds, but nothing comes close to the egg of a blizzard-bird, in my opinion!
       - I wish I could bring you more delicacies from the Tau-Ceti system, but for now, try the blizzard eggs!
       - Do you like sweet food? Try to add a blizzard egg to your dishes!
       - A lot of customers ask whether blizzard eggs are so delicious because of the blizzards. The answer is yes!
-      - blizzard eggs! blizzard eggs! Only 3 space-dollars for a blizzard egg!
+      - Blizzard eggs! Blizzard eggs! Only 3 space-dollars for a blizzard egg!
   - name: Seven-horned Eetch
     greetings:
       - Welcome, Hornless
