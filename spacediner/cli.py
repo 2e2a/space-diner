@@ -774,6 +774,7 @@ class RecipeMode(ChoiceMode):
     def exec_choice(self, choice):
         recipe = food.get_recipe(self.choices[choice])
         self._print_recipe(recipe)
+        self.wait_for_input()
         return self
 
 
@@ -856,7 +857,7 @@ class GuestCompendiumMode(ChoiceMode):
             print_text(group.description)
         else:
             print_text('Unknown.')
-        print_newline()
+        self.wait_for_input()
         return self
 
 
@@ -880,7 +881,7 @@ class IngredientCompendiumMode(ChoiceMode):
                 print_text('Properties: {}'.format(', '.join(ingredient.extra_properties)))
         else:
             print_text('Unknown.')
-        print_newline()
+        self.wait_for_input()
         return self
 
 
