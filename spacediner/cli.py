@@ -1164,13 +1164,13 @@ class MerchantMode(Mode):
         ])
 
     def print_info(self):
-        print_title('Owned ingredients:')
-        print_list(['{} x {}'.format(a, i) for i, a in self.available_ingredients.items()])
         print_title('Ingredients for sale:')
         print_list([
             '{}: {} space dollars, {} in stock, {} required'.format(ingredient, cost, amount, stock)
             for ingredient,  (amount, cost, stock) in self.ingredients_for_sale.items()
         ])
+        print_title('Ingredients in stock in the diner:')
+        print_list(['{} x {}'.format(a, i) for i, a in self.available_ingredients.items()])
 
     def exec(self, cmd, cmd_input):
         if cmd == self.CMD_BUY_INGREDIENT:
