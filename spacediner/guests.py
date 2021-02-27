@@ -127,7 +127,7 @@ class Guest:
 
     @property
     def negative_reaction_properties(self):
-        return self._reaction_properties(lambda reaction: reaction.taste < -1)
+        return self._reaction_properties(lambda reaction: reaction.taste <= -1)
 
     def select_from_menu(self):
         wish = None
