@@ -13,20 +13,20 @@ intro: >
   feel at home in your diner! Your goal is to get 25 positive reviews from each group. This will help you to establish
   a reputation as a versatile chef.
 goals:
-  - type: money
-    amount: 1000
-    message: You win.
+#  - type: money
+#    amount: 1000
+#    message: You win.
   - type: reviews
     group: Reptiloid
-    amount: 25
+    amount: 1
     message: Congratulations, you have received 25 positive reviews from reptiloids!
   - type: reviews
     group: Bovid
-    amount: 25
+    amount: 1
     message: Congratulations, you have received 25 positive reviews from bovids!
   - type: reviews
     group: Human
-    amount: 25
+    amount: 1
     message: Congratulations, you have received 25 positive reviews from humans!
 
 calendar:

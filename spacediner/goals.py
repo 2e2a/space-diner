@@ -10,6 +10,7 @@ class Goal:
 
     message = None
     typ = None
+    is_reached = False
 
     def init(self, data):
         self.message = data.get('message')
@@ -50,14 +51,15 @@ class ReviewsGoal(Goal):
         self.amount = data.get('amount')
 
     def reached(self):
-        cli.print_message('Reached {} positive {} reviews.'.format(self.amount, self.group))
+        cli.print_message('Reached {} positive {} review(s).'.format(self.amount, self.group))
         super().reached()
         input('{} '.format('<press ENTER to continue>'))
 
     def check(self):
         group_rating_positive_count = reviews.group_rating_positive_count(self.group)
         if group_rating_positive_count >= self.amount:
-            self.reached()
+            if not self.is_reached:
+                self.reached()
             return True
         return False
 
@@ -70,6 +72,8 @@ def check_goals():
     goals_reached = True
     for goal in goals:
         goal_reached = goal.check()
+        if goal_reached:
+            goal.is_reached = True
         if goals_reached and not goal_reached:
             goals_reached = False
     if goals_reached:
