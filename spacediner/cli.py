@@ -1192,6 +1192,10 @@ class MerchantMode(Mode):
     available_ingredients = None
     ingredients_for_sale = None
 
+    hint = (
+        'You can buy individual ingredients (e.g., "buy 5 potato") or stock up on everything the merchant '
+        'offers ("buy 5 each").'
+        )
     def __init__(self, merchant, **kwargs):
         self.merchant = merchant
         super().__init__(**kwargs)
