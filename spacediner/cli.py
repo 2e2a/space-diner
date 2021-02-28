@@ -1,8 +1,9 @@
+import math
 import os
 import re
 import readline
 import textwrap
-import math
+import shutil
 from datetime import datetime
 
 from . import activities
@@ -23,40 +24,55 @@ from . import time
 
 
 LINE_WIDTH = 100
+LINE_WIDTH_SMALL = 80
 
 
 def cls():
     os.system('cls' if os.name=='nt' else 'clear')
 
 
-def print_text(str):
+def line_width():
+    width = LINE_WIDTH
+    terminal_width = shutil.get_terminal_size().columns
+    if terminal_width < LINE_WIDTH:
+        width = LINE_WIDTH_SMALL
+
+
+def is_small_screen():
+    return line_width() == LINE_WIDTH_SMALL
+
+
+def print_text(text):
     # TODO: capitalize just the first letter.
-    for line in textwrap.wrap(str, width=LINE_WIDTH):
+    for line in textwrap.wrap(text, width=line_width()):
         print(line)
 
 
-def print_title(str):
-    print(str)
-    print('-' * (len(str)))
+def print_title(text):
+    print(text)
+    print('-' * (len(text)))
 
 
-def print_list(list, double_columns=True):
-    if list:
+def print_list(text_list, double_columns=True):
+    if text_list:
         length = None
-        if double_columns and not any(len(e) >= (math.floor(LINE_WIDTH/2)-2) for e in list):
-            for e in list:
+        if (
+                double_columns and not is_small_screen()
+                and not any(len(e) >= (math.floor(LINE_WIDTH/2)-2) for e in text_list)
+        ):
+            for text in text_list:
                 if length:
-                    print('{}- {}'.format(' '*int((LINE_WIDTH/2)-length-2), e))
+                    print('{}- {}'.format(' '*int((LINE_WIDTH/2)-length-2), text))
                     length = None
                 else:
-                    if list.index(e) == len(list) - 1:
-                        print('- {}'.format(e))
+                    if text_list.index(text) == len(text_list) - 1:
+                        print('- {}'.format(text))
                     else:
-                        print('- {}'.format(e), end='')
-                    length = len(e)
+                        print('- {}'.format(text), end='')
+                    length = len(text)
         else:
-            for e in list:
-                print('- {}'.format(e))
+            for text in text_list:
+                print('- {}'.format(text))
     else:
         print('-')
     print_newline()
@@ -64,14 +80,15 @@ def print_list(list, double_columns=True):
 
 def print_header(header_values=None):
     cls()
-    number_of_tildes = int(math.floor((LINE_WIDTH - 13) / 2))
-    print_text('~' * LINE_WIDTH)
+    width = line_width()
+    number_of_tildes = int(math.floor((width - 13) / 2))
+    print_text('~' * width)
     print('{} SPACE DINER'.format(' ' * number_of_tildes))
-    print_text('~' * LINE_WIDTH)
+    print_text('~' * width)
     if header_values:
         for name, values in header_values:
             print_value(name, *values)
-        print_text('~' * LINE_WIDTH)
+        print_text('~' * width)
         print_newline()
 
 
