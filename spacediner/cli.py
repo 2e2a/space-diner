@@ -36,6 +36,7 @@ def line_width():
     terminal_width = shutil.get_terminal_size().columns
     if terminal_width < LINE_WIDTH:
         width = LINE_WIDTH_SMALL
+    return width
 
 
 def is_small_screen():
