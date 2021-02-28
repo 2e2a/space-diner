@@ -9,6 +9,7 @@ from . import activities
 from . import cheats
 from . import diner
 from . import food
+from . import goals
 from . import guests
 from . import kitchen
 from . import shopping
@@ -455,9 +456,12 @@ class NewGameMode(ChoiceMode):
     def exec_choice(self, choice):
         levels.init(self.levels[choice])
         self.print_header()
-        print_text(levels.level.name)
+        print_title(levels.level.name)
         print_newline()
         print_text(levels.level.intro)
+        print_newline()
+        print_title('Goals')
+        print_list(goals.get_texts(), double_columns=False)
         print_newline()
         diner_name = input('Diner name (default: {}): '.format(diner.diner.name))
         if diner_name:
@@ -538,9 +542,10 @@ class DinerMode(Mode):
     CMD_MENU = 5
     CMD_REVIEWS = 6
     CMD_COMPENDIUM = 7
-    CMD_CLOSE_UP = 8
-    CMD_EXIT = 9
-    #CMD_SAVE = 9
+    CMD_GOALS = 8
+    CMD_CLOSE_UP = 9
+    CMD_EXIT = 10
+    #CMD_SAVE = 10
     commands = [
         ('kitchen',),
         ('take order from', []),
@@ -550,6 +555,7 @@ class DinerMode(Mode):
         ('menu',),
         ('reviews',),
         ('compendium',),
+        ('goals',),
         ('close up',),
         #('save',),
         ('exit',),
@@ -637,6 +643,8 @@ class DinerMode(Mode):
             return ReviewsInfoMode(back=self)
         if cmd == self.CMD_COMPENDIUM:
             return CompendiumMode(back=self)
+        if cmd == self.CMD_GOALS:
+            return GoalsInfoMode(back=self)
         if cmd == self.CMD_CLOSE_UP:
             for plated_food in food.plated():
                 print_message('throw away {}'.format(plated_food))
@@ -888,6 +896,19 @@ class IngredientCompendiumMode(ChoiceMode):
             print_text('Unknown.')
         self.wait_for_input()
         return self
+
+
+class GoalsInfoMode(InfoMode):
+
+    def print_info(self):
+        print_title('Goals')
+        progresses = []
+        for goal, (progress_num, progress_of) in zip(goals.get_texts(), goals.get_progresses()):
+            goal_progress_prc = int(float(progress_num) * 10.0 / float(progress_of))
+            progress_bar = '#' * goal_progress_prc + '-' * (10 - goal_progress_prc)
+            progress_info = '[{}]  {}/{} - {}'.format(progress_bar, progress_num, progress_of, goal)
+            progresses.append(progress_info)
+        print_list(progresses, double_columns=False)
 
 
 class ReviewsInfoMode(InfoMode):

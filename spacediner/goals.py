@@ -8,11 +8,13 @@ class Goal:
     TYPE_MONEY = 'money'
     TYPE_REVIEWS = 'reviews'
 
+    text = None
     message = None
     typ = None
     is_reached = False
 
     def init(self, data):
+        self.text = data.get('text')
         self.message = data.get('message')
 
     def reached(self):
@@ -21,6 +23,9 @@ class Goal:
 
     def check(self):
         raise NotImplemented()
+
+    def progress(self):
+        return 0, 100
 
 
 class MoneyGoal(Goal):
@@ -39,6 +44,9 @@ class MoneyGoal(Goal):
             self.reached()
             return True
         return False
+
+    def progress(self):
+        return levels.level.money, self.amount
 
 
 class ReviewsGoal(Goal):
@@ -63,8 +71,22 @@ class ReviewsGoal(Goal):
             return True
         return False
 
+    def progress(self):
+        group_rating_positive_count = reviews.group_rating_positive_count(self.group)
+        return group_rating_positive_count, self.amount
+
 
 goals = None
+
+
+def get_texts():
+    global goals
+    return [goal.text for goal in goals]
+
+
+def get_progresses():
+    global goals
+    return [goal.progress() for goal in goals]
 
 
 def check_goals():
@@ -78,6 +100,7 @@ def check_goals():
             goals_reached = False
     if goals_reached:
         cli.print_message('Congratulations! You have won!')
+
 
 
 def init(data):
