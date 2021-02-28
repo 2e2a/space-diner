@@ -24,23 +24,22 @@ from . import time
 
 
 LINE_WIDTH = 100
-LINE_WIDTH_SMALL = 80
 
 
 def cls():
-    os.system('cls' if os.name=='nt' else 'clear')
+    os.system('cls' if os.name == 'nt' else 'clear')
 
 
 def line_width():
     width = LINE_WIDTH
-    terminal_width = shutil.get_terminal_size().columns
+    terminal_width = shutil.get_terminal_size(fallback=(LINE_WIDTH, 24)).columns
     if terminal_width < LINE_WIDTH:
-        width = LINE_WIDTH_SMALL
+        width = terminal_width
     return width
 
 
 def is_small_screen():
-    return line_width() == LINE_WIDTH_SMALL
+    return line_width() < LINE_WIDTH
 
 
 def print_text(text):
@@ -1191,7 +1190,6 @@ class MerchantMode(Mode):
     merchant = None
     available_ingredients = None
     ingredients_for_sale = None
-
     hint = (
         'You can buy individual ingredients (e.g., "buy 5 potato") or stock up on everything the merchant '
         'offers ("buy 5 each").'
