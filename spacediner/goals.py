@@ -102,7 +102,6 @@ def check_goals():
         cli.print_message('Congratulations! You have won!')
 
 
-
 def init(data):
     global goals
     goals = []
