@@ -480,7 +480,6 @@ class NewGameMode(ChoiceMode):
         print_newline()
         print_title('Goals')
         print_list(goals.get_texts(), double_columns=False)
-        print_newline()
         diner_name = input('Diner name (default: {}): '.format(diner.diner.name))
         if diner_name:
             diner.diner.name = diner_name
