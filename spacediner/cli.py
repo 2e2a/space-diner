@@ -598,13 +598,14 @@ class DinerMode(Mode):
 
     def print_header(self):
         available_guests = guests.get_guests()
+        decoration = [', '.join(diner.diner.available_decoration)] if diner.diner.available_decoration else '-'
         print_header([
             ('Location', [diner.diner.name, '(dining room)']),
             ('Time', [time.now()]),
             ('Money', [levels.level.money, 'space dollars']),
             ('Seats taken', ['{}/{}'.format(len(available_guests), diner.diner.seats)]),
             ('Sanitation', ['{}/5'.format(diner.diner.sanitation)]),
-            ('Interior decoration', [', '.join(diner.diner.available_decoration)]),
+            ('Interior decoration', decoration),
         ])
 
     def print_info(self):

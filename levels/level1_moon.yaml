@@ -106,11 +106,11 @@ kitchen:
     result: raw
     properties: [ ]
 
-  - name: pan
+  - name: grill
     available: True
-    preparation: pan-frying
-    command: pan-fry
-    result: pan-fried
+    preparation: grilling
+    command: grill
+    result: grilled
     properties: [ ]
 
   - name: fryer
@@ -162,7 +162,7 @@ food:
     - name: Beef Burger
       available: True
       ingredients:
-        - [ pan-fried, beef ]
+        - [ grilled, beef ]
         - [ bun ]
         - [ pickles ]
       properties: [ burger ]
@@ -170,7 +170,7 @@ food:
     - name: Silkworm Burger
       available: True
       ingredients:
-        - [ pan-fried, silkworm ]
+        - [ grilled, silkworm ]
         - [ bun ]
         - [ pickles ]
       properties: [ burger, fancy ]
@@ -178,9 +178,9 @@ food:
     - name: Meat Plate
       available: True
       ingredients:
-        - [ pan-fried, meat ]
-        - [ pan-fried, meat ]
-        - [ pan-fried, meat ]
+        - [ grilled, meat ]
+        - [ grilled, meat ]
+        - [ grilled, meat ]
       properties: [ ]
 
     - name: Pickle Salad
@@ -248,10 +248,10 @@ guests:
       available: True
       budget: 10
       reactions:
-        - properties: [ pan-fried ]
+        - properties: [ grilled ]
           taste: +1
-          output: I love pan-fried food!
-          review_phrase: the delicious pan-fried components of the dish
+          output: I love grilled food!
+          review_phrase: the delicious grilled components of the dish
         - properties: [ deep-fried ]
           taste: +1
           output: I love deep-fried food!
@@ -263,8 +263,8 @@ guests:
       orders:
         - wish: beef
           text: I'll have some beef.
-        - wish: pan-fried
-          text: Can you make me something pan-fried?
+        - wish: grilled
+          text: Can you make me something grilled?
         - wish: meat
           text: I'll have something with meat, please.
       positive_phrases:
