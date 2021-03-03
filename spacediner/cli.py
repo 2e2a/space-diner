@@ -585,9 +585,10 @@ class DinerMode(Mode):
     ]
     prompt = 'diner >>'
     hint = (
-        'In the dining room, you can chat with your guests, take their orders, and serve them food. '
-        'For preparing food, go to the kitchen. When all the guests are gone, close up the diner - '
-        'new guests will come tomorrow.'
+        'In the dining room, you can take an order by typing "take order from [NAME]". Use '
+        'auto-complete: type "take" and press TAB, type the first letters of a customer\'s name and press TAB '
+        'again. You can also, e.g., chat with the guests or go to the kitchen to prepare food – type "help" to see '
+        'the corresponding commands. When all the guests are gone, close up the diner - new guests will come tomorrow.'
     )
 
     def update_commands(self):
@@ -714,8 +715,9 @@ class KitchenMode(Mode):
     available_ingredients = None
     available_devices = None
     hint = (
-        'You can follow the available recipes or create your own dishes. Every dish consists of three ingredients. '
-        'Once you have prepared them, they will be automatically plated as a completed dish.'
+        'Every dish consists of three ingredients. Once you have prepared them  - e.g.: "grill beef", '
+        '"plate pickles", "plate bun" - they will be automatically plated as a completed dish. You can follow a recipe '
+        'or create your own dishes. Type "help" to see all available commands.'
     )
 
     def __init__(self, **kwargs):
