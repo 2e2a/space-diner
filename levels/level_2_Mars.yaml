@@ -1,0 +1,794 @@
+name: Mars
+diner:
+  name: Space Diner
+  seats: 7
+  decoration: [ twisted horn ]
+money: 100
+intro: >
+  You are starting a new life on Mars. Humans are terra-forming it, but the cities on Mars still need
+  to be protected by domes. Fresh crops grown in the Martian greenhouses complement the supplies imported from Earth and
+  other planets. Some (edible?) life forms are even beginning to cover the rocky surface outside of the domes.
+  Your diner is located in a small city close to Pavonis Mons. Most of the settlers
+  seeking their fortunes on Mars are humans, but there are also reptiloids and bovids. Make sure that they all
+  feel at home in your diner! Your goal is to get 20 positive reviews from each group (i.e., reviews with a rating
+  of 3 or better; review by regular customers do not count towards the goals). This will help you to establish
+  a reputation as a versatile chef.
+goals:
+  - type: reviews
+    group: Reptiloid
+    amount: 20
+    text: Get 20 positive reviews from reptiloids.
+    message: Congratulations, reptiloids love your food!
+  - type: reviews
+    group: Bovid
+    amount: 20
+    text: Get 20 positive reviews from bovids.
+    message: Congratulations, bovids love your food!
+  - type: reviews
+    group: Human
+    amount: 20
+    text: Get 20 positive reviews from humans.
+    message: Congratulations, humans love your food!
+
+calendar:
+  week: ['Monsol', 'Tuessol', 'Wednessol', 'Thurssol', 'Frisol', 'Satursol', 'Sunsol']
+  cycle: 668
+
+ingredients:
+  - name: lichen
+    description: A composite algae/fungus organism. Grows on the surface of Mars.
+    storage: pantry
+    properties: [ sweet, Martian ]
+
+  - name: moss
+    description: Small green plants forming a soft, dense mat. Grows on the surface of Mars.
+    storage: pantry
+    properties: [ spicy, Martian ]
+
+  - name: moss milk
+    description: A milky fluid extracted from Martian moss.
+    storage: fridge
+    properties: [ milk, spicy, Martian ]
+
+  - name: tomato
+    description: Red and juicy.
+    storage: pantry
+    properties: [ ]
+
+  - name: peach
+    description: Sweet and juicy.
+    storage: pantry
+    properties: [ sweet ]
+
+  - name: banana
+    description: Longish yellow fruit.
+    storage: pantry
+    properties: [ sweet ]
+
+  - name: basil
+    description: An aromatic green herb.
+    storage: pantry
+    properties: [ ]
+
+  - name: cow milk
+    description: A milky fluid produced by cows (an Earth mammal).
+    storage: fridge
+    properties: [ milk, animal product ]
+
+  - name: chicken egg
+    description: Egg laid by a chicken (an Earth bird). Consists of a shell, egg white, and egg yolk.
+    storage: pantry
+    properties: [ egg, animal product ]
+
+  - name: blizzard egg
+    description: Egg laid by a blizzard bird (a Tau-Cetian bird). Consists of a shell and sweet purple goo.
+    storage: pantry
+    properties: [ egg, animal product, sweet ]
+
+storage:
+  - name: fridge
+    available: True
+    ingredients:
+      - name: cow milk
+        available: 2
+
+  - name: pantry
+    available: True
+    ingredients:
+      - name: tomato
+        available: 5
+      - name: basil
+        available: 1
+      - name: peach
+        available: 1
+      - name: chicken egg
+        available: 6
+      - name: blizzard egg
+        available: 6
+
+
+kitchen:
+  - name: plate
+    available: True
+    preparation: plating raw
+    command: plate
+    result: raw
+    properties: [ ]
+
+  - name: pot
+    available: True
+    preparation: boiling
+    command: boil
+    result: boiled
+    properties: [ ]
+
+  - name: pan
+    available: True
+    preparation: pan-frying
+    command: pan-fry
+    result: pan-fried
+    properties: [ ]
+
+  - name: fryer
+    available: True
+    preparation: deep-frying
+    command: deep-fry
+    result: deep-fried
+    properties: [ ]
+
+  - name: blender
+    available: True
+    preparation: blending
+    command: blend
+    result: blended
+    properties: [ ]
+
+shopping:
+  market:
+    name: Pavonis market
+    description: You pass the local market. Do you need to stock up on supplies?
+  merchants:
+    - name: Earth Wholesale
+      description: You approach the market stall that belongs to Earth Wholesale, a big corporation that imports products from Earth.
+      owner: Cashier Bot
+      available: True
+      ingredients:
+        - name: chicken egg
+          cost: 2
+        - name: cow milk
+          cost: 2
+
+    - name: Fresh From the Greenhouse
+      description: A human sells greenhouse-grown fruit and vegetables at this market stall.
+      owner: Samira
+      available: True
+      ingredients:
+        - name: tomato
+          cost: 1
+        - name: basil
+          cost: 2
+        - name: peach
+          cost: 2
+        - name: banana
+          cost: 2
+
+    - name: Tau-Cetian Imports
+      description: A very tall and skinny reptiloid sells Tau-Cetian products at this booth.
+      available: True
+      owner: Charbinivore
+      ingredients:
+        - name: blizzard egg
+          cost: 3
+
+    - name: Lush Meadows
+      description: In a hidden corner of the market place, you find this stall selling fresh plants that have recently
+        started to grow on the surface of Mars.
+      available: False
+      owner: Seven-horned Eetch
+      ingredients:
+        - name: lichen
+          cost: 1
+        - name: moss
+          cost: 1
+        - name: moss milk
+          cost: 1
+
+food:
+  recipes:
+    - name: Plain Omelette
+      available: True
+      ingredients:
+        - [ pan-fried, egg ]
+        - [ pan-fried, egg ]
+        - [ pan-fried, egg ]
+      properties: [ omelette ]
+
+    - name: Tomato Omelette
+      available: True
+      ingredients:
+        - [ pan-fried, tomato ]
+        - [ pan-fried, egg ]
+        - [ pan-fried, egg ]
+      properties: [ omelette ]
+
+    - name: Tomato Soup
+      available: True
+      ingredients:
+        - [ boiled, tomato ]
+        - [ boiled, tomato ]
+        - [ basil ]
+      properties: [ soup, healthy ]
+
+    - name: Peach Milkshake
+      available: True
+      ingredients:
+        - [ blended, peach ]
+        - [ milk ]
+        - [ milk ]
+      properties: [ shake ]
+
+    - name: Banana Milkshake
+      available: True
+      ingredients:
+        - [ blended, banana ]
+        - [ milk ]
+        - [ milk ]
+      properties: [ shake ]
+
+    - name: Tomato Salad
+      available: True
+      ingredients:
+        - [tomato, raw]
+        - [tomato, raw]
+        - [basil, raw]
+      properties: [ salad, healthy ]
+
+    - name: Tau-Cetian Kulkick
+      available: True
+      ingredients:
+        - [blizzard egg, boiled]
+        - [blizzard egg, raw]
+        - [blizzard egg, pan-fried]
+      properties: []
+
+    - name: Aab's Moss Soup
+      available: False
+      ingredients:
+        - [basil, deep-fried]
+        - [moss, boiled]
+        - [moss milk, boiled]
+      properties: [ soup]
+
+
+  menu:
+    - Tomato Soup
+    - Peach Milkshake
+    - Plain Omelette
+    - Tomato Salad
+    - Tau-Cetian Kulkick
+
+guests:
+  groups:
+    - name: Human
+      description: Bipedal mammals originating from Earth. Almost omnivorous.
+      name_factory: Martian-Human
+      available: True
+      reactions:
+        - properties: [ blizzard egg ]
+          taste: -3
+          output: Argh, Humans cannot digest blizzard eggs.
+          review_phrase: that the dish contained blizzard eggs, which are poisonous to humans
+
+    - name: Reptiloid
+      description: >
+        Semiaquatic four-limbed vertebrates with long snouts and powerful jaw muscles.
+        With their highly acidic stomach, they can easily digest bones, hooves and horns.
+        Many reptiloids swallow stones to crush the food in their stomachs.
+      name_factory: Martian-Reptiloid
+      available: True
+      reactions:
+        - properties: [ spicy ]
+          taste: -3
+          output: Argh, reptiloids cannot digest spicy food.
+          review_phrase: the spiciness, as a reptiloid I cannot handle it
+        - properties: [ egg ]
+          taste: +1
+          output: I like eggs.
+          review_phrase: the eggs
+        - properties: [ blizzard egg ]
+          taste: +1
+          output: I especially like blizzard eggs.
+          review_phrase: the blizzard eggs from the reptiloid home world
+      orders:
+        - wish: egg
+          text: Something with eggs, please.
+        - wish: omelette
+          text: I would like one of these... what do you call them... omelettes!
+        - wish: blizzard egg
+          text: I would really appreciate a blizzard egg right now.
+        - wish: pan-fried
+          text: Something pan-fried, please.
+        - wish: milk
+          text: I'll have something with milk.
+
+    - name: Bovid
+      description: >
+        Cloven-hoofed mammals originating from the Barnard's Star system, with a certain resemblance to Earth cows.
+        The number of horns on a Bovid's head reflects their age and plays an important social role
+        in most Bovid cultures. Bovids ferment plant-based food in a specialized stomach prior to digestion.
+      name_factory: Martian-Bovid
+      available: True
+      reactions:
+        - properties: [ animal product ]
+          taste: -3
+          output: Argh, Bovids cannot digest animal products.
+          review_phrase: that the dish contained animal products, which I cannot digest
+        - properties: [ Martian ]
+          taste: +1
+          output: I love fresh Martian plant products.
+          review_phrase: the fresh Martian plants
+        - properties: [ raw ]
+          taste: +1
+          output: Raw food is delicious.
+          review_phrase: the raw components
+      orders:
+        - wish: raw
+          text: Can you bring me something raw, please?
+        - wish: tomato
+          text: I would like something with tomatoes, please.
+        - wish: soup
+          text: Hm, how about a soup? Can you make one for me?
+        - wish: basil
+          text: Can you make me something with basil?
+
+    - name: adult
+      description: Most of Mars's adult population works in engineering, research, or food supply.
+      available: True
+      budget: 15
+      reactions:
+        - properties: [ healthy ]
+          taste: +1
+          output: As a responsible adult, I know that healthy food is good for me.
+          review_phrase: that the food was on the healthy side
+        - properties: [ shake ]
+          taste: -1
+          output: Aren't shakes for children?
+          review_phrase: the shake that I got
+      positive_phrases:
+        - Great!
+        - Wonderful!
+        - Perfect!
+      neutral_phrases:
+        - OK.
+        - Quite good.
+        - Not bad.
+      negative_phrases:
+        - Pretty bad.
+        - I did not enjoy this.
+        - I didn't like it.
+
+    - name: senior
+      description: Currently, most seniors on Mars are Humans who were among the first colonists.
+      available: False
+      budget: 30
+      reactions:
+        - properties: [ blended ]
+          taste: +1
+          output: Blended food is good for my stomach.
+          review_phrase: that the food was blended, this made it easy to eat
+        - properties: [ boiled ]
+          taste: +1
+          output: Boiled food is good for my stomach.
+          review_phrase: that there was something boild in the dish, it was easy to digest
+        - properties: [ deep-fried ]
+          taste: -2
+          output: Deep-fried food gives me heartburn.
+          review_phrase: the deep-fried elements of the dish, they gave me heartburn
+      orders:
+        - wish: soup
+          text: I'll have a soup, please.
+        - wish: boiled
+          text: I think that something boiled would be good for me now.
+        - wish: sweet
+          text: Can I have something sweet?
+      positive_phrases:
+        - Jolly good.
+        - This young chef impressed me.
+        - Marvelous.
+      neutral_phrases:
+        - Acceptable.
+        - Decent.
+        - Not as bad as I thought.
+      negative_phrases:
+        - Maybe popular with the kids, but not for me.
+        - Off-putting.
+        - This place is abhorrent.
+
+    - name: teenager
+      description: Young second-generation colonists, more or less rebellious.
+      available: False
+      budget: 10
+      reactions:
+        - properties: [ deep-fried ]
+          taste: +2
+          output: I love deep-fried food!
+          review_phrase: that there was deep-fried stuff
+        - properties: [ sweet ]
+          taste: +2
+          output: I love sweet food!
+          review_phrase: that there was something sweet in the food
+        - properties: [ shake ]
+          taste: +2
+          output: I love shakes!
+          review_phrase: that I got a shake
+      orders:
+        - wish: deep-fried
+          text: Hey, something deep-fried would be awesome! Thanks!
+        - wish: sweet
+          text: Bring me anything, as long as it is sweet!
+        - wish: shake
+          text: A shake, please!
+      positive_phrases:
+        - ":D"
+        - ":))"
+        - "<3"
+      neutral_phrases:
+        - ":/"
+        - ":|"
+      negative_phrases:
+        - ":(("
+        - "(thumb down)"
+        - "-_-"
+  names:
+    - name: Martian-Human
+      factory:
+        - [ Mohomot, Youssef, Ahmet, Junior, Mehti, Fatima, Aya, Salma, Precious, Mariam, Santiako, Noah, Mikuel, Chayten,
+           Ramón, Luis, Akustín, Sofía, Alysha, Alice, Oliphia, Emma, Mariana, Phidelene, Kaprielle, Ximena, Mary, Camila,
+           An, Phei, Aaraph, Amir, Ori, Amit, Keorch, Minato, Yerasyl, Kiran, Min-chun, Chia-hao, Somchai, Ai, Cai, Ching,
+           Aatya, Tamar, Eten, Sekura, Rimas, Aysere, Nor, Otphal, Shristi, Anchel, Seo-yeon, Sara, Shu-fen, Sumayah,
+           Noel, Marc, Tavit, Lukas, Yusif, Atam, Stefan, Cheorchi, Rasmus, Penchamin, Onni, Atrian, Kapriel, Malik,
+           Cheorchios, Francesco, Mihail, Taan, Philliam, Antoni, Trakan, Huko, Amelia, Nareh, Laia, Sahra,
+           Teresa, Mia, Margret, Taisy, Iphaana, Susanna, Anastasia, Tarina, Nikau, Teiki, Maepha, Hina,
+           Mammatoph, Aktar, Wong, Chu, Peritse, Lomitse, Cohen, Lephi, Tanaka, Sasaki, Kim, Seo, Santos, Aquino, Perera,
+           Kamake, Can, Lau, Kaya, Aslan, Phan, Lý, Kruber, Auer, Peeters, Telić, Savić, Iliev, Nielsen, Kask, Koppel,
+           Repane, Sepp, Antrejev, Iphanoph, Hansen, Poulsen, Laine, Phirtanen, Salonen, Chohansson, Pernart, Tubois, Roux,
+           Phagner, Pecker, Papp, Kiss, Priem, Plöntal, Murphy, Quinn, Russo, Esposito, Krasniqi, Shala, Osols,
+           Kaslauskas, Schiltz, Fella, Crech, Popa, Te Chong, Te Poer, Perg, Krafczyk, Costa, Silpha, Sokoloph, Palok,
+           Karcía, Pérez, Fontana, Pontarenko, Melnyk, Wright, Wilson, Moore, Tremplay, Flores, Morais, Asepheto, Mohan ]
+
+    - name: Martian-Reptiloid
+      factory:
+        - [ B,P,D,T,J,Ch,R,L, G, K ]
+        - [ u,a ]
+        - [ b,rb, lb, mb, p, rp, lp, mp, d, ld, rd, nd, ch, nch, rch, r, l, g, rg, lg, ng, k, rk, lk, nk ]
+        - [ ini ]
+        - [ aceous, adelic, adenia, agog, androus, arch, aroo, aroonie, astic, athlon, blastic, biont, cratic,
+           cyte, dactyl, ennial, eroo, esque, ette, fest, fugal, geddon, hood, ick, iferous, imundol, illion,
+           illiard, izzle, lepsy, ling, lock, mancer, naut, oecious, oholic, omics, orama, pants, pathy, pedia,
+           phage, phil, phonic, pod, poeia, pteran, riffic, saur, sicle, ster, topia, tude, tuple, urgy, verse,
+           vore, ware, ylene, zoon ]
+
+    - name: Martian-Bovid
+      factory:
+        - [ One-, Two-, Three-, Four-, Five-, Six-, Seven-, Eight-, Nine-, Ten-, Eleven-, Twelve- ]
+        - [ horned ]
+        - [ " " ]
+        - [ A, Aa, E, Ee, Ou ]
+        - [ d, b, g, l, rg, rk, tch, rb, z, dge, mb, sk, w ]
+
+    - name: Martian-Bovid-Teenager
+      factory:
+        - [ Little Hornless ]
+        - [ " " ]
+        - [ A, Aa, E, Ee, Ou]
+        - [ dd, bb, gg, ll, rg, rk, tch, rb, zz, dge, mb, sk, w ]
+        - [ i ]
+
+  factory:
+    - [ Human, senior]
+    - [ Human, adult ]
+    - [ Reptiloid, adult ]
+    - [ Bovid, adult ]
+    - [ Human, teenager ]
+    - [ Reptiloid, teenager ]
+    - [ Bovid, teenager ]
+
+  regulars:
+    - name: Old Twenty-Horned Aab
+      available: True
+      budget: 30
+      reactions:
+        - properties: [ spicy ]
+          taste: +2
+          output: Ah, I love spicy food.
+          review_phrase: the delicious spiciness
+        - properties: [ tomato ]
+          taste: +2
+          output: Ah, I love tomatos.
+          review_phrase: the tomatos in the dish
+        - properties: [ animal product ]
+          taste: -3
+          output: Argh, Bovids cannot digest animal products.
+        - properties: [ Martian ]
+          taste: +1
+          output: I love fresh Martian plant products.
+        - properties: [ raw ]
+          taste: +1
+          output: Raw food is delicious.
+      orders:
+        - wish: tomato
+          text: Ah... I have this craving for a tomato.
+      positive_phrases:
+        - Ah, it was fantastic.
+        - Ah, very enjoyable diner, I liked it.
+        - Ah, I like good food.
+      neutral_phrases:
+        - Mh, I was not impressed today.
+        - Mh, it could have been better.
+        - Mh, something was not quite right today.
+      negative_phrases:
+        - Oh, almost everything was bad today.
+        - Oh, I really did not love it.
+        - Oh, no, not great.
+
+social:
+
+  - name: Old Twenty-Horned Aab
+    greetings:
+      - Ah... hello, Hornless
+    chats:
+      - Mh... the weather is usually strange on Mars, but today, it is particularly strange, is it not?
+      - Ah, what a day. So sandy and stormy.
+    friendship:
+      disappears: True
+      meetings:
+        - meeting: Your regular customer Aab invites you to the park. When you arrive, she is watching a game of
+            Rubarch that two elderly humans are playing. Aab is one of the few non-human older citizens of Mars.
+            Most of the new colonists that are arriving are young, and the first colonists that have grown old were
+            from Earth. Aab greets you and invites you to take a seat with her at one
+            of the small tables with game boards on them. You have a vague idea how Rubarch is played, and you start
+            moving the spiky spheres around on the board. You quickly notice that Aab is not very good at it, either.
+          question: Ah, I like my friends here, but sometimes our activities bore me. I do not enjoy games that much.
+            Mh, sometimes I wish I had a more challenging occupation... I used to be the director of a museum once.
+          replies:
+            - reply: I wish I had as much free time as you do. It's great to just hang out and relax all day.
+              reaction: Mh, I hear you. But still, Rubarch every day... I worry that I will never get the hang of it.
+            - reply: Well, couldn't you look for a job, or join an organization or something?
+              reaction: Mh, I am not sure I can do it. I have lived for a long time and I have many horns...
+          rewards:
+            - type: guest
+              guest: senior
+              text: Ah, I have told all my friends about your diner. Perhaps they will try it out! Your diner will
+                be crowded with old people.
+        - meeting: Aab invites you to drink tea in the evening. You meet in her little appartment. Even though the
+            furniture is optimized for bovid anatomy and the floor is covered with soil and grass instead of a carpet,
+            the interior design uncannily reminds you of your own grandparents' style. Sipping
+            the bitter herbal tea, you let your eyes wander over the shelves filled with tableware and souvenirs. There
+            is also a cabinet filled with what looks like bovid horns, in various colors and lengths. Some of them are
+            longer than you are tall.
+          question: Ah, impressive collection, do you not think? These are from friends and relatives. Sometimes old
+              bovids decide to cut off their many horns as a symbol of starting anew, even if it is late in life.
+              Mh, my uncle Esk traveled to another star for the first time when he was my age. My friend Oudge went back
+              to the university. It is a custom to give away the horns as special gifts.
+          replies:
+            - reply: What a beautiful custom.
+              reaction: Ah, yes. I often chew on the idea of doing this as well. But I do not know if I have the courage.
+            - reply: Uh... seems a little weird to me.
+              reaction: Ah, perhaps from the ouside it looks a little distressing. To me, it is a beautiful thing.
+                Mh, but I do not know if I would have the courage to do this...
+          rewards:
+            - type: ingredient
+              ingredient: moss
+              diff: 7
+              text: Here, a little gift for you. It is Martian moss that grows outside on the surface.
+                Mh, it is spicy, and it reminds me of the herbs on my planet.
+        - meeting: You visit Aab again in her apartment. This time, Aab serves some snacks with the tea. You chew on
+            the small blocks of pressed plants while Aab tells you about her family. 'Ah, it has been ten years now
+            that we left our home system that you call Barnard's Star. Mh, I miss the meadows... When I lived there,
+            I could just leave my house and have some fresh grass and herbs any time.'
+          question: Ah, they are now starting to grow some plants on the surface of Mars. What do you think about this?
+          replies:
+            - reply: It's wonderful. The planet is coming to life.
+              reaction: Mh, you are right. It will take a long time until I can go out and graze in a Martian meadow,
+                but it is a promising start.
+            - reply: I am against it. The red rocks make this planet unique.
+              reaction: Ah, I see, you want to preserve what makes Mars special. Mh, but think about the advantages,
+                hornless friend. More fresh products for us to eat and to cook with.
+          rewards:
+            - type: merchant
+              merchant: Lush Meadows
+              text: Mh, it would be wonderful if I could order some of the new Martian plants in your diner.
+                Here you go, I will give you the address of a nice little market stand where you can buy them.
+                Ah, you are most welcome.
+        - meeting: Aab invites you for a walk on the Bright Boulevard with her and two of her grandchildren.
+            The Bright Boulevard is a promenade that leads around the city, right next to the inner side of the dome.
+            The boulevard is swarming with citizens, most of them families and joggers. Once a year, a city marathon
+            takes place on this trail. It takes a human jogger around 4 hours to complete the whole round.
+            With Aab and the kids, you walk only a small fraction of it, and you stop from time to time to rest on
+            one of the many benches facing the outer wall. The children press their nose against the transparent panes
+            that form the walls of the dome. Aab points out some colorful patches of lichen and moss on the rocks
+            to them and explains what kinds they are.
+          question: Ah, I have even more little hornless grandchildren, you know. Mh, but some of them are growing up in
+            in other solar systems, and I have never been there in person.
+          replies:
+            - reply: You can visit them if you want.
+              reaction: Mh, you are right, but interstellar traveling is exhausting, and I am not young anymore.
+                But it would be delightful to see more worlds...
+            - reply: I am sure your grandchildren here on Mars are happy to have you around.
+              reaction: Ah, yes, you are right. Still, the thought of seeing new worlds tingles me in my stomachs...
+          rewards:
+            - type: guest
+              guest: teenager
+              text: I am going to tell all my grandchildren and their friends about your diner. This should liven
+                things up quite a bit! It will be lovely.
+        - meeting: You visit Aab again in her apartment. You notice that the living lawn-carpet looks different
+            than last time, some of the grasses and herbs are flowering. Aab tells you that you are welcome to pick
+            some of them and snack them if you want. You try a small yellow flower. It tastes very bitter, but
+            somehow enjoyable. Aab is standing in the kitchenette and stirring a bit pot. As far as you know,
+            it is rare for bovids to cook a hot meal, but whatever is in the pot is clearly simmering and steaming.
+            It smells good. You recognize the spiciness of Martian plants, but when Aab starts frying something in a
+            pan, a familiar Earth scent starts to fill the room.
+          question: Ah, here you go. I hope you like it. What do you think about bovid cuisine?
+          replies:
+            - reply: I love fresh greens.
+              reaction: Ah, how nice. This recipe here is not so typical, there is nothing raw in it.
+                But I like to make things warm and soft sometimes.
+            - reply: I'm more the meat-and-potato kind of person.
+              reaction: Ah, this sounds interesting as well. I cannot digest meat, but perhaps you can cook
+                this 'potato' for me some time.
+          rewards:
+            - type: recipe
+              recipe: Aab's Moss Soup
+              text: Here, I will write down the recipe for you. It is an old family. Mh, it is best
+                with the moss that grows in my home region, but it works with Martian products as well. Please put
+                it on the menu in your diner. Ah, I am sure it is going to be a big hit.
+        - meeting: You agreed to meet Aab in your diner in the evening. You are polishing the silverware when an
+           unfamiliar bovid appears at the door. It takes you a few seconds to recognize that it is Aab – but without
+           her horns.
+          question: Ah, my young friend, you look surprised. I have decided to go for it. I am old, but I want to see
+            new world. Tomorrow, I am leaving for the Tau-Ceti system. Some of my grandshildren live there, and I also
+            have some reptiloid friends that I want to visit. Ah, I came to say good-bye.
+          replies:
+            - reply: Wow! I wish you the best of luck on your adventure.
+              reaction: Ah, thank you, my friend. I hope I will eat in your diner again some day.
+            - reply: I am worried. Interstellar journeys are dangerous and exhausting.
+              reaction: Mh, do not worry, my young friend. I know that I can do it. The hardest part was
+                 summoning my courage, and I have succeeded.
+          rewards:
+            - type: decoration
+              decoration: twisted horn
+              text: I want you to have one of my horns. It is very decorative, do you not think? You can hang
+                it on one of the empty walls of your diner.
+
+
+  - name: Human adult
+    greetings:
+      - Hello,
+      - Hi,
+      - Good morning,
+    chats:
+      - There must have been a really strong sandstorm last night. I heard that our dome was slightly damaged.
+  - name: Reptiloid adult
+    greetings:
+      - Hello,
+    chats:
+      - It's so cold today, I can barely move my limbs.
+  - name: Bovid adult
+    greetings:
+      - Greetings, Hornless
+    chats:
+      - I heard that they want to allow keeping pets inside the domes soon. I'd really like one of these Earth dogs.
+      - Have you ever been outside of the domes? I did a tour yesterday, but I found it scary.
+      - Sigh. My hornless children are really exhausting.
+      - Ah, my stomachs hurt. Or at least one of them hurts, sometimes it's hard to tell.
+  - name: Human senior
+    greetings:
+      - Good morning
+    chats:
+      - Your diner looks so charming, my dear.
+      - I'm just going to rest my eyes for a minute.
+      - What kind of music are these kids outside listening to? Sounds like a lot of noise to me.
+      - I wish I still had all my teeth. You should take good care of your teeth while you are young!
+  - name: Reptiloid teenager
+    greetings:
+      - Good morning
+      - What's up,
+    chats:
+      - How do I look? This is a brand-new scale polish that I'm trying.
+  - name: Bovid teenager
+    greetings:
+      - Good morning
+      - What's up,
+    chats:
+      - I've got a headache. Maybe my horns are starting to grow?
+      - I hate school. Why do I need to go to school?!
+  - name: Human teenager
+    greetings:
+      - Good morning
+      - What's up,
+    chats:
+      - I wanna go dancing tonight.
+      - Ugh, I don't feel great today. Maybe I shouldn't have gone to that party yesterday.
+      - When I finish school, I also want to become a chef!
+  - name: Cashier Bot
+    greetings:
+      - Welcome to Earth Wholesale,
+    chats:
+      - How about some chicken eggs? A versatile product.
+      - How about some cow milk? Calcium is good for your bones.
+  - name: Samira
+    greetings:
+      - Welcome to my shop,
+    chats:
+      - Try our sun-ripened tomatoes!
+      - The weather conditions have been perfect this week. Try our fresh products!
+      - We treat all our plants with love.
+      - You should come and visit our greenhouses some day. They are open to the public!
+      - I'm waiting for some new seeds from Earth. I'm excited to try growing some new varieties!
+  - name: Charbinivore
+    greetings:
+      - Welcome, welcome,
+    chats:
+      - I have tried eggs from many types of birds, but nothing comes close to the egg of a blizzard-bird, in my opinion!
+      - I wish I could bring you more delicacies from the Tau-Ceti system, but for now, try the blizzard eggs!
+      - Do you like sweet food? Try to add a blizzard egg to your dishes!
+      - A lot of customers ask whether blizzard eggs are so delicious because of the blizzards. The answer is yes!
+      - Blizzard eggs! Blizzard eggs! Only 3 space-dollars for a blizzard egg!
+  - name: Seven-horned Eetch
+    greetings:
+      - Welcome, Hornless
+    chats:
+      - Can I interest you in some Martian lichen? Half plant, half fungus! Nice and sweet!
+      - Can I interest you in some Martian moss? Fresh, green, spicy!
+      - Can I interest you in some moss milk? A wonderful plant-based product, smooth and silky!
+            
+skills:
+  - type: cooking
+    name: seasoning skills
+    subskills:
+      - proper salting
+      - using spices
+      - balancing the level of acidity
+      - combining flavors
+      - creating unique flavors
+  - type: service
+    name: wittiness
+    subskills:
+      - old jokes
+      - modern jokes
+      - puns
+      - impersonations
+      - stand-up comedy
+  - type: ambience
+    name: napkin-folding techniques
+    subskills:
+      - The Palm Leaf
+      - The Lily
+      - The Classic Fan
+      - The Bishop's Hat
+      - The Rose
+
+activities:
+  - name: watch cooking show on TV
+    available: True
+    message: >
+      You watched an episode of Intergalactic Chef. You learned something about seasoning. This should improve the
+      quality of your food.
+    rewards:
+      - type: skill
+        skill: seasoning skills
+        diff: +1
+  - name: watch comedy channel on TV
+    available: True
+    message: You watched some comedy. This should make you wittier and improve the quality of your service.
+    rewards:
+      - type: skill
+        skill: wittiness
+        diff: +1
+  - name: learn napkin-folding techniques
+    available: True
+    message: You followed a napkin-folding tutorial. This should improve the ambience of your restaurant.
+    rewards:
+      - type: skill
+        skill: napkin-folding techniques
+        diff: +1

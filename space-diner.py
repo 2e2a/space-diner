@@ -1,6 +1,8 @@
 import argparse
 from spacediner import cli, levels, settings
 
+# TODO: consider showing available or suggested commands when starting a level
+# TODO: define win-message per level
 # TODO: consider removing unlock conditions for social meetings: regulars could have fixed meeting days
 # TODO: regulars as group members
 # TODO: show more info about guests in diner mode (e.g., ordered: ...)

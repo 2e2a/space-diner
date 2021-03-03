@@ -348,6 +348,7 @@ class Mode:
                 if is_available:
                     command_list.append(text)
             print_list(command_list)
+        print_text('Use auto-complete: type the first letters of a command and press TAB.')
         self.wait_for_input()
 
     def print_hint(self):
@@ -538,8 +539,14 @@ class FirstHelpMode(InfoMode):
         print_title(title)
         print_text(
             'How to play? Use auto-complete: type the first letters of a command and press TAB. Type \'help\' to '
-            'display a list of available commands. During your first day, you will receive general gameplay hints.\n'
-            'What to do first? Take your guests\' orders in the diner, prepare food in the kitchen, and serve it.\n'
+            'display a list of available commands. During your first day, you will receive general gameplay hints.'
+        )
+        print_newline()
+        print_text(
+            'What to do first? Take your guests\' orders in the diner, prepare food in the kitchen, and serve it. '
+        )
+        print_newline()
+        print_text(
             'Heads up: your guests have specific dietary restrictions and preferences. '
             'Make them happy, and they will repay you in space dollars and positive reviews!'
         )
