@@ -11,7 +11,7 @@ intro: >
   Your diner is located in a small city close to Pavonis Mons. Most of the settlers
   seeking their fortunes on Mars are humans, but there are also reptiloids and bovids. Make sure that they all
   feel at home in your diner! Your goal is to get 20 positive reviews from each group (i.e., reviews with a rating
-  of 3 or better; review by regular customers do not count towards the goals). This will help you to establish
+  of 3 or better; reviews by regular customers do not count towards the goals). This will help you to establish
   a reputation as a versatile chef.
 goals:
   - type: reviews
@@ -33,6 +33,36 @@ goals:
 calendar:
   week: ['Monsol', 'Tuessol', 'Wednessol', 'Thurssol', 'Frisol', 'Satursol', 'Sunsol']
   cycle: 668
+  events:
+    - event: lose ingredients
+      days: 3-5
+      info: Your fridge malfunctioned, some of the milk stored in it went bad!
+      ingredients:
+        - name: moss milk
+          amount: 10
+        - name: cow milk
+          amount: 10
+    - event: lose ingredients
+      days: 9-12
+      info: Some kind of organism infested the plants in your pantry, you lost some of your ingredients!
+      ingredients:
+        - name: lichen
+          amount: 5
+        - name: moss
+          amount: 5
+        - name: tomato
+          amount: 5
+        - name: peach
+          amount: 5
+        - name: banana
+          amount: 5
+        - name: basil
+          amount: 5
+    - event: holiday
+      name: A holiday!
+      info: Everyone is celebrating.
+      day: 6
+      groups: [ Human adult, Bovid adult, Reptiloid adult, Human senior, Human teenager, Bovid teenager, Reptiloid teenager ]
 
 ingredients:
   - name: lichen
