@@ -588,7 +588,7 @@ class DinerMode(Mode):
         'In the dining room, you can take an order by typing "take order from [NAME]". Use '
         'auto-complete: type "take" and press TAB, type the first letters of a customer\'s name and press TAB '
         'again. You can also, e.g., chat with the guests or go to the kitchen to prepare food – type "help" to see '
-        'the corresponding commands. When all the guests are gone, close up the diner - new guests will come tomorrow.'
+        'the corresponding commands. When all the guests are gone, close up the diner; new guests will come tomorrow.'
     )
 
     def update_commands(self):
@@ -620,11 +620,15 @@ class DinerMode(Mode):
         print_title('Food:')
         print_list(food.plated())
         print_title('Guests:')
-        names_with_groups = []
+        names_with_info = []
         for guest_name in available_guests:
             guest = guests.get(guest_name)
-            names_with_groups.append('{} ({})'.format(guest.name, guest.group_name if guest.groups else 'regular'))
-        print_list(names_with_groups)
+            group = guest.group_name if guest.groups else 'regular'
+            info = ''
+            if guest.order:
+                info = ', ordered {}'.format(guest.order.wish)
+            names_with_info.append('{} ({}){}'.format(guest.name, group, info))
+        print_list(names_with_info)
 
     def exec(self, cmd, cmd_input):
         if cmd == self.CMD_KITCHEN:
