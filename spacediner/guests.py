@@ -46,6 +46,7 @@ class Order:
 
 
 class Guest:
+    is_regular = False
     name = None
     name_factory = None
     description = None
@@ -68,19 +69,27 @@ class Guest:
     ambience = 2
     review = None
 
-    def __init__(self):
+    def __init__(self, is_regular=False):
+        self.is_regular = is_regular
         self.groups = []
         self.positive_phrases = []
         self.neutral_phrases = []
         self.negative_phrases = []
 
-    @property
-    def group_name(self):
-        return ' '.join(group.name for group in self.groups) if self.groups else self.name
+    def name_with_groups(self):
+        pass
 
     @property
-    def group_names(self):
-        return [group.name for group in self.groups] if self.groups else []
+    def group(self):
+        return ' '.join(group.name for group in self.groups)
+
+    @property
+    def group_name(self):
+        return self.group if not self.is_regular else self.name
+
+    @property
+    def review_names(self):
+        return [group.name for group in self.groups] if not self.is_regular else []
 
     def add_decoration_review(self):
         all_decoration = diner.diner.decoration
@@ -260,6 +269,8 @@ class Guest:
         self.positive_phrases = data.get('positive_phrases', [])
         self.neutral_phrases = data.get('neutral_phrases', [])
         self.negative_phrases = data.get('negative_phrases', [])
+        if self.is_regular:
+            self.groups = [get_group(group_name) for group_name in data.get('groups', [])]
 
 
 class GuestGroup(Guest):
@@ -304,9 +315,8 @@ class GuestFactory:
         return [' '.join(group) for group in self.get_available_subgroups()]
 
     def create_guest(self, name, existing=None):
-        global guest_groups
         guest = Guest()
-        groups = [guest_groups.get(group_name) for group_name in name.split(' ')]
+        groups = [get_group(group_name) for group_name in name.split(' ')]
         guest.name = self._guest_name(groups, existing)
         guest.groups = groups
         guest.reactions = list(itertools.chain.from_iterable(group.reactions for group in groups))
@@ -488,27 +498,28 @@ def daytime():
     new_guests = _new_guests(seats)
     for name in new_guests:
         guest = guest_factory.create_guest(name, existing=guests)
-        reviews.add(guest.group_name, guest.group_names)
+        reviews.add(guest.group_name, guest.review_names)
         guests.append(guest)
     for regular in regulars_today:
         regular.reset()
 
 
 def init(data):
-    global regulars
-    regulars = OrderedDict()
-    for guest_data in data.get('regulars', []):
-        guest = Guest()
-        guest.init(guest_data)
-        guest.reset()
-        regulars.update({guest.name: guest})
-
     global guest_groups
     guest_groups = OrderedDict()
     for group_data in data.get('groups'):
         group = GuestGroup()
         group.init(group_data)
         guest_groups.update({group.name: group})
+
+    global regulars
+    regulars = OrderedDict()
+    for guest_data in data.get('regulars', []):
+        guest = Guest(is_regular=True)
+        guest.init(guest_data)
+        guest.reset()
+        regulars.update({guest.name: guest})
+
 
     global name_factories
     name_factories = {}

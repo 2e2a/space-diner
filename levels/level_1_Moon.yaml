@@ -354,6 +354,7 @@ guests:
 
   regulars:
     - name: Dr. Ozabela Ruizy
+      groups: [ Human, colonist ]
       available: True
       budget: 10
       days: ['Moonday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']

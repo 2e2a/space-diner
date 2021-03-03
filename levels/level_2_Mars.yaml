@@ -525,6 +525,7 @@ guests:
 
   regulars:
     - name: Old Twenty-Horned Aab
+      groups: [ Bovid, adult ]
       available: True
       budget: 30
       reactions:

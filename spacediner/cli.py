@@ -623,7 +623,10 @@ class DinerMode(Mode):
         names_with_info = []
         for guest_name in available_guests:
             guest = guests.get(guest_name)
-            group = guest.group_name if guest.groups else 'regular'
+            if guest.is_regular:
+                group = 'regular, {}'.format(guest.group) if guest.group else 'regular'
+            else:
+                group = guest.group
             info = ''
             if guest.order:
                 info = ', ordered {}'.format(guest.order.wish)
