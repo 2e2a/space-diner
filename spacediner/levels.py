@@ -44,11 +44,24 @@ class Level:
             activities.init(data.get('activities', []))
 
 
+levels = None
 level = None
 
 
-def list():
-    return sorted([level_file for level_file in os.listdir('levels/')])
+def get():
+    global levels
+    return list(levels.keys())
+
+
+def init_level(name):
+    global levels
+    global level
+    level = Level()
+    file_name = 'levels/{}'.format(levels[name])
+    level.init(file_name)
+    #time.register_callback(time.Calendar.TIME_MORNING, autosave_save)
+
+
 
 
 def saved_games():
@@ -87,12 +100,15 @@ def autosave_load():
         load(f)
 
 
-def init(name):
-    global level
-    level = Level()
-    file_name = 'levels/{}'.format(name)
-    level.init(file_name)
-    #time.register_callback(time.Calendar.TIME_MORNING, autosave_save)
+def init():
+    global levels
+    levels = {}
+    files = [level_file for level_file in os.listdir('levels/')]
+    files = filter(lambda f: f.startswith('level'), files)
+    files = sorted(files)
+    for level_file in files:
+        _, num, name = os.path.splitext(level_file)[0].split('_')
+        levels[name] = level_file
 
 
 def save(file):

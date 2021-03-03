@@ -1,5 +1,5 @@
 import argparse
-from spacediner import cli, settings
+from spacediner import cli, levels, settings
 
 # TODO: rewards/trophies for achievements, e.g., served 10/50/100 dishes, received 10/50/100 positive reviews...
 # TODO: check if rewards by normal guests are possible
@@ -19,5 +19,6 @@ parser.add_argument(
 )
 args = vars(parser.parse_args())
 settings.read_args(args)
+levels.init()
 cli.init()
 cli.run(args)

@@ -467,11 +467,11 @@ class NewGameMode(ChoiceMode):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.levels = levels.list()
+        self.levels = levels.get()
         self.choices = self.levels
 
     def exec_choice(self, choice):
-        levels.init(self.levels[choice])
+        levels.init_level(self.levels[choice])
         self.print_header()
         print_title(levels.level.name)
         print_newline()
