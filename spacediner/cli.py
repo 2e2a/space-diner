@@ -1079,7 +1079,6 @@ class MeetingMode(ChoiceMode):
     def exec_choice(self, choice):
         reply = choice
         social.meet(self.guest, reply)
-        social.lock_friendship(self.guest)
         self.wait_for_input()
         return SleepMode()
 

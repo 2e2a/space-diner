@@ -223,8 +223,6 @@ class Guest:
         payment = int(self.budget/5 * aggregate_rating)
         levels.level.money += payment
         cli.print_text('{} paid {} space dollars.'.format(self.name, payment))
-        if self.taste == 4:
-            social.unlock_friendship(self.group_name)
         return self.taste
 
     def has_chat_available(self):

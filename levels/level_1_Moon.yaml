@@ -391,7 +391,7 @@ social:
       - These reviewers... they know nothing!
       - Experiments, sigh... why do they always go wrong.
     friendship:
-      disappears: True
+      available: True
       meetings:
         - meeting: 'Ozabela invites you to the research facility where she works. Access to the area is restricted, but when
             the security guards see Ozabela, they let you enter. Ozabela shows you what she is working on

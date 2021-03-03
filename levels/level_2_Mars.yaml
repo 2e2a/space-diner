@@ -540,7 +540,7 @@ social:
       - Mh... the weather is usually strange on Mars, but today, it is particularly strange, is it not?
       - Ah, what a day. So sandy and stormy.
     friendship:
-      disappears: True
+      available: True
       meetings:
         - meeting: Your regular customer Aab invites you to the park. When you arrive, she is watching a game of
             Rubarch that two elderly humans are playing. Aab is one of the few non-human older citizens of Mars.

@@ -72,23 +72,29 @@ class Meeting:
 
 class Friendship:
     name = None
+    available = True
+    days = None
     meetings = None
     meetings_done = 0
-    unlocked = False
 
     def __init__(self, name):
         self.name = name
 
     def init(self, data):
         self.meetings = []
+        self.available = data.get('available', True)
+        self.days = data.get('days')
         if 'meetings' in data:
             for meeting_data in data.get('meetings'):
                 meeting = Meeting()
                 meeting.init(meeting_data)
                 self.meetings.append(meeting)
 
+    def available_today(self):
+        return self.available and not self.days or time.weekday() in self.days
+
     def has_meeting(self):
-        return self.meetings and self.meetings_done < len(self.meetings)
+        return self.meetings and self.meetings_done < len(self.meetings) and self.available_today()
 
     def get_meeting(self):
         if self.has_meeting():
@@ -133,7 +139,7 @@ class Social:
         return self.greetings.get() if self.greetings else None
 
     def has_meeting(self):
-        return self.friendship and self.friendship.unlocked and self.friendship.has_meeting()
+        return self.friendship and self.friendship.has_meeting()
 
     def get_meeting(self):
         if self.friendship:
@@ -144,13 +150,13 @@ class Social:
 
     def unlock_friendship(self):
         if self.friendship:
-            self.friendship.unlocked = True
+            self.friendship.available = True
             if self.friendship.has_meeting():
                 cli.print_message('Meeting with {} unlocked'.format(self.name))
 
     def lock_friendship(self):
         if self.friendship:
-            self.friendship.unlocked = False
+            self.friendship.available = False
             if self.friendship.has_meeting():
                 cli.print_message('Meeting with {} locked'.format(self.name))
 
