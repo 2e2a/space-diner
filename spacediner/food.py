@@ -1,5 +1,6 @@
 from collections import OrderedDict
 
+from . import ingredients
 from . import kitchen
 from . import storage
 
@@ -99,12 +100,14 @@ class Recipe:
                         return True
         return False
 
-    @property
     def all_properties(self):
         properties = set()
         properties.update(self.properties)
-        for ingredient_property in self.ingredient_properties:
-            properties.update(ingredient_property)
+        for ingredient_properties in self.ingredient_properties:
+            properties.update(ingredient_properties)
+            for ingredient_property in ingredient_properties:
+                if ingredients.get(ingredient_property):
+                    properties.update(ingredients.get_properties(ingredient_property))
         return properties
 
     def consists_of(self, prepared_ingredients):

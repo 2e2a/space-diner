@@ -156,10 +156,11 @@ class Guest:
         acceptable_food = []
         for menu_item in menu:
             recipe = food.get_recipe(menu_item)
-            if not self.negative_reaction_properties.intersection(recipe.all_properties):
+            if not self.negative_reaction_properties.intersection(recipe.all_properties()):
                 acceptable_food.append(menu_item)
         if acceptable_food:
             wish = random.choice(acceptable_food)
+        import pdb;pdb.set_trace()
         return wish
 
     def take_order(self):

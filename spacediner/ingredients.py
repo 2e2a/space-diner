@@ -28,6 +28,10 @@ def get(name):
     return ingredients.get(name)
 
 
+def get_properties(name):
+    return list(get(name).properties)
+
+
 def get_extra_properties(name):
     return list(get(name).extra_properties)
 
