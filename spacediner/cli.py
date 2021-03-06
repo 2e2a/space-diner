@@ -646,6 +646,7 @@ class DinerMode(Mode):
                 guests.leave(guest)
                 print_text('{} left.'.format(guest))
             self.wait_for_input()
+            self.update_commands()
             return self
         if cmd == self.CMD_CHAT:
             guest = cmd_input[1]
@@ -654,7 +655,6 @@ class DinerMode(Mode):
             self.wait_for_input()
             self.update_commands()
             return self
-
         if cmd == self.CMD_SERVE:
             dish = cmd_input[1]
             guest = cmd_input[3]

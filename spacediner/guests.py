@@ -72,6 +72,8 @@ class Guest:
     def __init__(self, is_regular=False):
         self.is_regular = is_regular
         self.groups = []
+        self.reactions = []
+        self.orders = []
         self.positive_phrases = []
         self.neutral_phrases = []
         self.negative_phrases = []
@@ -90,6 +92,16 @@ class Guest:
     @property
     def review_names(self):
         return [group.name for group in self.groups] if not self.is_regular else []
+
+    def apply_groups(self):
+        self.reactions += list(itertools.chain.from_iterable(group.reactions for group in self.groups))
+        if not self.budget:
+            self.budget = max([group.budget for group in self.groups if group.budget])
+        self.orders += list(itertools.chain.from_iterable(group.orders for group in self.groups))
+        for group in self.groups:
+            self.positive_phrases += group.positive_phrases
+            self.neutral_phrases += group.neutral_phrases
+            self.negative_phrases += group.negative_phrases
 
     def add_decoration_review(self):
         all_decoration = diner.diner.decoration
@@ -319,13 +331,7 @@ class GuestFactory:
         groups = [get_group(group_name) for group_name in name.split(' ')]
         guest.name = self._guest_name(groups, existing)
         guest.groups = groups
-        guest.reactions = list(itertools.chain.from_iterable(group.reactions for group in groups))
-        guest.budget = max([group.budget for group in groups if group.budget])
-        guest.orders = list(itertools.chain.from_iterable(group.orders for group in groups))
-        for group in groups:
-            guest.positive_phrases += group.positive_phrases
-            guest.neutral_phrases += group.neutral_phrases
-            guest.negative_phrases += group.negative_phrases
+        guest.apply_groups()
         guest.reset()
         return guest
 
@@ -517,6 +523,7 @@ def init(data):
     for guest_data in data.get('regulars', []):
         guest = Guest(is_regular=True)
         guest.init(guest_data)
+        guest.apply_groups()
         guest.reset()
         regulars.update({guest.name: guest})
 
