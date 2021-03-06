@@ -4,4 +4,10 @@
 #
 #    pip-compile
 #
+altgraph==0.17            # via pyinstaller
+pyinstaller-hooks-contrib==2020.11  # via pyinstaller
+pyinstaller==4.2          # via -r requirements.in
 pyyaml==5.4.1             # via -r requirements.in
+
+# The following packages are considered to be unsafe in a requirements file:
+# setuptools
