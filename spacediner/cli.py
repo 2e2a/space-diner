@@ -316,6 +316,7 @@ class Mode:
     empty_input = False
     back_mode = None
     hint = None
+    hint_shown = False
 
 
     def __init__(self, back=None):
@@ -335,6 +336,9 @@ class Mode:
         print('')
 
     def print_help(self):
+        if self.hint:
+            print_text(self.hint)
+            print_newline()
         if self.commands:
             print_text('')
             print_title('Available commands')
@@ -361,10 +365,11 @@ class Mode:
         self.wait_for_input()
 
     def print_hint(self):
-        if self.hint:
+        if self.hint and not self.hint_shown:
             hint_text = '*Info*: {}'.format(self.hint)
             print_text(hint_text)
             print_newline()
+            self.hint_shown = True
 
     def print_tutorial(self):
         from .tutorial import get_tutorial
