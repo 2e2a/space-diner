@@ -362,7 +362,7 @@ class Mode:
 
     def print_hint(self):
         if self.hint:
-            hint_text = '(Hint: {})'.format(self.hint)
+            hint_text = '*Info*: {}'.format(self.hint)
             print_text(hint_text)
             print_newline()
 
@@ -370,7 +370,8 @@ class Mode:
         from .tutorial import get_tutorial
         text = get_tutorial(self)
         if text:
-            print_text(text)
+            print_text('*Tutorial*: {}'.format(text))
+            print_newline()
 
     def increment_tutorial(self, cmd_num):
         from .tutorial import increment_tutorial
@@ -605,10 +606,8 @@ class DinerMode(Mode):
     ]
     prompt = 'diner >>'
     hint = (
-        'In the dining room, you can take an order by typing "take order from [NAME]". Use '
-        'auto-complete: type "take" and press TAB, type the first letters of a customer\'s name and press TAB '
-        'again. You can also, e.g., chat with the guests or go to the kitchen to prepare food – type "help" to see '
-        'the corresponding commands. When all the guests are gone, close up the diner; new guests will come tomorrow.'
+        'In the dining room, you can take orders, chat with your guests, and look up information (e.g., about your '
+        'guests or your progress in the game). Type "help" to see all available commands.'
     )
 
     def update_commands(self):
@@ -744,9 +743,8 @@ class KitchenMode(Mode):
     available_ingredients = None
     available_devices = None
     hint = (
-        'Every dish consists of three ingredients. Once you have prepared them  - e.g.: "grill beef", '
-        '"plate pickles", "plate bun" - they will be automatically plated as a completed dish. You can follow a recipe '
-        'or create your own dishes. Type "help" to see all available commands.'
+        'In the kitchen, you prepare the food. You can follow existing recipes or create your own. Try to match '
+        'your guests\' orders.'
     )
 
     def __init__(self, **kwargs):
@@ -1180,7 +1178,7 @@ class ShoppingMode(ChoiceMode):
     title = 'Visit merchant'
     hint = (
         'Every morning you have the opportunity to stock up on supplies. Try to plan ahead and to be prepared even '
-        'for unexpectedly crowded days at the diner. New merchants might become available during the game.'
+        'for crowded days at the diner. New merchants might become available during the game.'
     )
     merchants = None
     available_ingredients = None
@@ -1313,16 +1311,8 @@ class MerchantMode(Mode):
             return ShoppingMode()
 
 
-TUTORIAL = [
-    (DinerMode, DinerMode.CMD_TAKE_ORDER, 'Try to take an order.'),
-    (DinerMode, DinerMode.CMD_KITCHEN, 'Now go to the kitchen please.'),
-    (KitchenMode, KitchenMode.CMD_COOK, 'Cook!'),
-]
-
-
 mode = None
 logfile = None
-tutorial_step = 0
 
 
 def run(args):
