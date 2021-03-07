@@ -421,7 +421,7 @@ guests:
         - properties: [ boiled ]
           taste: +1
           output: Boiled food is good for my stomach.
-          review_phrase: that there was something boild in the dish, it was easy to digest
+          review_phrase: that there was something boiled in the dish, it was easy to digest
         - properties: [ deep-fried ]
           taste: -2
           output: Deep-fried food gives me heartburn.
@@ -539,6 +539,7 @@ guests:
     - name: Old Twenty-Horned Aab
       groups: [ Bovid, senior ]
       available: True
+      days: ['Monsol', 'Wednessol', 'Frisol', 'Satursol']
       budget: 30
       reactions:
         - properties: [ spicy ]
@@ -566,7 +567,6 @@ guests:
         - Oh, no, not great.
 
 social:
-
   - name: Old Twenty-Horned Aab
     greetings:
       - Ah... hello, Hornless
@@ -575,6 +575,7 @@ social:
       - Ah, what a day. So sandy and stormy.
     friendship:
       available: True
+      days: ['Monsol', 'Wednessol', 'Frisol', 'Satursol']
       meetings:
         - meeting: >
             Your regular customer Aab invites you to the park. When you arrive, she is watching a game of

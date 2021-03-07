@@ -19,7 +19,7 @@ calendar:
   cycle: 365
   events:
     - event: lose ingredients
-      days: 6-9
+      days: 4-6
       info: Rats ate some of the ingredients in your pantry! Who knew there were rats on the moon?
       ingredients:
         - name: bun
@@ -29,22 +29,22 @@ calendar:
     - event: holiday
       name: Landing day
       info: The colonists are celebrating the anniversary of the first person on the moon today!
-      day: 5
+      day: 3
       groups: [ Human colonist ]
     - event: holiday
       name: Lunatic Rollercoaster Opening
       info: A new attraction is opening today in the Moon amusement park. The tourists are celebrating!
-      day: 10
+      day: 8
       groups: [ Human tourist ]
     - event: holiday
       name: Colony day
       info: The colonists are celebrating the anniversary of the first colony on the moon today!
-      day: 15
+      day: 12
       groups: [ Human colonist ]
     - event: holiday
       name: Free-Ride-to-the-Moon day
       info: Some lucky Earthlings have won free tickets to the Moon. The colony is crowded!
-      day: 20
+      day: 17
       groups: [ Human tourist ]
 
 goals:
@@ -357,7 +357,7 @@ guests:
       groups: [ Human, colonist ]
       available: True
       budget: 10
-      days: ['Moonday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+      days: ['Moonday', 'Tuesday', 'Wednesday', 'Friday', 'Saturday']
       reactions:
         - properties: [ pickles ]
           taste: +2
@@ -393,7 +393,7 @@ social:
       - Experiments, sigh... why do they always go wrong.
     friendship:
       available: True
-      days: ['Moonday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+      days: ['Moonday', 'Tuesday', 'Wednesday', 'Friday', 'Saturday']
       meetings:
         - meeting: 'Ozabela invites you to the research facility where she works. Access to the area is restricted, but when
             the security guards see Ozabela, they let you enter. Ozabela shows you what she is working on
