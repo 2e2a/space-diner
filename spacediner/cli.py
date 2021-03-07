@@ -982,7 +982,7 @@ class ReviewsInfoMode(InfoMode):
 
     def print_info(self):
         print_text('You read today\'s reviews.')
-        print_text('')
+        print_newline()
         print_title('Ratings')
         ratings = []
         for group, rating in reviews.get_ratings().items():
@@ -1129,6 +1129,12 @@ class DinerMenuEditMode(ChoiceMode):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.choices = food.get_menu()
+
+    def print_info(self):
+        print_text('It\'s the beginning of a new week! You have the chance to edit what is on the menu. Would '
+                   'you like to replace anything?')
+        print_newline()
+        super().print_info()
 
     def exec_choice(self, choice):
         return DinerMenuItemMode(item=choice, back=self)

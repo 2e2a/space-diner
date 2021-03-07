@@ -255,7 +255,7 @@ def get_menu():
 
 def update_menu(item, name):
     global menu
-    menu[item - 1] = name
+    menu[item] = name
 
 
 def not_on_menu():
