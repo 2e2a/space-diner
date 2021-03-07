@@ -65,7 +65,7 @@ class Food:
     def plate(self):
         recipe = match_recipe(self)
         if recipe:
-            self.recipe_properties = recipe.properties
+            self.recipe_properties = recipe.extra_properties()
             self.set_custom_name(recipe.name)
         else:
             self.set_default_name()
@@ -100,14 +100,18 @@ class Recipe:
                         return True
         return False
 
+    def extra_properties(self):
+        return self.properties + [self.name.lower()]
+
     def all_properties(self):
         properties = set()
-        properties.update(self.properties)
+        properties.update(self.extra_properties())
         for ingredient_properties in self.ingredient_properties:
             properties.update(ingredient_properties)
             for ingredient_property in ingredient_properties:
                 if ingredients.get(ingredient_property):
                     properties.update(ingredients.get_properties(ingredient_property))
+        properties = sorted(list(set(properties)))
         return properties
 
     def consists_of(self, prepared_ingredients):
@@ -127,7 +131,6 @@ class Recipe:
         for ingredient_property_data in data.get('ingredients'):
             self.ingredient_properties.append(ingredient_property_data)
         self.properties = data.get('properties')
-        self.properties.append(self.name.lower())
 
 
 class SavedDish(Recipe):

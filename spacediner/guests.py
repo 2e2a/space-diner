@@ -160,7 +160,6 @@ class Guest:
                 acceptable_food.append(menu_item)
         if acceptable_food:
             wish = random.choice(acceptable_food)
-        import pdb;pdb.set_trace()
         return wish
 
     def take_order(self):

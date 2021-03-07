@@ -811,11 +811,12 @@ class RecipeMode(ChoiceMode):
 
     def _print_recipe(self, recipe):
         print_title(recipe.name)
-        ingredient_list = [
-            'Ingredient {}: {}'.format(i, ', '.join(properties))
-            for i, properties in enumerate(recipe.ingredient_properties, 1)
-        ]
-        print_list(ingredient_list)
+        print_newline()
+        print('Ingredients:')
+        ingredient_list = [', '.join(properties) for properties in recipe.ingredient_properties]
+        print_list(ingredient_list, double_columns=False)
+        print_newline()
+        print('Properties: {}'.format(', '.join(recipe.all_properties())))
 
     def exec_choice(self, choice):
         recipe = food.get_recipe(self.choices[choice])
