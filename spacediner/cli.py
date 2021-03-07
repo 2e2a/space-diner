@@ -629,7 +629,7 @@ class DinerMode(Mode):
                 group = guest.group
             info = ''
             if guest.order:
-                info = ', ordered {}'.format(guest.order.wish)
+                info = ', ordered: {}'.format(guest.order.wish)
             names_with_info.append('{} ({}){}'.format(guest.name, group, info))
         print_list(names_with_info)
 
@@ -662,12 +662,14 @@ class DinerMode(Mode):
             guests.leave(guest)
             print_text('{} left.'.format(guest))
             self.wait_for_input()
+            self.update_commands()
             return self
         if cmd == self.CMD_SEND_HOME:
             guest = cmd_input[1]
             guests.send_home(guest)
             print_text('{} left.'.format(guest))
             self.wait_for_input()
+            self.update_commands()
             return self
         if cmd == self.CMD_MENU:
             return DinerMenuMode(back=self)
@@ -761,7 +763,7 @@ class KitchenMode(Mode):
         print_title('Kitchen:')
         print_list(['{} for {}'.format(d.name, d.preparation) for d in self.available_devices.values()])
         print_title('Prepared:')
-        print_list(food.cooked_ingredients())
+        print_list(food.cooked_ingredients(), double_columns=False)
         print_title('Plated:')
         print_list(list(food.plated()))
 
