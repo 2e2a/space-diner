@@ -317,6 +317,7 @@ class Mode:
     back_mode = None
     hint = None
 
+
     def __init__(self, back=None):
         self.back_mode = back
         self.update_commands()
@@ -365,6 +366,16 @@ class Mode:
             print_text(hint_text)
             print_newline()
 
+    def print_tutorial(self):
+        from .tutorial import get_tutorial
+        text = get_tutorial(self)
+        if text:
+            print_text(text)
+
+    def increment_tutorial(self, cmd_num):
+        from .tutorial import increment_tutorial
+        increment_tutorial(self, cmd_num)
+
     def exec(self, cmd, cmd_input):
         raise NotImplemented()
 
@@ -389,6 +400,7 @@ class Mode:
             matched_cmd_num, matched_cmd = self.completer.match_command(cmd_input_list)
             if matched_cmd_num is not None and matched_cmd_num >= 0 and matched_cmd:
                 self.log(matched_cmd_num, matched_cmd)
+                self.increment_tutorial(matched_cmd_num)
                 return self.exec(matched_cmd_num, matched_cmd)
             else:
                 self.print_help()
@@ -1298,8 +1310,16 @@ class MerchantMode(Mode):
             return ShoppingMode()
 
 
+TUTORIAL = [
+    (DinerMode, DinerMode.CMD_TAKE_ORDER, 'Try to take an order.'),
+    (DinerMode, DinerMode.CMD_KITCHEN, 'Now go to the kitchen please.'),
+    (KitchenMode, KitchenMode.CMD_COOK, 'Cook!'),
+]
+
+
 mode = None
 logfile = None
+tutorial_step = 0
 
 
 def run(args):
@@ -1316,6 +1336,7 @@ def run(args):
             mode.print_info()
             if time.calendar.is_first_day:
                 mode.print_hint()
+            mode.print_tutorial()
             prompt = '{} '.format(mode.prompt) if mode.prompt else ''
             cmd = input('{} '.format(prompt))
             print_newline()
