@@ -38,9 +38,11 @@ class Review:
 
     name = None
     group_name = None
+    regular_group_name = None
 
     first_choices = None
     second_choices = None
+    message = None
 
     scale = ['very bad', 'bad', 'ok', 'good', 'very good']
     like = 'I liked {}.'
@@ -56,9 +58,10 @@ class Review:
     diner_dirty = 'Very dirty diner.'
     skill = 'I was impressed by the chef\'s {}, especially {}.'
 
-    def __init__(self, name, group_name):
+    def __init__(self, name, group_name, regular_group_name=None):
         self.name = name
         self.group_name = group_name
+        self.regular_group_name = regular_group_name
         self.first_choices = []
         self.second_choices = []
         self.chatted = self.chatted.format(diner.diner.chef)
@@ -86,9 +89,16 @@ class Review:
         self.add(2, 'ambience', ambience)
         self.add(2, 'service', service)
         aggregate_rating = add_rating(self.group_name, taste, service, ambience)
+        if self.regular_group_name:
+            add_rating(self.regular_group_name, taste, service, ambience)
         message = ''
         random.seed()
+        group = None
         if self.group_name != self.name:
+            group = self.group_name
+        elif self.regular_group_name:
+            group = self.regular_group_name
+        if group:
             message += '{} ({}):'.format(self.name, self.group_name)
         else:
             message += '{}:'.format(self.name)

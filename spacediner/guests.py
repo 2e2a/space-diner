@@ -93,6 +93,11 @@ class Guest:
     def review_names(self):
         return [group.name for group in self.groups] if not self.is_regular else []
 
+    @property
+    def is_in_factory(self):
+        global guest_factory
+        return self.group in guest_factory.get_groups()
+
     def apply_groups(self):
         self.reactions += list(itertools.chain.from_iterable(group.reactions for group in self.groups))
         if not self.budget:
@@ -127,7 +132,11 @@ class Guest:
         self.available = True
         self.order = None
         self.chatted = False
-        self.review = reviews.Review(self.name, self.group_name)
+        if not self.is_regular:
+            self.review = reviews.Review(self.name, self.group_name)
+        else:
+            regular_group_name = self.group if self.is_in_factory else None
+            self.review = reviews.Review(self.name, self.group_name, regular_group_name)
         self.served = False
         self.taste = 2
         self.service = 2
@@ -523,16 +532,6 @@ def init(data):
         group.init(group_data)
         guest_groups.update({group.name: group})
 
-    global regulars
-    regulars = OrderedDict()
-    for guest_data in data.get('regulars', []):
-        guest = Guest(is_regular=True)
-        guest.init(guest_data)
-        guest.apply_groups()
-        guest.reset()
-        regulars.update({guest.name: guest})
-
-
     global name_factories
     name_factories = {}
     for name_data in data.get('names'):
@@ -545,10 +544,22 @@ def init(data):
     guest_factory = GuestFactory()
     guest_factory.init(data.get('factory'))
 
+    global regulars
+    regulars = OrderedDict()
+    for guest_data in data.get('regulars', []):
+        guest = Guest(is_regular=True)
+        guest.init(guest_data)
+        guest.apply_groups()
+        guest.reset()
+        regulars.update({guest.name: guest})
+
+
     reviews.init()
     for regular in regulars.values():
         if regular.available:
-            reviews.add(regular.name, regular.groups)
+            reviews.add(regular.name, regular.name)
+            if regular.is_in_factory:
+                reviews.add(regular.name, regular.groups)
 
     time.register_callback(time.Calendar.TIME_DAYTIME, daytime)
 
