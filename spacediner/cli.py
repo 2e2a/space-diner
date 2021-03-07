@@ -108,11 +108,11 @@ def print_message(msg):
 
 
 def print_dialog(name, msg):
-    print('{}: "{}"'.format(name, msg))
+    print_text('{}: "{}"'.format(name, msg))
 
 
 def print_dialog_with_info(name, info, msg):
-    print('{} {}: "{}"'.format(name, info, msg))
+    print_text('{} {}: "{}"'.format(name, info, msg))
 
 
 def print_newline():
@@ -578,7 +578,7 @@ class DinerMode(Mode):
     CMD_EXIT = 10
     #CMD_SAVE = 10
     commands = [
-        ('kitchen',),
+        ('go to kitchen',),
         ('take order from', []),
         ('chat with', []),
         ('serve', [], 'to', []),
@@ -637,7 +637,7 @@ class DinerMode(Mode):
                 group = guest.group
             info = ''
             if guest.order:
-                info = ', ordered: {}'.format(guest.order.wish)
+                info = ', order: {}'.format(guest.order.wish)
             names_with_info.append('{} ({}){}'.format(guest.name, group, info))
         print_list(names_with_info)
 
@@ -720,7 +720,7 @@ class KitchenMode(Mode):
     CMD_RECIPES = 4
     CMD_SAVE_RECIPE = 5
     commands = [
-        ('diner',),
+        ('go to diner',),
         ([], [],),
         ('compendium',),
         ('trash',),
@@ -1017,7 +1017,7 @@ class ActivityMode(ChoiceMode):
     activities = None
     meetings = None
     hint = (
-        'Evening activities can advance your social relationships: when you make your regulars happy, they might '
+        'Evening activities can advance your social relationships: on some days, your regular customers '
         'invite you to social events. Other activities can affect your skills. Do not forget to clean your diner '
         'once in a while.'
     )
@@ -1092,6 +1092,7 @@ class MeetingMode(ChoiceMode):
 
     def print_info(self):
         print_text(self.meeting.text)
+        print_newline()
         print_dialog(self.guest, self.meeting.question)
         print_newline()
         super().print_info()

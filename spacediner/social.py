@@ -105,6 +105,8 @@ class Friendship:
         reaction = meeting.reaction(reply)
         cli.print_dialog(self.name, reaction)
         for reward in meeting.rewards:
+            cli.wait_for_input()
+            cli.print_newline()
             cli.print_dialog(self.name, reward.text)
             reward.apply()
         self.meetings_done += 1

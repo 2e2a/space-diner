@@ -59,10 +59,20 @@ calendar:
         - name: basil
           amount: 5
     - event: holiday
-      name: A holiday!
-      info: Everyone is celebrating.
-      day: 6
+      name: Colony day
+      info: Everybody is celebrating the anniversary of the founding of the colony!
+      day: 5
       groups: [ Human adult, Bovid adult, Reptiloid adult, Human senior, Human teenager, Bovid teenager, Reptiloid teenager ]
+    - event: holiday
+      name: Reptiloid arrival day
+      info: Reptilods are celebrating the anniversary of the first reptiloid on Mars!
+      day: 9
+      groups: [ Reptiloid adult, Reptiloid teenager ]
+    - event: holiday
+      name: Bovid arrival day
+      info: Bovids are celebrating the anniversary of the first bovid on Mars!
+      day: 13
+      groups: [ Bovid adult, Bovid teenager ]
 
 ingredients:
   - name: lichen
@@ -128,9 +138,11 @@ storage:
       - name: tomato
         available: 5
       - name: basil
-        available: 1
+        available: 3
       - name: peach
-        available: 1
+        available: 4
+      - name: banana
+        available: 3
       - name: chicken egg
         available: 6
       - name: blizzard egg
@@ -525,7 +537,7 @@ guests:
 
   regulars:
     - name: Old Twenty-Horned Aab
-      groups: [ Bovid, adult ]
+      groups: [ Bovid, senior ]
       available: True
       budget: 30
       reactions:
@@ -537,15 +549,6 @@ guests:
           taste: +2
           output: Ah, I love tomatos.
           review_phrase: the tomatos in the dish
-        - properties: [ animal product ]
-          taste: -3
-          output: Argh, Bovids cannot digest animal products.
-        - properties: [ Martian ]
-          taste: +1
-          output: I love fresh Martian plant products.
-        - properties: [ raw ]
-          taste: +1
-          output: Raw food is delicious.
       orders:
         - wish: tomato
           text: Ah... I have this craving for a tomato.
@@ -573,13 +576,15 @@ social:
     friendship:
       available: True
       meetings:
-        - meeting: Your regular customer Aab invites you to the park. When you arrive, she is watching a game of
+        - meeting: >
+            Your regular customer Aab invites you to the park. When you arrive, she is watching a game of
             Rubarch that two elderly humans are playing. Aab is one of the few non-human older citizens of Mars.
             Most of the new colonists that are arriving are young, and the first colonists that have grown old were
             from Earth. Aab greets you and invites you to take a seat with her at one
             of the small tables with game boards on them. You have a vague idea how Rubarch is played, and you start
             moving the spiky spheres around on the board. You quickly notice that Aab is not very good at it, either.
-          question: Ah, I like my friends here, but sometimes our activities bore me. I do not enjoy games that much.
+          question: >
+            Ah, I like my friends here, but sometimes our activities bore me. I do not enjoy games that much.
             Mh, sometimes I wish I had a more challenging occupation... I used to be the director of a museum once.
           replies:
             - reply: I wish I had as much free time as you do. It's great to just hang out and relax all day.
@@ -591,13 +596,15 @@ social:
               guest: senior
               text: Ah, I have told all my friends about your diner. Perhaps they will try it out! Your diner will
                 be crowded with old people.
-        - meeting: Aab invites you to drink tea in the evening. You meet in her little appartment. Even though the
+        - meeting: >
+            Aab invites you to drink tea in the evening. You meet in her little appartment. Even though the
             furniture is optimized for bovid anatomy and the floor is covered with soil and grass instead of a carpet,
             the interior design uncannily reminds you of your own grandparents' style. Sipping
             the bitter herbal tea, you let your eyes wander over the shelves filled with tableware and souvenirs. There
             is also a cabinet filled with what looks like bovid horns, in various colors and lengths. Some of them are
             longer than you are tall.
-          question: Ah, impressive collection, do you not think? These are from friends and relatives. Sometimes old
+          question: >
+              Ah, impressive collection, do you not think? These are from friends and relatives. Sometimes old
               bovids decide to cut off their many horns as a symbol of starting anew, even if it is late in life.
               Mh, my uncle Esk traveled to another star for the first time when he was my age. My friend Oudge went back
               to the university. It is a custom to give away the horns as special gifts.
@@ -605,7 +612,8 @@ social:
             - reply: What a beautiful custom.
               reaction: Ah, yes. I often chew on the idea of doing this as well. But I do not know if I have the courage.
             - reply: Uh... seems a little weird to me.
-              reaction: Ah, perhaps from the ouside it looks a little distressing. To me, it is a beautiful thing.
+              reaction: >
+                Ah, perhaps from the ouside it looks a little distressing. To me, it is a beautiful thing.
                 Mh, but I do not know if I would have the courage to do this...
           rewards:
             - type: ingredient

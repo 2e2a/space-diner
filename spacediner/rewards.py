@@ -55,7 +55,7 @@ class GuestReward(Reward):
         self.guest = data.get('guest')
 
     def apply(self):
-        cli.print_message('New guest unlocked')
+        cli.print_message('New type of guest unlocked')
         guests.unlock(self.guest)
 
 
