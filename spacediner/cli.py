@@ -868,7 +868,10 @@ class SaveRecipeMode(ChoiceMode):
 
     def _print_recipe(self):
         print_title('Recipe:')
-        print_list(', '.join(ingredient_properties) for ingredient_properties in self.ingredient_property_choices)
+        print_list(
+            [', '.join(ingredient_properties) for ingredient_properties in self.ingredient_property_choices],
+            double_columns=False
+        )
 
     def print_info(self):
         self._print_recipe()
