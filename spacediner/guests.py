@@ -443,6 +443,7 @@ RANDOM_GUESTS = 2
 def _new_guests(seats):
     global guest_factory
     # TODO: numbers are not completely right: e.g., 4 colonists and 2 tourists when 6 seats are available?
+    wait_for_input = False
     seats_remaining = seats
     new_guests = []
     groups = guest_factory.get_groups()
@@ -468,6 +469,7 @@ def _new_guests(seats):
                 empty_groups.append(name)
         else:
             cli.print_message('It\'s somebody\'s birthday: {}'.format(name))
+            wait_for_input = True
             seats_taken = available_seats
         new_guests.extend(seats_taken * [name])
         seats_remaining -= seats_taken
@@ -476,6 +478,7 @@ def _new_guests(seats):
     for holiday in holidays:
         holiday_groups = set(holiday.groups).intersection(groups)
         cli.print_message('Today is a holiday for: {}.'.format(', '.join(holiday_groups)))
+        wait_for_input = True
         seats_taken = round(seats_per_holiday / len(holiday_groups))
         for group in holiday_groups:
             new_guests.extend(seats_taken * [group])
@@ -487,6 +490,8 @@ def _new_guests(seats):
             empty_groups.remove(random_group)
             seats_remaining -= 1
     random.shuffle(new_guests)
+    if wait_for_input:
+        cli.wait_for_input()
     return new_guests
 
 

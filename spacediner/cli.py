@@ -42,6 +42,11 @@ def is_small_screen():
     return line_width() < LINE_WIDTH
 
 
+def wait_for_input():
+    print_newline()
+    input('<press ENTER to continue>')
+
+
 def print_text(text):
     # TODO: capitalize just the first letter.
     for line in textwrap.wrap(text, width=line_width()):
@@ -320,8 +325,7 @@ class Mode:
         self.completer = CommandCompleter(self.commands)
 
     def wait_for_input(self):
-        print_newline()
-        input('<press ENTER to continue>')
+        wait_for_input()
 
     def print_header(self):
         print_header()
