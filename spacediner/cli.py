@@ -586,7 +586,7 @@ class DinerMode(Mode):
         ('menu',),
         ('reviews',),
         ('compendium',),
-        ('goals',),
+        ('show goals',),
         ('close up',),
         #('save',),
         ('exit',),
@@ -1051,6 +1051,9 @@ class ActivityMode(ChoiceMode):
 
     def print_info(self):
         print_text('Now you have time for one evening activity.')
+        if self.meetings:
+            print_newline()
+            print_text('You have been invited to a social event!')
         print_newline()
         print_value('Sanitation status of the diner', '{}/5'.format(diner.diner.sanitation))
         print_newline()
