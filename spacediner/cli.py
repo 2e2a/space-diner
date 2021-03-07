@@ -1157,14 +1157,16 @@ class ShoppingMode(ChoiceMode):
         'Every morning you have the opportunity to stock up on supplies. Try to plan ahead and to be prepared even '
         'for unexpectedly crowded days at the diner. New merchants might become available during the game.'
     )
-    ingredients_for_sale = None
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.choices = shopping.get_available()
+    merchants = None
+    available_ingredients = None
 
     def update_commands(self):
-        self.ingredients_for_sale = shopping.for_sale()
+        self.available_ingredients = storage.available_ingredients()
+        self.merchants = {
+            '{} ({})'.format(merchant, ', '.join(merchant_ingredients)): merchant
+            for merchant, merchant_ingredients in shopping.for_sale().items()
+        }
+        self.choices = list(self.merchants.keys())
         super().update_commands()
 
     def print_header(self):
@@ -1178,15 +1180,12 @@ class ShoppingMode(ChoiceMode):
         if shopping.market.description:
             print_text(shopping.market.description)
             print_newline()
-        print_title('Merchants available today')
-        print_list([
-            '{} [{}]'.format(merchant, ', '.join(merchant_ingredients))
-            for merchant, merchant_ingredients in self.ingredients_for_sale.items()
-        ])
+        print_title('Ingredients in stock in the diner:')
+        print_list(['{} x {}'.format(a, i) for i, a in self.available_ingredients.items()])
         super().print_info()
 
     def exec_choice(self, choice):
-        merchant = self.choices[choice]
+        merchant = self.merchants[self.choices[choice]]
         merchant_mode = MerchantMode(merchant)
         merchant_description = shopping.get(merchant).description
         if merchant_description:
