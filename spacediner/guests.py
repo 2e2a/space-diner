@@ -482,7 +482,7 @@ def _new_guests(seats):
         seats_taken = round(seats_per_holiday / len(holiday_groups))
         for group in holiday_groups:
             new_guests.extend(seats_taken * [group])
-        seats_remaining -= seats_taken
+        seats_remaining -= len(holiday_groups) * seats_taken
     for _ in range(RANDOM_GUESTS):
         if empty_groups and seats_remaining > 0:
             random_group = random.choice(empty_groups)
