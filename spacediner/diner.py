@@ -10,6 +10,7 @@ class Diner:
     available_decoration = None
 
     sanitation = 5
+    cleaned = False
 
     def init(self, data):
         self.name = data.get('name')
@@ -27,6 +28,7 @@ class Diner:
 
     def clean(self):
         self.sanitation = 5
+        self.cleaned = True
 
 
 diner = None
@@ -37,18 +39,18 @@ def add_decoration(name):
     diner.available_decoration.append(name)
 
 
-def new_evening():
+def new_morning():
     global diner
-    if diner.sanitation > 0:
+    if not diner.cleaned and diner.sanitation > 0:
         diner.sanitation -= 1
-    cli.print_message('Sanitation status of your diner: {}/5'.format(diner.sanitation))
+    diner.cleaned = False
 
 
 def init(data):
     global diner
     diner = Diner()
     diner.init(data)
-    time.register_callback(time.Calendar.TIME_EVENING, new_evening)
+    time.register_callback(time.Calendar.TIME_MORNING, new_morning)
 
 
 def save(file):
