@@ -105,7 +105,7 @@ class Recipe:
 
     def all_properties(self):
         properties = set()
-        properties.update(self.extra_properties())
+        properties.update(self.properties)
         for ingredient_properties in self.ingredient_properties:
             properties.update(ingredient_properties)
             for ingredient_property in ingredient_properties:
@@ -131,7 +131,6 @@ class Recipe:
         for ingredient_property_data in data.get('ingredients'):
             self.ingredient_properties.append(ingredient_property_data)
         self.properties = data.get('properties')
-
 
 class SavedDish(Recipe):
     ingredients = None

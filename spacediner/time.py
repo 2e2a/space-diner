@@ -74,9 +74,12 @@ class Calendar:
             self.day += 1
             cli.print_text(self.daily_greeting)
             cli.print_newline()
-        for event in self.events.get(self.day, []):
-            if event.info:
-                cli.print_text(event.info)
+            for event in self.events.get(self.day, []):
+                if event.info:
+                    cli.print_text(event.info)
+                    if event.type == Event.TYPE_HOLIDAY:
+                        cli.print_message('Today is "{}", a holiday for: {}.'.format(event.name, ', '.join(event.groups)))
+            cli.wait_for_input()
         for time, callback in self.callbacks:
             if time == self.time:
                 callback()
@@ -135,6 +138,7 @@ def now():
 def weekday():
     global calendar
     return calendar.weekday
+
 
 def get_holidays():
     global calendar
