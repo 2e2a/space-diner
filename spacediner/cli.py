@@ -354,7 +354,7 @@ class Mode:
                             text += '{} '.format(words[0])
                         elif len(words) > 1:
                             if cmd_num in self.dont_truncate_cmd_help:
-                                text += '/'.join(words) + '. '
+                                text += '/'.join(words)
                             else:
                                 text += '{}/{}/etc. '.format(words[0], words[1])
                         else:
@@ -592,7 +592,7 @@ class DinerMode(Mode):
     CMD_CHAT = 2
     CMD_SERVE = 3
     CMD_SEND_HOME = 4
-    CMD_LOOKUP = 5
+    CMD_LOOK_UP = 5
     CMD_CLOSE_UP = 6
     CMD_EXIT = 7
     #CMD_SAVE = 10
@@ -602,7 +602,7 @@ class DinerMode(Mode):
         ('chat with', []),
         ('serve', [], 'to', []),
         ('send home', []),
-        ('lookup', ['menu','reviews', 'goals', 'guests', 'ingredients']),
+        ('look up', ['recipes', 'guests', 'ingredients', 'menu', 'reviews', 'goals']),
         ('close up',),
         ('exit',),
         # ('save',),
@@ -612,7 +612,7 @@ class DinerMode(Mode):
         'In the dining room, you can take orders, chat with your guests, and look up information (e.g., about your '
         'guests or your progress in the game). Type "help" to see all available commands.'
     )
-    dont_truncate_cmd_help = [CMD_LOOKUP]
+    dont_truncate_cmd_help = [CMD_LOOK_UP]
 
     def update_commands(self):
         cooked_food = food.plated()
@@ -657,9 +657,11 @@ class DinerMode(Mode):
         print_list(names_with_info)
 
     @staticmethod
-    def exec_lookup(back, arg):
+    def exec_look_up(back, arg):
         if arg == 'menu':
             return DinerMenuMode(back=back)
+        if arg == 'recipes':
+            return RecipeMode(back=back)
         if arg == 'reviews':
             return ReviewsInfoMode(back=back)
         if arg == 'guests':
@@ -668,7 +670,6 @@ class DinerMode(Mode):
             return IngredientInfoMode(back=back)
         if arg == 'goals':
             return GoalsInfoMode(back=back)
-        # recipes?
 
     def exec(self, cmd, cmd_input):
         if cmd == self.CMD_KITCHEN:
@@ -708,10 +709,8 @@ class DinerMode(Mode):
             self.wait_for_input()
             self.update_commands()
             return self
-        if cmd == self.CMD_LOOKUP:
-            return self.exec_lookup(self, cmd_input[-1])
-        if cmd == self.CMD_GOALS:
-            return GoalsInfoMode(back=self)
+        if cmd == self.CMD_LOOK_UP:
+            return self.exec_look_up(self, cmd_input[-1])
         if cmd == self.CMD_CLOSE_UP:
             for plated_food in food.plated():
                 print_message('throw away {}'.format(plated_food))
@@ -733,6 +732,8 @@ class DinerMode(Mode):
 class DinerMenuMode(InfoMode):
 
     def print_info(self):
+        print_text('This is the current menu from which your guests can select items. At the beginning of each new '
+                   'week, you get the chance to change your menu.')
         print_title('{} menu'.format(diner.diner.name))
         print_list(food.get_menu())
 
@@ -740,16 +741,14 @@ class DinerMenuMode(InfoMode):
 class KitchenMode(Mode):
     CMD_DINER = 0
     CMD_COOK = 1
-    CMD_COMPENDIUM = 2
-    CMD_TRASH = 3
-    CMD_RECIPES = 4
-    CMD_SAVE_RECIPE = 5
+    CMD_TRASH = 2
+    CMD_LOOK_UP = 3
+    CMD_SAVE_RECIPE = 4
     commands = [
         ('go to diner',),
         ([], [],),
-        ('compendium',),
         ('trash',),
-        ('recipes',),
+        ('look up', ['recipes', 'guests', 'ingredients', 'menu', 'reviews', 'goals']),
         ('save recipe', []),
     ]
     prompt = 'kitchen >>'
@@ -825,8 +824,8 @@ class KitchenMode(Mode):
             food.trash()
             self.update_commands()
             return self
-        if cmd == self.CMD_RECIPES:
-            return RecipeMode(back=self)
+        if cmd == self.CMD_LOOK_UP:
+            return DinerMode.exec_look_up(self, cmd_input[-1])
         if cmd == self.CMD_SAVE_RECIPE:
             dish = cmd_input[1]
             return SaveRecipeMode(dish, back=self)
@@ -847,8 +846,13 @@ class RecipeMode(ChoiceMode):
         print('Ingredients:')
         ingredient_list = [', '.join(properties) for properties in recipe.ingredient_properties]
         print_list(ingredient_list, double_columns=False)
-        print_newline()
         print('Properties: {}'.format(', '.join(recipe.all_properties())))
+
+    def print_info(self):
+        print_text('This is a list of available recipes. You can also add your own recipes to this collection: '
+                   'after completing a new dish, you can save the recipe.')
+        print_newline()
+        super().print_info()
 
     def exec_choice(self, choice):
         recipe = food.get_recipe(self.choices[choice])
@@ -884,6 +888,14 @@ class SaveRecipeMode(ChoiceMode):
         )
 
     def print_info(self):
+        print_text('You can save this dish as a new recipe. Use the menu below to decide how specific you want '
+                   'the recipe to be. For each component, you can choose the crucial properties that need to '
+                   'be met. For example, if the first ingredient is grilled beef, you can decide whether '
+                   'the recipe requires the exact same preparation (then select two properties: "grilled" and "beef"), '
+                   'or any kind of beef is ok (select the property: "beef"), or even any kind of meat goes ("meat"). '
+                   'Then, selected the required properties of the second and third component in the same manner.'
+                   )
+        print_newline()
         self._print_recipe()
         super().print_info()
 
@@ -976,7 +988,7 @@ class ReviewsInfoMode(InfoMode):
 
     def _rating_info(self, name, count, rating):
         if count == 0:
-            return '{}:\tno reviews yet'.format(name)
+            return '[-----] (N/A) - {} - no reviews yet'.format(name)
         n_stars = round(rating)
         return '[{}{}] ({:0.1f}) - {} - based on {} review(s)'.format(
             '*' * n_stars,
@@ -986,11 +998,11 @@ class ReviewsInfoMode(InfoMode):
             count,
             )
 
-    def print_header(self):
-        print_header([
-            ('Location', [diner.diner.name, '(office)']),
-            ('Time', [time.now()]),
-        ])
+#    def print_header(self):
+#        print_header([
+#            ('Location', [diner.diner.name, '(office)']),
+#            ('Time', [time.now()]),
+#        ])
 
     def print_info(self):
         print_text('You read today\'s reviews.')

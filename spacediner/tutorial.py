@@ -36,9 +36,10 @@ tutorial_step = 0
 
 def increment_tutorial(mode, cmd_num):
     global tutorial_step
-    tutorial_mode, command, text = TUTORIAL[tutorial_step]
-    if cmd_num == command and isinstance(mode, tutorial_mode):
-        tutorial_step += 1
+    if tutorial_step < len(TUTORIAL):
+        tutorial_mode, command, text = TUTORIAL[tutorial_step]
+        if cmd_num == command and isinstance(mode, tutorial_mode):
+            tutorial_step += 1
 
 
 def get_mode_tutorial(mode):
