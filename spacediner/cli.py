@@ -794,7 +794,8 @@ class KitchenMode(Mode):
         print_title('Kitchen:')
         print_list(['{} for {}'.format(d.name, d.preparation) for d in self.available_devices.values()])
         print_title('Prepared:')
-        print_list(food.cooked_ingredients(), double_columns=False)
+        cooked_ingredients = food.cooked_ingredients()
+        print_list(cooked_ingredients + ['']*(3-len(cooked_ingredients)), double_columns=False)
         print_title('Plated:')
         print_list(list(food.plated()))
 
@@ -868,6 +869,7 @@ class SaveRecipeMode(ChoiceMode):
 
     ingredient = 0
     dish = None
+    ingredient_properties = None
     ingredient_property_choices = None
 
     @property
@@ -879,6 +881,16 @@ class SaveRecipeMode(ChoiceMode):
         self.ingredient_property_choices = [[], [], []]
         self.choices = self.dish.ingredient_properties(self.ingredient)
         super().__init__(**kwargs)
+
+    def _print_dish(self):
+        print_title('Prepared dish:')
+        dish_ingredient_properties = []
+        for i in range(3):
+            dish_ingredient_properties.append(self.dish.ingredient_properties(i))
+        print_list(
+            [', '.join(ingredient_properties) for ingredient_properties in dish_ingredient_properties],
+            double_columns=False
+        )
 
     def _print_recipe(self):
         print_title('Recipe:')
@@ -896,6 +908,7 @@ class SaveRecipeMode(ChoiceMode):
                    'Then, selected the required properties of the second and third component in the same manner.'
                    )
         print_newline()
+        self._print_dish()
         self._print_recipe()
         super().print_info()
 
