@@ -372,11 +372,12 @@ class Mode:
             self.hint_shown = True
 
     def print_tutorial(self):
-        from .tutorial import get_tutorial
-        text = get_tutorial(self)
-        if text:
-            print_text('*Tutorial*: {}'.format(text))
-            print_newline()
+        if levels.is_tutorial_enabled():
+            from .tutorial import get_mode_tutorial
+            text = get_mode_tutorial(self)
+            if text:
+                print_text('*Tutorial*: {}'.format(text))
+                print_newline()
 
     def increment_tutorial(self, cmd_num):
         from .tutorial import increment_tutorial
@@ -474,7 +475,7 @@ class StartMode(ChoiceMode):
     def exec_choice(self, choice):
         if choice == 0:
             levels.autosave_load()
-            print_value('Level', levels.level.name)
+            print_value('Level', levels.get_name())
             return DinerMode()
         elif choice == 1:
             return NewGameMode(back=self)
@@ -500,9 +501,9 @@ class NewGameMode(ChoiceMode):
     def exec_choice(self, choice):
         levels.init_level(self.levels[choice])
         self.print_header()
-        print_title(levels.level.name)
+        print_title(levels.get_name())
         print_newline()
-        print_text(levels.level.intro)
+        print_text(levels.get_intro())
         print_newline()
         print_title('Goals')
         print_list(goals.get_texts(), double_columns=False)
@@ -553,7 +554,7 @@ class LoadGameMode(ChoiceMode):
 
     def exec_choice(self, choice):
         levels.load_game(choice)
-        print_value('Level', levels.level.name)
+        print_value('Level', levels.get_name())
         return FirstHelpMode()
 
 
@@ -564,7 +565,7 @@ class FirstHelpMode(InfoMode):
         print_title(title)
         print_text(
             'How to play? Use auto-complete: type the first letters of a command and press TAB. Type \'help\' to '
-            'display a list of available commands. During your first day, you will receive general gameplay hints.'
+            'display a list of available commands. During your first day, you will receive hints about each location.'
         )
         print_newline()
         print_text(
@@ -572,8 +573,8 @@ class FirstHelpMode(InfoMode):
         )
         print_newline()
         print_text(
-            'Heads up: your guests have specific dietary restrictions and preferences. '
-            'Make them happy, and they will repay you in space dollars and positive reviews!'
+            'Heads up: your guests have specific dietary restrictions and preferences that you will discover during '
+            'the game. Make the guests happy, and they will repay you in space dollars and positive reviews!'
         )
         print_newline()
 
@@ -633,7 +634,7 @@ class DinerMode(Mode):
         print_header([
             ('Location', [diner.diner.name, '(dining room)']),
             ('Time', [time.now()]),
-            ('Money', [levels.level.money, 'space dollars']),
+            ('Money', [levels.get_money(), 'space dollars']),
             ('Seats taken', ['{}/{}'.format(len(available_guests), diner.diner.seats)]),
             ('Sanitation', ['{}/5'.format(diner.diner.sanitation)]),
             ('Interior decoration', decoration),
@@ -1201,7 +1202,7 @@ class ShoppingMode(ChoiceMode):
         print_header([
             ('Location', [shopping.market.name]),
             ('Time', [time.now()]),
-            ('Money', [levels.level.money, 'space dollars']),
+            ('Money', [levels.get_money(), 'space dollars']),
         ])
 
     def print_info(self):
@@ -1262,7 +1263,7 @@ class MerchantMode(Mode):
         print_header([
             ('Location', [shopping.market.name, ' - ', self.merchant]),
             ('Time', [time.now()]),
-            ('Money', [levels.level.money, 'space dollars']),
+            ('Money', [levels.get_money(), 'space dollars']),
         ])
 
     def print_info(self):
@@ -1282,7 +1283,7 @@ class MerchantMode(Mode):
             if not merchant.is_ingredient_available(ingredient, amount):
                 error = 'Not enough ingredients'
             cost += merchant.cost(ingredient) * amount
-        if cost > levels.level.money:
+        if cost > levels.get_money():
             error = 'Not enough money'
         if error:
             cost = 0
@@ -1297,7 +1298,7 @@ class MerchantMode(Mode):
             ingredient = cmd_input[2]
             cost = self._can_buy(merchant, amount, ingredient)
             if cost:
-                levels.level.money = levels.level.money - cost
+                levels.add_money(-cost)
                 merchant.buy(ingredient, amount)
                 storage.store_ingredient(ingredient, amount)
                 self.update_commands()
@@ -1306,7 +1307,7 @@ class MerchantMode(Mode):
             amount = int(cmd_input[1])
             cost = self._can_buy(merchant, amount, None)
             if cost:
-                levels.level.money = levels.level.money - cost
+                levels.add_money(-cost)
                 for ingredient in self.ingredients_for_sale.keys():
                     merchant.buy(ingredient, amount)
                     storage.store_ingredient(ingredient, amount)

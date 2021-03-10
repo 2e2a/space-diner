@@ -2,7 +2,7 @@ from . import cli
 
 TUTORIAL = [
     (cli.DinerMode, cli.DinerMode.CMD_TAKE_ORDER,
-     'Welcome! This short tutorial is going to guide through the first couple of steps. First, try to take an order. '
+     'This short tutorial is going to guide through the first couple of steps. First, try to take an order. '
      'The command is "take order from [NAME]". Use auto-complete: type "take" and press TAB, then type the first '
      'letters of a customer\'s name and press TAB again.'
      ),
@@ -41,7 +41,7 @@ def increment_tutorial(mode, cmd_num):
         tutorial_step += 1
 
 
-def get_tutorial(mode):
+def get_mode_tutorial(mode):
     global tutorial_step
     if tutorial_step < len(TUTORIAL):
         tutorial_mode, command, text = TUTORIAL[tutorial_step]

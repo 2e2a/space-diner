@@ -23,6 +23,7 @@ class Level:
     name = None
     intro = None
     money = 0
+    tutorial = False
 
     def init(self, filename):
         with open(filename, 'r') as stream:
@@ -30,6 +31,7 @@ class Level:
             self.name = data.get('name')
             self.intro = data.get('intro')
             self.money = data.get('money')
+            self.tutorial = data.get('tutorial')
             diner.init(data.get('diner'))
             goals.init(data.get('goals'))
             time.init(data.get('calendar'))
@@ -53,6 +55,32 @@ def get():
     return list(levels.keys())
 
 
+def get_name():
+    global level
+    return level.name if level else None
+
+
+def get_intro():
+    global level
+    return level.intro
+
+
+def is_tutorial_enabled():
+    global level
+    return level.tutorial if level else False
+
+
+def get_money():
+    global level
+    return level.money
+
+
+def add_money(diff):
+    global level
+    level.money += diff
+    return level.money
+
+
 def init_level(name):
     global levels
     global level
@@ -60,8 +88,6 @@ def init_level(name):
     file_name = 'levels/{}'.format(levels[name])
     level.init(file_name)
     #time.register_callback(time.Calendar.TIME_MORNING, autosave_save)
-
-
 
 
 def saved_games():

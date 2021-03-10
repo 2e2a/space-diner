@@ -9,6 +9,8 @@ intro: The moon has been colonized. You run a diner in one of the settlements.
 
 money: 50
 
+tutorial: True
+
 diner:
   name: Space Diner
   seats: 7
