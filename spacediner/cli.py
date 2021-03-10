@@ -317,7 +317,7 @@ class Mode:
     back_mode = None
     hint = None
     hint_shown = False
-
+    dont_truncate_cmd_help = []
 
     def __init__(self, back=None):
         self.back_mode = back
@@ -343,7 +343,7 @@ class Mode:
             print_text('')
             print_title('Available commands')
             command_list = []
-            for command in self.commands:
+            for cmd_num, command in enumerate(self.commands):
                 text = ''
                 is_available = True
                 for words in command:
@@ -353,7 +353,10 @@ class Mode:
                         if len(words) == 1:
                             text += '{} '.format(words[0])
                         elif len(words) > 1:
-                            text += '{}/{}/etc. '.format(words[0], words[1])
+                            if cmd_num in self.dont_truncate_cmd_help:
+                                text += '/'.join(words) + '. '
+                            else:
+                                text += '{}/{}/etc. '.format(words[0], words[1])
                         else:
                             is_available = False
                     elif words == int:
@@ -589,12 +592,9 @@ class DinerMode(Mode):
     CMD_CHAT = 2
     CMD_SERVE = 3
     CMD_SEND_HOME = 4
-    CMD_MENU = 5
-    CMD_REVIEWS = 6
-    CMD_COMPENDIUM = 7
-    CMD_GOALS = 8
-    CMD_CLOSE_UP = 9
-    CMD_EXIT = 10
+    CMD_LOOKUP = 5
+    CMD_CLOSE_UP = 6
+    CMD_EXIT = 7
     #CMD_SAVE = 10
     commands = [
         ('go to kitchen',),
@@ -602,19 +602,17 @@ class DinerMode(Mode):
         ('chat with', []),
         ('serve', [], 'to', []),
         ('send home', []),
-        ('menu',),
-        ('reviews',),
-        ('compendium',),
-        ('show goals',),
+        ('lookup', ['menu','reviews', 'goals', 'guests', 'ingredients']),
         ('close up',),
-        #('save',),
         ('exit',),
+        # ('save',),
     ]
     prompt = 'diner >>'
     hint = (
         'In the dining room, you can take orders, chat with your guests, and look up information (e.g., about your '
         'guests or your progress in the game). Type "help" to see all available commands.'
     )
+    dont_truncate_cmd_help = [CMD_LOOKUP]
 
     def update_commands(self):
         cooked_food = food.plated()
@@ -658,6 +656,20 @@ class DinerMode(Mode):
             names_with_info.append('{} ({}){}'.format(guest.name, group, info))
         print_list(names_with_info)
 
+    @staticmethod
+    def exec_lookup(back, arg):
+        if arg == 'menu':
+            return DinerMenuMode(back=back)
+        if arg == 'reviews':
+            return ReviewsInfoMode(back=back)
+        if arg == 'guests':
+            return GuestInfoMode(back=back)
+        if arg == 'ingredients':
+            return IngredientInfoMode(back=back)
+        if arg == 'goals':
+            return GoalsInfoMode(back=back)
+        # recipes?
+
     def exec(self, cmd, cmd_input):
         if cmd == self.CMD_KITCHEN:
             return KitchenMode(back=self)
@@ -696,12 +708,8 @@ class DinerMode(Mode):
             self.wait_for_input()
             self.update_commands()
             return self
-        if cmd == self.CMD_MENU:
-            return DinerMenuMode(back=self)
-        if cmd == self.CMD_REVIEWS:
-            return ReviewsInfoMode(back=self)
-        if cmd == self.CMD_COMPENDIUM:
-            return CompendiumMode(back=self)
+        if cmd == self.CMD_LOOKUP:
+            return self.exec_lookup(self, cmd_input[-1])
         if cmd == self.CMD_GOALS:
             return GoalsInfoMode(back=self)
         if cmd == self.CMD_CLOSE_UP:
@@ -810,8 +818,6 @@ class KitchenMode(Mode):
                 print_message('Plated {}'.format(name))
             self.update_commands()
             return self
-        if cmd == self.CMD_COMPENDIUM:
-            return CompendiumMode(back=self)
         if cmd == self.CMD_TRASH:
             cooked_ingredients = food.cooked_ingredients()
             if cooked_ingredients:
@@ -905,23 +911,10 @@ class SaveRecipeMode(ChoiceMode):
             return super().back()
 
 
-class CompendiumMode(ChoiceMode):
-    prompt = 'choice #'
-    choices = ['Guests', 'Ingredients']
-    title = 'Compendium'
-
-    def exec_choice(self, choice):
-        if choice == 0:
-            return GuestCompendiumMode(back=self)
-        if choice == 1:
-            return IngredientCompendiumMode(back=self)
-        return self
-
-
-class GuestCompendiumMode(ChoiceMode):
+class GuestInfoMode(ChoiceMode):
     prompt = 'guest #'
     choices = None
-    title = 'Guest compendium'
+    title = 'Guest infos'
 
     def __init__(self, **kwargs):
         self.choices = sorted(guests.get_available_groups())
@@ -937,10 +930,10 @@ class GuestCompendiumMode(ChoiceMode):
         return self
 
 
-class IngredientCompendiumMode(ChoiceMode):
+class IngredientInfoMode(ChoiceMode):
     prompt = 'ingredient #'
     choices = None
-    title = 'Ingredient compendium'
+    title = 'Ingredient infos'
 
     def __init__(self, **kwargs):
         ingredients = set(storage.available_ingredients().keys())
