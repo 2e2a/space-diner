@@ -38,13 +38,18 @@ def line_width():
     return width
 
 
+def centering_spaces(text):
+    return ' ' * int((line_width() - len(text)) / 2)
+
+
 def is_small_screen():
     return line_width() < LINE_WIDTH
 
 
 def wait_for_input():
     print_newline()
-    input('<press ENTER to continue>')
+    print_text('<press ENTER to continue>')
+    input('')
 
 
 def print_text(text):
@@ -489,6 +494,34 @@ class StartMode(ChoiceMode):
         exit()
 
 
+class LogoMode(InfoMode):
+
+    prompt = ''
+
+    def print_header(self):
+        cls()
+        print_newline()
+        print_newline()
+        logo = (
+            '############## SPACE DINER ##############\n'
+            '#                                       #\n'
+            '#                          .-"""""-.    #\n'
+            '#   > plate bun           (_________)   #\n'
+            '#   > plate pickles        o o o o o    #\n'
+            '#   > grill tentacle       xXxXxXxXx    #\n'
+            '#   > serve Space Burger  (_________)   #\n'
+            '#                                       #\n'
+            '#########################################\n'
+        )
+        for line in logo.split('\n'):
+            print(centering_spaces(line) + line)
+        prompt_text = '<press ENTER to start the game>'
+        print_text(centering_spaces(prompt_text) + prompt_text)
+
+    def back(self):
+        return NewGameMode()
+
+
 class NewGameMode(ChoiceMode):
     prompt = 'new game #'
     levels = None
@@ -510,10 +543,12 @@ class NewGameMode(ChoiceMode):
         print_newline()
         print_title('Goals')
         print_list(goals.get_texts(), double_columns=False)
-        diner_name = input('Diner name (default: {}): '.format(diner.diner.name))
+        print_text('Diner name (default: {}): '.format(diner.diner.name))
+        diner_name = input('')
         if diner_name:
             diner.diner.name = diner_name
-        chef_name = input('Your name: ')
+        print_text('Your name: ')
+        chef_name = input('')
         if chef_name:
             diner.diner.chef = 'Chef {}'.format(chef_name)
         return FirstHelpMode()
@@ -1346,7 +1381,7 @@ def run(args):
         logfile_name = 'space-diner_{}.log'.format(datetime.now().strftime('%Y-%m-%d-%H%M%S'))
         logfile = open(logfile_name, 'w')
     #mode = StartMode()  # TODO: restore when save & load works
-    mode = NewGameMode()
+    mode = LogoMode()
     while True:
         try:
             mode.print_header()
