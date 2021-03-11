@@ -572,7 +572,13 @@ social:
       - Ah... hello, Hornless
     chats:
       - Mh... the weather is usually strange on Mars, but today, it is particularly strange, is it not?
+      - Yesterday, I won the first Rubarch game of my life. Mh, I am proud.
+      - Ah, I am a little bit bored today. Nothing to do.
       - Ah, what a day. So sandy and stormy.
+      - Mh, my grandchildren drew a picture of me. Do you want to see it? Here it is. The number of horns is not quite right.
+      - Ah, I need to remember to water the grass in my apartment.
+      - How are you doing? I always talk about myself, I apologize.
+
     friendship:
       available: True
       days: ['Monsol', 'Wednessol', 'Frisol', 'Satursol']
@@ -708,6 +714,11 @@ social:
       - Good morning,
     chats:
       - There must have been a really strong sandstorm last night. I heard that our dome was slightly damaged.
+      - What do you think about planting all this stuff on the Mars surface? I'm not sure I can get used to a green Mars.
+      - I heard that they are extending the theme park on Earth's moon. I think I'll go there soon and check it out.
+      - My children are really getting on my nerves today.
+      - What is going on on Earth? I forgot to check the news this week.
+      - I just came back from a business trip to the Tau Ceti system. What an exhausting trip!
   - name: Reptiloid adult
     greetings:
       - Hello,
@@ -717,30 +728,41 @@ social:
     greetings:
       - Greetings, Hornless
     chats:
-      - I heard that they want to allow keeping pets inside the domes soon. I'd really like one of these Earth dogs.
       - Have you ever been outside of the domes? I did a tour yesterday, but I found it scary.
       - Sigh. My hornless children are really exhausting.
       - Ah, my stomachs hurt. Or at least one of them hurts, sometimes it's hard to tell.
+      - I heard that they want to allow keeping pets inside the domes soon. I'd really like one of these Earth dogs.
+      - I got a nice compliment about my horns today. It really lifted my spirit.
+      - I received a message from my cousins in Barnard's Star system. It is always so nice to hear from them!
+      - I think I hurt my left hoof. It feels weird.
   - name: Human senior
     greetings:
       - Good morning
     chats:
       - Your diner looks so charming, my dear.
       - I'm just going to rest my eyes for a minute.
+      - You should print your menu in bigger letters. I can barely read it.
       - What kind of music are these kids outside listening to? Sounds like a lot of noise to me.
       - I wish I still had all my teeth. You should take good care of your teeth while you are young!
+      - I feel tired today. Sigh.
+      - My children gave me this new walking stick. Isn't it nice?
+      - What did you say? Sorry, I can't hear so well.
   - name: Reptiloid teenager
     greetings:
       - Good morning
       - What's up,
     chats:
       - How do I look? This is a brand-new scale polish that I'm trying.
+      - Man, I wish there were more bars and stuff like that in the colony. Your diner is nice, though.
+      -
   - name: Bovid teenager
     greetings:
       - Good morning
       - What's up,
     chats:
+      - My friends were so mean to me today. That's why I'm eating alone!
       - I've got a headache. Maybe my horns are starting to grow?
+      - Ugh, my friend sent me a message that they're not coming. I've been stood up!
       - I hate school. Why do I need to go to school?!
   - name: Human teenager
     greetings:
