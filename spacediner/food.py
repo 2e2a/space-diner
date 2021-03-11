@@ -247,6 +247,10 @@ def match_recipe(food):
     return None
 
 
+def unlock_recipe(name):
+    get_recipe(name).available = True
+
+
 def get_menu():
     global menu
     return menu

@@ -1272,6 +1272,7 @@ class ShoppingMode(ChoiceMode):
         merchant_description = shopping.get(merchant).description
         if merchant_description:
             print_text(merchant_description)
+        print_newline()
         if shopping.has_chat_available(merchant):
             owner = shopping.owner(merchant)
             chat = shopping.chat(merchant)
@@ -1301,6 +1302,7 @@ class MerchantMode(Mode):
         'You can buy individual ingredients (e.g., "buy 5 potato") or stock up on everything the merchant '
         'offers ("buy 5 each").'
         )
+
     def __init__(self, merchant, **kwargs):
         self.merchant = merchant
         super().__init__(**kwargs)

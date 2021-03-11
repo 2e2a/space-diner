@@ -1,5 +1,6 @@
 from . import cli
 from . import diner
+from . import food
 from . import guests
 from . import levels
 from . import shopping
@@ -144,8 +145,7 @@ class RecipeReward(Reward):
 
     def apply(self):
         cli.print_message('New recipe unlocked')
-        shopping.unlock(self.recipe)
-
+        food.unlock_recipe(self.recipe)
 
 def init_list(data):
     rewards = []
@@ -165,7 +165,7 @@ def init_list(data):
         elif typ == Reward.TYPE_DECORATION:
             reward = DecorationReward()
         elif typ == Reward.TYPE_RECIPE:
-            reward = DecorationReward()
+            reward = RecipeReward()
         reward.init(reward_data)
         rewards.append(reward)
     return rewards
