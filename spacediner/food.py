@@ -38,7 +38,6 @@ class Food:
 
     @property
     def default_name(self):
-        name = ''
         prepared_ingredients = self.get_prepared_ingredients()
         prepared_ingredients = [ingredient.replace(' ', '-') for ingredient in prepared_ingredients]
         unique_ingredients = list(set(prepared_ingredients))

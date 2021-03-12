@@ -125,7 +125,7 @@ def print_newline():
 
 
 def ascii_name(name):
-    ascii_name = re.sub(r'[^a-zA-Z0-9- ]+', '', name.lower(), count=16)
+    ascii_name = re.sub(r'[^a-zA-Z0-9- ()]+', '', name.lower(), count=16)
     ascii_name = ascii_name.strip('_')
     return ascii_name
 
@@ -160,6 +160,7 @@ class CommandCompleter:
             return '1'
 
     def _get_arg_completions(self, arg, cmd_arg):
+        # "beef burger (","Beef Burger (Grilled..."
         completed = 0
         arg_split = arg.split()
         cmd_split = cmd_arg.split()
@@ -182,6 +183,8 @@ class CommandCompleter:
                 completion = '-'.join(remaining_completion_parts)
             else:
                 completion = remaining_completion_parts[0]
+        if completion.startswith('('):
+            completion = completion[1:]
         return [completion]
 
     def _match_list(self, cmd, pos, arg, allow_partial):
