@@ -248,7 +248,7 @@ guests:
         Some of them are second or even third generation colonists.
       name_factory: Moon-English
       available: True
-      budget: 10
+      budget: 12
       reactions:
         - properties: [ grilled ]
           taste: +1
@@ -359,7 +359,7 @@ guests:
       groups: [ Human, colonist ]
       available: True
       budget: 10
-      days: ['Moonday', 'Tuesday', 'Wednesday', 'Friday', 'Saturday']
+      days: ['Moonday', 'Tuesday', 'Wednesday', 'Friday']
       reactions:
         - properties: [ pickles ]
           taste: +2
@@ -395,7 +395,7 @@ social:
       - Experiments, sigh... why do they always go wrong.
     friendship:
       available: True
-      days: ['Moonday', 'Tuesday', 'Wednesday', 'Friday', 'Saturday']
+      days: ['Moonday', 'Tuesday', 'Wednesday', 'Friday']
       meetings:
         - meeting: 'Ozabela invites you to the research facility where she works. Access to the area is restricted, but when
             the security guards see Ozabela, they let you enter. Ozabela shows you what she is working on
@@ -468,7 +468,7 @@ social:
             - reply: Yes, but they're really interesting worms.
               reaction: Ha, you're right. There's easily a lifetime's worth of research in just this one species that we have here.
             - reply: Cheer up. Less species means less work for you biologists.
-            - reaction: Not really. The work is just more repetitive.
+              reaction: Not really. The work is just more repetitive.
           rewards:
             - type: decoration
               decoration: movie poster
