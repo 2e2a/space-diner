@@ -1,6 +1,7 @@
 import random
 
 from . import cli
+from . import goals
 
 
 class Event:
@@ -74,15 +75,23 @@ class Calendar:
             self.day += 1
             cli.print_text(self.daily_greeting)
             cli.print_newline()
-            for event in self.events.get(self.day, []):
+            for event in self.get_events_today():
                 if event.info:
                     cli.print_text(event.info)
                     if event.type == Event.TYPE_HOLIDAY:
-                        cli.print_message('Today is "{}", a holiday for: {}.'.format(event.name, ', '.join(event.groups)))
+                        cli.print_message(
+                            'Today is "{}", a holiday for: {}.'.format(event.name, ', '.join(event.groups))
+                        )
+            cli.print_newline()
+            cli.print_title('Goals')
+            cli.print_list(goals.get_progresses(), double_columns=False)
             cli.wait_for_input()
         for time, callback in self.callbacks:
             if time == self.time:
                 callback()
+
+    def get_events_today(self):
+        return self.events.get(self.day, [])
 
     @property
     def weekday(self):
@@ -98,7 +107,11 @@ class Calendar:
 
     @property
     def now(self):
-        return 'day {}, {}, {}'.format(self.day, self.weekday, self.time)
+        now = 'day {}, {}, {}'.format(self.day, self.weekday, self.time)
+        event_names = [event.name for event in self.get_events_today() if hasattr(event, 'name')]
+        if event_names:
+            now += ' ({})'.format(','.join(event_names))
+        return now
 
     def register_callback(self, time, callback):
         self.callbacks.append((time, callback))

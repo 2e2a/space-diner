@@ -1018,13 +1018,7 @@ class GoalsInfoMode(InfoMode):
 
     def print_info(self):
         print_title('Goals')
-        progresses = []
-        for goal, (progress_num, progress_of) in zip(goals.get_texts(), goals.get_progresses()):
-            goal_progress_prc = int(float(progress_num) * 10.0 / float(progress_of))
-            progress_bar = '#' * goal_progress_prc + '-' * (10 - goal_progress_prc)
-            progress_info = '[{}]  {}/{} - {}'.format(progress_bar, progress_num, progress_of, goal)
-            progresses.append(progress_info)
-        print_list(progresses, double_columns=False)
+        print_list(goals.get_progresses(), double_columns=False)
 
 
 class ReviewsInfoMode(InfoMode):

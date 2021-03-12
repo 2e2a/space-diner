@@ -20,6 +20,7 @@ class Goal:
     def reached(self):
         cli.print_text(self.message)
         cli.print_newline()
+        cli.wait_for_input()
 
     def check(self):
         raise NotImplemented()
@@ -86,7 +87,14 @@ def get_texts():
 
 def get_progresses():
     global goals
-    return [goal.progress() for goal in goals]
+    progresses = []
+    for goal in goals:
+        progress_num, progress_of = goal.progress()
+        goal_progress_prc = int(float(progress_num) * 10.0 / float(progress_of))
+        progress_bar = '#' * goal_progress_prc + '-' * (10 - goal_progress_prc)
+        progress_info = '[{}]  {}/{} - {}'.format(progress_bar, progress_num, progress_of, goal.text)
+        progresses.append(progress_info)
+    return progresses
 
 
 def check_goals():
@@ -100,6 +108,7 @@ def check_goals():
             goals_reached = False
     if goals_reached:
         cli.print_message('Congratulations! You have won!')
+        cli.wait_for_input()
 
 
 def init(data):
