@@ -689,7 +689,7 @@ class DinerMode(Mode):
             if guest.order:
                 info = ', order: {}'.format(guest.order.wish)
             names_with_info.append('{} ({}){}'.format(guest.name, group, info))
-        print_list(names_with_info)
+        print_list(names_with_info, double_columns=False)
 
     @staticmethod
     def exec_look_up(back, arg):
