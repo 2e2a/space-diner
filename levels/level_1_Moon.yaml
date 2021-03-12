@@ -288,7 +288,7 @@ guests:
       available: True
       budget: 25
       reactions:
-        - properties: [ local  specialty ]
+        - properties: [ local specialty ]
           taste: +2
           output: Great, a local specialty!
           review_phase: that I got to eat a local specialty from the Moon
