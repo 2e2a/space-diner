@@ -35,11 +35,11 @@ calendar:
   events:
     - event: lose ingredients
       days: 3-5
-      info: Your fridge malfunctioned, some of the milk stored in it went bad!
+      info: Your fridge malfunctioned, some of the ingredients in it went bad!
       ingredients:
         - name: moss milk
           amount: 10
-        - name: cow milk
+        - name: blizzard egg
           amount: 10
     - event: lose ingredients
       days: 9-12
@@ -109,18 +109,23 @@ ingredients:
     storage: pantry
     properties: [ ]
 
+  - name: soy milk
+    description: A milky fluid extracted from soy (a plant growing on Earth).
+    storage: pantry
+    properties: [ milk, animal product, canned ]
+
   - name: cow milk
-    description: A milky fluid produced by cows (an Earth mammal).
+    description: A milky fluid produced by cows (a mammal living on Earth). Imported from Earth in cans.
     storage: fridge
-    properties: [ milk, animal product ]
+    properties: [ milk, canned ]
 
   - name: chicken egg
-    description: Egg laid by a chicken (an Earth bird). Consists of a shell, egg white, and egg yolk.
+    description: Egg laid by a chicken (a bird living on Earth). Consists of a shell, egg white, and egg yolk.
     storage: pantry
     properties: [ egg, animal product ]
 
   - name: blizzard egg
-    description: Egg laid by a blizzard bird (a Tau-Cetian bird). Consists of a shell and sweet purple goo.
+    description: Egg laid by a blizzard bird (a Tau-Cetian bird). Consists of a shell and sweet purple goo. Needs to be cooled.
     storage: pantry
     properties: [ egg, animal product, sweet ]
 
@@ -200,6 +205,9 @@ shopping:
         - name: cow milk
           cost: 2
           available: 10
+        - name: soy milk
+          cost: 4
+          available: 5
 
     - name: Fresh From the Greenhouse
       description: A human sells greenhouse-grown fruit and vegetables at this market stall.
@@ -381,7 +389,11 @@ guests:
         - properties: [ raw ]
           taste: +1
           output: Raw food is delicious.
-          review_phrase: the raw components
+          review_phrase: the raw components of the dish
+        - properties: [ canned ]
+          taste: -1
+          output: I do not enjoy canned food.
+          review_phrase: the canned food
       orders:
         - wish: raw
           text: Can you bring me something raw, please?
@@ -552,11 +564,11 @@ guests:
       budget: 30
       reactions:
         - properties: [ spicy ]
-          taste: +2
+          taste: +1
           output: Ah, I love spicy food.
           review_phrase: the delicious spiciness
         - properties: [ tomato ]
-          taste: +2
+          taste: +1
           output: Ah, I love tomatos.
           review_phrase: the tomatos in the dish
       orders:
@@ -613,7 +625,7 @@ social:
               text: Ah, I have told all my friends about your diner. Perhaps they will try it out! Your diner will
                 be crowded with old people.
         - meeting: >
-            Aab invites you to drink tea in the evening. You meet in her little appartment. Even though the
+            Aab invites you to drink tea in the evening. You meet in her little apartment. Even though the
             furniture is optimized for bovid anatomy and the floor is covered with soil and grass instead of a carpet,
             the interior design uncannily reminds you of your own grandparents' style. Sipping
             the bitter herbal tea, you let your eyes wander over the shelves filled with tableware and souvenirs. There
@@ -629,7 +641,7 @@ social:
               reaction: Ah, yes. I often chew on the idea of doing this as well. But I do not know if I have the courage.
             - reply: Uh... seems a little weird to me.
               reaction: >
-                Ah, perhaps from the ouside it looks a little distressing. To me, it is a beautiful thing.
+                Ah, perhaps from the outside it looks a little distressing. To me, it is a beautiful thing.
                 Mh, but I do not know if I would have the courage to do this...
           rewards:
             - type: ingredient
@@ -727,12 +739,17 @@ social:
       - I heard that they are extending the theme park on Earth's moon. I think I'll go there soon and check it out.
       - My children are really getting on my nerves today.
       - What is going on on Earth? I forgot to check the news this week.
-      - I just came back from a business trip to the Tau Ceti system. What an exhausting trip!
+      - I just came back from a business trip to the Tau-Ceti system. What an exhausting journey!
   - name: Reptiloid adult
     greetings:
       - Hello,
     chats:
       - It's so cold today, I can barely move my limbs.
+      - I laid some eggs yesterday, and today I am celebrating.
+      - Have you ever been Earth? I hear it is nice there, maybe I should go and visit it. After all, it is not so far.
+      - I am glad that it is getting a bit warmer. Makes it much easier for the cold-blooded among us.
+      - I heard they are renovating a part of the Bright Bouleverad. Finally! I hope they fix all the holes.
+      - Sigh. I am not having a great day. I hope the food will cheer me up.
   - name: Bovid adult
     greetings:
       - Greetings, Hornless
@@ -763,15 +780,20 @@ social:
     chats:
       - How do I look? This is a brand-new scale polish that I'm trying.
       - Man, I wish there were more bars and stuff like that in the colony. Your diner is nice, though.
+      - Ugh. I am trying to do my homework, but I understand nothing. Isn't algebra the worst?
+      - I wish I could spent more time outside the dome. They should speed up this atmosphere thing.
+      - Do you like being a chef? Doesn't look like fun.
   - name: Bovid teenager
     greetings:
       - Good morning
       - What's up,
     chats:
-      - My friends were so mean to me today. That's why I'm eating alone!
       - I've got a headache. Maybe my horns are starting to grow?
+      - My friends were so mean to me today. That's why I'm eating alone!
+      - Who is this person with the twenty horns that I sometimes see hanging around here? She looks cool.
       - Ugh, my friend sent me a message that they're not coming. I've been stood up!
       - I hate school. Why do I need to go to school?!
+
   - name: Human teenager
     greetings:
       - Good morning
@@ -780,6 +802,8 @@ social:
       - I wanna go dancing tonight.
       - Ugh, I don't feel great today. Maybe I shouldn't have gone to that party yesterday.
       - When I finish school, I also want to become a chef!
+      - I watched a spaceship from Earth arrive yesterday. That was fun!
+      - I am so bored. I wish there was more going on in this colony.
   - name: Cashier Bot
     greetings:
       - Welcome to Earth Wholesale,
