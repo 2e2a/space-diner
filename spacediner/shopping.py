@@ -2,6 +2,7 @@ from collections import OrderedDict
 
 from . import ingredients
 from . import social
+from . import time
 
 
 class Market:
@@ -27,7 +28,7 @@ class Merchant:
 
     def for_sale(self):
         for_sale = {}
-        for ingredient_name, (availability, cost) in self.ingredients.items():
+        for ingredient_name, (availability, cost, _) in self.ingredients.items():
             ingredient = ingredients.get(ingredient_name)
             for_sale.update({ingredient_name: (availability, cost, ingredient.storage)})
         return for_sale
@@ -37,9 +38,9 @@ class Merchant:
 
     def buy(self, name, amount):
         if name in self.ingredients:
-            availability, cost = self.ingredients.get(name)
+            availability, cost, in_stock = self.ingredients.get(name)
             if availability > 0:
-                self.ingredients.update({name: (availability - amount, cost)})
+                self.ingredients.update({name: (availability - amount, cost, in_stock)})
                 return ingredients.get(name)
         return None
 
@@ -48,6 +49,10 @@ class Merchant:
 
     def chat(self):
         return social.greet_and_chat(self.owner)
+
+    def restock(self):
+        for name, (availability, cost, in_stock) in self.ingredients.items():
+            self.ingredients.update({name: (in_stock, cost, in_stock)})
 
     STOCK_AVAILABILITY_UNLIMITED = 99
 
@@ -61,10 +66,10 @@ class Merchant:
             ingredient = merchant_ingredient.get('name')
             availability = merchant_ingredient.get('available', self.STOCK_AVAILABILITY_UNLIMITED)
             cost = merchant_ingredient.get('cost', 0)
-            self.ingredients.update({ingredient: (availability, cost, )})
+            self.ingredients.update({ingredient: (availability, cost, availability)}) # TODO: restock
 
     def __str__(self):
-        ingredients = ', '.join(['{}[{} in stock] [{} $$$]'.format(i, a, c) for (i, (a, c)) in self.ingredients.items()])
+        ingredients = ', '.join(['{}[{} in stock] [{} $$$]'.format(i, a, c) for (i, (a, c, _)) in self.ingredients.items()])
         return '{}: {}'.format(self.name, ingredients)
 
 
@@ -131,6 +136,12 @@ def unlock(name):
     merchant.available = True
 
 
+def morning():
+    global merchants
+    for merchant in merchants.values():
+        merchant.restock()
+
+
 def init(data):
     global market
     global merchants
@@ -141,6 +152,7 @@ def init(data):
         merchant = Merchant()
         merchant.init(merchant_data)
         merchants.update({merchant.name: merchant})
+    time.register_callback(time.Calendar.TIME_MORNING, morning)
 
 
 def save(file):
