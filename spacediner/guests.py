@@ -451,6 +451,7 @@ RANDOM_GUESTS = 2
 
 
 def _new_guests(seats):
+    import pdb;pdb.set_trace()
     global guest_factory
     # TODO: numbers are not completely right: e.g., 4 colonists and 2 tourists when 6 seats are available?
     wait_for_input = False
@@ -487,10 +488,11 @@ def _new_guests(seats):
     seats_per_holiday = round(seats_remaining / len(holidays)) if holidays else 0
     for holiday in holidays:
         holiday_groups = set(holiday.groups).intersection(groups)
-        seats_taken = round(seats_per_holiday / len(holiday_groups))
+        seats_per_group = round(seats_per_holiday / len(holiday_groups))
         for group in holiday_groups:
-            new_guests.extend(seats_taken * [group])
-        seats_remaining -= len(holiday_groups) * seats_taken
+            seats_per_group = min(seats_per_group, seats_remaining)
+            new_guests.extend(seats_per_group * [group])
+            seats_remaining -= seats_per_group
     for _ in range(RANDOM_GUESTS):
         if empty_groups and seats_remaining > 0:
             random_group = random.choice(empty_groups)
