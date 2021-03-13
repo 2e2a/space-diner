@@ -91,7 +91,10 @@ class Guest:
 
     @property
     def review_names(self):
-        return [group.name for group in self.groups]
+        names = [group.name for group in self.groups]
+        if self.is_regular:
+            names.append(self.name)
+        return names
 
     @property
     def is_in_factory(self):
