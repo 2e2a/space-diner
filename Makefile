@@ -19,3 +19,5 @@ run:
 .PHONY: build
 build:
 	$(VIRTUAL_ENV)/bin/pyinstaller space-diner.py
+	rm dist/space-diner/levels/
+	cp -r levels/ dist/space-diner/
