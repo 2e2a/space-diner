@@ -91,7 +91,7 @@ class Guest:
 
     @property
     def review_names(self):
-        return [group.name for group in self.groups] if not self.is_regular else []
+        return [group.name for group in self.groups]
 
     @property
     def is_in_factory(self):
@@ -195,9 +195,7 @@ class Guest:
             self.taste,
             self.service,
             self.ambience,
-            self.positive_phrases,
-            self.neutral_phrases,
-            self.negative_phrases,
+            review_phrases=(self.positive_phrases, self.neutral_phrases, self.negative_phrases),
         )
 
     def add_skill_review(self):
@@ -551,13 +549,9 @@ def init(data):
         guest.reset()
         regulars.update({guest.name: guest})
 
-
     reviews.init()
     for regular in regulars.values():
-        if regular.available:
-            reviews.add(regular.name, regular.name)
-            if regular.is_in_factory:
-                reviews.add(regular.name, regular.groups)
+        reviews.add(regular.name, regular.review_names)
 
     time.register_callback(time.Calendar.TIME_DAYTIME, daytime)
 

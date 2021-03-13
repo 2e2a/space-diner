@@ -18,9 +18,9 @@ class Rating:
 
     TASTE_MULTIPLIER = 3
 
-    def __init__(self, name, groups):
+    def __init__(self, name, groups=None):
         self.name = name
-        self.groups = groups
+        self.groups = groups if groups else []
 
     def add(self, taste, service, ambience):
         self.taste = (self.count * self.taste + taste) / (self.count + 1)
@@ -84,37 +84,37 @@ class Review:
         choices = self.first_choices if prio == 1 else self.second_choices
         choices.append(message)
 
-    def generate(self, taste, service, ambience, positive_phrases, neutral_phrases, negative_phrases):
+    def generate(self, taste, service, ambience, review_phrases=None):
         global reviews
         self.add(2, 'ambience', ambience)
         self.add(2, 'service', service)
         aggregate_rating = add_rating(self.group_name, taste, service, ambience)
-        if self.regular_group_name:
-            add_rating(self.regular_group_name, taste, service, ambience)
-        message = ''
-        random.seed()
-        group = None
-        if self.group_name != self.name:
-            group = self.group_name
-        elif self.regular_group_name:
-            group = self.regular_group_name
-        if group:
-            message += '{} ({}):'.format(self.name, self.group_name)
-        else:
-            message += '{}:'.format(self.name)
-        if negative_phrases and aggregate_rating <= 2:
-            message += ' ' + random.choice(negative_phrases)
-        elif positive_phrases and aggregate_rating >= 4:
-            message += ' ' + random.choice(positive_phrases)
-        elif neutral_phrases:
-            message += ' ' + random.choice(neutral_phrases)
-        if self.first_choices:
-            message += ' ' + random.choice(self.first_choices)
-        if self.second_choices:
-            message += ' ' + random.choice(self.second_choices)
-        message += ' (Rating: {})'.format(round(aggregate_rating))
-        self.message = message
-        reviews.append(self)
+        if review_phrases:
+            positive_phrases, neutral_phrases, negative_phrases = review_phrases
+            message = ''
+            random.seed()
+            group = None
+            if self.group_name != self.name:
+                group = self.group_name
+            elif self.regular_group_name:
+                group = self.regular_group_name
+            if group:
+                message += '{} ({}):'.format(self.name, self.group_name)
+            else:
+                message += '{}:'.format(self.name)
+            if negative_phrases and aggregate_rating <= 2:
+                message += ' ' + random.choice(negative_phrases)
+            elif positive_phrases and aggregate_rating >= 4:
+                message += ' ' + random.choice(positive_phrases)
+            elif neutral_phrases:
+                message += ' ' + random.choice(neutral_phrases)
+            if self.first_choices:
+                message += ' ' + random.choice(self.first_choices)
+            if self.second_choices:
+                message += ' ' + random.choice(self.second_choices)
+            message += ' (Rating: {})'.format(round(aggregate_rating))
+            self.message = message
+            reviews.append(self)
         return aggregate_rating
 
 
@@ -175,9 +175,8 @@ def daytime():
     reviews = []
 
 
-def add(guest, groups):
+def add(guest, groups=None):
     global ratings
-    global reviews
     global likes
     if guest not in ratings:
         ratings.update({guest: Rating(guest, groups)})
