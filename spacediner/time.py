@@ -67,6 +67,20 @@ class Calendar:
 
     def tick(self):
         if self.time == self.TIME_MORNING:
+            is_event_happening = False
+            cli.cls()
+            cli.print_header()
+            for event in self.get_events_today():
+                if event.type in Event.STORAGE_EVENT_TYPES:
+                    is_event_happening = True
+                    if event.info:
+                        cli.print_text(event.info)
+                    if event.type == Event.TYPE_INGREDIENTS_LOSE:
+                        cli.print_message('You might have lost some ingredients.')
+                    if event.type == Event.TYPE_INGREDIENTS_WIN:
+                        cli.print_message('You gained some ingredients.')
+            if is_event_happening:
+                cli.wait_for_input()
             self.time = self.TIME_DAYTIME
         elif self.time == self.TIME_DAYTIME:
             self.time = self.TIME_EVENING
@@ -76,8 +90,9 @@ class Calendar:
             cli.print_text(self.daily_greeting)
             cli.print_newline()
             for event in self.get_events_today():
-                if event.info:
-                    cli.print_text(event.info)
+                if event.type in Event.GROUP_EVENT_TYPES:
+                    if event.info:
+                        cli.print_text(event.info)
                     if event.type == Event.TYPE_HOLIDAY:
                         cli.print_message(
                             'Today is "{}", a holiday for: {}.'.format(event.name, ', '.join(event.groups))
