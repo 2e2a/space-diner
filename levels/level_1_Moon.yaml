@@ -1,11 +1,19 @@
 name: Moon
 
-intro: The moon has been colonized. You run a diner in one of the settlements.
+intro: >
+  The moon has been colonized. You run a diner in one of the settlements.
   It is not very lucrative, but you have a solid customer base.
   The colony is too insignificant to have visitors from other
   planets or even solar systems, but it is a quite popular spot for human tourists from Earth.
   Try to earn 500 space dollars - that's the amount you need to buy an interplanetary ticket and open a diner
   in a more interesting place.
+
+outro: >
+  You have earned enough money to buy an interplanetary ticket. You feel relief that you can leave the
+  colony, but with a pinch of sadness. Some of the colonist have become dear to your heart.
+  You could go anywhere in the whole solar system now! To Mars, the red planet that is becoming greener
+  by the day; to one of the lively moons of Jupiter; or even to one of the dark but exciting outer planets.
+  Time to get your career as a Space Chef going! You can leave right now, or stay a little longer on the moon.
 
 money: 50
 

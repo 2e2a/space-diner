@@ -12,21 +12,26 @@ intro: >
   seeking their fortunes on Mars are humans, but there are also reptiloids and bovids. Make sure that they all
   feel at home in your diner! Your goal is to get 15 positive reviews from each group (i.e., reviews with a rating
   of 3 or better). This will help you to establish a reputation as a versatile chef.
+outro: >
+  You did it! You have proven that you are a versatile chef with knowledge about a variety of cuisines.
+  Your diner is booming. But you should dream big: this solar system is not the only one.
+  Exciting culinary things are happening all around the galaxy...
+  (Coming soon: more Space Diner levels and a level editor!)
 goals:
   - type: reviews
     group: Reptiloid
     amount: 15
-    text: Get 20 positive reviews from reptiloids.
+    text: Get 15 positive reviews from reptiloids.
     message: Congratulations, reptiloids love your food!
   - type: reviews
     group: Bovid
     amount: 15
-    text: Get 20 positive reviews from bovids.
+    text: Get 15 positive reviews from bovids.
     message: Congratulations, bovids love your food!
   - type: reviews
     group: Human
     amount: 15
-    text: Get 20 positive reviews from humans.
+    text: Get 15 positive reviews from humans.
     message: Congratulations, humans love your food!
 
 calendar:

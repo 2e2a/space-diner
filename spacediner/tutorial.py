@@ -10,7 +10,7 @@ TUTORIAL = [
      'After taking orders, you can go to the kitchen to prepare the food: "go to kitchen".'
      ),
     (cli.KitchenMode, cli.KitchenMode.CMD_COOK,
-     'Every dish consists of three ingredients. Once you have prepared them, they will be automatically plated as '
+     'Once you have prepared three ingredients, they will be automatically plated as '
      'a completed dish. If you like, you can look at available recipes (type: "look up recipes"). To start cooking, '
      'type "[VERB] [INGREDIENT]". The available verbs (e.g., "grill", "plate"...) and ingredients are listed above.'
      ),

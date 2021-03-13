@@ -22,6 +22,7 @@ from . import time
 class Level:
     name = None
     intro = None
+    outro = None
     money = 0
     tutorial = False
 
@@ -30,6 +31,7 @@ class Level:
             data = yaml.load(stream, Loader=yaml.FullLoader)
             self.name = data.get('name')
             self.intro = data.get('intro')
+            self.outro = data.get('outro')
             self.money = data.get('money')
             self.tutorial = data.get('tutorial')
             diner.init(data.get('diner'))
@@ -65,6 +67,11 @@ def get_intro():
     return level.intro
 
 
+def get_outro():
+    global level
+    return level.outro
+
+
 def is_tutorial_enabled():
     global level
     return level.tutorial if level else False
@@ -73,7 +80,6 @@ def is_tutorial_enabled():
 def get_money():
     global level
     return level.money
-
 
 def add_money(diff):
     global level

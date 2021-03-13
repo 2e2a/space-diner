@@ -109,6 +109,16 @@ def check_goals():
     if goals_reached:
         cli.print_message('Congratulations! You have won!')
         cli.wait_for_input()
+        cli.cls()
+        cli.print_header()
+        cli.print_text(levels.get_outro())
+        cli.print_newline()
+        yes = input('Exit game? (y/N) ')
+        if yes in ['y', 'Y']:
+            # levels.autosave_save()
+            if cli.logfile:
+                cli.logfile.close()
+            exit()
 
 
 def init(data):

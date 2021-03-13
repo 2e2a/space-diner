@@ -785,7 +785,7 @@ class KitchenMode(Mode):
     commands = [
         ('go to diner',),
         ([], [],),
-        ('trash',),
+        ('trash prepared ingredients',),
         ('look up', ['recipes', 'guests', 'ingredients', 'menu', 'reviews', 'goals']),
         ('save recipe', []),
     ]
@@ -794,8 +794,8 @@ class KitchenMode(Mode):
     available_ingredients = None
     available_devices = None
     hint = (
-        'In the kitchen, you prepare the food. You can follow existing recipes or create your own. Try to match '
-        'your guests\' orders.'
+        'In the kitchen, you prepare the food. Each dish consists of three ingredients (the order does not matter).'
+        'You can follow existing recipes or create your own. Try to match your guests\' orders.'
     )
 
     def __init__(self, **kwargs):
