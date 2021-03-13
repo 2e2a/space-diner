@@ -10,23 +10,22 @@ intro: >
   other planets. Some (edible?) life forms are even beginning to cover the rocky surface outside of the domes.
   Your diner is located in a small city close to Pavonis Mons. Most of the settlers
   seeking their fortunes on Mars are humans, but there are also reptiloids and bovids. Make sure that they all
-  feel at home in your diner! Your goal is to get 20 positive reviews from each group (i.e., reviews with a rating
-  of 3 or better; reviews by regular customers do not count towards the goals). This will help you to establish
-  a reputation as a versatile chef.
+  feel at home in your diner! Your goal is to get 15 positive reviews from each group (i.e., reviews with a rating
+  of 3 or better). This will help you to establish a reputation as a versatile chef.
 goals:
   - type: reviews
     group: Reptiloid
-    amount: 20
+    amount: 15
     text: Get 20 positive reviews from reptiloids.
     message: Congratulations, reptiloids love your food!
   - type: reviews
     group: Bovid
-    amount: 20
+    amount: 15
     text: Get 20 positive reviews from bovids.
     message: Congratulations, bovids love your food!
   - type: reviews
     group: Human
-    amount: 20
+    amount: 15
     text: Get 20 positive reviews from humans.
     message: Congratulations, humans love your food!
 
@@ -197,8 +196,10 @@ shopping:
       ingredients:
         - name: chicken egg
           cost: 2
+          available: 10
         - name: cow milk
           cost: 2
+          available: 10
 
     - name: Fresh From the Greenhouse
       description: A human sells greenhouse-grown fruit and vegetables at this market stall.
@@ -207,12 +208,16 @@ shopping:
       ingredients:
         - name: tomato
           cost: 1
+          available: 20
         - name: basil
           cost: 2
+          available: 10
         - name: peach
           cost: 2
+          available: 10
         - name: banana
           cost: 2
+          available: 10
 
     - name: Tau-Cetian Imports
       description: A very tall and skinny reptiloid sells Tau-Cetian products at this booth.
@@ -221,6 +226,7 @@ shopping:
       ingredients:
         - name: blizzard egg
           cost: 3
+          available: 12
 
     - name: Lush Meadows
       description: In a hidden corner of the market place, you find this stall selling fresh plants that have recently
@@ -230,10 +236,13 @@ shopping:
       ingredients:
         - name: lichen
           cost: 1
+          available: 15
         - name: moss
           cost: 1
         - name: moss milk
           cost: 1
+          available: 15
+
 
 food:
   recipes:

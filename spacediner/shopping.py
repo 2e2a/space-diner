@@ -57,8 +57,8 @@ class Merchant:
         self.owner = data.get('owner', self.name)
         self.available = data.get('available', True)
         self.ingredients = OrderedDict()
-        for merchant_ingredient in  data.get('ingredients'):
-            ingredient =  merchant_ingredient.get('name')
+        for merchant_ingredient in data.get('ingredients'):
+            ingredient = merchant_ingredient.get('name')
             availability = merchant_ingredient.get('available', self.STOCK_AVAILABILITY_UNLIMITED)
             cost = merchant_ingredient.get('cost', 0)
             self.ingredients.update({ingredient: (availability, cost, )})

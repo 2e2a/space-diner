@@ -1423,7 +1423,7 @@ def run(args):
         except (KeyboardInterrupt, EOFError):
             try:
                 print_newline()
-                yes = input('Save and exit game? (y/N) ')
+                yes = input('Exit game? (y/N) ')
                 if yes in ['y', 'Y']:
                     #levels.autosave_save()
                     if logfile:

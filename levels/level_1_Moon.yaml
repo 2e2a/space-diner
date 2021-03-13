@@ -136,12 +136,16 @@ shopping:
       ingredients:
         - name: beef
           cost: 2
+          available: 10
         - name: pickles
           cost: 1
+          available: 10
         - name: bun
           cost: 1
+          available: 10
         - name: potato
           cost: 1
+          available: 10
 
     - name: Moon Delicacies
       description: Pete sells his 'Moon delicacies' at this scruffy booth.
@@ -150,6 +154,7 @@ shopping:
       ingredients:
         - name: silkworm
           cost: 19
+          available: 5
 
     - name: Oddie's Laboratory Waste
       description: You climb down the steep stairs leading to Oddie's hidden basement store.
@@ -158,6 +163,7 @@ shopping:
       ingredients:
         - name: silkworm
           cost: 3
+          available: 10
 
 food:
   recipes:
