@@ -11,7 +11,7 @@ TUTORIAL = [
      ),
     (cli.KitchenMode, cli.KitchenMode.CMD_COOK,
      'Every dish consists of three ingredients. Once you have prepared them, they will be automatically plated as '
-     'a completed dish. If you like, you can look at available recipes (type: "recipes"). To start cooking, '
+     'a completed dish. If you like, you can look at available recipes (type: "look up recipes"). To start cooking, '
      'type "[VERB] [INGREDIENT]". The available verbs (e.g., "grill", "plate"...) and ingredients are listed above.'
      ),
     (cli.KitchenMode, cli.KitchenMode.CMD_COOK,
@@ -21,7 +21,7 @@ TUTORIAL = [
      'Add a third ingredient.'
      ),
     (cli.KitchenMode, cli.KitchenMode.CMD_DINER,
-     'Once you have completed a dish, return to your guests: "go to diner".'
+     'Once you have completed one or more dishes, return to your guests: "go to diner".'
      ),
     (cli.DinerMode, cli.DinerMode.CMD_SERVE,
      'Now it\'s time to serve your dish: "serve [DISH] to [NAME]". After serving all the customers, you can '

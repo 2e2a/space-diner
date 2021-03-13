@@ -52,7 +52,7 @@ calendar:
 goals:
   - type: money
     amount: 500
-    text: Earn 500 space-dollars.
+    text: Earn 500 space dollars.
     message: You have earned enough money for an interplanetary ticket. Let's get out of here.
 
 ingredients:
@@ -578,7 +578,7 @@ skills:
       - Allumette cut
       - Julienne cut
   - type: service
-    name: etiquette
+    name: etiquette skills
     subskills:
       - friendly greeting
       - announcing day's specials
@@ -599,5 +599,5 @@ activities:
     message: You read a chapter of the book Elegant Etiquette. This should improve the quality of your service.
     rewards:
       - type: skill
-        skill: etiquette
+        skill: etiquette skills
         diff: +1

@@ -30,6 +30,12 @@ class Food:
         if num < len(self.ingredients):
             return list(self.ingredients[num].properties)
 
+    def all_ingredient_properties(self):
+        all_ingredient_properties = []
+        for i in range(3):
+            all_ingredient_properties.append(self.ingredient_properties(i))
+        return all_ingredient_properties
+
     def get_prepared_ingredients(self):
         return [
             '{} {}'.format(preparation, ingredient)

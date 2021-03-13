@@ -606,7 +606,7 @@ class FirstHelpMode(InfoMode):
         print_title(title)
         print_text(
             'How to play? Use auto-complete: type the first letters of a command and press TAB. Type \'help\' to '
-            'display a list of available commands. During your first day, you will receive hints about each location.'
+            'display a list of available commands. During your first day, you will receive gameplay hints.'
         )
         print_newline()
         print_text(
@@ -885,7 +885,7 @@ class RecipeMode(ChoiceMode):
         print('Ingredients:')
         ingredient_list = [', '.join(properties) for properties in recipe.ingredient_properties]
         print_list(ingredient_list, double_columns=False)
-        print('Properties: {}'.format(', '.join(recipe.all_properties())))
+        print('Properties of the dish: {}'.format(', '.join(recipe.all_properties())))
 
     def print_info(self):
         print_text('This is a list of available recipes. You can also add your own recipes to this collection: '
@@ -901,6 +901,45 @@ class RecipeMode(ChoiceMode):
 
 
 class SaveRecipeMode(ChoiceMode):
+    prompt = 'menu #'
+    choices = ["Quick-save the recipe", "Advanced recipe maker"]
+    title = 'How would you like to save your recipe?'
+    dish = None
+
+    def print_info(self):
+        print_text(
+            'You can save your dish as a new recipe. Use quick-save to quickly note down the preparation of the '
+            'ingredients - then only exact replications of your dish will be considered as instances of the recipe. '
+            'Use the advanced recipe maker to create more flexible recipes.'
+        )
+        print_newline()
+        super().print_info()
+
+    def __init__(self, dish, **kwargs):
+        self.dish = food.get(dish)
+        super().__init__(**kwargs)
+
+    def exec_choice(self, choice):
+        if choice == 0:
+            print_title('Recipe:')
+            self.print_recipe(self.dish.all_ingredient_properties())
+            name = None
+            while not name:
+                name = input('Recipe name: '.format(self.prompt))
+            food.save_as_recipe(name, self.dish.all_ingredient_properties())
+            self.back_mode.update_commands()
+            return self.back_mode
+        elif choice == 1:
+            return AdvancedSaveRecipeMode(self.dish, back=self.back_mode)
+
+    @staticmethod
+    def print_recipe(ingredient_properties_list):
+        print_list(
+            [', '.join(ingredient_properties) for ingredient_properties in ingredient_properties_list],
+            double_columns=False
+        )
+
+class AdvancedSaveRecipeMode(ChoiceMode):
     choices = None
     prompt = 'Add property:'
     back_label = 'Done'
@@ -915,39 +954,24 @@ class SaveRecipeMode(ChoiceMode):
         return 'Choose which properties of ingredient {} will be part of the recipe'.format(self.ingredient + 1)
 
     def __init__(self, dish, **kwargs):
-        self.dish = food.get(dish)
+        self.dish = dish
         self.ingredient_property_choices = [[], [], []]
         self.choices = self.dish.ingredient_properties(self.ingredient)
         super().__init__(**kwargs)
 
-    def _print_dish(self):
-        print_title('Prepared dish:')
-        dish_ingredient_properties = []
-        for i in range(3):
-            dish_ingredient_properties.append(self.dish.ingredient_properties(i))
-        print_list(
-            [', '.join(ingredient_properties) for ingredient_properties in dish_ingredient_properties],
-            double_columns=False
-        )
-
-    def _print_recipe(self):
-        print_title('Recipe:')
-        print_list(
-            [', '.join(ingredient_properties) for ingredient_properties in self.ingredient_property_choices],
-            double_columns=False
-        )
-
     def print_info(self):
-        print_text('You can save this dish as a new recipe. Use the menu below to decide how specific you want '
-                   'the recipe to be. For each component, you can choose the crucial properties that need to '
-                   'be met. For example, if the first ingredient is grilled beef, you can decide whether '
-                   'the recipe requires the exact same preparation (then select two properties: "grilled" and "beef"), '
-                   'or any kind of beef is ok (select the property: "beef"), or even any kind of meat goes ("meat"). '
-                   'Then, selected the required properties of the second and third component in the same manner.'
-                   )
+        print_text(
+            'For each component, you can choose the crucial properties that need to '
+            'be met. For example, if the first ingredient is grilled beef, you can decide whether '
+            'the recipe requires the exact same preparation (then select two properties: "grilled" and "beef"), '
+            'or any kind of beef is ok (select the property: "beef"), or even any kind of meat goes ("meat"). '
+            'Then, select the required properties of the second and third component in the same manner.'
+        )
         print_newline()
-        self._print_dish()
-        self._print_recipe()
+        print_title('Prepared dish:')
+        SaveRecipeMode.print_recipe(self.dish.all_ingredient_properties())
+        print_title('Recipe draft:')
+        SaveRecipeMode.print_recipe(self.ingredient_property_choices)
         super().print_info()
 
     def exec_choice(self, choice):
@@ -965,7 +989,9 @@ class SaveRecipeMode(ChoiceMode):
             self.choices = self.dish.ingredient_properties(self.ingredient)
             return self
         else:
-            self._print_recipe()
+            cls()
+            print_title('Recipe:')
+            SaveRecipeMode.print_recipe(self.ingredient_property_choices)
             name = None
             while not name:
                 name = input('Recipe name: '.format(self.prompt))
