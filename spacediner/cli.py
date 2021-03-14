@@ -181,7 +181,7 @@ class CommandCompleter:
             remaining_completion_parts = completion.split('-')[sub_args_completed:]
             if len(remaining_completion_parts) > 1:
                 completion = '-'.join(remaining_completion_parts)
-            else:
+            elif remaining_completion_parts:
                 completion = remaining_completion_parts[0]
         if completion.startswith('('):
             completion = completion[1:]
