@@ -363,6 +363,8 @@ guests:
           text: Is it peach season? Can I have something with peaches, please?
         - wish: egg
           text: An egg or two would be nice.
+        - wish: spicy
+          text: Can make something spicy for me?
 
     - name: Reptiloid
       description: >
@@ -487,8 +489,6 @@ guests:
           text: I think that something boiled would be good for me now.
         - wish: sweet
           text: Can I have something sweet?
-        - wish: canned
-          text: In the good old days, we only had canned food on Mars. Do you have any nice canned products?
       positive_phrases:
         - Jolly good.
         - This young chef impressed me.

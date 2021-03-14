@@ -11,9 +11,9 @@ intro: >
 outro: >
   You have earned enough money to buy an interplanetary ticket. You feel relief that you can leave the
   colony, but with a pinch of sadness. Some of the colonist have become dear to your heart.
-  You could go anywhere in the whole solar system now! To Mars, the red planet that is becoming greener
-  by the day; to one of the lively moons of Jupiter; or even to one of the dark but exciting outer planets.
-  Time to get your career as a Space Chef going! You can leave right now, or stay a little longer on the moon.
+  You could go anywhere in the whole solar system now! Perhaps to Mars, the red planet that is becoming greener
+  by the day? Time to get your career as a Space Chef going!
+  You can leave right now, or stay on the moon a little longer.
 
 money: 50
 
@@ -278,12 +278,14 @@ guests:
           output: I don't like this kind of fancy, pretentious food.
           review_phrase: that the dish was too fancy for my taste
       orders:
-        - wish: beef
-          text: I'll have some beef.
+        - wish: bun
+          text: I'll have some bread, please.
         - wish: grilled
           text: Can you make me something grilled?
-        - wish: meat
-          text: I'll have something with meat, please.
+        - wish: pickles
+          text: I'll have something with pickles, please.
+        - wish: potato
+          text: I'd like something with potatoes!
       positive_phrases:
         - Awesome!
         - Amazing!
@@ -318,6 +320,8 @@ guests:
           text: I would really like to try a local specialty.
         - wish: potato
           text: Can you make me something with potatoes, please?
+        - wish: potato
+          text: Could I have something raw, please?
       positive_phrases:
         - Ooh la la!
         - Lovely!
@@ -373,7 +377,7 @@ guests:
     - name: Dr. Ozabela Ruizy
       groups: [ Human, colonist ]
       available: True
-      budget: 10
+      budget: 13
       days: ['Moonday', 'Tuesday', 'Wednesday', 'Friday']
       reactions:
         - properties: [ pickles ]
@@ -592,14 +596,6 @@ skills:
       - Batonnet cut
       - Allumette cut
       - Julienne cut
-  - type: service
-    name: etiquette skills
-    subskills:
-      - friendly greeting
-      - announcing day's specials
-      - refilling drinks
-      - proper cutlery placement
-      - serving and clearing from the correct side
 
 activities:
   - name: practice knife skills
@@ -608,11 +604,4 @@ activities:
     rewards:
       - type: skill
         skill: knife skills
-        diff: +1
-  - name: read up on etiquette for restaurant staff
-    available: True
-    message: You read a chapter of the book Elegant Etiquette. This should improve the quality of your service.
-    rewards:
-      - type: skill
-        skill: etiquette skills
         diff: +1
