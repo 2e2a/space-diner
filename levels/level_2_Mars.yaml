@@ -117,7 +117,7 @@ ingredients:
   - name: soy milk
     description: A milky fluid extracted from soy (a plant growing on Earth).
     storage: pantry
-    properties: [ milk, animal product, canned ]
+    properties: [ milk, canned ]
 
   - name: cow milk
     description: A milky fluid produced by cows (a mammal living on Earth). Imported from Earth in cans.
