@@ -29,7 +29,7 @@ class Rating:
         aggregate = (self.TASTE_MULTIPLIER * taste + service + ambience) / (self.TASTE_MULTIPLIER + 2)
         self.aggregate = round((self.count * self.aggregate + aggregate) / (self.count + 1))
         self.count += 1
-        if self.aggregate >= 3:
+        if self.aggregate >= 4:
             self.positive_count += 1
         return aggregate
 

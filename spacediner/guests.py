@@ -451,7 +451,6 @@ RANDOM_GUESTS = 2
 
 
 def _new_guests(seats):
-    import pdb;pdb.set_trace()
     global guest_factory
     # TODO: numbers are not completely right: e.g., 4 colonists and 2 tourists when 6 seats are available?
     wait_for_input = False

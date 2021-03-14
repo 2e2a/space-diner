@@ -10,8 +10,8 @@ intro: >
   other planets. Some (edible?) life forms are even beginning to cover the rocky surface outside of the domes.
   Your diner is located in a small city close to Pavonis Mons. Most of the settlers
   seeking their fortunes on Mars are humans, but there are also reptiloids and bovids. Make sure that they all
-  feel at home in your diner! Your goal is to get 15 positive reviews from each group (i.e., reviews with a rating
-  of 3 or better). This will help you to establish a reputation as a versatile chef.
+  feel at home in your diner! Your goal is to get 10 very positive reviews from each group.
+  This will help you to establish a reputation as a versatile chef.
 outro: >
   You did it! You have proven that you are a versatile chef with knowledge about a variety of cuisines.
   Your diner is booming. But you should dream big: this solar system is not the only one.
@@ -20,18 +20,18 @@ outro: >
 goals:
   - type: reviews
     group: Reptiloid
-    amount: 15
-    text: Get 15 positive reviews from reptiloids.
+    amount: 10
+    text: Get 10 very positive reviews (rating of 4 or better) from reptiloids.
     message: Congratulations, reptiloids love your food!
   - type: reviews
     group: Bovid
-    amount: 15
-    text: Get 15 positive reviews from bovids.
+    amount: 10
+    text: Get 10 very positive reviews (rating of 4 or better) from bovids.
     message: Congratulations, bovids love your food!
   - type: reviews
     group: Human
-    amount: 15
-    text: Get 15 positive reviews from humans.
+    amount: 10
+    text: Get 10 very positive reviews (rating of 4 or better) from humans.
     message: Congratulations, humans love your food!
 
 calendar:
