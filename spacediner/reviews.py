@@ -10,7 +10,7 @@ class Rating:
     name = None
     groups = None
     count = 0
-    positive_count = 0
+    count_by_rating = [0]*5
     aggregate = 0
     taste = 0
     service = 0
@@ -29,9 +29,11 @@ class Rating:
         aggregate = (self.TASTE_MULTIPLIER * taste + service + ambience) / (self.TASTE_MULTIPLIER + 2)
         self.aggregate = round((self.count * self.aggregate + aggregate) / (self.count + 1))
         self.count += 1
-        if self.aggregate >= 4:
-            self.positive_count += 1
+        self.count_by_rating[self.aggregate - 1] += 1
         return aggregate
+
+    def get_ratings_above(self, rating):
+        return sum(self.count_by_rating[rating-1:])
 
 
 class Review:
@@ -132,13 +134,13 @@ def get_rating(name):
     return get_ratings().get(name)
 
 
-def group_rating_positive_count(group):
-    positive_count = 0
+def group_ratings_above(group, rating):
+    count = 0
     ratings = get_ratings()
     for rating in ratings.values():
         if group in rating.groups:
-            positive_count += rating.positive_count
-    return positive_count
+            count += rating.get_ratings_above(rating)
+    return count
 
 
 def get_reviews():

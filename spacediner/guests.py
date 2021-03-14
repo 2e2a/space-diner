@@ -473,7 +473,7 @@ def _new_guests(seats):
             rating = ratings.get(name)
             seats_taken = 0
             if rating:
-                seats_by_rating = round((available_seats * rating.positive_count) / FULL_AFTER_RATINGS)
+                seats_by_rating = round((available_seats * rating.get_ratings_above(3)) / FULL_AFTER_RATINGS)
                 seats_taken = min(available_seats, seats_by_rating)
             if seats_taken == 0:
                 empty_groups.append(name)

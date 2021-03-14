@@ -11,8 +11,11 @@ TUTORIAL = [
      ),
     (cli.KitchenMode, cli.KitchenMode.CMD_COOK,
      'Once you have prepared three ingredients, they will be automatically plated as '
-     'a completed dish. If you like, you can look at available recipes (type: "look up recipes"). To start cooking, '
-     'type "[VERB] [INGREDIENT]". The available verbs (e.g., "grill", "plate"...) and ingredients are listed above.'
+     'a completed dish. If someone ordered a specific dish, you can look up the recipe (type: "look up recipes"). '
+     'If someone asked for an ingredient/property (e.g., "raw", "pickles"), it is sufficient to add one ingredient '
+     'that matches the order. '
+     'To start cooking, type "[VERB] [INGREDIENT]", e.g., "grill beef". '
+     'The available verbs and ingredients are listed above.'
      ),
     (cli.KitchenMode, cli.KitchenMode.CMD_COOK,
      'Now you can add a second ingredient.'
@@ -24,7 +27,7 @@ TUTORIAL = [
      'Once you have completed one or more dishes, return to your guests: "go to diner".'
      ),
     (cli.DinerMode, cli.DinerMode.CMD_SERVE,
-     'Now it\'s time to serve your dish: "serve [DISH] to [NAME]". After serving all the customers, you can '
+     'Now it\'s time to serve your dish: "serve [DISH] to [NAME]". After serving food to all the customers, you can '
      'call it a day ("close up"). New guests will come tomorrow. (This is the end of the tutorial. You can '
      'type "help" at any point during the game for hints and a list of available commands.)'
      ),

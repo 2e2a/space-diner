@@ -99,7 +99,7 @@ def print_header(header_values=None):
         for name, values in header_values:
             print_value(name, *values)
         print_text('~' * width)
-        print_newline()
+    print_newline()
 
 
 def print_value(key, *values):
@@ -794,7 +794,7 @@ class KitchenMode(Mode):
     available_ingredients = None
     available_devices = None
     hint = (
-        'In the kitchen, you prepare the food. Each dish consists of three ingredients (the order does not matter).'
+        'In the kitchen, you prepare the food. Each dish consists of three ingredients (the order does not matter). '
         'You can follow existing recipes or create your own. Try to match your guests\' orders.'
     )
 
@@ -1323,7 +1323,7 @@ class MerchantMode(Mode):
     ingredients_for_sale = None
     hint = (
         'You can buy individual ingredients (e.g., "buy 5 potato") or stock up on everything the merchant '
-        'offers ("buy 5 each").'
+        'offers ("buy 5 each"). Type "done" to go back to the market.'
         )
 
     def __init__(self, merchant, **kwargs):
