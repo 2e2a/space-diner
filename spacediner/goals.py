@@ -64,7 +64,7 @@ class ReviewsGoal(Goal):
         super().reached()
 
     def check(self):
-        group_rating_positive_count = reviews.group_rating_count(self.group, 4)
+        group_rating_positive_count = reviews.group_ratings_above(self.group, 4)
         if group_rating_positive_count >= self.amount:
             if not self.is_reached:
                 self.reached()

@@ -33,7 +33,7 @@ class Rating:
         return aggregate
 
     def get_ratings_above(self, rating):
-        return sum(self.count_by_rating[rating-1:])
+        return sum(self.count_by_rating[rating - 1:])
 
 
 class Review:
@@ -134,12 +134,12 @@ def get_rating(name):
     return get_ratings().get(name)
 
 
-def group_ratings_above(group, rating):
+def group_ratings_above(group, num):
     count = 0
     ratings = get_ratings()
     for rating in ratings.values():
         if group in rating.groups:
-            count += rating.get_ratings_above(rating)
+            count += rating.get_ratings_above(num)
     return count
 
 
