@@ -342,6 +342,13 @@ guests:
           taste: -3
           output: Argh, Humans cannot digest blizzard eggs.
           review_phrase: that the dish contained blizzard eggs, which are poisonous to humans
+      orders:
+        - wish: banana
+          text: Mh... can I have something with banana in it, please?
+        - wish: peach
+          text: Is it peach season? Can I have something with peaches, please?
+        - wish: egg
+          text: An egg or two would be nice.
 
     - name: Reptiloid
       description: >
@@ -402,12 +409,8 @@ guests:
       orders:
         - wish: raw
           text: Can you bring me something raw, please?
-        - wish: tomato
-          text: I would like something with tomatoes, please.
-        - wish: soup
-          text: Hm, how about a soup? Can you make one for me?
         - wish: basil
-          text: Can you make me something with basil?
+          text: I really like the taste of basil. Can you make me something with basil?
 
     - name: adult
       description: Most of Mars's adult population works in engineering, research, or food supply.
@@ -422,6 +425,11 @@ guests:
           taste: -1
           output: Aren't shakes for children?
           review_phrase: the shake that I got
+      orders:
+        - wish: soup
+          text: Hm, how about a soup? Can you make one for me?
+        - wish: salad
+          text: A salad, please.
       positive_phrases:
         - Great!
         - Wonderful!
