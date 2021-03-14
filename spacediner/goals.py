@@ -62,7 +62,6 @@ class ReviewsGoal(Goal):
     def reached(self):
         cli.print_message('Reached {} positive {} review(s).'.format(self.amount, self.group))
         super().reached()
-        input('{} '.format('<press ENTER to continue>'))
 
     def check(self):
         group_rating_positive_count = reviews.group_rating_positive_count(self.group)
