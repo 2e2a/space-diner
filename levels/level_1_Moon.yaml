@@ -5,7 +5,7 @@ intro: >
   It is not very lucrative, but you have a solid customer base.
   The colony is too insignificant to have visitors from other
   planets or even solar systems, but it is a quite popular spot for human tourists from Earth.
-  Try to earn 500 space dollars - that's the amount you need to buy an interplanetary ticket and open a diner
+  Try to earn 400 space dollars - that's the amount you need to buy an interplanetary ticket and open a diner
   in a more interesting place.
 
 outro: >
@@ -59,8 +59,8 @@ calendar:
 
 goals:
   - type: money
-    amount: 500
-    text: Earn 500 space dollars.
+    amount: 400
+    text: Earn 400 space dollars.
     message: You have earned enough money for an interplanetary ticket. Let's get out of here.
 
 ingredients:
@@ -451,7 +451,7 @@ social:
               text: I brought some more silkworms for you.
             - type: recipe
               recipe: Silkworm Tatar
-              text: I had this idea for a recipe... let me know what you think about it.
+              text: I had this idea for a recipe... a kind of tatar. Let me know what you think about it.
         - meeting: 'You meet Ozabela at The Lunatic, the first bar that ever opened on the moon.
             It is not located in the underground mall, but in an older structure on the surface. It is officially recommended not to spend more than five hours
             there, because radiation protection is less perfect there than in the underground parts of the colony. Nevertheless,

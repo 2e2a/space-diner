@@ -44,6 +44,8 @@ calendar:
       ingredients:
         - name: moss milk
           amount: 10
+        - name: cow milk
+          amount: 10
         - name: blizzard egg
           amount: 10
     - event: lose ingredients
@@ -131,7 +133,7 @@ ingredients:
 
   - name: blizzard egg
     description: Egg laid by a blizzard bird (a Tau-Cetian bird). Consists of a shell and sweet purple goo. Needs to be cooled.
-    storage: pantry
+    storage: fridge
     properties: [ egg, animal product, sweet ]
 
 storage:
@@ -302,26 +304,34 @@ food:
     - name: Tomato Salad
       available: True
       ingredients:
-        - [tomato, raw]
-        - [tomato, raw]
-        - [basil, raw]
+        - [ tomato, raw ]
+        - [ tomato, raw ]
+        - [ basil, raw ]
       properties: [ salad, healthy ]
 
     - name: Tau-Cetian Kulkick
       available: True
       ingredients:
-        - [blizzard egg, boiled]
-        - [blizzard egg, raw]
-        - [blizzard egg, pan-fried]
+        - [ blizzard egg, boiled ]
+        - [ blizzard egg, raw ]
+        - [ blizzard egg, pan-fried ]
       properties: []
+
+    - name: Martian Salad
+      available: False
+      ingredients:
+        - [ moss, raw ]
+        - [ moss, raw ]
+        - [ lichen, raw ]
+      properties: [ salad ]
 
     - name: Aab's Moss Soup
       available: False
       ingredients:
-        - [basil, deep-fried]
-        - [moss, boiled]
-        - [moss milk, boiled]
-      properties: [soup]
+        - [ basil, deep-fried ]
+        - [ moss, boiled ]
+        - [ moss milk, boiled ]
+      properties: [ soup ]
 
 
   menu:
@@ -635,8 +645,9 @@ social:
           rewards:
             - type: guest
               guest: senior
-              text: Ah, I have told all my friends about your diner. Perhaps they will try it out! Your diner will
-                be crowded with old people.
+              text: >
+                Ah, I have told all my friends about your diner. Perhaps they will try it out, and there will be
+                an old person in your diner from time to time.
         - meeting: >
             Aab invites you to drink tea in the evening. You meet in her little apartment. Even though the
             furniture is optimized for bovid anatomy and the floor is covered with soil and grass instead of a carpet,
@@ -659,9 +670,16 @@ social:
           rewards:
             - type: ingredient
               ingredient: moss
-              diff: 7
+              diff: 6
               text: Here, a little gift for you. It is Martian moss that grows outside on the surface.
                 Mh, it is spicy, and it reminds me of the herbs on my planet.
+            - type: ingredient
+              ingredient: lichen
+              diff: 6
+              text: And some Martian lichen, which is nice and sweet.
+            - type: recipe
+              recipe: Martian Salad
+              text: Ah, now you can try this little recipe that I came up with. I call it the Martian Salad.
         - meeting: You visit Aab again in her apartment. This time, Aab serves some snacks with the tea. You chew on
             the small blocks of pressed plants while Aab tells you about her family. 'Ah, it has been ten years now
             that we left our home system that you call Barnard's Star. Mh, I miss the meadows... When I lived there,
