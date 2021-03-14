@@ -77,6 +77,7 @@ class ReviewsGoal(Goal):
 
 
 goals = None
+win_message_shown = False
 
 
 def get_texts():
@@ -89,7 +90,7 @@ def get_progresses():
     progresses = []
     for goal in goals:
         progress_num, progress_of = goal.progress()
-        goal_progress_prc = int(float(progress_num) * 10.0 / float(progress_of))
+        goal_progress_prc = min(int(float(progress_num) * 10.0 / float(progress_of)), 10)
         progress_bar = '#' * goal_progress_prc + '-' * (10 - goal_progress_prc)
         progress_info = '[{}]  {}/{} - {}'.format(progress_bar, progress_num, progress_of, goal.text)
         progresses.append(progress_info)
@@ -98,6 +99,7 @@ def get_progresses():
 
 def check_goals():
     global goals
+    global win_message_shown
     goals_reached = True
     for goal in goals:
         goal_reached = goal.check()
@@ -105,7 +107,8 @@ def check_goals():
             goal.is_reached = True
         if goals_reached and not goal_reached:
             goals_reached = False
-    if goals_reached:
+    if goals_reached and not win_message_shown:
+        win_message_shown = True
         cli.print_message('Congratulations! You have won!')
         cli.wait_for_input()
         cli.cls()
