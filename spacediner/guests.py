@@ -244,7 +244,7 @@ class Guest:
             if served_food.has_properties([self.order.wish_property]):
                 cli.print_message('{} received what they ordered ({}).'.format(self.name, self.order.wish))
             else:
-                self.service -= 1
+                self.service -= 2
                 self.review.add(2, 'order_not_met', self.order.wish)
                 cli.print_message('{} did not receive what they ordered ({}).'.format(self.name, self.order.wish))
         self.taste = min(4, max(0, self.taste))
