@@ -2,7 +2,8 @@ name: Mars
 diner:
   name: Space Diner
   seats: 7
-  decoration: [ twisted horn ]
+  decoration: [ poster of mars rover, twisted horn ]
+  available decoration: [ poster of mars rover ]
 money: 100
 intro: >
   You are starting a new life on Mars. Humans are terra-forming it, but the cities on Mars still need

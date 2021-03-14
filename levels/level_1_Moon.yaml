@@ -22,7 +22,8 @@ tutorial: True
 diner:
   name: Space Diner
   seats: 7
-  decoration: [ movie poster, satellite photo, silkmoth model ]
+  decoration: [ sad-looking pot plant, movie poster, satellite photo, silkmoth model ]
+  available decoration: [ sad-looking pot plant ]
 
 calendar:
   week: [Moonday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday]

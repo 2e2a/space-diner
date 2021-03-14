@@ -16,7 +16,7 @@ class Diner:
         self.name = data.get('name')
         self.seats = data.get('seats')
         self.decoration = data.get('decoration', [])
-        self.available_decoration = []
+        self.available_decoration = data.get('available decoration', [])
 
     @property
     def is_dirty(self):
