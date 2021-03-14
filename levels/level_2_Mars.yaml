@@ -467,17 +467,25 @@ guests:
           taste: +1
           output: Boiled food is good for my stomach.
           review_phrase: that there was something boiled in the dish, it was easy to digest
+        - properties: [ pan-fried ]
+          taste: -1
+          output: Pan-fried food is too greasy for my stomach.
+          review_phrase: that there was something pan-fried in the dish, it was too greasy for me
         - properties: [ deep-fried ]
-          taste: -2
+          taste: -1
           output: Deep-fried food gives me heartburn.
           review_phrase: the deep-fried elements of the dish, they gave me heartburn
+        - properties: [ deep-fried ]
+          taste: -1
+          output: Raw food is difficult to digest at my age.
+          review_phrase: the raw parts, which were hard to digest for me
       orders:
-        - wish: soup
-          text: I'll have a soup, please.
         - wish: boiled
           text: I think that something boiled would be good for me now.
         - wish: sweet
           text: Can I have something sweet?
+        - wish: canned
+          text: In the good old days, we only had canned food on Mars. Do you have any nice canned products?
       positive_phrases:
         - Jolly good.
         - This young chef impressed me.
