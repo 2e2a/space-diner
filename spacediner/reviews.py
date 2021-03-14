@@ -10,7 +10,7 @@ class Rating:
     name = None
     groups = None
     count = 0
-    count_by_rating = [0]*5
+    count_by_rating = None
     aggregate = 0
     taste = 0
     service = 0
@@ -21,6 +21,7 @@ class Rating:
     def __init__(self, name, groups=None):
         self.name = name
         self.groups = groups if groups else []
+        self.count_by_rating = [0]*5
 
     def add(self, taste, service, ambience):
         self.taste = (self.count * self.taste + taste) / (self.count + 1)
