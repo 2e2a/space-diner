@@ -143,6 +143,8 @@ storage:
     ingredients:
       - name: cow milk
         available: 2
+      - name: blizzard egg
+        available: 6
 
   - name: pantry
     available: True
@@ -157,8 +159,9 @@ storage:
         available: 3
       - name: chicken egg
         available: 6
-      - name: blizzard egg
-        available: 6
+      - name: soy milk
+        available: 2
+
 
 
 kitchen:
@@ -877,22 +880,14 @@ social:
       - Can I interest you in some moss milk? A wonderful plant-based product, smooth and silky!
             
 skills:
-  - type: cooking
-    name: seasoning skills
-    subskills:
-      - proper salting
-      - using spices
-      - balancing the level of acidity
-      - combining flavors
-      - creating unique flavors
   - type: service
-    name: wittiness
+    name: etiquette skills
     subskills:
-      - old jokes
-      - modern jokes
-      - puns
-      - impersonations
-      - stand-up comedy
+      - friendly greeting
+      - announcing day's specials
+      - refilling drinks
+      - proper cutlery placement
+      - serving and clearing from the correct side
   - type: ambience
     name: napkin-folding techniques
     subskills:
@@ -903,21 +898,12 @@ skills:
       - The Rose
 
 activities:
-  - name: watch cooking show on TV
+  - name: read up on etiquette for restaurant staff
     available: True
-    message: >
-      You watched an episode of Intergalactic Chef. You learned something about seasoning. This should improve the
-      quality of your food.
+    message: You read a chapter of the book Elegant Etiquette. This should improve the quality of your service.
     rewards:
       - type: skill
-        skill: seasoning skills
-        diff: +1
-  - name: watch comedy channel on TV
-    available: True
-    message: You watched some comedy. This should make you wittier and improve the quality of your service.
-    rewards:
-      - type: skill
-        skill: wittiness
+        skill: etiquette skills
         diff: +1
   - name: learn napkin-folding techniques
     available: True
