@@ -1264,6 +1264,7 @@ class ShoppingMode(ChoiceMode):
     )
     merchants = None
     available_ingredients = None
+    back_label = 'Leave market'
 
     def update_commands(self):
         self.available_ingredients = storage.available_ingredients()
