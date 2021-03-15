@@ -4,6 +4,7 @@ import re
 import readline
 import textwrap
 import shutil
+import sys
 from datetime import datetime
 
 from . import activities
@@ -494,7 +495,7 @@ class StartMode(ChoiceMode):
             return LoadGameMode(back=self)
 
     def back(self):
-        exit()
+        sys.exit()
 
 
 class LogoMode(InfoMode):
@@ -558,7 +559,7 @@ class NewGameMode(ChoiceMode):
 
     def back(self):
         #return StartMode()
-        exit()
+        sys.exit()
 
 
 class SaveGameMode(ChoiceMode):
@@ -1429,12 +1430,12 @@ def run(args):
                     #levels.autosave_save()
                     if logfile:
                         logfile.close()
-                    exit()
+                    sys.exit()
             except (KeyboardInterrupt, EOFError):
                 print_newline()
                 if logfile:
                     logfile.close()
-                exit()
+                sys.exit()
 
 
 def init():
