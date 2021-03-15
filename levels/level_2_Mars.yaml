@@ -72,7 +72,7 @@ calendar:
       groups: [ Human adult, Bovid adult, Reptiloid adult, Human senior, Human teenager, Bovid teenager, Reptiloid teenager ]
     - event: holiday
       name: Reptiloid arrival day
-      info: Reptilods are celebrating the anniversary of the first reptiloid on Mars!
+      info: Reptiloids are celebrating the anniversary of the first reptiloid on Mars!
       day: 9
       groups: [ Reptiloid adult, Reptiloid teenager ]
     - event: holiday

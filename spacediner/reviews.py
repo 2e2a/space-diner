@@ -30,7 +30,7 @@ class Rating:
         aggregate = (self.TASTE_MULTIPLIER * taste + service + ambience) / (self.TASTE_MULTIPLIER + 2)
         self.aggregate = round((self.count * self.aggregate + aggregate) / (self.count + 1))
         self.count += 1
-        self.count_by_rating[self.aggregate - 1] += 1
+        self.count_by_rating[self.count - 1] += 1
         return aggregate
 
     def get_ratings_above(self, rating):
