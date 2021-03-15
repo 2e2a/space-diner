@@ -43,7 +43,7 @@ calendar:
       days: 3-5
       info: Your fridge malfunctioned, some of the ingredients in it went bad!
       ingredients:
-        - name: moss milk
+        - name: moss-milk
           amount: 10
         - name: cow milk
           amount: 10
