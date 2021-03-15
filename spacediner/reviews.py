@@ -27,7 +27,7 @@ class Rating:
         self.taste = (self.count * self.taste + taste) / (self.count + 1)
         self.service = (self.count * self.service + service) / (self.count + 1)
         self.ambience = (self.count * self.ambience + ambience) / (self.count + 1)
-        final_rating = round(self.TASTE_MULTIPLIER * taste + service + ambience) / (self.TASTE_MULTIPLIER + 2)
+        final_rating = round((self.TASTE_MULTIPLIER * taste + service + ambience) / (self.TASTE_MULTIPLIER + 2))
         self.aggregate = round((self.count * self.aggregate + final_rating) / (self.count + 1))
         self.count += 1
         self.count_by_rating[final_rating - 1] += 1
