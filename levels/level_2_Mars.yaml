@@ -92,7 +92,7 @@ ingredients:
     storage: pantry
     properties: [ spicy, Martian ]
 
-  - name: moss milk
+  - name: moss-milk
     description: A milky fluid extracted from Martian moss.
     storage: fridge
     properties: [ milk, spicy, Martian ]
@@ -258,7 +258,7 @@ shopping:
           available: 15
         - name: moss
           cost: 1
-        - name: moss milk
+        - name: moss-milk
           cost: 1
           available: 15
 
@@ -334,7 +334,7 @@ food:
       ingredients:
         - [ basil, deep-fried ]
         - [ moss, boiled ]
-        - [ moss milk, boiled ]
+        - [ moss-milk, boiled ]
       properties: [ soup ]
 
 
@@ -877,7 +877,7 @@ social:
     chats:
       - Can I interest you in some Martian lichen? Half plant, half fungus! Nice and sweet!
       - Can I interest you in some Martian moss? Fresh, green, spicy!
-      - Can I interest you in some moss milk? A wonderful plant-based product, smooth and silky!
+      - Can I interest you in some moss-milk? A wonderful plant-based product, smooth and silky!
             
 skills:
   - type: service
