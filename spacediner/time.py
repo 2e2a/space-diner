@@ -95,7 +95,7 @@ class Calendar:
                         cli.print_text(event.info)
                     if event.type == Event.TYPE_HOLIDAY:
                         cli.print_message(
-                            'It might get croweded today: it is "{}", a holiday for: {}.'.format(event.name, ', '.join(event.groups))
+                            'It might get crowded today: it is "{}", a holiday for: {}.'.format(event.name, ', '.join(event.groups))
                         )
             cli.print_newline()
             cli.print_title('Goals')
