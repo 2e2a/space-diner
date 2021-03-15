@@ -27,11 +27,11 @@ class Rating:
         self.taste = (self.count * self.taste + taste) / (self.count + 1)
         self.service = (self.count * self.service + service) / (self.count + 1)
         self.ambience = (self.count * self.ambience + ambience) / (self.count + 1)
-        aggregate = (self.TASTE_MULTIPLIER * taste + service + ambience) / (self.TASTE_MULTIPLIER + 2)
-        self.aggregate = round((self.count * self.aggregate + aggregate) / (self.count + 1))
+        final_rating = (self.TASTE_MULTIPLIER * taste + service + ambience) / (self.TASTE_MULTIPLIER + 2)
+        self.aggregate = round((self.count * self.aggregate + final_rating) / (self.count + 1))
         self.count += 1
-        self.count_by_rating[self.count - 1] += 1
-        return aggregate
+        self.count_by_rating[final_rating - 1] += 1
+        return final_rating
 
     def get_ratings_above(self, rating):
         return sum(self.count_by_rating[rating - 1:])
@@ -91,7 +91,7 @@ class Review:
         global reviews
         self.add(2, 'ambience', ambience)
         self.add(2, 'service', service)
-        aggregate_rating = add_rating(self.group_name, taste, service, ambience)
+        final_rating = add_rating(self.group_name, taste, service, ambience)
         if review_phrases:
             positive_phrases, neutral_phrases, negative_phrases = review_phrases
             message = ''
@@ -105,9 +105,9 @@ class Review:
                 message += '{} ({}):'.format(self.name, self.group_name)
             else:
                 message += '{}:'.format(self.name)
-            if negative_phrases and aggregate_rating <= 2:
+            if negative_phrases and final_rating <= 2:
                 message += ' ' + random.choice(negative_phrases)
-            elif positive_phrases and aggregate_rating >= 4:
+            elif positive_phrases and final_rating >= 4:
                 message += ' ' + random.choice(positive_phrases)
             elif neutral_phrases:
                 message += ' ' + random.choice(neutral_phrases)
@@ -115,10 +115,10 @@ class Review:
                 message += ' ' + random.choice(self.first_choices)
             if self.second_choices:
                 message += ' ' + random.choice(self.second_choices)
-            message += ' (Rating: {})'.format(round(aggregate_rating))
+            message += ' (Rating: {})'.format(round(final_rating))
             self.message = message
             reviews.append(self)
-        return aggregate_rating
+        return final_rating
 
 
 ratings = None

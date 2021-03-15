@@ -250,8 +250,8 @@ class Guest:
         self.taste = min(4, max(0, self.taste))
         self.review.add(1, 'taste', self.taste, print=True)
         self.add_skill_review()
-        aggregate_rating = self.add_review()
-        payment = int(self.budget/5 * aggregate_rating)
+        final_rating = self.add_review()
+        payment = int(self.budget/5 * final_rating)
         levels.level.money += payment
         cli.print_text('{} paid {} space dollars.'.format(self.name, payment))
         return self.taste
