@@ -14,10 +14,9 @@ install:
 
 .PHONY: run
 run:
-	$(VIRTUAL_ENV)/bin/python3 space-diner.py
+	$(VIRTUAL_ENV)/bin/python3 -m spacediner
 
 .PHONY: build
 build:
-	$(VIRTUAL_ENV)/bin/pyinstaller space-diner.py
-	cp -r levels/ dist/space-diner/
-	cp README.txt dist/space-diner/
+	find . -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete
+	$(VIRTUAL_ENV)/bin/python3 -m build

@@ -1,5 +1,5 @@
 import argparse
-from spacediner import cli, levels, settings
+from . import cli, levels, settings
 
 # TODO: consider showing available or suggested commands when starting a level
 # TODO: define win-message per level
@@ -13,14 +13,16 @@ from spacediner import cli, levels, settings
 # TODO: special weekend day (last day of the week) with two activities instead of work and one activity
 # TODO: think about menu: are all/some initial menu items fixed?
 
-parser = argparse.ArgumentParser(description='Space diner')
-parser.add_argument(
-    '-l', '--log',
-    action='store_true',
-    help='Log game input into separate file.',
-)
-args = vars(parser.parse_args())
-settings.read_args(args)
-levels.init()
-cli.init()
-cli.run(args)
+
+def main(dev=False):
+    parser = argparse.ArgumentParser(description='Space diner')
+    parser.add_argument(
+        '-l', '--log',
+        action='store_true',
+        help='Log game input into separate file.',
+    )
+    args = vars(parser.parse_args())
+    settings.read_args(args)
+    levels.init()
+    cli.init()
+    cli.run(args)

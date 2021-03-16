@@ -2,7 +2,8 @@
 *log
 .venv
 .idea
-*.spec
+*.egg-info/
+*.egg
 build
 dist
 

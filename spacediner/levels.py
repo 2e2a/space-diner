@@ -1,9 +1,15 @@
 import os
 import yaml
+try:
+    import importlib.resources as pkg_resources
+except ImportError:
+    # Try backported to PY<37 `importlib_resources`.
+    import importlib_resources as pkg_resources
 
 from datetime import datetime
 
 
+from levels import LEVELS
 from . import activities
 from . import cli
 from . import diner
@@ -19,6 +25,10 @@ from . import storage
 from . import time
 
 
+TYPE_LOCAL = 'local'
+TYPE_PACKAGE = 'pkg'
+
+
 class Level:
     name = None
     intro = None
@@ -26,26 +36,31 @@ class Level:
     money = 0
     tutorial = False
 
-    def init(self, filename):
-        with open(filename, 'r') as stream:
-            data = yaml.load(stream, Loader=yaml.FullLoader)
-            self.name = data.get('name')
-            self.intro = data.get('intro')
-            self.outro = data.get('outro')
-            self.money = data.get('money')
-            self.tutorial = data.get('tutorial')
-            diner.init(data.get('diner'))
-            goals.init(data.get('goals'))
-            time.init(data.get('calendar'))
-            skills.init(data.get('skills', []))
-            ingredients.init(data.get('ingredients', []))
-            storage.init(data.get('storage', []))
-            kitchen.init(data.get('kitchen', []))
-            shopping.init(data.get('shopping', []))
-            food.init(data.get('food'))
-            guests.init(data.get('guests', []))
-            social.init(data.get('social', []))
-            activities.init(data.get('activities', []))
+    def init(self, filename, typ):
+        if typ == TYPE_LOCAL:
+            path = 'levels/{}'.format(filename)
+            stream = open(path, 'r')
+        else:
+            stream = pkg_resources.open_text('levels', filename)
+        data = yaml.load(stream, Loader=yaml.FullLoader)
+        self.name = data.get('name')
+        self.intro = data.get('intro')
+        self.outro = data.get('outro')
+        self.money = data.get('money')
+        self.tutorial = data.get('tutorial')
+        diner.init(data.get('diner'))
+        goals.init(data.get('goals'))
+        time.init(data.get('calendar'))
+        skills.init(data.get('skills', []))
+        ingredients.init(data.get('ingredients', []))
+        storage.init(data.get('storage', []))
+        kitchen.init(data.get('kitchen', []))
+        shopping.init(data.get('shopping', []))
+        food.init(data.get('food'))
+        guests.init(data.get('guests', []))
+        social.init(data.get('social', []))
+        activities.init(data.get('activities', []))
+        stream.close()
 
 
 levels = None
@@ -91,8 +106,8 @@ def init_level(name):
     global levels
     global level
     level = Level()
-    file_name = 'levels/{}'.format(levels[name])
-    level.init(file_name)
+    file, typ = levels[name]
+    level.init(file, typ)
     #time.register_callback(time.Calendar.TIME_MORNING, autosave_save)
 
 
@@ -132,15 +147,20 @@ def autosave_load():
         load(f)
 
 
-def init():
+def init(dev=False):
     global levels
     levels = {}
-    files = [level_file for level_file in os.listdir('levels/')]
-    files = filter(lambda f: f.startswith('level'), files)
-    files = sorted(files)
+    if dev:
+        files = [level_file for level_file in os.listdir('levels/')]
+        files = filter(lambda f: f.startswith('level'), files)
+        files = sorted(files)
+        typ = TYPE_LOCAL
+    else:
+        files = LEVELS
+        typ = TYPE_PACKAGE
     for level_file in files:
         _, num, name = os.path.splitext(level_file)[0].split('_')
-        levels[name] = level_file
+        levels[name] = (level_file, typ)
 
 
 def save(file):
