@@ -1,5 +1,9 @@
 import argparse
+import platform
+from ptpython.repl import embed
+
 from . import cli, levels, settings
+
 
 # TODO: consider showing available or suggested commands when starting a level
 # TODO: define win-message per level
@@ -25,4 +29,7 @@ def main(dev=False):
     settings.read_args(args)
     levels.init()
     cli.init()
-    cli.run(args)
+    if platform.system() == 'Linux':
+        embed(cli.run(args))
+    else:
+        cli.run(args)
