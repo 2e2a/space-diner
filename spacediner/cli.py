@@ -2,6 +2,7 @@ import math
 import os
 import re
 import readline
+import rlcompleter
 import textwrap
 import shutil
 import sys
@@ -138,7 +139,11 @@ class CommandCompleter:
     def __init__(self, commands):
         self.commands = commands
         readline.set_completer(self.complete)
-        readline.parse_and_bind('tab: complete')
+        if 'libedit' in readline.__doc__:
+            # OSX
+            readline.parse_and_bind("bind ^I rl_complete")
+        else:
+            readline.parse_and_bind('tab: complete')
 
     def _get_completion(self, cmd, pos):
         if pos >= len(cmd):
@@ -161,7 +166,6 @@ class CommandCompleter:
             return '1'
 
     def _get_arg_completions(self, arg, cmd_arg):
-        # "beef burger (","Beef Burger (Grilled..."
         completed = 0
         arg_split = arg.split()
         cmd_split = cmd_arg.split()
