@@ -139,7 +139,7 @@ class CommandCompleter:
     def __init__(self, commands):
         self.commands = commands
         readline.set_completer(self.complete)
-        if 'libedit' in readline.__doc__:
+        if readline.__doc__ and 'libedit' in readline.__doc__:
             # OSX
             readline.parse_and_bind("bind ^I rl_complete")
         else:
