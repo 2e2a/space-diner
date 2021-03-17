@@ -1,6 +1,5 @@
 import argparse
 import platform
-from ptpython.repl import embed
 
 from . import cli, levels, settings
 
@@ -29,7 +28,4 @@ def main(dev=False):
     settings.read_args(args)
     levels.init()
     cli.init()
-    if platform.system() == 'Linux':
-        embed(cli.run(args))
-    else:
-        cli.run(args)
+    cli.run(args)
