@@ -4,6 +4,7 @@ diner:
   seats: 7
   decoration: [ poster of mars rover, twisted horn ]
   available decoration: [ poster of mars rover ]
+tutorial: True
 money: 100
 intro: >
   You are starting a new life on Mars. Humans are terra-forming it, but the cities on Mars still need
