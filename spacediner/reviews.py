@@ -213,6 +213,7 @@ def load(file):
     global ratings
     global reviews
     global likes
-    pickle.load(ratings, file)
-    pickle.load(reviews, file)
-    pickle.load(likes, file)
+    ratings = pickle.load(file)
+    reviews = pickle.load(file)
+    likes = pickle.load(file)
+    time.register_callback(time.Calendar.TIME_DAYTIME, daytime)

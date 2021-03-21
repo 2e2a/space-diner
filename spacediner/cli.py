@@ -1,5 +1,6 @@
 import math
 import os
+import pickle
 import re
 import readline
 import rlcompleter
@@ -19,6 +20,7 @@ from . import shopping
 from . import levels
 from . import ingredients
 from . import reviews
+from . import save as save_module
 from . import skills
 from . import social
 from . import storage
@@ -491,7 +493,7 @@ class StartMode(ChoiceMode):
 
     def exec_choice(self, choice):
         if choice == 0:
-            levels.autosave_load()
+            save_module.autosave_load()
             print_value('Level', levels.get_name())
             return DinerMode()
         elif choice == 1:
@@ -573,7 +575,7 @@ class SaveGameMode(ChoiceMode):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.saved_games = levels.saved_games()
+        self.saved_games = save_module.saved_games()
         self.choices = []
         for slot in range(1, 9):
             file = self.saved_games.get(slot)
@@ -583,7 +585,7 @@ class SaveGameMode(ChoiceMode):
                 self.choices.append('<empty>')
 
     def exec_choice(self, choice):
-        levels.save_game(choice)
+        save_module.save_game(choice)
         return DinerMode()
 
 
@@ -594,13 +596,13 @@ class LoadGameMode(ChoiceMode):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.saved_games = levels.saved_games()
-        self.choices = self.saved_games.items()
+        self.choices = save_module.saved_games().values()
 
     def exec_choice(self, choice):
-        levels.load_game(choice)
+        global mode
+        save_module.load_game(choice + 1)
         print_value('Level', levels.get_name())
-        return FirstHelpMode()
+        return mode
 
 
 class FirstHelpMode(InfoMode):
@@ -637,7 +639,7 @@ class DinerMode(Mode):
     CMD_LOOK_UP = 5
     CMD_CLOSE_UP = 6
     CMD_EXIT = 7
-    #CMD_SAVE = 10
+    CMD_SAVE = 8
     commands = [
         ('go to kitchen',),
         ('take order from', []),
@@ -646,9 +648,8 @@ class DinerMode(Mode):
         ('send home', []),
         ('look up', ['recipes', 'guests', 'ingredients', 'menu', 'reviews', 'goals']),
         ('close up',),
-        ('save',),
         ('exit',),
-        # ('save',),
+        ('save',),
     ]
     prompt = 'diner >>'
     hint = (
@@ -764,11 +765,11 @@ class DinerMode(Mode):
             print_newline()
             time.tick()
             return ReviewsInfoMode(back=ActivityMode())
+        if cmd == self.CMD_EXIT:
+            save_module.autosave_save()
+            return StartMode()
         if cmd == self.CMD_SAVE:
             return SaveGameMode(back=self)
-        if cmd == self.CMD_EXIT:
-            levels.autosave_save()
-            return StartMode()
 
 
 class DinerMenuMode(InfoMode):
@@ -1410,7 +1411,6 @@ def run(args):
     if args.get('log', False):
         logfile_name = 'space-diner_{}.log'.format(datetime.now().strftime('%Y-%m-%d-%H%M%S'))
         logfile = open(logfile_name, 'w')
-    #mode = StartMode()  # TODO: restore when save & load works
     mode = LogoMode()
     while True:
         try:
@@ -1430,7 +1430,7 @@ def run(args):
                 print_newline()
                 yes = input('Exit game? (y/N) ')
                 if yes in ['y', 'Y']:
-                    levels.autosave_save()
+                    save_module.autosave_save()
                     if logfile:
                         logfile.close()
                     sys.exit()
@@ -1443,3 +1443,13 @@ def run(args):
 
 def init():
     pass
+
+
+def save(file):
+    global mode
+    pickle.dump(mode, file)
+
+
+def load(file):
+    global mode
+    mode = pickle.load(file)

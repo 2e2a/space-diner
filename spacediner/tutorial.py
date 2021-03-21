@@ -1,3 +1,5 @@
+import pickle
+
 from . import cli
 
 TUTORIAL = [
@@ -51,3 +53,13 @@ def get_mode_tutorial(mode):
         tutorial_mode, command, text = TUTORIAL[tutorial_step]
         if isinstance(mode, tutorial_mode):
             return text
+
+
+def save(file):
+    global tutorial_step
+    pickle.dump(tutorial_step, file)
+
+
+def load(file):
+    global tutorial_step
+    tutorial_step = pickle.load(file)

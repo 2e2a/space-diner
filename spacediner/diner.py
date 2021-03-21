@@ -63,3 +63,4 @@ def save(file):
 def load(file):
     global diner
     diner = pickle.load(file)
+    time.register_callback(time.Calendar.TIME_MORNING, new_morning)

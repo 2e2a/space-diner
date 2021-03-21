@@ -322,15 +322,23 @@ def save(file):
     global recipes
     global dishes
     global cooked
+    global cooking
+    global menu
     pickle.dump(recipes, file)
     pickle.dump(dishes, file)
     pickle.dump(cooked, file)
+    pickle.dump(cooking, file)
+    pickle.dump(menu, file)
 
 
 def load(file):
     global recipes
     global dishes
     global cooked
+    global cooking
+    global menu
     recipes = pickle.load(file)
     dishes = pickle.load(file)
     cooked = pickle.load(file)
+    cooking = pickle.load(file)
+    menu = pickle.load(file)

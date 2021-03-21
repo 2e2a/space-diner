@@ -161,3 +161,4 @@ def save(file):
 def load(file):
     global storages
     storages = pickle.load(file)
+    time.register_callback(time.Calendar.TIME_DAYTIME, daytime)

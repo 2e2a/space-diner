@@ -1,3 +1,5 @@
+import pickle
+
 from . import cli
 from . import levels
 from . import time
@@ -139,3 +141,20 @@ def init(data):
     time.register_callback(time.Calendar.TIME_DAYTIME, check_goals)
     time.register_callback(time.Calendar.TIME_EVENING, check_goals)
     return goals
+
+
+def save(file):
+    global goals
+    global win_message_shown
+    pickle.dump(goals, file)
+    pickle.dump(win_message_shown, file)
+
+
+def load(file):
+    global goals
+    global win_message_shown
+    goals = pickle.load(file)
+    win_message_shown = pickle.load(file)
+    time.register_callback(time.Calendar.TIME_MORNING, check_goals)
+    time.register_callback(time.Calendar.TIME_DAYTIME, check_goals)
+    time.register_callback(time.Calendar.TIME_EVENING, check_goals)

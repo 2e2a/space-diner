@@ -7,18 +7,15 @@ except ImportError:
     # Try backported to PY<37 `importlib_resources`.
     import importlib_resources as pkg_resources
 
-from datetime import datetime
-
-
 from levels import LEVELS
 from . import activities
-from . import cli
 from . import diner
 from . import food
 from . import goals
 from . import guests
 from . import kitchen
 from . import ingredients
+from . import save as save_module
 from . import shopping
 from . import social
 from . import skills
@@ -109,42 +106,7 @@ def init_level(name):
     level = Level()
     file, typ = levels[name]
     level.init(file, typ)
-    #time.register_callback(time.Calendar.TIME_MORNING, autosave_save)
-
-
-def saved_games():
-    files = [file for file in os.listdir('saves/') if 'yaml' in file]
-    return {slot: level_file for slot, level_file in enumerate(files, 1)}
-
-
-def save_game(slot):
-    global level
-    files = saved_games()
-    file = files.get(slot)
-    if file:
-        os.remove('saves/{}'.format(file))
-    timestamp = datetime.now().strftime('%Y-%m-%d_%H:%M')
-    file_name = '{}_{}_{}'.format(slot, level.name, timestamp)
-    with open('saves/{}'.format(file_name), 'wb') as f:
-        save(f)
-
-
-def load_game(slot):
-    global level
-    files = saved_games()
-    file = files.get(slot)
-    with open('saves/{}'.format(file), 'rb') as f:
-        load(f)
-
-def autosave_save():
-    cli.print_message('Auto-saving...')
-    with open('saves/auto.yaml', 'wb') as f:
-        save(f)
-
-
-def autosave_load():
-    with open('saves/auto.yaml', 'rb') as f:
-        load(f)
+    save_module.init()
 
 
 def init(dev=False):
@@ -161,35 +123,13 @@ def init(dev=False):
     for level_file in files:
         _, num, name = os.path.splitext(level_file)[0].split('_')
         levels[name] = (level_file, typ)
-    time.register_callback(time.Calendar.TIME_MORNING, autosave_save)
 
 
 def save(file):
-    # TODO: missing rewards? goals?
     global level
     pickle.dump(level, file)
-    time.save(file)
-    skills.save(file)
-    ingredients.save(file)
-    storage.save(file)
-    kitchen.save(file)
-    shopping.save(file)
-    food.save(file)
-    guests.save(file)
-    social.save(file)
-    activities.save(file)
 
 
 def load(file):
     global level
     level = pickle.load(file)
-    time.load(file)
-    skills.load(file)
-    ingredients.load(file)
-    storage.load(file)
-    kitchen.load(file)
-    shopping.load(file)
-    food.load(file)
-    guests.load(file)
-    social.load(file)
-    activities.load(file)

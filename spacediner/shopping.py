@@ -159,9 +159,14 @@ def init(data):
 
 def save(file):
     global merchants
+    global market
     pickle.dump(merchants, file)
+    pickle.dump(market, file)
 
 
 def load(file):
     global merchants
+    global market
     merchants = pickle.load(file)
+    market = pickle.load(file)
+    time.register_callback(time.Calendar.TIME_MORNING, morning)

@@ -566,10 +566,12 @@ def save(file):
     global regulars
     global guest_groups
     global guest_factory
+    global name_factories
     pickle.dump(guests, file)
     pickle.dump(regulars, file)
     pickle.dump(guest_groups, file)
     pickle.dump(guest_factory, file)
+    pickle.dump(name_factories, file)
 
 
 def load(file):
@@ -577,7 +579,11 @@ def load(file):
     global regulars
     global guest_groups
     global guest_factory
+    global name_factories
     guests = pickle.load(file)
     regulars = pickle.load(file)
     guest_groups = pickle.load(file)
     guest_factory = pickle.load(file)
+    name_factories = pickle.load(file)
+    time.register_callback(time.Calendar.TIME_DAYTIME, daytime)
+

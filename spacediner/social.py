@@ -252,9 +252,14 @@ def init(data):
 
 def save(file):
     global social
+    global chatted_today
     pickle.dump(social, file)
+    pickle.dump(chatted_today, file)
 
 
 def load(file):
     global social
+    global chatted_today
     social = pickle.load(file)
+    chatted_today = pickle.load(file)
+    time.register_callback(time.Calendar.TIME_MORNING, morning)
