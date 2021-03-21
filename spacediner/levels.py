@@ -1,4 +1,5 @@
 import os
+import pickle
 import yaml
 try:
     import importlib.resources as pkg_resources
@@ -135,7 +136,6 @@ def load_game(slot):
     with open('saves/{}'.format(file), 'rb') as f:
         load(f)
 
-
 def autosave_save():
     cli.print_message('Auto-saving...')
     with open('saves/auto.yaml', 'wb') as f:
@@ -161,11 +161,35 @@ def init(dev=False):
     for level_file in files:
         _, num, name = os.path.splitext(level_file)[0].split('_')
         levels[name] = (level_file, typ)
+    time.register_callback(time.Calendar.TIME_MORNING, autosave_save)
 
 
 def save(file):
-    pass
+    # TODO: missing rewards? goals?
+    global level
+    pickle.dump(level, file)
+    time.save(file)
+    skills.save(file)
+    ingredients.save(file)
+    storage.save(file)
+    kitchen.save(file)
+    shopping.save(file)
+    food.save(file)
+    guests.save(file)
+    social.save(file)
+    activities.save(file)
 
 
 def load(file):
-    pass
+    global level
+    level = pickle.load(file)
+    time.load(file)
+    skills.load(file)
+    ingredients.load(file)
+    storage.load(file)
+    kitchen.load(file)
+    shopping.load(file)
+    food.load(file)
+    guests.load(file)
+    social.load(file)
+    activities.load(file)

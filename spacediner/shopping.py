@@ -1,3 +1,5 @@
+import pickle
+
 from collections import OrderedDict
 
 from . import ingredients
@@ -156,8 +158,10 @@ def init(data):
 
 
 def save(file):
-    pass
+    global merchants
+    pickle.dump(merchants, file)
 
 
 def load(file):
-    pass
+    global merchants
+    merchants = pickle.load(file)

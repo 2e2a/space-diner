@@ -1,3 +1,4 @@
+import pickle
 import random
 from collections import OrderedDict
 
@@ -250,8 +251,10 @@ def init(data):
 
 
 def save(file):
-    pass
+    global social
+    pickle.dump(social, file)
 
 
 def load(file):
-    pass
+    global social
+    social = pickle.load(file)

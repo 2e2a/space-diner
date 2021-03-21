@@ -1,3 +1,5 @@
+import pickle
+
 from collections import OrderedDict
 
 from . import cli
@@ -49,8 +51,10 @@ def init(data):
 
 
 def save(file):
-    pass
+    global activities
+    pickle.dump(activities, file)
 
 
 def load(file):
-    pass
+    global activities
+    activities = pickle.load(file)

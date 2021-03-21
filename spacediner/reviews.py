@@ -1,3 +1,4 @@
+import pickle
 import random
 from collections import OrderedDict
 
@@ -199,8 +200,19 @@ def init():
 
 
 def save(file):
-    pass
+    global ratings
+    global reviews
+    global likes
+    pickle.dump(ratings, file)
+    pickle.dump(reviews, file)
+    pickle.dump(likes, file)
+
 
 
 def load(file):
-    pass
+    global ratings
+    global reviews
+    global likes
+    pickle.load(ratings, file)
+    pickle.load(reviews, file)
+    pickle.load(likes, file)

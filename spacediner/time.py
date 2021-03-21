@@ -1,3 +1,4 @@
+import pickle
 import random
 
 from . import cli
@@ -237,8 +238,10 @@ def init(data):
 
 
 def save(file):
-    pass
+    global calendar
+    pickle.dump(calendar, file)
 
 
 def load(file):
-    pass
+    global calendar
+    calendar = pickle.load(file)

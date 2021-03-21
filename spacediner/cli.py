@@ -527,7 +527,7 @@ class LogoMode(InfoMode):
         print_text(centering_spaces(prompt_text) + prompt_text)
 
     def back(self):
-        return NewGameMode()
+        return StartMode()
 
 
 class NewGameMode(ChoiceMode):
@@ -535,7 +535,6 @@ class NewGameMode(ChoiceMode):
     levels = None
     choices = None
     title = 'Select level'
-    back_label = 'Exit'
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -562,8 +561,7 @@ class NewGameMode(ChoiceMode):
         return FirstHelpMode()
 
     def back(self):
-        #return StartMode()
-        sys.exit()
+        return StartMode()
 
 
 class SaveGameMode(ChoiceMode):
@@ -647,6 +645,7 @@ class DinerMode(Mode):
         ('send home', []),
         ('look up', ['recipes', 'guests', 'ingredients', 'menu', 'reviews', 'goals']),
         ('close up',),
+        ('save',),
         ('exit',),
         # ('save',),
     ]
@@ -764,12 +763,11 @@ class DinerMode(Mode):
             print_newline()
             time.tick()
             return ReviewsInfoMode(back=ActivityMode())
-        #if cmd == self.CMD_SAVE:
-        #    return SaveGameMode(back=self)
+        if cmd == self.CMD_SAVE:
+            return SaveGameMode(back=self)
         if cmd == self.CMD_EXIT:
-            #levels.autosave_save()
-            #return StartMode()
-            return NewGameMode()
+            levels.autosave_save()
+            return StartMode()
 
 
 class DinerMenuMode(InfoMode):
@@ -1431,7 +1429,7 @@ def run(args):
                 print_newline()
                 yes = input('Exit game? (y/N) ')
                 if yes in ['y', 'Y']:
-                    #levels.autosave_save()
+                    levels.autosave_save()
                     if logfile:
                         logfile.close()
                     sys.exit()

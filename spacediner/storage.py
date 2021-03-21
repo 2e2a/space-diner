@@ -1,4 +1,5 @@
 import copy
+import pickle
 
 from collections import OrderedDict
 
@@ -153,8 +154,10 @@ def init(data):
 
 
 def save(file):
-    pass
+    global storages
+    pickle.dump(storages, file)
 
 
 def load(file):
-    pass
+    global storages
+    storages = pickle.load(file)
