@@ -3,42 +3,70 @@ import os
 from datetime import datetime
 
 from . import cli
+from . import diner
 from . import levels
 from . import time
 
+path = None
+
+
+def has_save_path():
+    global path
+    return path is not None
+
+
+def set_save_path():
+    global path
+    while True:
+        cli.print_newline()
+        cli.print_text('Select folder to store save games:')
+        default = os.path.join(os.getcwd(), 'SpaceDinerSaves')
+        path = cli.input_with_default(default)
+        if not os.path.exists(path):
+            os.mkdir(path)
+            break
+        elif not os.path.isdir(path):
+            cli.print_message('Selected path is not a directory.')
+        else:
+            break
+    return path
+
 
 def saved_games():
-    files = sorted(file for file in os.listdir('saves/') if 'Space-diner' in file)
+    global path
+    files = sorted(file for file in os.listdir(path) if 'Space-Diner' in file)
     return {slot: level_file for slot, level_file in enumerate(files, 1)}
 
 
 def save_game(slot):
+    global path
     files = saved_games()
     file = files.get(slot)
     if file:
-        os.remove('saves/{}'.format(file))
+        os.remove(os.path.join(path, file))
     timestamp = datetime.now().strftime('%Y-%m-%d_%H:%M')
     file_name = 'Space-diner_{}_{}_{}'.format(slot, levels.get_name(), timestamp)
-    with open('saves/{}'.format(file_name), 'wb') as f:
+    with open(os.path.join(path, file_name), 'wb') as f:
         save(f)
 
 
 def load_game(slot):
+    global path
     files = saved_games()
     file = files.get(slot)
-    with open('saves/{}'.format(file), 'rb') as f:
+    with open(os.path.join(path, file), 'rb') as f:
         load(f)
 
 
 def autosave_save():
-    cli.print_message('Auto-saving...')
-    with open('saves/Space-diner_autosave', 'wb') as f:
+    global path
+    if not diner.diner:
+        return
+    level = 'Space-Diner_{}_{}_{}'.format(levels.get_number(), levels.get_name(), diner.diner.name.replace(' ', '-'))
+    cli.print_message('Auto-saving to {}...'.format(level))
+    file = os.path.join(path, level)
+    with open(file, 'wb') as f:
         save(f)
-
-
-def autosave_load():
-    with open('saves/Space-diner_autosave', 'rb') as f:
-        load(f)
 
 
 def init():
@@ -62,7 +90,6 @@ def save(file):
     from . import time
     from . import tutorial
     activities.save(file)
-    cli.save(file)
     diner.save(file)
     food.save(file)
     goals.save(file)
@@ -96,7 +123,6 @@ def load(file):
     from . import time
     from . import tutorial
     activities.load(file)
-    cli.load(file)
     diner.load(file)
     food.load(file)
     goals.load(file)

@@ -29,6 +29,7 @@ TYPE_PACKAGE = 'pkg'
 
 class Level:
     name = None
+    number = 0
     intro = None
     outro = None
     money = 0
@@ -41,6 +42,7 @@ class Level:
         else:
             stream = pkg_resources.open_text('levels', filename)
         data = yaml.load(stream, Loader=yaml.FullLoader)
+        self.number = data.get('level')
         self.name = data.get('name')
         self.intro = data.get('intro')
         self.outro = data.get('outro')
@@ -73,6 +75,11 @@ def get():
 def get_name():
     global level
     return level.name if level else None
+
+
+def get_number():
+    global level
+    return level.number if level else None
 
 
 def get_intro():
