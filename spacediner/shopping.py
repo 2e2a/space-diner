@@ -47,10 +47,10 @@ class Merchant:
         return None
 
     def has_chat_available(self):
-        return social.has_chats(self.owner) and social.next_chat(self.owner)
+        return social.has_chats(self.owner, self.owner) and social.next_chat(self.owner)
 
     def chat(self):
-        return social.greet_and_chat(self.owner)
+        return social.greet_and_chat(self.owner, self.owner)
 
     def restock(self):
         for name, (availability, cost, in_stock) in self.ingredients.items():

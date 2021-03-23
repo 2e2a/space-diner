@@ -180,11 +180,11 @@ def chats_available():
     return chats
 
 
-def has_chats(name):
+def has_chats(name, group_name):
     global chatted_today
     if name in chatted_today:
         return False
-    friend_social = get(name)
+    friend_social = get(group_name)
     if friend_social:
         return friend_social.chats is not None
     return False
@@ -194,19 +194,19 @@ def next_chat(name):
     return get(name).next_chat()
 
 
-def chat(name):
+def chat(name, group_name):
     global chatted_today
     chatted_today.append(name)
-    return get(name).chat()
+    return get(group_name).chat()
 
 
 def greeting(name):
     return get(name).greeting()
 
 
-def greet_and_chat(name):
-    text = chat(name)
-    greeting_text = greeting(name)
+def greet_and_chat(name, group_name):
+    text = chat(name, group_name)
+    greeting_text = greeting(group_name)
     if greeting:
         text = '{} {}! {}'.format(greeting_text, diner.diner.chef, text)
     return text

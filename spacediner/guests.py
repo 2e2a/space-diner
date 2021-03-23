@@ -258,13 +258,13 @@ class Guest:
         return self.taste
 
     def has_chat_available(self):
-        return not self.chatted and social.has_chats(self.group_name) and social.next_chat(self.group_name)
+        return not self.chatted and social.has_chats(self.name, self.group_name) and social.next_chat(self.group_name)
 
     def chat(self):
         self.chatted = True
         self.service += 1
         self.review.add(2, 'chatted')
-        return social.greet_and_chat(self.group_name)
+        return social.greet_and_chat(self.name, self.group_name)
 
     def send_home(self):
         self.taste = 0
@@ -381,7 +381,8 @@ def guests_without_orders():
 
 def guests_with_chats():
     global guests
-    return [guest.name for guest in filter(lambda guest: guest.has_chat_available(), guests)]
+    guests_with_chats = list(filter(lambda guest: guest.has_chat_available(), guests))
+    return [guest.name for guest in guests_with_chats]
 
 
 def get(name):
