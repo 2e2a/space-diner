@@ -1,6 +1,5 @@
 import math
 import os
-import pickle
 import re
 import readline
 import rlcompleter
@@ -54,6 +53,14 @@ def wait_for_input():
     print_newline()
     print_text('<press ENTER to continue>')
     input('')
+
+
+def input_with_default(default, prompt=''):
+    readline.set_startup_hook(lambda: readline.insert_text(default))
+    try:
+        return input(prompt)
+    finally:
+        readline.set_startup_hook()
 
 
 def print_text(text):
@@ -485,26 +492,6 @@ class InfoMode(Mode):
         return self.back()
 
 
-class StartMode(ChoiceMode):
-    prompt = 'start #'
-    choices = ['Continue', 'New game', 'Load game']
-    back_label = 'Exit'
-    title = 'Start menu'
-
-    def exec_choice(self, choice):
-        if choice == 0:
-            save_module.autosave_load()
-            print_value('Level', levels.get_name())
-            return DinerMode()
-        elif choice == 1:
-            return NewGameMode(back=self)
-        elif choice == 2:
-            return LoadGameMode(back=self)
-
-    def back(self):
-        sys.exit()
-
-
 class LogoMode(InfoMode):
 
     prompt = ''
@@ -533,6 +520,24 @@ class LogoMode(InfoMode):
         return StartMode()
 
 
+class StartMode(ChoiceMode):
+    prompt = 'start #'
+    choices = ['Load Game', 'New game']
+    back_label = 'Exit'
+    title = 'Start menu'
+
+    def exec_choice(self, choice):
+        if not save_module.has_save_path():
+            save_module.set_save_path()
+        if choice == 0:
+            return LoadGameMode(back=self)
+        elif choice == 1:
+            return NewGameMode(back=self)
+
+    def back(self):
+        sys.exit()
+
+
 class NewGameMode(ChoiceMode):
     prompt = 'new game #'
     levels = None
@@ -554,11 +559,11 @@ class NewGameMode(ChoiceMode):
         print_title('Goals')
         print_list(goals.get_texts(), double_columns=False)
         print_text('Diner name (default: {}): '.format(diner.diner.name))
-        diner_name = input('')
+        diner_name = input('>>')
         if diner_name:
             diner.diner.name = diner_name
         print_text('Your name: ')
-        chef_name = input('')
+        chef_name = input('>>')
         if chef_name:
             diner.diner.chef = 'Chef {}'.format(chef_name)
         return FirstHelpMode()
@@ -599,10 +604,8 @@ class LoadGameMode(ChoiceMode):
         self.choices = save_module.saved_games().values()
 
     def exec_choice(self, choice):
-        global mode
         save_module.load_game(choice + 1)
-        print_value('Level', levels.get_name())
-        return mode
+        return DinerMode()
 
 
 class FirstHelpMode(InfoMode):
@@ -639,7 +642,6 @@ class DinerMode(Mode):
     CMD_LOOK_UP = 5
     CMD_CLOSE_UP = 6
     CMD_EXIT = 7
-    CMD_SAVE = 8
     commands = [
         ('go to kitchen',),
         ('take order from', []),
@@ -649,7 +651,6 @@ class DinerMode(Mode):
         ('look up', ['recipes', 'guests', 'ingredients', 'menu', 'reviews', 'goals']),
         ('close up',),
         ('exit',),
-        ('save',),
     ]
     prompt = 'diner >>'
     hint = (
@@ -768,8 +769,6 @@ class DinerMode(Mode):
         if cmd == self.CMD_EXIT:
             save_module.autosave_save()
             return StartMode()
-        if cmd == self.CMD_SAVE:
-            return SaveGameMode(back=self)
 
 
 class DinerMenuMode(InfoMode):
@@ -1443,13 +1442,3 @@ def run(args):
 
 def init():
     pass
-
-
-def save(file):
-    global mode
-    pickle.dump(mode, file)
-
-
-def load(file):
-    global mode
-    mode = pickle.load(file)
