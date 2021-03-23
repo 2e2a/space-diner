@@ -321,7 +321,7 @@ guests:
           text: I would really like to try a local specialty.
         - wish: potato
           text: Can you make me something with potatoes, please?
-        - wish: potato
+        - wish: raw
           text: Could I have something raw, please?
       positive_phrases:
         - Ooh la la!
