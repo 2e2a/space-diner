@@ -561,8 +561,9 @@ class NewGameMode(ChoiceMode):
         print_newline()
         print_title('Goals')
         print_list(goals.get_texts(), double_columns=False)
-        print_text('(Note: The game auto-saves every morning. There is one savegame file per level '
-                   'and diner. If you have already played this level, choose a different diner name this '
+        print_text('(Note: your progress is automatically saved once per day in the game. '
+                   'There is one savegame file per level and diner. '
+                   'If you have already played this level, choose a different diner name this '
                    'time to avoid overwriting the other savegame.)'
                    )
         print_newline()

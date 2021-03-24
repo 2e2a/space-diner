@@ -70,7 +70,7 @@ def autosave_save():
 
 
 def init():
-    time.register_callback(time.Calendar.TIME_MORNING, autosave_save)
+    time.register_callback(time.Calendar.TIME_DAYTIME, autosave_save)
 
 
 def save(file):
@@ -137,4 +137,4 @@ def load(file):
     storage.load(file)
     time.load(file)
     tutorial.load(file)
-    time.register_callback(time.Calendar.TIME_MORNING, autosave_save)
+    time.register_callback(time.Calendar.TIME_DAYTIME, autosave_save)
