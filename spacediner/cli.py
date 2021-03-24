@@ -64,7 +64,7 @@ def input_with_default(default, prompt='>> '):
             readline.set_startup_hook()
     else:
         print_text('Default: {} (copy+paste and adjust path if necessary))'.format(default))
-        input(prompt)
+        return input(prompt)
 
 
 def print_text(text):
