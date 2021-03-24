@@ -18,8 +18,7 @@ def has_save_path():
 def set_save_path():
     global path
     while True:
-        cli.print_newline()
-        cli.print_text('Select folder to store save games:')
+        cli.print_text('Select folder for saving/loading of Space Diner savegames:')
         default = os.path.join(os.getcwd(), 'SpaceDinerSaves')
         path = cli.input_with_default(default)
         if not os.path.exists(path):
@@ -64,6 +63,7 @@ def autosave_save():
         return
     level = 'Space-Diner_{}_{}_{}'.format(levels.get_number(), levels.get_name(), diner.diner.name.replace(' ', '-'))
     cli.print_message('Auto-saving to {}...'.format(level))
+    cli.wait_for_input()
     file = os.path.join(path, level)
     with open(file, 'wb') as f:
         save(f)

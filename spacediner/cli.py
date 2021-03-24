@@ -120,7 +120,6 @@ def print_value(key, *values):
 
 def print_message(msg):
     print('*** {} ***'.format(msg))
-    print_newline()
 
 
 def print_dialog(name, msg):
@@ -558,12 +557,17 @@ class NewGameMode(ChoiceMode):
         print_newline()
         print_title('Goals')
         print_list(goals.get_texts(), double_columns=False)
+        print_text('(Note: The game auto-saves every morning. There is one savegame file per level '
+                   'and diner. If you have already played this level, choose a different diner name this '
+                   'time to avoid overwriting the other savegame.)'
+                   )
+        print_newline()
         print_text('Diner name (default: {}): '.format(diner.diner.name))
-        diner_name = input('>>')
+        diner_name = input('>> ')
         if diner_name:
             diner.diner.name = diner_name
         print_text('Your name: ')
-        chef_name = input('>>')
+        chef_name = input('>> ')
         if chef_name:
             diner.diner.chef = 'Chef {}'.format(chef_name)
         return FirstHelpMode()
@@ -613,9 +617,11 @@ class FirstHelpMode(InfoMode):
     def print_info(self):
         title = 'Welcome to your new diner, {}!'.format(diner.diner.chef)
         print_title(title)
+        print_newline()
         print_text(
             'How to play? Use auto-complete: type the first letters of a command and press TAB. Type \'help\' to '
-            'display a list of available commands. During your first day, you will receive gameplay hints.'
+            'display a list of available commands. During your first day, you will receive gameplay hints. '
+            'We recommend to set the terminal size to 100x40.'
         )
         print_newline()
         print_text(
@@ -647,8 +653,8 @@ class DinerMode(Mode):
         ('take order from', []),
         ('chat with', []),
         ('serve', [], 'to', []),
-        ('send home', []),
-        ('look up', ['recipes', 'guests', 'ingredients', 'menu', 'reviews', 'goals']),
+        ('dismiss', []),
+        ('look up', ['recipes', 'guests', 'ingredients', 'menu', 'today\'s reviews', 'goals']),
         ('close up',),
         ('exit',),
     ]
@@ -668,7 +674,7 @@ class DinerMode(Mode):
         self.commands[self.CMD_TAKE_ORDER] = ('take order from', guests_without_orders) # FIXME: dont reinit, just set arg EVERYWHERE
         self.commands[self.CMD_CHAT] = ('chat with', guests_with_chats)
         self.commands[self.CMD_SERVE] = ('serve', cooked_food, 'to', guests_with_orders)
-        self.commands[self.CMD_SEND_HOME] = ('send home', available_guests)
+        self.commands[self.CMD_SEND_HOME] = ('dismiss', available_guests)
         super().update_commands()
 
     def print_header(self):
@@ -707,7 +713,7 @@ class DinerMode(Mode):
             return DinerMenuMode(back=back)
         if arg == 'recipes':
             return RecipeMode(back=back)
-        if arg == 'reviews':
+        if arg == 'today\'s reviews':
             return ReviewsInfoMode(back=back)
         if arg == 'guests':
             return GuestInfoMode(back=back)
@@ -790,7 +796,7 @@ class KitchenMode(Mode):
         ('go to diner',),
         ([], [],),
         ('trash prepared ingredients',),
-        ('look up', ['recipes', 'guests', 'ingredients', 'menu', 'reviews', 'goals']),
+        ('look up', ['recipes', 'guests', 'ingredients', 'menu', 'today\'s reviews', 'goals']),
         ('save recipe', []),
     ]
     prompt = 'kitchen >>'
@@ -1328,7 +1334,7 @@ class MerchantMode(Mode):
     ingredients_for_sale = None
     hint = (
         'You can buy individual ingredients (e.g., "buy 5 potato") or stock up on everything the merchant '
-        'offers ("buy 5 each"). Type "done" to go back to the market.'
+        'offers ("buy 5 each"). Type "done" to leave.'
         )
 
     def __init__(self, merchant, **kwargs):
@@ -1357,6 +1363,8 @@ class MerchantMode(Mode):
         ])
         print_title('Ingredients in stock in the diner:')
         print_list(['{} x {}'.format(a, i) for i, a in self.available_ingredients.items()])
+        print_newline()
+        print_text('Type "done" to leave this merchant and get back to the market.')
 
     def _can_buy(self, merchant, amount, ingredient):
         cost = 0
