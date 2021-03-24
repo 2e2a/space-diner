@@ -1441,7 +1441,6 @@ def run(args):
                 print_newline()
                 yes = input('Exit game? (y/N) ')
                 if yes in ['y', 'Y']:
-                    save_module.autosave_save()
                     if logfile:
                         logfile.close()
                     sys.exit()
