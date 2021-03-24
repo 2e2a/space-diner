@@ -482,10 +482,7 @@ guests:
           taste: -1
           output: Deep-fried food gives me heartburn.
           review_phrase: the deep-fried elements of the dish, they gave me heartburn
-        - properties: [ deep-fried ]
-          taste: -1
-          output: Raw food is difficult to digest at my age.
-          review_phrase: the raw parts, which were hard to digest for me
+
       orders:
         - wish: boiled
           text: I think that something boiled would be good for me now.
