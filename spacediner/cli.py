@@ -56,7 +56,7 @@ def wait_for_input():
 
 
 def input_with_default(default, prompt='>> '):
-    if sys.platform != 'win32':
+    if sys.platform == 'linux':
         readline.set_startup_hook(lambda: readline.insert_text(default))
         try:
             return input(prompt)
