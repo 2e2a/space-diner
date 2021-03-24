@@ -243,7 +243,7 @@ class Guest:
                     self.review.add(1, 'dislike', reaction.review_phrase)
         if self.orders:
             if served_food.has_properties([self.order.wish_property]):
-                cli.print_message('{} received what they ordered ({}).'.format(self.name, self.order.wish))
+                cli.print_text('{} received what they ordered ({}).'.format(self.name, self.order.wish))
             else:
                 self.service -= 2
                 self.review.add(2, 'order_not_met', self.order.wish)
@@ -358,11 +358,15 @@ def get_available_groups():
     global guest_groups
     return [group.name for group in guest_groups.values() if group.available]
 
+def is_group_available(group):
+    global guest_groups
+    subgroups = group.split(' ')
+    available_groups = get_available_groups()
+    return all(subgroup in available_groups for subgroup in subgroups)
 
 def get_group(name):
     global guest_groups
     return guest_groups.get(name)
-
 
 def get_guests():
     global guests

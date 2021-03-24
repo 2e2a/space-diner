@@ -3,6 +3,7 @@ import random
 
 from . import cli
 from . import goals
+from . import guests
 
 
 class Event:
@@ -95,8 +96,9 @@ class Calendar:
                     if event.info:
                         cli.print_text(event.info)
                     if event.type == Event.TYPE_HOLIDAY:
+                        holiday_guests = [group for group in event.groups if guests.is_group_available(group)]
                         cli.print_message(
-                            'It might get crowded today: it is "{}", a holiday for: {}.'.format(event.name, ', '.join(event.groups))
+                            'It might get crowded today: it is "{}", a holiday for: {}.'.format(event.name, ', '.join(holiday_guests))
                         )
             cli.print_newline()
             cli.print_title('Goals')
