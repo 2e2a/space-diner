@@ -55,12 +55,16 @@ def wait_for_input():
     input('')
 
 
-def input_with_default(default, prompt=''):
-    readline.set_startup_hook(lambda: readline.insert_text(default))
-    try:
-        return input(prompt)
-    finally:
-        readline.set_startup_hook()
+def input_with_default(default, prompt='>> '):
+    if sys.platform != 'win32':
+        readline.set_startup_hook(lambda: readline.insert_text(default))
+        try:
+            return input(prompt)
+        finally:
+            readline.set_startup_hook()
+    else:
+        print_text('Default: {} (copy+paste and adjust path if necessary))'.format(default))
+        input(prompt)
 
 
 def print_text(text):
