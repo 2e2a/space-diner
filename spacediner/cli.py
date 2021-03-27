@@ -20,6 +20,7 @@ from . import levels
 from . import ingredients
 from . import reviews
 from . import save as save_module
+from . import settings
 from . import skills
 from . import social
 from . import storage
@@ -51,7 +52,10 @@ def is_small_screen():
 
 def wait_for_input():
     print_newline()
-    print_text('<press ENTER to continue>')
+    if settings.text_only():
+        print_text('Press ENTER to continue.')
+    else:
+        print_text('<press ENTER to continue>')
     input('')
 
 
@@ -74,8 +78,11 @@ def print_text(text):
 
 
 def print_title(text):
-    print(text)
-    print('-' * (len(text)))
+    if settings.text_only():
+        print(text)
+    else:
+        print(text)
+        print('-' * (len(text)))
 
 
 def print_list(text_list, double_columns=True):
@@ -97,7 +104,7 @@ def print_list(text_list, double_columns=True):
                     length = len(text)
         else:
             for text in text_list:
-                print('- {}'.format(text))
+                print_text('- {}'.format(text))
     else:
         print('-')
     print_newline()
@@ -105,15 +112,19 @@ def print_list(text_list, double_columns=True):
 
 def print_header(header_values=None):
     cls()
-    width = line_width()
-    number_of_tildes = int(math.floor((width - 13) / 2))
-    print_text('~' * width)
-    print('{} SPACE DINER'.format(' ' * number_of_tildes))
-    print_text('~' * width)
+    if settings.text_only():
+        print('SPACE DINER')
+    else:
+        width = line_width()
+        number_of_tildes = int(math.floor((width - 13) / 2))
+        print_text('~' * width)
+        print('{} SPACE DINER'.format(' ' * number_of_tildes))
+        print_text('~' * width)
     if header_values:
         for name, values in header_values:
             print_value(name, *values)
-        print_text('~' * width)
+        if not settings.text_only():
+            print_text('~' * width)
     print_newline()
 
 
@@ -123,7 +134,7 @@ def print_value(key, *values):
 
 
 def print_message(msg):
-    print('*** {} ***'.format(msg))
+    print('*{}*'.format(msg))
 
 
 def print_dialog(name, msg):
@@ -352,6 +363,12 @@ class Mode:
     def update_commands(self):
         self.completer = CommandCompleter(self.commands)
 
+    def get_prompt(self):
+        if settings.text_only():
+            return 'Your command:'
+        else:
+            return self.prompt
+
     def wait_for_input(self):
         wait_for_input()
 
@@ -458,6 +475,12 @@ class ChoiceMode(Mode):
     def exec_choice(self, choice):
         raise NotImplemented
 
+    def get_prompt(self):
+        if settings.text_only():
+            return 'Your choice:'
+        else:
+            return self.prompt
+
     def print_info(self):
         if self.title:
             print_title(self.title)
@@ -487,13 +510,17 @@ class ChoiceMode(Mode):
 
 
 class InfoMode(Mode):
-    prompt = '<press ENTER to continue>'
     empty_input = True
 
     def exec(self, cmd, cmd_input):
         print_newline()
         return self.back()
 
+    def get_prompt(self):
+        if settings.text_only():
+            return 'Press ENTER to continue.'
+        else:
+            return '<press ENTER to continue>'
 
 class LogoMode(InfoMode):
 
@@ -501,23 +528,31 @@ class LogoMode(InfoMode):
 
     def print_header(self):
         cls()
-        print_newline()
-        print_newline()
-        logo = (
-            '############## SPACE DINER ##############\n'
-            '#                                       #\n'
-            '#                          .-"""""-.    #\n'
-            '#   > plate bun           (_________)   #\n'
-            '#   > plate pickles        o o o o o    #\n'
-            '#   > grill tentacle       xXxXxXxXx    #\n'
-            '#   > serve Space Burger  (_________)   #\n'
-            '#                                       #\n'
-            '#########################################\n'
-        )
-        for line in logo.split('\n'):
-            print(centering_spaces(line) + line)
-        prompt_text = '<press ENTER to start the game>'
-        print_text(centering_spaces(prompt_text) + prompt_text)
+        if settings.text_only():
+            print_text('Welcome to Space Diner!')
+            print_newline()
+            print_text('Press ENTER to start the game.')
+        else:
+            print_newline()
+            print_newline()
+            logo = (
+                '############## SPACE DINER ##############\n'
+                '#                                       #\n'
+                '#                          .-"""""-.    #\n'
+                '#   > plate bun           (_________)   #\n'
+                '#   > plate pickles        o o o o o    #\n'
+                '#   > grill tentacle       xXxXxXxXx    #\n'
+                '#   > serve Space Burger  (_________)   #\n'
+                '#                                       #\n'
+                '#########################################\n'
+            )
+            for line in logo.split('\n'):
+                print(centering_spaces(line) + line)
+            prompt_text = '<press ENTER to start the game>'
+            print_text(centering_spaces(prompt_text) + prompt_text)
+
+    def get_prompt(self):
+        return None
 
     def back(self):
         return StartMode()
@@ -568,11 +603,11 @@ class NewGameMode(ChoiceMode):
                    )
         print_newline()
         print_text('Diner name (default: {}): '.format(diner.diner.name))
-        diner_name = input('>> ')
+        diner_name = input('')
         if diner_name:
             diner.diner.name = diner_name
         print_text('Your name: ')
-        chef_name = input('>> ')
+        chef_name = input('')
         if chef_name:
             diner.diner.chef = 'Chef {}'.format(chef_name)
         return FirstHelpMode()
@@ -940,7 +975,7 @@ class SaveRecipeMode(ChoiceMode):
             self.print_recipe(self.dish.all_ingredient_properties())
             name = None
             while not name:
-                name = input('Recipe name: '.format(self.prompt))
+                name = input('Recipe name: ')
             food.save_as_recipe(name, self.dish.all_ingredient_properties())
             self.back_mode.update_commands()
             return self.back_mode
@@ -1009,7 +1044,7 @@ class AdvancedSaveRecipeMode(ChoiceMode):
             SaveRecipeMode.print_recipe(self.ingredient_property_choices)
             name = None
             while not name:
-                name = input('Recipe name: '.format(self.prompt))
+                name = input('Recipe name: ')
             food.save_as_recipe(name, self.ingredient_property_choices)
             print_message('saved {}.'.format(name))
             return super().back()
@@ -1431,7 +1466,7 @@ def run(args):
             if time.calendar.is_first_day:
                 mode.print_hint()
             mode.print_tutorial()
-            prompt = '{} '.format(mode.prompt) if mode.prompt else ''
+            prompt = '{} '.format(mode.get_prompt()) if mode.get_prompt() else ''
             cmd = input('{} '.format(prompt))
             print_newline()
             next_mode = mode.parse(cmd)

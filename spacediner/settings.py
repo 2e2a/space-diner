@@ -1,6 +1,11 @@
 settings = {
     'log': False,
+    'text_only': False,
 }
+
+
+def text_only():
+    return settings.get('text_only')
 
 
 def read_args(args):

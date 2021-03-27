@@ -10,6 +10,11 @@ def run(dev=False):
         action='store_true',
         help='Log game input into separate file.',
     )
+    parser.add_argument(
+        '-t', '--text-only',
+        action='store_true',
+        help='Text-only mode without ascii art and with less special characters.',
+    )
     args = vars(parser.parse_args())
     settings.read_args(args)
     levels.init()
