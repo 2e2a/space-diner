@@ -11,7 +11,7 @@
 1. **Open a terminal/command prompt** and **go to the directory** with the downloaded package.
 2. Run the following command: **`pip3 install space-diner-VERSION.tar.gz`** (replace VERSION with the actual version
 number from the file name)
-3. Check if any of the conditions below apply – otherwise, you are done!
+3. Check if any of the conditions below apply - otherwise, you are done!
    - **Only if your python version < 3.7**, additionally run: `pip3 install importlib_resources`.
    - **Only under Windows**, additionally run: `pip3 install pyreadline`.
    - **Only under Linux**, try to run the command `space-diner`. If it is not available, you need to adjust your shell's PATH
@@ -29,3 +29,5 @@ See the instructions on [packaging.python.org](https://packaging.python.org/tuto
 ## Starting the game
 
 You can now start the game from the terminal with the following command: `space-diner`
+
+You can optionally start the game in a text-only mode (without ASCII art and decorative special characters): `space-diner --text-only`
