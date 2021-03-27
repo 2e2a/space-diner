@@ -59,7 +59,7 @@ def wait_for_input():
     input('')
 
 
-def input_with_default(default, prompt='>> '):
+def input_with_default(default, prompt='path: '):
     if sys.platform == 'linux':
         readline.set_startup_hook(lambda: readline.insert_text(default))
         try:
@@ -68,7 +68,8 @@ def input_with_default(default, prompt='>> '):
             readline.set_startup_hook()
     else:
         print_text('Default: {} (copy+paste and adjust path if necessary))'.format(default))
-        return input(prompt)
+        path = input(prompt)
+        return path if path else default
 
 
 def print_text(text):
@@ -572,6 +573,12 @@ class StartMode(ChoiceMode):
         elif choice == 1:
             return NewGameMode(back=self)
 
+    def print_header(self):
+        print_header([
+            ('A game by', ['Marta and Alexej (Gvarab Games)']),
+            ('Many thanks to our testers', ['Kathrin, David, Doro, Andreas']),
+        ])
+
     def back(self):
         sys.exit()
 
@@ -591,7 +598,6 @@ class NewGameMode(ChoiceMode):
         levels.init_level(self.levels[choice])
         self.print_header()
         print_title(levels.get_name())
-        print_newline()
         print_text(levels.get_intro())
         print_newline()
         print_title('Goals')

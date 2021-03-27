@@ -22,8 +22,11 @@ def set_save_path():
         default = os.path.join(os.getcwd(), 'SpaceDinerSaves')
         path = cli.input_with_default(default)
         if not os.path.exists(path):
-            os.mkdir(path)
-            break
+            try:
+                os.mkdir(path)
+                break
+            except FileNotFoundError:
+                cli.print_message('Selected path not found.')
         elif not os.path.isdir(path):
             cli.print_message('Selected path is not a directory.')
         else:

@@ -30,4 +30,4 @@ See the instructions on [packaging.python.org](https://packaging.python.org/tuto
 
 You can now start the game from the terminal with the following command: `space-diner`
 
-You can optionally start the game in a text-only mode (without ASCII art and decorative special characters): `space-diner --text-only`
+You can optionally start the game in a text-only mode (without decorative special characters): `space-diner --text-only`
