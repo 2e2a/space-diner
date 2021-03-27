@@ -67,7 +67,7 @@ def input_with_default(default, prompt='path: '):
         finally:
             readline.set_startup_hook()
     else:
-        print_text('Default: {} (copy+paste and adjust path if necessary))'.format(default))
+        print_text('Default: {} (copy+paste and adjust path if necessary)'.format(default))
         path = input(prompt)
         return path if path else default
 
