@@ -327,13 +327,16 @@ class CommandCompleter:
                 completions.extend(cmd_completions)
         return completions
 
+    def _completion_matches(self, completions, input_arg):
+        return any(completion for completion in completions if completion.endswith(input_arg))
+
     def match_command(self, cmd_input):
         matching_commands = self.matching_commands(cmd_input)
         if matching_commands and len(matching_commands) == 1:
             cmd_num, matched_command, completions = matching_commands[0]
             if (
                     not completions
-                    or completions and cmd_input[-1] in completions
+                    or completions and self._completion_matches(completions, cmd_input[-1])
             ):
                 return cmd_num, matched_command
         return None, None
