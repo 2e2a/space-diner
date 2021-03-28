@@ -842,6 +842,7 @@ class DinerMenuMode(InfoMode):
     def print_info(self):
         print_text('This is the current menu from which your guests can select items. At the beginning of each new '
                    'week, you get the chance to change your menu.')
+        print_newline()
         print_title('{} menu'.format(diner.diner.name))
         print_list(food.get_menu())
 

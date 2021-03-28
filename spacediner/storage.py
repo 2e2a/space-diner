@@ -131,14 +131,16 @@ def daytime():
                 ingredients_lost.update({ingredient: lost_amount})
                 storage.take_ingredient(ingredient, amount)
     if ingredients_lost:
-        ingredient_list = ['{}x{}'.format(amount, ingredient) for ingredient, amount in ingredients_lost.items()]
+        ingredient_list = ['{} x {}'.format(amount, ingredient) for ingredient, amount in ingredients_lost.items()]
         cli.print_message('Ingredients lost: {}'.format(', '.join(ingredient_list)))
+        cli.print_newline()
 
     ingredients_won = time.get_ingredients_won()
     if ingredients_won:
         # TODO: Check if storage available
-        ingredient_list = ['{}x{}'.format(amount, ingredient) for ingredient, amount in ingredients_won.items()]
+        ingredient_list = ['{} x {}'.format(amount, ingredient) for ingredient, amount in ingredients_won.items()]
         cli.print_message('Ingredients won: {}'.format(', '.join(ingredient_list)))
+        cli.print_newline()
     for ingredient, amount in ingredients_won.items():
         store_ingredient(ingredient, amount)
 
