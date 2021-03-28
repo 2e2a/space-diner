@@ -263,7 +263,7 @@ class CommandCompleter:
 
     def match_arg(self, cmd, pos, arg, allow_partial=False):
         if pos >= len(cmd):
-            return False, False
+            return None, None
         arg = ascii_name(arg)
         cmd_arg = cmd[pos]
         match = None
