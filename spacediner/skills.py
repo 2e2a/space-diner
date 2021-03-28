@@ -38,6 +38,7 @@ class Skill:
             ', '.join(self.learned_subskills)
         )
         cli.print_message(msg)
+        cli.print_newline()
 
     def init(self, data):
         self.typ = data.get('type')

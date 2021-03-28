@@ -590,7 +590,7 @@ class StartMode(ChoiceMode):
     def print_header(self):
         print_header([
             ('A game by', ['Marta and Alexej (Gvarab Games)']),
-            ('Many thanks to our testers', ['Kathrin, David, Doro, Andreas']),
+            ('Many thanks to our testers', ['Kathrin, Kuba, David, Doro, Andreas']),
         ])
 
     def back(self):
@@ -1425,6 +1425,7 @@ class MerchantMode(Mode):
         print_list(['{} x {}'.format(a, i) for i, a in self.available_ingredients.items()])
         print_newline()
         print_text('Type "done" to leave this merchant and get back to the market.')
+        print_newline()
 
     def _can_buy(self, merchant, amount, ingredient):
         cost = 0
