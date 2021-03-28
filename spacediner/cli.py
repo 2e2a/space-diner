@@ -189,6 +189,15 @@ class CommandCompleter:
         elif next_cmd_arg == int:
             return '1'
 
+    def _get_partial_cmd_completions(self, cmd, intput_arg):
+        next_cmd_arg = cmd[-1]
+        if isinstance(next_cmd_arg, list):
+            return [arg for arg in next_cmd_arg if arg.startswith(intput_arg)]
+        elif isinstance(next_cmd_arg, str):
+            return next_cmd_arg
+        elif next_cmd_arg == int:
+            return '1'
+
     def _get_arg_completions(self, arg, cmd_arg):
         completed = 0
         arg_split = arg.split()
@@ -223,7 +232,10 @@ class CommandCompleter:
         for choice in cmd_arg:
             if arg == ascii_name(choice):
                 match = choice
-                completions.extend(self._get_cmd_completions(cmd, pos + 1))
+                if allow_partial:
+                    completions.extend(self._get_partial_cmd_completions(cmd, arg))
+                else:
+                    completions.extend(self._get_cmd_completions(cmd, pos + 1))
             elif allow_partial and ascii_name(choice).startswith(arg):
                 match = choice
                 completions.extend(self._get_arg_completions(arg, choice))
@@ -321,8 +333,7 @@ class CommandCompleter:
             cmd_num, matched_command, completions = matching_commands[0]
             if (
                     not completions
-                    or matched_command and len(matched_command) == len(cmd_input)
-                    or completions and len(completions) == 1 and completions[0] == cmd_input[-1]
+                    or completions and cmd_input[-1] in completions
             ):
                 return cmd_num, matched_command
         return None, None
