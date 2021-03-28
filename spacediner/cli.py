@@ -321,7 +321,7 @@ class CommandCompleter:
             cmd_num, matched_command, completions = matching_commands[0]
             if (
                     not completions
-                    or len(matched_command) == len(cmd_input)
+                    or matched_command and len(matched_command) == len(cmd_input)
                     or completions and len(completions) == 1 and completions[0] == cmd_input[-1]
             ):
                 return cmd_num, matched_command

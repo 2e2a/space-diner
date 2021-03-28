@@ -601,10 +601,6 @@ guests:
           taste: +1
           output: Ah, I love spicy food.
           review_phrase: the delicious spiciness
-        - properties: [ tomato ]
-          taste: +1
-          output: Ah, I love tomatos.
-          review_phrase: the tomatos in the dish
       orders:
         - wish: tomato
           text: Ah... I have this craving for a tomato.
