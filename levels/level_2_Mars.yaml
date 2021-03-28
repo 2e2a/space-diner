@@ -42,7 +42,7 @@ calendar:
   cycle: 668
   events:
     - event: lose ingredients
-      days: 3-5
+      days: 3-4
       info: Your fridge malfunctioned, some of the ingredients in it went bad!
       ingredients:
         - name: moss milk
