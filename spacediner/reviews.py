@@ -72,7 +72,8 @@ class Review:
 
     def get(self, name, *args):
         if len(args) > 0 and isinstance(args[0], int):
-            message = getattr(self, name).format(self.scale[args[0]])
+            scale_value = max(min(args[0], 4), 0)
+            message = getattr(self, name).format(self.scale[scale_value])
         else:
             message = getattr(self, name).format(*args)
         return message
