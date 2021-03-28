@@ -242,8 +242,10 @@ def init(data):
 def save(file):
     global calendar
     pickle.dump(calendar, file)
+    pickle.dump(calendar.events, file)
 
 
 def load(file):
     global calendar
     calendar = pickle.load(file)
+    calendar.events = pickle.load(file)
