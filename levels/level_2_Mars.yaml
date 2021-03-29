@@ -366,8 +366,8 @@ guests:
           text: Is it peach season? Can I have something with peaches, please?
         - wish: egg
           text: An egg or two would be nice.
-        - wish: spicy
-          text: Can make something spicy for me?
+        - wish: basil
+          text: Can you make something with basil for me?
 
     - name: Reptiloid
       description: >
@@ -745,14 +745,14 @@ social:
           rewards:
             - type: recipe
               recipe: Aab's Moss Soup
-              text: Here, I will write down the recipe for you. It is an old family. Mh, it is best
+              text: Here, I will write down the recipe for you. It is an old family recipe. Mh, it is best
                 with the moss that grows in my home region, but it works with Martian products as well. Please put
                 it on the menu in your diner. Ah, I am sure it is going to be a big hit.
         - meeting: You agreed to meet Aab in your diner in the evening. You are polishing the silverware when an
            unfamiliar bovid appears at the door. It takes you a few seconds to recognize that it is Aab – but without
            her horns.
           question: Ah, my young friend, you look surprised. I have decided to go for it. I am old, but I want to see
-            new world. Tomorrow, I am leaving for the Tau-Ceti system. Some of my grandshildren live there, and I also
+            new world. Tomorrow, I am leaving for the Tau-Ceti system. Some of my grandchildren live there, and I also
             have some reptiloid friends that I want to visit. Ah, I came to say good-bye.
           replies:
             - reply: Wow! I wish you the best of luck on your adventure.
