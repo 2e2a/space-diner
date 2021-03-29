@@ -1130,15 +1130,26 @@ class ReviewsInfoMode(InfoMode):
 
     def _rating_info(self, name, count, rating):
         if count == 0:
-            return '[-----] (N/A) - {} - no reviews yet'.format(name)
-        n_stars = round(rating)
-        return '[{}{}] ({:0.1f}) - {} - based on {} review(s)'.format(
-            '*' * n_stars,
-            '-' * (5 - n_stars),
-            float(rating),
-            name,
-            count,
-            )
+            if settings.text_only():
+                return '(N/A) - {} - no reviews yet'.format(name)
+            else:
+                return '[-----] (N/A) - {} - no reviews yet'.format(name)
+        else:
+            if settings.text_only():
+                return '({:0.1f}) - {} - based on {} review(s)'.format(
+                float(rating),
+                name,
+                count,
+                )
+            else:
+                n_stars = round(rating)
+                return '[{}{}] ({:0.1f}) - {} - based on {} review(s)'.format(
+                    '*' * n_stars,
+                    '-' * (5 - n_stars),
+                    float(rating),
+                    name,
+                    count,
+                    )
 
 #    def print_header(self):
 #        print_header([
@@ -1201,7 +1212,10 @@ class ActivityMode(ChoiceMode):
 
     def print_skill(self, name, level):
         progress = '#' * int(level) + '-' * (skills.MAX_SKILL_LEVEL - int(level))
-        line = '[{}] {}/{} - {}'.format(progress, level, skills.MAX_SKILL_LEVEL, name)
+        if settings.text_only():
+            line = '{}/{} - {}'.format(level, skills.MAX_SKILL_LEVEL, name)
+        else:
+            line = '[{}] {}/{} - {}'.format(progress, level, skills.MAX_SKILL_LEVEL, name)
         return line
 
     def print_skills(self):

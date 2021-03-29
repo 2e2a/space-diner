@@ -2,9 +2,9 @@ import pickle
 
 from . import cli
 from . import levels
-from . import time
 from . import reviews
-
+from . import settings
+from . import time
 
 class Goal:
     TYPE_MONEY = 'money'
@@ -94,7 +94,10 @@ def get_progresses():
         progress_num, progress_of = goal.progress()
         goal_progress_prc = min(int(float(progress_num) * 10.0 / float(progress_of)), 10)
         progress_bar = '#' * goal_progress_prc + '-' * (10 - goal_progress_prc)
-        progress_info = '[{}]  {}/{} - {}'.format(progress_bar, progress_num, progress_of, goal.text)
+        if settings.text_only():
+            progress_info = '{}/{} - {}'.format(progress_num, progress_of, goal.text)
+        else:
+            progress_info = '[{}]  {}/{} - {}'.format(progress_bar, progress_num, progress_of, goal.text)
         progresses.append(progress_info)
     return progresses
 
