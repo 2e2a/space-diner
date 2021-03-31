@@ -463,7 +463,8 @@ def _new_guests(seats):
     seats_remaining = seats
     new_guests = []
     groups = guest_factory.get_groups()
-    groups = random.sample(groups, seats_remaining)
+    if seats_remaining < len(groups):
+        groups = random.sample(groups, seats_remaining)
     seats_per_group = int(seats/len(groups))
     extra_seats = seats - (seats_per_group * len(groups))
     ratings = reviews.get_ratings()
