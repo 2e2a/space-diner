@@ -8,7 +8,7 @@ You can also get to know your regular customers and their stories.
 
 ## Installation
 
-Install Space Diner with: `pip3 install space-diner`
+Install Space Diner with: `pip install space-diner`
 
 ## Starting the game
 
