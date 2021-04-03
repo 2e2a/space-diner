@@ -8,7 +8,11 @@ You can also get to know your regular customers and their stories.
 
 ## Installation
 
+Python3 is required.
+
 Install Space Diner with: `pip install space-diner`
+
+[More detailed installation instructions are available here.](https://github.com/2e2a/space-diner/blob/master/INSTALL.md)
 
 ## Starting the game
 
